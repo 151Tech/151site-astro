@@ -1,0 +1,13 @@
+type: Drink
+name: German Chocolate
+category: src/content/categories/coffee.yaml
+subtitle: Coconut & Caramel, Chocolate Milk
+description: >-
+  Inspired by the beloved cake. Coconut and caramel swirl through rich chocolate
+  milk and espresso. Toasty, sweet, and deeply satisfying.
+image: /images/v5/coffee.jpg
+tags:
+  - Coconut
+  - Caramel
+  - Dark Chocolate
+menuOrder: 99

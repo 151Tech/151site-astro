@@ -1,0 +1,10 @@
+type: Drink
+name: Bacon Cheddar Egg Bites
+category: src/content/categories/hotfood.yaml
+subtitle: Three Per Order
+description: >-
+  Three tender, protein-packed egg bites loaded with crispy bacon and sharp
+  cheddar. Small but mighty, they're exactly what a busy morning needs.
+image: /images/bacon-cheddar-egg-bites.webp
+tags: null
+menuOrder: 99

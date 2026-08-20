@@ -1,0 +1,13 @@
+type: Drink
+name: Pink Drink
+category: src/content/categories/refreshers.yaml
+subtitle: Strawberry, Passion Fruit, Coconut Milk
+description: >-
+  Light, fruity, and impossibly pretty. Strawberry and passion fruit swirl
+  together with coconut milk for a refresher that's as good as it looks.
+image: /images/v5/refreshers.jpg
+tags:
+  - Strawberry
+  - Passion Fruit
+  - Coconut
+menuOrder: 99

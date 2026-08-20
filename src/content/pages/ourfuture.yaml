@@ -1,0 +1,130 @@
+type: PageRealestate
+seo:
+  title: Real Estate & Site Development | 151 Coffee Drive-Thru Expansion
+  description: >-
+    151 Coffee is expanding across Texas and Kansas. Seeking drive-thru pad
+    sites of 25,000+ sq ft with 30,000+ VPD. See our site criteria and submit
+    your property.
+  ogImage: https://www.151coffee.com/images/store1.jpg
+hero:
+  eyebrow: Est. 2017
+  heading: Here We Grow Again.
+  body: >-
+    151 Coffee is expanding rapidly across the country. If you have a site that
+    fits our criteria, we want to hear from you.
+  ctaLabel: Get in Touch
+  ctaHref: '#contact'
+visibility:
+  overview: true
+  criteria: true
+  idealSite: true
+  markets: true
+  contact: true
+overview:
+  heading: A Brand Built for
+  headingSpan: Fast Growth.
+  body:
+    - >-
+      151 Coffee currently operates 16 locations across the Dallas-Fort Worth
+      metro and Kansas City metro areas, with 4 more stores opening in 2026 and
+      many more in the pipeline.
+    - >-
+      Founded and funded by Mark Wattles - who built a 2,000-store retail chain,
+      co-founded HomeAdvisor, and scaled Firebirds Wood Fired Grill to 45
+      locations - 151 Coffee is built to grow fast without losing what makes it
+      special.
+  stats:
+    - number: '16'
+      label: Open Locations
+    - number: 4+
+      label: Opening in 2026
+    - number: '500'
+      label: Goal by 2028
+    - number: 950sf
+      label: Building Footprint
+  image: /images/locations/151-coffee-burleson.webp
+  imageAlt: 151 Coffee store exterior
+  images:
+    - image: /images/locations/151-coffee-burleson.webp
+      imageAlt: 151 Coffee Burleson drive-thru
+    - image: /images/locations/151-coffee-keller.webp
+      imageAlt: 151 Coffee Keller drive-thru
+    - image: /images/locations/151-coffee-coppell.webp
+      imageAlt: 151 Coffee Coppell drive-thru
+    - image: /images/locations/151-coffee-flower-mound.webp
+      imageAlt: 151 Coffee Flower Mound drive-thru
+criteria:
+  heading: Property Site Criteria
+  subheading: >-
+    We need a minimum of 25-30k sq ft of usable land for our prototype 950 sq ft
+    building plus 800 sq ft of covered exterior seating.
+  cards:
+    - title: Building Footprint
+      body: >-
+        950 sq ft kitchen building with an additional 800 sq ft covered patio
+        area. Small footprint, big output.
+    - title: Land Requirement
+      body: >-
+        Minimum 25,000 sq ft of usable land. 151 Coffee can fit on pads as small
+        as 25,000 SF - ideal for outparcels and infill sites.
+    - title: Traffic Count
+      body: >-
+        Seeking sites with traffic counts greater than 30,000 vehicles per day
+        (VPD) with good ingress and egress.
+    - title: Drive-Thru Access
+      body: >-
+        Optimized for drive-thru traffic flow. Easy in, easy out - speed is
+        central to the 151 model.
+    - title: Target Markets
+      body: >-
+        Currently expanding in DFW and Kansas City metros. Actively seeking new
+        markets with strong suburban and commuter traffic.
+    - title: Pad or Ground Lease
+      body: >-
+        Open to outparcel pads, ground leases, and build-to-suit opportunities.
+        Flexible on deal structure.
+idealSite:
+  heading: Our Ideal Drive-Thru Site
+  items:
+    - 950 SF kitchen building with 800 SF covered patio
+    - Pad sites as small as 25,000 SF
+    - Traffic count greater than 30,000 VPD
+    - Strong ingress and egress from main road
+    - High-visibility corner or outparcel location preferred
+    - Suburban and commuter-heavy demographics
+markets:
+  heading: Current & Target Markets
+  subheading: Open in DFW and Kansas City. Actively expanding to new metros.
+  tags:
+    - North Richland Hills TX
+    - Flower Mound TX
+    - Plano TX
+    - Roanoke TX
+    - Haltom City TX
+    - Lewisville TX
+    - Coppell TX
+    - Keller TX
+    - Rowlett TX
+    - Burleson TX
+    - Westworth Village TX
+    - The Colony TX
+    - Tanger Outlets TX
+    - Lawrence KS
+    - Manhattan KS
+    - Overland Park KS
+    - + New Markets Coming
+contact:
+  heading: For More Information
+  formHeading: Real Estate Inquiry
+  formSubtext: >-
+    Contact Mark Wattles directly about site opportunities across our target
+    markets.
+  email: RealEstate@151Coffee.com
+  emailIntro: or email us directly
+  buttonLabel: Submit Inquiry
+  firstNameLabel: First Name
+  lastNameLabel: Last Name
+  emailLabel: Email Address
+  phoneLabel: Phone Number
+  propertyLabel: Property Address / Market
+  detailsLabel: Site Details

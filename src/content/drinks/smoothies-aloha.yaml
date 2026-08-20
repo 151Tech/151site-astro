@@ -1,0 +1,13 @@
+type: Drink
+name: Aloha
+category: src/content/categories/smoothies.yaml
+subtitle: Strawberry, Mango & Pineapple
+description: >-
+  Three fruits, zero regrets. Strawberry, mango, and pineapple blended into a
+  thick, vibrant smoothie that brings the islands to your cup holder.
+image: /images/v5/smoothies.jpg
+tags:
+  - Strawberry
+  - Mango
+  - Pineapple
+menuOrder: 99

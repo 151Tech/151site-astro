@@ -1,0 +1,12 @@
+type: Drink
+name: Jolly Rancher
+category: src/content/categories/energy.yaml
+subtitle: Blue Raspberry & Green Apple
+description: >-
+  Tart green apple meets blue raspberry in a nostalgic, candy-inspired energy
+  drink. Sweet, sour, and impossible to put down.
+image: /images/v5/energy.jpg
+tags:
+  - Blue Raspberry
+  - Green Apple
+menuOrder: 99

@@ -1,0 +1,238 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import HeroVideo from '../components/HeroVideo.astro';
+import BlockRenderer from '../components/blocks/BlockRenderer.astro';
+import { getEntry, getCollection } from 'astro:content';
+
+const [homeEntry, settingsEntry, locationsEntries] = await Promise.all([
+  getEntry('pages', 'home'),
+  getEntry('settings', 'global'),
+  getCollection('locations'),
+]);
+
+const p = homeEntry!.data as any;
+const s = settingsEntry?.data as any ?? {};
+const locations = locationsEntries
+  .map(e => e.data)
+  .sort((a: any, b: any) => (a.displayOrder ?? 99) - (b.displayOrder ?? 99));
+
+const storesJson = JSON.stringify(locations.map((l: any) => ({
+  name: l.name, address: l.address, city: l.city, state: l.state, zip: l.zip, lat: l.lat, lng: l.lng,
+})));
+
+---
+<Layout title={p.seo?.title ?? '151 Coffee | Drive-Thru Coffee, Cold Brew & Energy Drinks'} description={p.seo?.description} ogImage={p.seo?.ogImage}>
+  <fragment slot="head">
+    <link rel="preconnect" href="https://unpkg.com" crossorigin />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": s.siteName ?? "151 Coffee",
+      "url": "https://www.151coffee.com/",
+      "logo": "https://www.151coffee.com/images/logo.png",
+      "telephone": s.phone ?? "+1-682-325-2124",
+      "email": s.email ?? "Contact@151Coffee.com",
+      "slogan": s.slogan ?? "It's a Good Day to Have a Good Day.",
+    })} />
+  </fragment>
+
+  <Nav />
+
+  <!-- Hero -->
+  <section class="hero" data-sb-object-id="src/content/pages/home.yaml">
+    <div>
+      <HeroVideo src={p.hero?.videoUrl} videoClass="hero-video" />
+    </div>
+    <div class="container">
+      <div class="hero-content">
+        <h1 data-sb-field-path="hero.heading">{p.hero?.heading}<br /><span data-sb-field-path="hero.subheadingLine1">{p.hero?.subheadingLine1}</span><br /><span data-sb-field-path="hero.subheadingLine2">{p.hero?.subheadingLine2}</span></h1>
+        <div class="hero-buttons">
+          <a href={p.hero?.ctaHref ?? '/menu'} class="main-menu-btn2" data-sb-field-path="hero.ctaLabel">{p.hero?.ctaLabel}</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <BlockRenderer sections={p.sectionsAfterHero} objectId="src/content/pages/home.yaml" fieldPrefix="sectionsAfterHero" />
+
+  <!-- Featured Drink -->
+  {p.featuredDrink?.visible !== false && (
+    <section class="featured-drink" data-sb-object-id="src/content/pages/home.yaml">
+      <div class="featured-inner">
+        <div class="featured-visual">
+          <h2 class="featured-mobile-name" data-sb-field-path="featuredDrink.name">{p.featuredDrink?.name} <span data-sb-field-path="featuredDrink.nameBold">{p.featuredDrink?.nameBold}</span></h2>
+          <div class="featured-card">
+            <div class="drink-img-wrap">
+              <img src={p.featuredDrink?.image ?? '/images/v5/coffee.jpg'} alt={p.featuredDrink?.imageAlt ?? p.featuredDrink?.name ?? 'Featured drink'} width="480" height="480" decoding="async" data-sb-field-path="featuredDrink.image#@src featuredDrink.imageAlt#@alt" />
+            </div>
+          </div>
+        </div>
+        <div class="featured-text">
+          <span class="featured-badge" data-sb-field-path="featuredDrink.badge">{p.featuredDrink?.badge}</span>
+          <h2 data-sb-field-path="featuredDrink.name">{p.featuredDrink?.name}<br /><span data-sb-field-path="featuredDrink.nameBold">{p.featuredDrink?.nameBold}</span></h2>
+          <p data-sb-field-path="featuredDrink.description">{p.featuredDrink?.description}</p>
+          <a href={p.featuredDrink?.ctaHref} class="featured-cta" data-sb-field-path="featuredDrink.ctaLabel">{p.featuredDrink?.ctaLabel}</a>
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- Locations -->
+  {(p.visibility?.locations ?? true) && (
+  <section class="spaces" id="spaces" data-sb-object-id="src/content/pages/home.yaml">
+    <div class="container">
+      <div class="section-header"><h2 data-sb-field-path="locationsSection.heading">{p.locationsSection?.heading ?? 'Find Your Location'}</h2></div>
+      <div class="locator">
+        <div class="locator__panel">
+          <div class="locator__search">
+            <input type="text" id="locator-search" aria-label="Search locations" placeholder={p.locatorPlaceholder ?? 'Search by city, state, or zip...'} />
+          </div>
+          <div class="locator__list" id="locator-list"></div>
+        </div>
+        <div class="locator__map" id="locator-map"></div>
+      </div>
+    </div>
+  </section>
+  )}
+
+  <!-- Menu Section -->
+  {(p.visibility?.menuGrid ?? true) && (
+  <section class="features" id="features" data-sb-object-id="src/content/pages/home.yaml">
+    <div class="container">
+      <div class="section-header"><h2 data-sb-field-path="menuSection.heading">{p.menuSection?.heading}</h2></div>
+      <div class="features-grid">
+        {(p.menuSection?.cards ?? []).map((card: any, i: number) => (
+          <a href={card.href} class="feature-card" data-sb-field-path={`menuSection.cards.${i}`}>
+            <div class="feature-card-img" style={`background-image:url('${card.image}')`}></div>
+            <div class="card-content">
+              <h3 data-sb-field-path="title">
+                {card.title}
+                <span class="feature-card-subtitle" style={i===1?{color:'var(--red)'}:{}} data-sb-field-path="subtitle">{card.subtitle}</span>
+              </h3>
+              <span class="menu-btn" data-sb-field-path="label">{card.label}</span>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+  )}
+
+  <!-- CTA -->
+  {(p.visibility?.cta ?? true) && (
+  <section class="cta" data-sb-object-id="src/content/pages/home.yaml">
+    <div class="container">
+      <div class="cta-inner">
+        <div class="cta-content">
+          <h2 data-sb-field-path="cta.heading">{p.cta?.heading}</h2>
+          <p data-sb-field-path="cta.body">{p.cta?.body}</p>
+          <div class="cta-buttons">
+            <a href={p.cta?.ctaHref} class="btn-primary" data-sb-field-path="cta.ctaLabel">{p.cta?.ctaLabel}</a>
+          </div>
+        </div>
+        <div class="cta-photo-stack">
+          {(p.cta?.photos ?? []).map((photo: any, i: number) => (
+            <div class={`cta-photo cta-photo--c${i}`} data-sb-field-path={`cta.photos.${i}`}>
+              <img loading="lazy" decoding="async" src={photo.image} alt={photo.alt ?? ''} data-sb-field-path="image#@src alt#@alt" />
+              <div class="cta-signature" data-sb-field-path="signature">{photo.signature}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+  )}
+
+  <!-- Reviews -->
+  {(p.visibility?.reviews ?? true) && (
+  <section class="pricing" id="pricing" data-sb-object-id="src/content/pages/home.yaml">
+    <div class="container">
+      <div class="section-header"><h2 data-sb-field-path="reviews.heading">{p.reviews?.heading}</h2></div>
+      <div class="pricing-grid">
+        {(p.reviews?.items ?? []).map((r: any, i: number) => (
+          <div class="pricing-card" data-sb-field-path={`reviews.items.${i}`}>
+            <p class="plan-price" data-sb-field-path="quote">{r.quote}</p>
+            <div class="review-byline">
+              <span class="review-avatar">{(r.name ?? '?').charAt(0)}</span>
+              <div class="review-byline-text">
+                <h3 class="plan-name" data-sb-field-path="name">{r.name}</h3>
+                {r.location && <span class="review-location" data-sb-field-path="location">{r.location}</span>}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+  )}
+
+  <!-- FAQ -->
+  {(p.visibility?.faq ?? true) && (
+  <section class="faq" id="faq" data-sb-object-id="src/content/pages/home.yaml">
+    <div class="container">
+      <div class="section-header"><h2 data-sb-field-path="faqs.heading">{p.faqs?.heading}</h2></div>
+      <div class="faq-list">
+        {(p.faqs?.items ?? []).map((faq: any, i: number) => (
+          <details open={i===0} data-sb-field-path={`faqs.items.${i}`}>
+            <summary data-sb-field-path="question">{faq.question}</summary>
+            <p data-sb-field-path="answer">{faq.answer}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+  )}
+
+  <!-- Contact -->
+  {(p.visibility?.contact ?? true) && (
+  <section class="contact" id="contact" data-sb-object-id="src/content/pages/home.yaml">
+    <div class="container">
+      <div class="section-header"><h2 data-sb-field-path="contact.heading">{p.contact?.heading}</h2></div>
+      <div class="contact-form-wrapper">
+        <form class="contact-form" name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+          <input type="hidden" name="form-name" value="contact" />
+          <p style="display:none"><label>Leave this field blank: <input name="bot-field" /></label></p>
+          <div class="form-header">
+            <h3 data-sb-field-path="contact.formHeading">{p.contact?.formHeading}</h3>
+            <p data-sb-field-path="contact.subheading">{p.contact?.subheading}</p>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label for="firstName" data-sb-field-path="contact.firstNameLabel">{p.contact?.firstNameLabel ?? 'First Name'}</label><input type="text" id="firstName" name="firstName" placeholder="First" required /></div>
+            <div class="form-group"><label for="lastName" data-sb-field-path="contact.lastNameLabel">{p.contact?.lastNameLabel ?? 'Last Name'}</label><input type="text" id="lastName" name="lastName" placeholder="Last" required /></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label for="email" data-sb-field-path="contact.emailLabel">{p.contact?.emailLabel ?? 'Email Address'}</label><input type="email" id="email" name="email" placeholder="john@company.com" required /></div>
+            <div class="form-group"><label for="phone" data-sb-field-path="contact.phoneLabel">{p.contact?.phoneLabel ?? 'Phone Number'}</label><input type="tel" id="phone" name="phone" placeholder="+1 (555) 123-4567" /></div>
+          </div>
+          <div class="form-group full-width"><label for="message" data-sb-field-path="contact.messageLabel">{p.contact?.messageLabel ?? 'Message'}</label><textarea id="message" name="message" placeholder="Your Message"></textarea></div>
+          <button type="submit" class="form-submit"><span data-sb-field-path="contact.submitLabel">{p.contact?.submitLabel ?? 'Submit'}</span></button>
+        </form>
+      </div>
+    </div>
+  </section>
+  )}
+
+  <BlockRenderer sections={p.sections} objectId="src/content/pages/home.yaml" />
+
+  <Footer />
+
+  <script define:vars={{ storesJson, hours: s.hours, phone: s.phone }} is:inline>
+    window.COFFEE151_STORES = JSON.parse(storesJson);
+    window.COFFEE151_LOCATOR = { hours, phone };
+  </script>
+  <script src="/js/locator-loader.js" is:inline></script>
+  <script is:inline>
+    (function () {
+      document.querySelectorAll('.cta-signature').forEach(function (sig) {
+        var rotate = -10 + Math.random() * 14;
+        var left = 42 + Math.random() * 16;
+        var bottom = 0.7 + Math.random() * 1;
+        sig.style.left = left + '%';
+        sig.style.bottom = bottom + 'rem';
+        sig.style.transform = 'translateX(-50%) rotate(' + rotate.toFixed(1) + 'deg)';
+      });
+    })();
+  </script>
+</Layout>

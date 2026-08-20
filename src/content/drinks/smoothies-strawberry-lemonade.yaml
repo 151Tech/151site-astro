@@ -1,0 +1,12 @@
+type: Drink
+name: Strawberry Lemonade
+category: src/content/categories/smoothies.yaml
+subtitle: Fresh & Tangy
+description: >-
+  Real strawberry and bright lemon blended into a tangy-sweet smoothie that hits
+  every note. Fresh, bold, and perfectly tart.
+image: /images/v5/smoothies.jpg
+tags:
+  - Strawberry
+  - Lemon
+menuOrder: 99

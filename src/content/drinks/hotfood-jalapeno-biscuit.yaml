@@ -1,0 +1,10 @@
+type: Drink
+name: Jalapeno Biscuit
+category: src/content/categories/hotfood.yaml
+subtitle: Spicy Sausage, Egg & Cheese on a Jalapeno Cheddar Biscuit
+description: >-
+  A flaky, spicy jalapeno cheddar biscuit stacked with spicy sausage, egg, and
+  cheese. For the ones who like their mornings with a kick.
+image: /images/jalapeno-biscuit.webp
+tags: null
+menuOrder: 99

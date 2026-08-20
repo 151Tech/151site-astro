@@ -1,0 +1,113 @@
+type: PageAbout
+seo:
+  title: About 151 Coffee | Our Story & Founder Mark Wattles
+  description: >-
+    151 Coffee is not your typical coffee shop. Founded in 2017 by entrepreneur
+    Mark Wattles, we serve the best-tasting coffee and blended energy drinks
+    fast.
+  ogImage: https://www.151coffee.com/images/splash1.jpg
+visibility:
+  intro: true
+  stats: true
+  history: true
+  founder: true
+  cta: true
+hero:
+  heading: About 151 Coffee
+  subheading: It's a Good Day to Have a Good Day.
+intro:
+  heading: Not Your Typical
+  headingSpan: Coffee Shop.
+  paragraphs:
+    - >-
+      151 Coffee is not your typical coffee shop. Fun and happiness drive our
+      culture and music drives our speed, that's why we live by the 151 motto
+      "It's a good day to have a good day."
+    - >-
+      Each of our drive-thru stores serves the best tasting coffee and blended
+      energy drinks faster than anyone. If you're thirsty and looking for a
+      tasty beverage to buzz your day, swing through our drive thru, say hi, and
+      drive with the 151 vibe.
+  tagline: It's a Good Day to have a Good Day.
+  image: >-
+    https://static.wixstatic.com/media/b45796_b6c019a088b74b3ba49d658de7304879~mv2.jpg/v1/fill/w_900,h_700,al_c,q_85,usm_0.66_1.00_0.01/350630772_586994276756053_9082157421413125565_n.jpg
+  imageAlt: 151 Coffee store
+stats:
+  - number: '2017'
+    label: Founded
+  - number: 15+
+    label: Locations
+  - number: $2B
+    label: Founder's Track Record
+  - number: '2,000'
+    label: Stores by 2038
+history:
+  heading: History of 151 Coffee
+  body:
+    - >-
+      151 Coffee is a whole new coffee concept started in 2017. 151 Coffee is
+      founded and funded by Mark Wattles, who has founded and financed multiple
+      national $100MM to $2B companies, including restaurants, B2C online
+      companies, and a 2000 store retail chain that opened a new store a day at
+      its peak.
+    - >-
+      At 151, we intend to leverage the experience of our founder and the 151
+      Team to grow rapidly and create opportunities for our employees while
+      never forgetting our #1 mission: to have fun!
+  timeline:
+    - year: '2017'
+      text: >-
+        First 151 Coffee location opens in the Dallas Fort Worth area. A new
+        coffee concept is born.
+    - year: '2018'
+      text: >-
+        Second location opens in Flower Mound, TX. The brand begins to take root
+        across the DFW metro.
+    - year: 2019-22
+      text: >-
+        Thirteen more locations open across Texas, followed by expansion into
+        Kansas - Lawrence, Manhattan, and Overland Park.
+    - year: Today
+      text: >-
+        16 locations operating across Texas and Kansas, with several more in
+        progress and many opening soon. The goal: 2,000 stores by the end of 2038.
+founder:
+  heading: Meet the Founder
+  name: Mark Wattles
+  title: Founder
+  image: /images/255396.jpg
+  imageAlt: Mark Wattles - Founder of 151 Coffee
+  bio:
+    - >-
+      Mark is a highly accomplished entrepreneur with a strong background in
+      business development and growth. Born and raised in both Santa Monica and
+      Texas, he developed a passion for surfing, wakeboarding, and snowboarding
+      from a young age.
+    - >-
+      Instead of pursuing a traditional college education, Mark chose to dive
+      into the world of business and has since built an impressive portfolio of
+      successful national ventures.
+  ventures:
+    - name: Hollywood Entertainment, Inc.
+      desc: >-
+        Started in 1988. Grew from one store to 1,000 corporate-owned stores in
+        just ten years - reaching $2 Billion in revenue and 2,000 company-owned
+        stores. Sold in 2005.
+    - name: HomeAdvisor.com
+      desc: >-
+        Co-founder of the B2C online home improvement marketplace. Sold to
+        IAC/InterActiveCorp (Nasdaq: IAC).
+    - name: Firebirds Wood Fired Grill
+      desc: >-
+        One of four partners who built this full-service restaurant chain to 45
+        locations across 18 states. Named a "breakout brand" by Nation's
+        Restaurant News. Majority stake sold to Angelo Gordon.
+cta:
+  heading: Interested in Joining the 151 Team?
+  body: >-
+    151 Coffee is not your typical coffee shop - fun and happiness drive our
+    culture. Come be part of something good.
+  primaryLabel: Apply Now
+  primaryHref: /careers
+  secondaryLabel: Find a Store
+  secondaryHref: /locations

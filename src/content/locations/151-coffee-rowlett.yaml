@@ -1,0 +1,10 @@
+﻿type: Location
+name: "151 Coffee Rowlett"
+address: "3525 Lakeview Pkwy"
+city: "Rowlett"
+state: "TX"
+zip: "75088"
+lat: 32.907404
+lng: -96.567121
+displayOrder: 9
+image: /images/locations/151-coffee-rowlett.webp

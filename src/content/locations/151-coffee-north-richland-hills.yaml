@@ -1,0 +1,10 @@
+﻿type: Location
+name: "151 Coffee North Richland Hills"
+address: "6244 Rufe Snow Dr"
+city: "North Richland Hills"
+state: "TX"
+zip: "76148"
+lat: 32.8580904
+lng: -97.2378174
+displayOrder: 1
+image: /images/locations/151-coffee-north-richland-hills.webp

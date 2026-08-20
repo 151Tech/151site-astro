@@ -1,0 +1,64 @@
+---
+interface Props {
+  title: string;
+  description?: string;
+  ogImage?: string;
+  canonical?: string;
+  bodyClass?: string;
+}
+
+const {
+  title,
+  description = '151 Coffee is a fast drive-thru coffee shop serving handcrafted espresso, cold brew, blended energy drinks, smoothies, teas & breakfast across Texas and Kansas.',
+  ogImage = 'https://www.151coffee.com/images/splash1.jpg',
+  canonical,
+  bodyClass = '',
+} = Astro.props;
+
+const canonicalUrl = canonical ?? new URL(Astro.url.pathname, 'https://www.151coffee.com').href;
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Caveat:wght@600&family=Inter:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Caveat:wght@600&family=Inter:wght@400;500;600;700&display=swap" /></noscript>
+
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={canonicalUrl} />
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+  <meta name="author" content="151 Coffee" />
+  <meta name="theme-color" content="#e63946" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="151 Coffee" />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={canonicalUrl} />
+  <meta property="og:image" content={ogImage} />
+  <meta property="og:locale" content="en_US" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={ogImage} />
+
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <link rel="apple-touch-icon" href="/images/logo.png" />
+  <link rel="stylesheet" href="/style.css" />
+  <link rel="stylesheet" href="/blocks.css" />
+  <slot name="head" />
+  <script is:inline>if(!window.matchMedia('(prefers-reduced-motion:reduce)').matches)document.documentElement.classList.add('js-anim');</script>
+</head>
+<body class={bodyClass}>
+  <slot />
+  <script src="/js/script.js" is:inline defer></script>
+  <script src="/js/animations.js" is:inline defer></script>
+  <script src="/js/cookie-consent.js" is:inline defer></script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+type: Drink
+name: Cinnamon Dulce
+category: src/content/categories/coffee.yaml
+subtitle: Brown Sugar Cinnamon & Caramel
+description: >-
+  Warm brown sugar cinnamon meets buttery caramel in this cozy, spiced espresso
+  drink. It tastes like fall in a cup, any time of year.
+image: /images/v5/coffee.jpg
+tags:
+  - Brown Sugar Cinnamon
+  - Caramel
+menuOrder: 99

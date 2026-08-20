@@ -1,0 +1,12 @@
+type: Drink
+name: Peaches & Cream
+category: src/content/categories/refreshers.yaml
+subtitle: Peach Puree & Vanilla Cream
+description: >-
+  Sweet peach puree meets silky vanilla cream in the simplest, most satisfying
+  refresher on the menu. Classic and crowd-pleasing every single time.
+image: /images/v5/refreshers.jpg
+tags:
+  - Peach
+  - Vanilla Bean
+menuOrder: 99

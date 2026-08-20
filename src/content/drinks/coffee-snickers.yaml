@@ -1,0 +1,13 @@
+type: Drink
+name: Snickers
+category: src/content/categories/coffee.yaml
+subtitle: Hazelnut & Caramel, Chocolate Milk
+description: >-
+  Everything you love about the classic candy bar. Hazelnut and caramel blended
+  into a bold espresso drink made with chocolate milk.
+image: /images/v5/coffee.jpg
+tags:
+  - Hazelnut
+  - Caramel
+  - Dark Chocolate
+menuOrder: 99

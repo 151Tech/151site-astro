@@ -1,0 +1,21 @@
+{
+  "name": "151coffee-storyblok",
+  "type": "module",
+  "version": "0.0.1",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/netlify": "^8.2.1",
+    "@astrojs/sitemap": "^3.7.3",
+    "@stackbit/cms-git": "1.0.38",
+    "@stackbit/types": "2.1.15",
+    "astro": "^7.2.2"
+  }
+}

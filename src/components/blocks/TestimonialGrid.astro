@@ -1,0 +1,27 @@
+---
+interface Item { quote: string; name: string; location?: string; }
+interface Props {
+  heading?: string;
+  items?: Item[];
+}
+const { heading, items = [], ...rest } = Astro.props as Props & Record<string, any>;
+---
+<section class="blk blk-testimonials" {...rest}>
+  <div class="container">
+    {heading && <div class="section-header"><h2>{heading}</h2></div>}
+    <div class="blk-testimonial-grid">
+      {items.map((item) => (
+        <div class="blk-testimonial-card">
+          <p class="blk-testimonial-quote">{item.quote}</p>
+          <div class="blk-testimonial-byline">
+            <span class="blk-testimonial-avatar">{(item.name ?? '?').charAt(0)}</span>
+            <div>
+              <div class="blk-testimonial-name">{item.name}</div>
+              {item.location && <div class="blk-testimonial-location">{item.location}</div>}
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

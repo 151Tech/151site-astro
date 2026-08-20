@@ -1,0 +1,123 @@
+---
+// Renders a full-bleed hero background from a URL that can be:
+//  - a YouTube link (any format)  -> autoplay/muted/looping embed
+//  - a Vimeo link                 -> autoplay/muted/looping embed
+//  - a direct video file (.mp4)   -> <video> tag
+//  - blank                        -> falls back to the default brand video
+// videoClass is the existing hero CSS class (positioning / opacity / z-index).
+interface Props {
+  src?: string;
+  videoClass?: string;
+  fallback?: string;
+  // Adds a second, blurred/cover copy of the video behind the main one on
+  // mobile, so a contain-fit video (full frame visible, no cropping) isn't
+  // surrounded by bare letterbox bars. Desktop is unaffected -- the backdrop
+  // copy is hidden there and the activation script skips loading it entirely.
+  blurBackdrop?: boolean;
+  // On phones, show this still photo instead of the video entirely -- the
+  // video never even loads on mobile when this is set (saves bandwidth).
+  // Desktop is unaffected and keeps playing the normal video.
+  mobileImage?: string;
+}
+const { src, videoClass = '', fallback = '/videos/landing_bg.mp4', blurBackdrop = false, mobileImage } = Astro.props;
+
+const raw = (src && src.trim()) ? src.trim() : fallback;
+
+const ytMatch = raw.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/|v\/|live\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/);
+const vimeoMatch = ytMatch ? null : raw.match(/vimeo\.com\/(?:video\/)?(\d+)/);
+// The Visual Editor's hero field is easy to mistake for a plain "background
+// image" field -- if it's a static image URL, render it as one instead of
+// handing it to <video>, which can't play a jpg/png/webp.
+const isImage = !ytMatch && !vimeoMatch && /\.(jpe?g|png|webp|avif|gif)(\?.*)?$/i.test(raw);
+
+let embedUrl: string | null = null;
+if (ytMatch) {
+  const id = ytMatch[1];
+  embedUrl = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&mute=1&loop=1&playlist=${id}&controls=0&showinfo=0&modestbranding=1&rel=0&playsinline=1&disablekb=1&fs=0&iv_load_policy=3`;
+} else if (vimeoMatch) {
+  embedUrl = `https://player.vimeo.com/video/${vimeoMatch[1]}?background=1&autoplay=1&muted=1&loop=1`;
+}
+---
+{embedUrl ? (
+  <div class={`hero-embed-wrap ${videoClass}`} aria-hidden="true">
+    <iframe
+      class="hero-embed"
+      data-hero-embed
+      data-src={embedUrl}
+      title="Background video"
+      frameborder="0"
+      allow="autoplay; encrypted-media; picture-in-picture"
+      allowfullscreen
+    ></iframe>
+  </div>
+) : isImage ? (
+  <img class={videoClass} src={raw} alt="" aria-hidden="true" />
+) : (
+  <Fragment>
+    {blurBackdrop && (
+      <video muted loop playsinline preload="none" class={`${videoClass}-backdrop`} data-hero-video data-mobile-only aria-hidden="true"
+        data-src={raw}
+        poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1' height='1'%3E%3Crect width='1' height='1' fill='%23111111'/%3E%3C/svg%3E"></video>
+    )}
+    <video muted loop playsinline preload="none" class={videoClass} data-hero-video data-src={raw} data-mobile-skip={mobileImage ? 'true' : undefined} aria-hidden="true"
+      poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1' height='1'%3E%3Crect width='1' height='1' fill='%23111111'/%3E%3C/svg%3E"></video>
+    {mobileImage && (
+      <img class={`${videoClass} hero-mobile-still`} src={mobileImage} alt="" aria-hidden="true" />
+    )}
+  </Fragment>
+)}
+
+<script>
+  // Load hero backgrounds after the page is interactive and idle, so the
+  // (large) video never competes with the content for bandwidth.
+  (function () {
+    var isDesktop = window.matchMedia('(min-width: 769px)').matches;
+    function activate() {
+      document.querySelectorAll('video[data-hero-video]').forEach(function (v) {
+        // The blurred backdrop copy only exists to fill space around a
+        // contain-fit video on mobile -- don't fetch/decode it on desktop.
+        if (isDesktop && v.hasAttribute('data-mobile-only')) return;
+        // A still photo replaces the video entirely on mobile -- never
+        // download the video there.
+        if (!isDesktop && v.hasAttribute('data-mobile-skip')) return;
+        if (v.dataset.src && !v.src) {
+          v.muted = true;
+          v.setAttribute('autoplay', '');
+          v.src = v.dataset.src;               // setting src triggers muted autoplay
+          var pr = v.play();
+          if (pr && pr.catch) pr.catch(function () {});
+        }
+      });
+      document.querySelectorAll('iframe[data-hero-embed]').forEach(function (f) {
+        if (!f.getAttribute('src')) f.setAttribute('src', f.getAttribute('data-src'));
+      });
+    }
+    var idle = window.requestIdleCallback || function (cb) { return setTimeout(cb, 300); };
+    if (document.readyState === 'complete') idle(activate);
+    else window.addEventListener('load', function () { idle(activate); });
+  })();
+</script>
+
+<style>
+  .hero-mobile-still { display: none; }
+  @media (max-width: 768px) {
+    .hero-mobile-still { display: block; }
+  }
+  .hero-embed-wrap { overflow: hidden; }
+  .hero-embed {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    /* Cover the hero while keeping the video's 16:9 aspect ratio:
+       size to the smallest 16:9 box that is at least as wide and tall
+       as the container, then clip the overflow via the wrapper. */
+    width: auto;
+    height: auto;
+    min-width: 100%;
+    min-height: 100%;
+    aspect-ratio: 16 / 9;
+    border: 0;
+    pointer-events: none;   /* let clicks pass through the background */
+  }
+</style>

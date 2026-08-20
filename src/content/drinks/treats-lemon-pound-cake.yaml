@@ -1,0 +1,11 @@
+type: Drink
+name: Lemon Pound Cake
+category: src/content/categories/treats.yaml
+subtitle: Bright & Buttery
+description: >-
+  Dense, buttery pound cake with a bright lemon punch. The kind of thing you eat
+  half of before you get home.
+image: /images/lemon-pound-cake.webp
+tags:
+  - Lemon
+menuOrder: 99

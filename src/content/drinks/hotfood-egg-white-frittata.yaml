@@ -1,0 +1,10 @@
+type: Drink
+name: Egg White Frittata
+category: src/content/categories/hotfood.yaml
+subtitle: Spinach, Feta & Roasted Red Pepper
+description: >-
+  Light and satisfying. Egg whites baked with spinach, salty feta, and sweet
+  roasted red pepper. Proof that eating well doesn't have to mean eating bland.
+image: /images/egg-white-frittata.webp
+tags: null
+menuOrder: 99

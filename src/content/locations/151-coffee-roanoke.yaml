@@ -1,0 +1,10 @@
+﻿type: Location
+name: "151 Coffee Roanoke"
+address: "1200 US-377"
+city: "Roanoke"
+state: "TX"
+zip: "76262"
+lat: 33.0125118
+lng: -97.2200814
+displayOrder: 4
+image: /images/locations/151-coffee-roanoke.webp

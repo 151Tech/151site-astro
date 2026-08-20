@@ -1,0 +1,398 @@
+/* ─── Drink Detail Page ─── */
+
+/* Hero */
+.dk-hero {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    overflow: hidden;
+    background-color: var(--red);
+    background-image: radial-gradient(rgba(255,255,255,0.18) 2px, transparent 2.5px);
+    background-size: 26px 26px;
+}
+
+.dk-hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(120% 55% at 50% 0%,    rgba(255,255,255,0.24) 0%, transparent 60%),
+        radial-gradient(120% 60% at 50% 100%,  rgba(255,255,255,0.14) 0%, transparent 55%),
+        radial-gradient(60%  100% at 0%   50%, rgba(255,255,255,0.10) 0%, transparent 55%),
+        radial-gradient(60%  100% at 100% 50%, rgba(255,255,255,0.10) 0%, transparent 55%);
+    pointer-events: none;
+}
+
+.dk-hero-inner {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 3rem 2rem 2.25rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+}
+
+.dk-pills-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.dk-tag-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+
+.dk-flavor-tag {
+    display: inline-block;
+    background: rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.9);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 100px;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 0.25rem 0.65rem;
+}
+
+.dk-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: rgba(255,255,255,0.9);
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: color 0.2s ease;
+    margin-bottom: 0.25rem;
+}
+
+.dk-back svg {
+    width: 16px;
+    height: 16px;
+}
+
+.dk-back:hover {
+    color: var(--black);
+}
+
+.dk-cat-pill {
+    display: inline-block;
+    background: rgba(255,255,255,0.18);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.35);
+    border-radius: 100px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.85rem;
+}
+
+.dk-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3rem, 7vw, 6rem);
+    color: #fff;
+    line-height: 1;
+    letter-spacing: 0.02em;
+    margin: 0;
+}
+
+.dk-subtitle {
+    font-size: 1rem;
+    color: rgba(255,255,255,0.9);
+    font-weight: 400;
+    margin: 0;
+    max-width: 55ch;
+}
+
+/* Drink info: photo + one unified detail card */
+.dk-info {
+    background: #f4efe9;
+    padding: 5rem 2rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.dk-info::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(120% 60% at 50% 0%,   rgba(230,57,70,0.08) 0%, transparent 60%),
+        radial-gradient(120% 60% at 50% 100%, rgba(230,57,70,0.06) 0%, transparent 60%),
+        radial-gradient(60% 100% at 0% 50%,   rgba(230,57,70,0.06) 0%, transparent 55%),
+        radial-gradient(60% 100% at 100% 50%, rgba(230,57,70,0.06) 0%, transparent 55%);
+    pointer-events: none;
+}
+
+.dk-body-inner {
+    position: relative;
+    z-index: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 0.85fr 1.15fr;
+    gap: 3.5rem;
+    align-items: stretch;
+}
+
+/* Image column -- stretches to match the detail card's full height */
+.dk-img-col {
+    display: flex;
+}
+
+.dk-photo-frame {
+    position: relative;
+    width: 100%;
+}
+
+.dk-photo-frame::before {
+    content: '';
+    position: absolute;
+    inset: -1.75rem;
+    background: radial-gradient(70% 70% at 50% 40%, rgba(230,57,70,0.14) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.dk-img-col {
+    align-items: flex-start;
+}
+
+.dk-img-col .featured-card {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: none;
+    height: auto;
+}
+
+.dk-img-col .featured-card .drink-img-wrap {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    height: auto;
+}
+
+.dk-img-col .featured-card .drink-img-wrap img {
+    object-fit: cover;
+}
+
+/* Detail column */
+.dk-detail-col { display: flex; flex-direction: column; }
+
+.dk-detail-card {
+    background:
+        radial-gradient(120% 100% at 100% 0%, rgba(230,57,70,0.16) 0%, transparent 55%),
+        linear-gradient(160deg, #242424 0%, #161616 100%);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: var(--radius);
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.22);
+    height: 100%;
+}
+
+.dk-detail-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.2rem, 4vw, 3.4rem);
+    color: #fff;
+    line-height: 1;
+    letter-spacing: 0.02em;
+    margin: 0;
+}
+
+.dk-detail-desc {
+    font-size: 1.02rem;
+    color: rgba(255,255,255,0.68);
+    line-height: 1.7;
+    margin: 0;
+    max-width: 52ch;
+}
+
+.dk-divider {
+    height: 1px;
+    background: rgba(255,255,255,0.08);
+    margin: 0.35rem 0;
+}
+
+.dk-flavor-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.55);
+    margin: 0;
+}
+
+.dk-flavor-val {
+    font-size: 0.95rem;
+    color: rgba(255,255,255,0.65);
+    margin: 0;
+    line-height: 1.5;
+}
+
+.dk-menu-link {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--red) 0%, var(--red-soft) 100%);
+    color: #fff;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 0.9rem 1.9rem;
+    border-radius: var(--radius-pill);
+    box-shadow: 0 4px 16px rgba(230,57,70,0.28);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+    margin-top: 0.6rem;
+    align-self: flex-start;
+}
+
+.dk-menu-link:hover {
+    filter: brightness(1.07);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(230,57,70,0.35);
+}
+
+/* Customize card -- full-width card below the image/detail row.
+   Flavors and Sugar Free rows sit side by side so the tag clouds
+   have room to wrap across the full card width. */
+.dk-customize-wrap {
+    position: relative;
+    z-index: 1;
+    max-width: 1200px;
+    margin: 2.5rem auto 0;
+}
+
+.dk-customize-card {
+    background:
+        radial-gradient(120% 100% at 100% 0%, rgba(230,57,70,0.16) 0%, transparent 55%),
+        linear-gradient(160deg, #242424 0%, #161616 100%);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: var(--radius);
+    padding: 2.5rem 3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.22);
+}
+
+.dk-customize-heading {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(1.15rem, 1.8vw, 1.4rem);
+    color: var(--red);
+    letter-spacing: 0.02em;
+    text-align: left;
+    margin: 0;
+}
+
+.dk-customize-rows {
+    display: flex;
+    flex-direction: row;
+    gap: 2.5rem;
+}
+
+.dk-customize-row {
+    flex: 1;
+    min-width: 0;
+}
+
+.dk-customize-row h4 {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.55);
+    margin: 0 0 0.65rem;
+}
+
+.dk-customize-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+
+.dk-customize-tag {
+    display: inline-block;
+    background: rgba(255,255,255,0.05);
+    color: rgba(255,255,255,0.75);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 100px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 500;
+    padding: 0.3rem 0.75rem;
+}
+
+.dk-customize-tag.sf {
+    border-color: rgba(230,57,70,0.3);
+    color: rgba(230,57,70,0.85);
+    background: rgba(230,57,70,0.06);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .dk-body-inner {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+    }
+
+    .dk-detail-card {
+        height: auto;
+    }
+
+    .dk-img-col .featured-card {
+        height: auto;
+    }
+
+    .dk-img-col .featured-card .drink-img-wrap {
+        height: auto;
+        aspect-ratio: 1 / 1;
+    }
+
+    .dk-customize-rows {
+        flex-direction: column;
+        gap: 1.25rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .dk-hero-inner {
+        padding: 2.5rem 1.25rem 1.75rem;
+    }
+
+    .dk-info {
+        padding: 3rem 1.25rem;
+    }
+
+    .dk-detail-card {
+        padding: 2rem 1.5rem;
+    }
+
+    .dk-img-col .featured-card .drink-img-wrap {
+        height: auto;
+        aspect-ratio: 1 / 1;
+    }
+
+    .dk-img-col {
+        max-width: 380px;
+        margin: 0 auto;
+    }
+
+    .dk-customize-card {
+        padding: 2rem 1.5rem;
+    }
+}
+

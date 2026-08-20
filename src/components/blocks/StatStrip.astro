@@ -1,0 +1,21 @@
+---
+interface Stat { number: string; label: string; }
+interface Props {
+  heading?: string;
+  stats?: Stat[];
+}
+const { heading, stats = [], ...rest } = Astro.props as Props & Record<string, any>;
+---
+<section class="blk blk-stats" {...rest}>
+  <div class="container">
+    {heading && <h2>{heading}</h2>}
+    <div class="blk-stats-grid">
+      {stats.map((stat) => (
+        <div>
+          <div class="blk-stat-number">{stat.number}</div>
+          <div class="blk-stat-label">{stat.label}</div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

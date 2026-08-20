@@ -1,0 +1,12 @@
+type: Drink
+name: White Chocolate Macadamia
+category: src/content/categories/coffee.yaml
+subtitle: White Chocolate & Macadamia Nut
+description: >-
+  Silky white chocolate pairs with the buttery richness of macadamia nut for a
+  latte that feels like a dessert. Smooth, sweet, and totally memorable.
+image: /images/v5/coffee.jpg
+tags:
+  - White Chocolate
+  - Chocolate Mac
+menuOrder: 99

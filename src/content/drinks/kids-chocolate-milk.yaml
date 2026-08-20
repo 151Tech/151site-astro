@@ -1,0 +1,11 @@
+type: Drink
+name: Chocolate Milk
+category: src/content/categories/kids.yaml
+subtitle: Cold & Delicious
+description: >-
+  Cold, creamy, chocolatey. A drive-thru essential for kids who know what they
+  want. Simple and perfectly satisfying every time.
+image: /images/chocolate-milk.webp
+tags:
+  - Dark Chocolate
+menuOrder: 99

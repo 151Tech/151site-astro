@@ -1,0 +1,11 @@
+type: Drink
+name: '"Hippie" GF Cookie'
+category: src/content/categories/treats.yaml
+subtitle: Oatmeal & Cranberries - Gluten Free
+description: >-
+  Hearty oatmeal and sweet cranberries baked into a gluten-free cookie that
+  actually tastes great. No compromise on flavor, just a different kind of
+  cookie for a different kind of person.
+image: /images/hippie-cookie.webp
+tags: null
+menuOrder: 99

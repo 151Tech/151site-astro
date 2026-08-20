@@ -1,0 +1,18 @@
+---
+interface Props {
+  eyebrow?: string;
+  heading?: string;
+  body?: string;
+  ctaLabel?: string;
+  ctaHref?: string;
+}
+const { eyebrow, heading, body, ctaLabel, ctaHref, ...rest } = Astro.props as Props & Record<string, any>;
+---
+<section class="blk blk-promo" {...rest}>
+  <div class="container">
+    {eyebrow && <span class="blk-promo-eyebrow">{eyebrow}</span>}
+    {heading && <h2>{heading}</h2>}
+    {body && <p>{body}</p>}
+    {ctaLabel && ctaHref && <a href={ctaHref} class="btn-white">{ctaLabel}</a>}
+  </div>
+</section>

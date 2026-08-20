@@ -1,0 +1,12 @@
+type: Drink
+name: 151 Caramel Mocha
+category: src/content/categories/coffee.yaml
+subtitle: Caramel, Chocolate Milk
+description: >-
+  Our signature mocha - bold espresso, real caramel, and chocolate milk come
+  together in the drink that helped put 151 on the map. Classic for a reason.
+image: /images/v5/coffee.jpg
+tags:
+  - Caramel
+  - Dark Chocolate
+menuOrder: 99

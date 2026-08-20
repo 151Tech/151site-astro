@@ -1,0 +1,11 @@
+type: Drink
+name: 151 Mocha
+category: src/content/categories/coldbrew.yaml
+subtitle: Dark Chocolate & Milk
+description: >-
+  Bold cold brew meets rich chocolate. Deep, smooth, and unapologetically
+  chocolatey.
+image: /images/v5/coldbrew.jpg
+tags:
+  - Dark Chocolate
+menuOrder: 99

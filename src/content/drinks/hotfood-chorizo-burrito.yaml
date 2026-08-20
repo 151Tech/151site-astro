@@ -1,0 +1,10 @@
+type: Drink
+name: Chorizo Burrito
+category: src/content/categories/hotfood.yaml
+subtitle: Egg, Jack & Cheddar, Chorizo, Hash Browns & Sour Cream
+description: >-
+  A packed breakfast burrito loaded with scrambled egg, melted jack and cheddar,
+  smoky chorizo, crispy hash browns, and sour cream. Grab and go, no regrets.
+image: /images/chorizo-burrito.webp
+tags: null
+menuOrder: 99

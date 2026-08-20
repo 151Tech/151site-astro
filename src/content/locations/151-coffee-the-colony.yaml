@@ -1,0 +1,10 @@
+﻿type: Location
+name: "151 Coffee The Colony"
+address: "4580 Destination Dr"
+city: "The Colony"
+state: "TX"
+zip: "75056"
+lat: 33.079624
+lng: -96.8562017
+displayOrder: 13
+image: /images/locations/151-coffee-the-colony.webp

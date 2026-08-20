@@ -1,0 +1,21 @@
+---
+interface Props {
+  heading?: string;
+  body?: string;
+  primaryLabel?: string;
+  primaryHref?: string;
+  secondaryLabel?: string;
+  secondaryHref?: string;
+}
+const { heading, body, primaryLabel, primaryHref, secondaryLabel, secondaryHref, ...rest } = Astro.props as Props & Record<string, any>;
+---
+<section class="blk blk-cta" {...rest}>
+  <div class="container">
+    {heading && <h2>{heading}</h2>}
+    {body && <p>{body}</p>}
+    <div class="blk-cta-buttons">
+      {primaryLabel && primaryHref && <a href={primaryHref} class="btn-white">{primaryLabel}</a>}
+      {secondaryLabel && secondaryHref && <a href={secondaryHref} class="btn-outline">{secondaryLabel}</a>}
+    </div>
+  </div>
+</section>

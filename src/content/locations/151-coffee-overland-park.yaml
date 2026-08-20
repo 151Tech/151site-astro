@@ -1,0 +1,9 @@
+﻿type: Location
+name: "151 Coffee Overland Park"
+address: "9180 Metcalf Ave"
+city: "Overland Park"
+state: "KS"
+zip: "66212"
+lat: 38.9624981
+lng: -94.6677576
+displayOrder: 15

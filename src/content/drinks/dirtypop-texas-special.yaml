@@ -1,0 +1,12 @@
+type: Drink
+name: Texas Special
+category: src/content/categories/dirtypop.yaml
+subtitle: Dr. Pepper, Vanilla & Coconut Cream
+description: >-
+  A Texas staple. Dr. Pepper gets dressed up with vanilla syrup and a pour of
+  coconut cream. Sweet, creamy, and unapologetically Texan.
+image: /images/dr-feel-good.webp
+tags:
+  - Vanilla Bean
+  - Coconut
+menuOrder: 99

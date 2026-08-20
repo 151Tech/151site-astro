@@ -1,0 +1,81 @@
+---
+import { getEntry } from 'astro:content';
+const g = await getEntry('settings', 'global');
+const s = (g?.data as any) ?? {};
+const f = s.footer ?? {};
+const companyLinks: { label: string; href: string }[] = f.companyLinks ?? [
+  { label: 'About Us', href: '/about' },
+  { label: 'Careers', href: '/careers' },
+  { label: 'Partnerships', href: '/#contact' },
+  { label: 'Privacy Policy', href: '/privacy-policy' },
+];
+const giftCardUrl = s.giftCardUrl ?? 'https://giftcards-151coffee-orders.crispnow.com';
+
+// Instagram supports a reliable username-based app URI scheme, so a tap can
+// open the native app directly instead of the profile's mobile web page.
+// (Facebook/TikTok/LinkedIn don't have an equivalent public, username-based
+// scheme, so those stay as plain web links.)
+const igUsername = (s.social?.instagram ?? '').match(/instagram\.com\/([^/?]+)/)?.[1];
+const igAppUrl = igUsername ? `instagram://user?username=${igUsername}` : undefined;
+---
+<footer>
+  <div class="container">
+    <div class="footer-content" style="padding:2rem;border:2px solid var(--red);border-radius:24px;" data-sb-object-id="src/content/settings/global.yaml">
+      <div class="footer-section">
+        <h4 data-sb-field-path="footer.companyHeading">{f.companyHeading ?? 'Company'}</h4>
+        <ul>
+          {companyLinks.map((link, i) => (
+            <li><a href={link.href} data-sb-field-path={`footer.companyLinks.${i}.label`}>{link.label}</a></li>
+          ))}
+        </ul>
+      </div>
+      <div class="footer-social-section">
+        <h4 data-sb-field-path="footer.socialHeading">{f.socialHeading ?? 'Social'}</h4>
+        <ul>
+          <li><a href={s.social?.tiktok ?? '#'} target="_blank" rel="noopener noreferrer">TikTok</a></li>
+          <li><a href={s.social?.facebook ?? '#'} target="_blank" rel="noopener noreferrer">Facebook</a></li>
+          <li><a href={s.social?.instagram ?? '#'} data-app-url={igAppUrl} target="_blank" rel="noopener noreferrer">Instagram</a></li>
+          <li><a href={s.social?.linkedin ?? '#'} target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4 data-sb-field-path="footer.supportHeading">{f.supportHeading ?? 'Support'}</h4>
+        <ul>
+          <li><a href={`mailto:${s.email ?? 'Contact@151Coffee.com'}`} data-sb-field-path="footer.contactLabel">{f.contactLabel ?? 'Contact'}</a></li>
+          <li><a href={`tel:${(s.phone ?? '').replace(/\D/g,'')}`} data-sb-field-path="footer.callLabel">{f.callLabel ?? 'Call Us'}</a></li>
+          <li><a href={`mailto:${s.email ?? 'Contact@151Coffee.com'}`} data-sb-field-path="footer.supportLabel">{f.supportLabel ?? 'Support'}</a></li>
+          <li><button type="button" id="giftCardFooterSupportBtn" data-sb-field-path="footer.giftCardCheckLabel">{f.giftCardCheckLabel ?? 'Check Gift Card'}</button></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="social-links">
+        <a href={s.social?.facebook ?? '#'} target="_blank" rel="noopener noreferrer" aria-label="Facebook">f</a>
+        <a href={s.social?.tiktok ?? '#'} target="_blank" rel="noopener noreferrer" aria-label="TikTok">tt</a>
+        <a href={s.social?.linkedin ?? '#'} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">in</a>
+        <a href={s.social?.instagram ?? '#'} data-app-url={igAppUrl} target="_blank" rel="noopener noreferrer" aria-label="Instagram">ig</a>
+      </div>
+      <p class="footer-web-design footer-web-design-desktop">
+        <span>Design by</span> <a href="https://stillbuilt.co" target="_blank" rel="noopener noreferrer" aria-label="Stillbuilt"><img src="/images/stillbuilt-logo-animated-blink.svg" alt="Stillbuilt" width="802" height="130" class="footer-web-design-logo" /></a>
+      </p>
+      <div class="footer-gc" data-sb-object-id="src/content/settings/global.yaml">
+        <button id="giftCardFooterBtn" class="gc-btn" data-sb-field-path="footer.giftCardButtonLabel">{f.giftCardButtonLabel ?? 'Check Gift Card Balance'}</button>
+      </div>
+      <div class="footer-credits" data-sb-object-id="src/content/settings/global.yaml">
+        <p data-sb-field-path="copyright">{s.copyright ?? "© 151 Coffee, LLC. It's a Good Day to Have a Good Day."}</p>
+        <p class="footer-web-design footer-web-design-mobile">
+          <span>Design by</span> <a href="https://stillbuilt.co" target="_blank" rel="noopener noreferrer" aria-label="Stillbuilt"><img src="/images/stillbuilt-logo-animated-blink.svg" alt="Stillbuilt" width="802" height="130" class="footer-web-design-logo" /></a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<div id="giftCardModal" class="modal">
+  <div class="modal-content">
+    <button id="closeGiftCardModal" class="modal-close">&times;</button>
+    <div class="crisp">
+      <iframe data-src={giftCardUrl} style="width:100%;height:650px;border:none;"></iframe>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,162 @@
+type: PageHome
+seo:
+  title: 151 Coffee | Drive-Thru Coffee, Cold Brew & Energy Drinks
+  description: >-
+    151 Coffee is a fast drive-thru coffee shop serving handcrafted espresso,
+    cold brew, blended energy drinks, smoothies, teas & breakfast across Texas
+    and Kansas.
+  ogImage: https://www.151coffee.com/images/splash1.jpg
+hero:
+  heading: 151 Coffee
+  subheadingLine1: It's a Good Day
+  subheadingLine2: to have a good day
+  ctaLabel: See Our Menu
+  ctaHref: /menu
+  videoUrl: /videos/menu_bg.mp4
+visibility:
+  locations: true
+  menuGrid: true
+  cta: true
+  reviews: true
+  faq: true
+  contact: true
+featuredDrink:
+  visible: true
+  badge: Summer's Featured Drink
+  name: Tigers
+  nameBold: Blood
+  description: >-
+    A tropical punch of strawberry and coconut blended into an energy drink
+    that tastes like summer. Bright, fruity, and ready to fuel your day.
+  image: /images/tigers-blood-featured.jpg
+  imageAlt: Tigers Blood
+  ctaLabel: Explore the Menu
+  ctaHref: /menu
+menuSection:
+  heading: Check Out Our Menu
+  cards:
+    - title: Drink Menu
+      subtitle: 43,000+ Flavor Combinations
+      image: /images/July Social Media (8).jpg
+      href: /menu
+      label: Drink Menu
+    - title: Food Menu
+      subtitle: Select Locations Only
+      image: /images/Burritos - Green Chile.JPG
+      href: /menu#hotfood
+      label: Food Menu
+locationsSection:
+  heading: Find Your Location
+locatorPlaceholder: Search by city, state, or zip...
+cta:
+  heading: We're Looking For Passionate People.
+  body: >-
+    151 Coffee is not your typical coffee shop. Fun and happiness drive our
+    culture and music drives our speed, that's why we live by the 151 motto
+    "it's a good day to have a good day."
+  ctaLabel: See Career Openings
+  ctaHref: /careers
+  photos:
+    - image: /images/july-social.jpg
+      alt: The 151 Coffee team
+      signature: Keller Team
+    - image: /images/nowhiring.webp
+      alt: ''
+      signature: Plano Team
+    - image: /images/team-photo-2.jpg
+      alt: ''
+      signature: its a good day
+    - image: /images/team-photo-3.jpg
+      alt: ''
+      signature: Overland Park Team
+reviews:
+  heading: Hear it from our customers!
+  items:
+    - quote: >-
+        Love 151 Coffee! My order is always the caramel blondie! It comes out
+        perfect every time! Love the efficiency of the staff as well!
+      name: Asha J.
+      location: Keller, TX
+    - quote: >-
+        2nd time coming back and coffee has been awesome! The service from the
+        team members was very friendly and they offered some awesome
+        recommendations.
+      name: Alejandro C.
+      location: Plano, TX
+    - quote: >-
+        Always friendly and efficient service. My pumpkin pie latte was
+        perfectly made, and this reliable drive-thru spot continues to impress.
+      name: Irene V.
+      location: Lewisville, TX
+    - quote: >-
+        Fast service good drinks. Peach smoothie and Carmel macchiato are the
+        best on a hot day. Usually a line but they are fast to take orders
+        outside.
+      name: Clark P.
+      location: Coppell, TX
+investment:
+  heading: brewing the next billion-dollar coffee brand
+  subheading: get first dibs on owning 151 coffee
+  body: >-
+    151 Coffee's founder, Mark Wattles, has invested over $15 Million of his
+    money to create the brand and build the first 15 stores. 151 is now raising
+    additional capital to kick off its growth stage. Before we open this
+    investment opportunity to the public, we're letting our most loyal fans -
+    YOU - GET FIRST DIBS ON OWNING 151 COFFEE.
+  stats:
+    - number: $15 Million
+      label: Invested by Founder
+    - number: 500 Stores
+      label: By the End of 2028
+    - number: $17 Million
+      label: Revenue 2025
+  ctaLabel: Explore Investment Opportunities
+  ctaHref: /ourfuture
+faqs:
+  heading: Frequently Asked Questions
+  items:
+    - question: What is 151 Coffee?
+      answer: >-
+        151 Coffee is a fast drive-thru coffee concept serving handcrafted
+        espresso, cold brew, and blended energy drinks across Texas and Kansas.
+        Founded in 2017 by Mark Wattles, we live by one motto: It's a good day
+        to have a good day.
+    - question: Where is 151 Coffee located?
+      answer: >-
+        We currently have 12+ locations across the Dallas-Fort Worth metro in
+        Texas and in Lawrence, Manhattan, and Overland Park, Kansas. Use the
+        locator on our homepage or visit the Locations page to find the nearest
+        store.
+    - question: What does 151 Coffee serve?
+      answer: >-
+        Our menu includes espresso drinks, cold brew, blended energy drinks,
+        dirty sodas (Dirty Pops), refreshers, smoothies, teas, kids drinks, hot
+        food items like burritos and bagels, and baked treats. With over 43,000
+        flavor combinations, there's something for everyone.
+    - question: Does 151 Coffee have a drive-thru?
+      answer: >-
+        Yes! Every 151 Coffee location has a drive-thru concept, and an outdoor
+        walk-up area as well. Speed and convenience are central to what we do.
+        Our dual-lane drive-thru design and outdoor order-takers help us move
+        fast even during peak hours.
+    - question: Does 151 Coffee sell gift cards?
+      answer: >-
+        Yes! You can purchase check gift cards in-store, and check gift card
+        balances using the Gift Card button at the bottom of the page.
+    - question: Is 151 Coffee hiring?
+      answer: >-
+        Always. Visit our Careers page to see current openings. We look for
+        people who are energetic, positive, and passionate about great customer
+        experiences.
+contact:
+  heading: Contact Us
+  subheading: Good experience? Event idea? Collaboration? Let us know here.
+  formHeading: Everyone Loves Coffee
+  firstNameLabel: First Name
+  lastNameLabel: Last Name
+  emailLabel: Email Address
+  phoneLabel: Phone Number
+  messageLabel: Message
+  submitLabel: Submit
+sections: []
+markdown_content: ''

@@ -1,0 +1,12 @@
+type: Drink
+name: Tigers Blood
+category: src/content/categories/energy.yaml
+subtitle: Strawberry & Coconut
+description: >-
+  A tropical punch of strawberry and coconut blended into an energy drink that
+  tastes like summer. Bright, fruity, and ready to fuel your day.
+image: /images/v5/energy.jpg
+tags:
+  - Strawberry
+  - Coconut
+menuOrder: 99

@@ -1,0 +1,108 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import Footer from '../../components/Footer.astro';
+import { getCollection, getEntry } from 'astro:content';
+
+export async function getStaticPaths() {
+  const locations = await getCollection('locations');
+  return locations.map(loc => ({ params: { slug: loc.id } }));
+}
+
+const { slug } = Astro.params;
+const [locations, settingsEntry, pageEntry] = await Promise.all([
+  getCollection('locations'),
+  getEntry('settings', 'global'),
+  getEntry('pages', 'locations'),
+]);
+const locEntry = locations.find(e => e.id === slug);
+
+if (!locEntry) return Astro.redirect('/locations');
+const loc = locEntry.data as any;
+const s = (settingsEntry?.data as any) ?? {};
+// Shared store-detail UI labels live on the Locations page (mirrors how the
+// drink detail page pulls its labels from the Menu page).
+const lp = (pageEntry?.data as any) ?? {};
+const dl = lp.storeDetail ?? {};
+
+const hours = loc.hours || s.hours || 'Open daily 6 AM - 8 PM';
+const phone = s.phone || '(682) 325-2124';
+const phoneTel = phone.replace(/\D/g, '');
+const image = loc.image ? (loc.image.startsWith('/') ? loc.image : '/' + loc.image) : '/images/store1.jpg';
+const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${loc.lat},${loc.lng}`;
+const shortName = (loc.name as string).replace(/^151 Coffee\s*/i, '') || loc.name;
+
+const ogImage = `https://www.151coffee.com${encodeURI(image)}`;
+---
+<Layout
+  title={`151 Coffee ${shortName} | Store Info & Hours`}
+  description={`Visit 151 Coffee in ${loc.city}, ${loc.state}. Address, hours, and directions for our ${shortName} drive-thru.`}
+  ogImage={ogImage}
+>
+  <Fragment slot="head">
+    <link rel="stylesheet" href="/location-detail.css" />
+    <link rel="preconnect" href="https://unpkg.com" crossorigin />
+  </Fragment>
+
+  <Nav active="locations" />
+
+  <section class="ld-hero" style="margin-top:58px;" data-sb-object-id={`src/content/locations/${slug}.yaml`}>
+    <div class="ld-hero-bg"></div>
+    <div class="ld-hero-inner">
+      <a href="/locations" class="ld-back">
+        <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M13 8H3M7 4L3 8l4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span data-sb-object-id="src/content/pages/locations.yaml" data-sb-field-path="storeDetail.backLabel">{dl.backLabel ?? 'Back to Locations'}</span>
+      </a>
+      <span class="ld-state-pill" data-sb-field-path="state">{loc.state}</span>
+      <h1 class="ld-title" data-sb-field-path="name">{loc.name}</h1>
+      <p class="ld-addr">
+        <span data-sb-field-path="address">{loc.address}</span>, <span data-sb-field-path="city">{loc.city}</span>, {loc.state} <span data-sb-field-path="zip">{loc.zip}</span>
+      </p>
+    </div>
+  </section>
+
+  <section class="ld-body" data-sb-object-id={`src/content/locations/${slug}.yaml`}>
+    <div class="ld-body-inner">
+      <div class="ld-img-col">
+        <img class="ld-photo" src={image} alt={`151 Coffee ${shortName}`} width="1200" height="900" decoding="async" data-sb-field-path="image" />
+      </div>
+
+      <div class="ld-detail-col">
+        <div class="ld-detail-card">
+          <div class="ld-detail-row">
+            <span class="ld-detail-label" data-sb-object-id="src/content/pages/locations.yaml" data-sb-field-path="storeDetail.hoursLabel">{dl.hoursLabel ?? 'Hours'}</span>
+            <p class="ld-detail-val" data-sb-field-path="hours">{hours}</p>
+          </div>
+          <div class="ld-divider"></div>
+          <div class="ld-detail-row">
+            <span class="ld-detail-label" data-sb-object-id="src/content/pages/locations.yaml" data-sb-field-path="storeDetail.phoneLabel">{dl.phoneLabel ?? 'Phone'}</span>
+            <a class="ld-detail-val ld-detail-link" href={`tel:+1${phoneTel}`}>{phone}</a>
+          </div>
+          <div class="ld-divider"></div>
+          <div class="ld-detail-row">
+            <span class="ld-detail-label" data-sb-object-id="src/content/pages/locations.yaml" data-sb-field-path="storeDetail.addressLabel">{dl.addressLabel ?? 'Address'}</span>
+            <p class="ld-detail-val">{loc.address}<br />{loc.city}, {loc.state} {loc.zip}</p>
+          </div>
+
+          <div class="ld-btn-row">
+            <a href={`/menu?store=${slug}`} class="ld-btn ld-btn-primary" data-sb-object-id="src/content/pages/locations.yaml" data-sb-field-path="storeDetail.menuButtonLabel">{dl.menuButtonLabel ?? "See This Store's Menu"}</a>
+            <a href={directionsUrl} target="_blank" rel="noopener noreferrer" class="ld-btn ld-btn-secondary" data-sb-object-id="src/content/pages/locations.yaml" data-sb-field-path="storeDetail.directionsButtonLabel">{dl.directionsButtonLabel ?? 'Get Directions'}</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ld-map-wrap">
+      <div class="ld-map" id="storeMap"></div>
+    </div>
+  </section>
+
+  <Footer />
+
+  <script define:vars={{ lat: loc.lat, lng: loc.lng, name: loc.name, address: `${loc.address}, ${loc.city}, ${loc.state} ${loc.zip}` }} is:inline>
+    window.STORE_MAP = { lat, lng, name, address };
+  </script>
+  <script src="/js/store-map-loader.js" is:inline></script>
+</Layout>

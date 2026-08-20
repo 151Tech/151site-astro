@@ -1,0 +1,12 @@
+type: Drink
+name: Starry Night
+category: src/content/categories/energy.yaml
+subtitle: Red Raspberry & Blue Raspberry
+description: >-
+  Two berries collide in a deep, berry-packed energy drink that's as bold in
+  flavor as it is in color. Smooth and seriously refreshing.
+image: /images/v5/energy.jpg
+tags:
+  - Raspberry
+  - Blue Raspberry
+menuOrder: 99

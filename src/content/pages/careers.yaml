@@ -1,0 +1,21 @@
+﻿type: PageCareers
+seo:
+  title: "Careers at 151 Coffee | Join Our Team"
+  description: "Join the 151 Coffee team. Fun, fast, and built on good vibes. See what's open and apply today."
+  ogImage: "https://www.151coffee.com/images/splash1.jpg"
+heroVideo: "/videos/careers_bg.mp4"
+agegate:
+  eyebrow: "Now Hiring"
+  heading: "Join 151 Coffee"
+  body: "Fun and happiness drive our culture. Music drives our speed. Before we send you to our openings - are you 18 or older?"
+  yesLabel: "Yes, I'm 18 or older"
+  noLabel: "Not quite yet"
+
+workstreamHref: "https://www.workstream.us/j/224b40b5/151-coffee"
+
+under18:
+  heading: "We'll See You Soon."
+  body:
+    - "We love the enthusiasm - and honestly, that energy is exactly what 151 Coffee is about. When the time comes, we'd love to have you on the team. Come back when you're ready, and we'll save a spot for you."
+    - "In the meantime, swing through your nearest drive-thru and enjoy a good day."
+  linkText: "Back to the homepage"

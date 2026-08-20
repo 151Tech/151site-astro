@@ -1,0 +1,12 @@
+type: Drink
+name: French Toast
+category: src/content/categories/coldbrew.yaml
+subtitle: White Chocolate & Brown Sugar Cinnamon
+description: >-
+  Cold brew steeped in the flavors of Sunday morning. White chocolate and brown
+  sugar cinnamon transform your coffee into something that tastes like brunch.
+image: /images/v5/coldbrew.jpg
+tags:
+  - White Chocolate
+  - Brown Sugar Cinnamon
+menuOrder: 99

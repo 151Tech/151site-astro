@@ -1,0 +1,164 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import BlockRenderer from '../components/blocks/BlockRenderer.astro';
+import { getCollection, getEntry } from 'astro:content';
+
+const [locationsEntries, settingsEntry, pageEntry] = await Promise.all([
+  getCollection('locations'),
+  getEntry('settings', 'global'),
+  getEntry('pages', 'locations'),
+]);
+
+const s = settingsEntry?.data as any ?? {};
+const p = pageEntry?.data as any ?? {};
+const locations = locationsEntries
+  .map(e => ({ slug: e.id, ...(e.data as any) }))
+  .sort((a, b) => (a.displayOrder ?? 99) - (b.displayOrder ?? 99));
+
+const storesJson = JSON.stringify(locations.map((l: any) => ({
+  name: l.name, address: l.address, city: l.city, state: l.state, zip: l.zip, lat: l.lat, lng: l.lng,
+  // Only this page's locator needs these -- their presence is what tells
+  // locator.js to render a photo + "More Info" link on each list item.
+  slug: l.slug,
+  image: l.image ? (l.image.startsWith('/') ? l.image : '/' + l.image) : '/images/store1.jpg',
+})));
+
+// Group locations by state for the cards grid
+const byState: Record<string, typeof locations> = {};
+for (const loc of locations) {
+  const key = loc.state ?? 'Other';
+  if (!byState[key]) byState[key] = [];
+  byState[key].push(loc);
+}
+const STATE_NAMES: Record<string, string> = Object.fromEntries(
+  (p.stateNames ?? [{ code: 'TX', name: 'Texas' }, { code: 'KS', name: 'Kansas' }])
+    .filter((s: any) => s?.code)
+    .map((s: any) => [s.code, s.name])
+);
+---
+<Layout
+  title={p.seo?.title ?? '151 Coffee Locations | Find a Drive-Thru Near You'}
+  description={p.seo?.description ?? 'Find your nearest 151 Coffee drive-thru. 15+ locations across Texas and Kansas with more opening soon.'}
+  ogImage={p.seo?.ogImage ?? 'https://www.151coffee.com/images/store1.jpg'}
+>
+  <fragment slot="head">
+    <link rel="preconnect" href="https://unpkg.com" crossorigin />
+  </fragment>
+
+  <Nav active="locations" />
+
+  <BlockRenderer sections={p.sections} objectId="src/content/pages/locations.yaml" />
+
+  {(p.visibility?.map ?? true) && (
+  <div class="loc-bg">
+    <section class="loc-map-section" data-sb-object-id="src/content/pages/locations.yaml">
+      <div class="container">
+        <div class="loc-hero-content">
+          <h1 data-sb-field-path="hero.heading">{p.hero?.heading ?? 'Find Your 151'}</h1>
+        </div>
+      </div>
+      <div class="locator locator--stacked">
+        <div class="locator__card">
+          <div class="locator__clip">
+            <div class="locator__map" id="locator-map"></div>
+            <div class="locator__search locator__search--floating">
+              <input type="text" id="locator-search" aria-label="Search locations" placeholder={p.searchPlaceholder ?? 'Search by city, state, or zip...'} />
+            </div>
+          </div>
+          <span class="loc-count-wrap">
+            <span class="loc-count-number">{locations.length}</span>
+            <span class="loc-count loc-count--badge">
+              <span class="loc-count-label" data-sb-field-path="hero.countSuffix">{p.hero?.countSuffix ?? 'Locations Open'}</span>
+            </span>
+          </span>
+        </div>
+      </div>
+    </section>
+  </div>
+  )}
+
+  {(p.visibility?.grid ?? true) && (
+  <section class="loc-grid-section">
+      <div class="container">
+        {Object.entries(byState).map(([stateCode, locs]) => (
+          <div class="loc-state-group">
+            <div class="loc-state-label">
+              {STATE_NAMES[stateCode] ?? stateCode} - {locs.length} Location{locs.length !== 1 ? 's' : ''}
+            </div>
+            <div class="loc-cards">
+              {locs.map((loc: any) => (
+                <div
+                  class="locator__item locator-photo-card"
+                  data-store-card
+                  data-href={`/locations/${loc.slug}`}
+                  data-sb-object-id={`src/content/locations/${loc.slug}.yaml`}
+                >
+                  <img
+                    class="locator__item-photo"
+                    src={(() => {
+                      const full = loc.image ? (loc.image.startsWith('/') ? loc.image : '/' + loc.image) : '/images/store1.jpg';
+                      // Cards render this at ~260px wide -- use the pre-generated
+                      // thumbnail instead of the full-size photo the location
+                      // detail page needs.
+                      const m = full.match(/^\/images\/locations\/(.+)\.webp$/);
+                      return m ? `/images/locations/${m[1]}-thumb.webp` : full;
+                    })()}
+                    alt=""
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <div class="locator__item-info">
+                    <h3 data-sb-field-path="city">{loc.city}</h3>
+                    <p>{loc.address}<br />{loc.city}, {loc.state} {loc.zip}</p>
+                  </div>
+                  <div class="locator__item-actions">
+                    <a
+                      class="locator__directions"
+                      href={`https://www.google.com/maps/dir/?api=1&destination=${loc.lat},${loc.lng}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {p.directionsLabel ?? 'Get Directions'}
+                      <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </a>
+                    <a class="locator__more-info" href={`/locations/${loc.slug}`}>
+                      {p.storeInfoLabel ?? 'Store Info'}
+                      <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </a>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  )}
+
+  <Footer />
+
+  <script define:vars={{ storesJson, hours: s.hours, phone: s.phone }} is:inline>
+    window.COFFEE151_STORES = JSON.parse(storesJson);
+    window.COFFEE151_LOCATOR = { hours, phone };
+  </script>
+  <script src="/js/locator-loader.js" is:inline></script>
+  <script is:inline>
+    // Whole card navigates to that store's info page, but clicks on either
+    // real link inside (Get Directions / Store Info) still behave normally
+    // -- Get Directions opens Google Maps in a new tab instead of also
+    // navigating this page.
+    document.querySelectorAll('[data-store-card]').forEach(function (card) {
+      card.addEventListener('click', function (e) {
+        if (e.target.closest('a')) return;
+        var href = card.dataset.href;
+        if (href) window.location.href = href;
+      });
+    });
+  </script>
+</Layout>

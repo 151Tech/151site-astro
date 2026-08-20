@@ -1,0 +1,131 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import Footer from '../../components/Footer.astro';
+import { getCollection, getEntry } from 'astro:content';
+
+export async function getStaticPaths() {
+  const drinks = await getCollection('drinks');
+  return drinks.map(drink => ({ params: { slug: drink.id } }));
+}
+
+const { slug } = Astro.params;
+const [drinks, menuEntry, categoryEntries] = await Promise.all([
+  getCollection('drinks'),
+  getEntry('pages', 'menu'),
+  getCollection('categories'),
+]);
+const drinkEntry = drinks.find(e => e.id === slug);
+
+if (!drinkEntry) return Astro.redirect('/menu');
+const drink = drinkEntry.data as any;
+const m = menuEntry!.data as any;
+
+// drink.category holds a reference to a category file; resolve it to the title.
+const categoryEntry = categoryEntries.find((c: any) => `src/content/categories/${c.id}.yaml` === drink.category);
+const categoryTitle = categoryEntry ? (categoryEntry.data as any).title : '';
+
+const ogImage = drink.image
+  ? `https://www.151coffee.com${encodeURI(drink.image.startsWith('/') ? drink.image : '/' + drink.image)}`
+  : undefined;
+---
+<Layout
+  title={`${drink.name} | 151 Coffee Menu`}
+  description={drink.description || `${drink.name}${drink.subtitle ? ' - ' + drink.subtitle : ''} at 151 Coffee.`}
+  ogImage={ogImage}
+>
+  <Fragment slot="head">
+    <link rel="stylesheet" href="/drink.css" />
+  </Fragment>
+
+  <Nav active="menu" />
+
+  <!-- Red polka-dot hero -->
+  <section class="dk-hero" style="margin-top:58px;" data-sb-object-id={`src/content/drinks/${slug}.yaml`}>
+    <div class="dk-hero-bg"></div>
+    <div class="dk-hero-inner">
+      <a href="/menu" class="dk-back">
+        <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M13 8H3M7 4L3 8l4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span data-sb-object-id="src/content/pages/menu.yaml" data-sb-field-path="drinkPage.backLabel">{m.drinkPage?.backLabel ?? 'Back to Menu'}</span>
+      </a>
+      <div class="dk-pills-row">
+        <span class="dk-cat-pill" data-sb-field-path="category">{categoryTitle}</span>
+      </div>
+      <h1 class="dk-title" data-sb-field-path="name">{drink.name}</h1>
+      {drink.tags && drink.tags.length > 0 && (
+        <div class="dk-tag-pills">
+          {drink.tags.map((tag: string, i: number) => (
+            <span class="dk-flavor-tag" data-sb-field-path={`tags.${i}`}>{tag}</span>
+          ))}
+        </div>
+      )}
+    </div>
+  </section>
+
+  <!-- Drink info: photo + one unified detail card -->
+  <section class="dk-info" data-sb-object-id={`src/content/drinks/${slug}.yaml`}>
+    <div class="dk-body-inner">
+      <div class="dk-img-col">
+        <div class="dk-photo-frame">
+          <div class="featured-card">
+            <div class="drink-img-wrap">
+              {drink.badge && <span class="drink-badge" data-sb-field-path="badge">{drink.badge}</span>}
+              {(() => {
+                const src = drink.image
+                  ? (drink.image.startsWith('/') ? drink.image : '/' + drink.image)
+                  : '/images/drinks/energy/151 Blue Energy Hand (1).png';
+                return <img src={src} alt={drink.name} data-sb-field-path="image" />;
+              })()}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dk-detail-col">
+        <div class="dk-detail-card">
+          <h2 class="dk-detail-name" data-sb-field-path="name">{drink.name}</h2>
+          {drink.description && (
+            <p class="dk-detail-desc" data-sb-field-path="description">{drink.description}</p>
+          )}
+          {drink.tags && drink.tags.length > 0 && (
+            <>
+              <div class="dk-divider"></div>
+              <p class="dk-flavor-label" data-sb-object-id="src/content/pages/menu.yaml" data-sb-field-path="drinkPage.flavorNotesLabel">{m.drinkPage?.flavorNotesLabel ?? 'Flavor Notes'}</p>
+              <p class="dk-flavor-val">{drink.tags.join(', ')}</p>
+            </>
+          )}
+
+          <a href="/menu" class="dk-menu-link" data-sb-object-id="src/content/pages/menu.yaml" data-sb-field-path="drinkPage.viewMenuLabel">{m.drinkPage?.viewMenuLabel ?? 'View Full Menu'}</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="dk-customize-wrap">
+      <div class="dk-customize-card">
+        <h3 class="dk-customize-heading" data-sb-object-id="src/content/pages/menu.yaml" data-sb-field-path="drinkPage.customizeHeading">{m.drinkPage?.customizeHeading ?? 'Customize Your Drink'}</h3>
+        <div class="dk-customize-rows">
+          <div class="dk-customize-row" data-sb-object-id="src/content/pages/menu.yaml">
+            <h4 data-sb-field-path="drinkPage.flavorsHeading">{m.drinkPage?.flavorsHeading ?? 'Flavors'}</h4>
+            <div class="dk-customize-tags" data-sb-field-path="customize.flavors">
+              {(m.customize?.flavors ?? []).map((f: string, i: number) => (
+                <span class="dk-customize-tag" data-sb-field-path={`.${i}`}>{f}</span>
+              ))}
+            </div>
+          </div>
+          <div class="dk-customize-row" data-sb-object-id="src/content/pages/menu.yaml">
+            <h4 data-sb-field-path="drinkPage.sugarFreeHeading">{m.drinkPage?.sugarFreeHeading ?? 'Sugar Free'}</h4>
+            <div class="dk-customize-tags" data-sb-field-path="customize.sfFlavors">
+              {(m.customize?.sfFlavors ?? []).map((f: string, i: number) => (
+                <span class="dk-customize-tag sf" data-sb-field-path={`.${i}`}>{f}</span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <Footer />
+</Layout>

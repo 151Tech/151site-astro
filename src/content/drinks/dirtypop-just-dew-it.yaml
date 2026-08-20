@@ -1,0 +1,12 @@
+type: Drink
+name: Just Dew It
+category: src/content/categories/dirtypop.yaml
+subtitle: Mt. Dew, Strawberry & Mango Puree
+description: >-
+  Mt. Dew gets a tropical makeover with real strawberry and mango puree. Bold
+  citrus meets sweet fruit in one impossibly refreshing sip.
+image: /images/just-dew-it.webp
+tags:
+  - Strawberry
+  - Mango
+menuOrder: 99

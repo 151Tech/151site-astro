@@ -1,0 +1,14 @@
+type: Category
+title: Teas
+number: '08'
+description: >-
+  Brewed fresh and flavored to order. From sweet and simple to fruity and bold,
+  there's a tea for every kind of day.
+extraCards:
+  - label: 'Hot Teas Available:'
+    items:
+      - Paris
+      - Sencha
+      - Earl Grey
+      - Mint
+      - Cinnamon Spice

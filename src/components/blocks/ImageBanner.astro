@@ -1,0 +1,20 @@
+---
+interface Props {
+  heading?: string;
+  body?: string;
+  ctaLabel?: string;
+  ctaHref?: string;
+  image?: string;
+  imageAlt?: string;
+}
+const { heading, body, ctaLabel, ctaHref, image, imageAlt = '', ...rest } = Astro.props as Props & Record<string, any>;
+---
+<section class="blk blk-imgbanner" {...rest}>
+  {image && <img class="blk-imgbanner-bg" src={image} alt={imageAlt} loading="lazy" decoding="async" />}
+  <div class="blk-imgbanner-overlay"></div>
+  <div class="container blk-imgbanner-content">
+    {heading && <h2>{heading}</h2>}
+    {body && <p>{body}</p>}
+    {ctaLabel && ctaHref && <a href={ctaHref} class="blk-imgbanner-cta">{ctaLabel}</a>}
+  </div>
+</section>

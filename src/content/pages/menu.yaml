@@ -1,0 +1,101 @@
+﻿type: PageMenu
+seo:
+  title: "Menu | 151 Coffee - Coffee, Cold Brew, Energy & Dirty Pop"
+  description: "Explore the full 151 Coffee menu. Signature espresso drinks, cold brew, blended energy, Dirty Pop sodas, refreshers, smoothies, teas, and more."
+  ogImage: "https://www.151coffee.com/images/splash1.jpg"
+heroVideo: "/videos/menu_bg.mp4"
+heroMobileImage: "/images/menu-hero-mobile-drinks.jpg"
+visibility:
+  timeline: true
+  customize: true
+hero:
+  heading: "Our Menu"
+  subheading: "Thousands of flavor combinations. One perfect drink, every time."
+
+labels:
+  emptyHeading: "Nothing here yet."
+  emptySub: "But we're always working on something good."
+
+locationPicker:
+  triggerLabel: "Select Your Location"
+  heading: "Select Your Location"
+  subtext: "See only what's available at your store. You can change this anytime."
+  allLabel: "All Locations"
+
+drinkPage:
+  backLabel: "Back to Menu"
+  flavorNotesLabel: "Flavor Notes"
+  viewMenuLabel: "View Full Menu"
+  customizeHeading: "Customize Your Drink"
+  flavorsHeading: "Flavors"
+  sugarFreeHeading: "Sugar Free"
+
+customize:
+  heading: "Sort by Flavor"
+  flavorLabel: "Tap to Filter the Menu"
+  sfLabel: "Also Available Sugar Free"
+  milks:
+    - Almond
+    - Oat
+    - Soy
+    - Coconut
+    - Whole
+    - Breve
+    - "2%"
+    - Nonfat
+  flavors:
+    - Almond
+    - Almond Roca
+    - Banana
+    - Blackberry
+    - Blue Raspberry
+    - Brown Sugar Cinnamon
+    - Butterscotch
+    - Cane Sugar
+    - Caramel
+    - Cherry
+    - Chocolate Mac
+    - Cinnamon
+    - Coconut
+    - Creme De Menthe
+    - Dark Chocolate
+    - Grapefruit
+    - Green Apple
+    - Hazelnut
+    - Irish Creme
+    - Kiwi
+    - Lavender
+    - Lemon
+    - Lime
+    - Mango
+    - Orange
+    - Passion Fruit
+    - Peach
+    - Peppermint
+    - Pineapple
+    - Pomegranate
+    - Raspberry
+    - Salted Caramel
+    - Strawberry
+    - Toasted Marshmallow
+    - Vanilla Bean
+    - Watermelon
+    - White Chocolate
+  sfFlavors:
+    - Brown Sugar Cinnamon
+    - Caramel
+    - Chocolate Mac
+    - Coconut
+    - Dark Chocolate
+    - Hazelnut
+    - Irish Creme
+    - Mango
+    - Peach
+    - Peppermint
+    - Pineapple
+    - Raspberry
+    - Salted Caramel
+    - Strawberry
+    - Vanilla Bean
+    - Watermelon
+    - White Chocolate

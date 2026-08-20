@@ -1,0 +1,11 @@
+type: Drink
+name: Hot Cocoa
+category: src/content/categories/kids.yaml
+subtitle: Rich & Creamy
+description: >-
+  A warm, rich cup of real hot cocoa made just right for the little ones.
+  Creamy, comforting, and impossible to say no to.
+image: /images/hot-cocoa-2.webp
+tags:
+  - Dark Chocolate
+menuOrder: 99

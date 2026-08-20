@@ -1,0 +1,580 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import HeroVideo from '../components/HeroVideo.astro';
+import BlockRenderer from '../components/blocks/BlockRenderer.astro';
+import { getEntry, getCollection } from 'astro:content';
+
+const [menuEntry, drinksEntries, categoryEntries, locationEntries] = await Promise.all([
+  getEntry('pages', 'menu'),
+  getCollection('drinks'),
+  getCollection('categories'),
+  getCollection('locations'),
+]);
+
+const p = menuEntry!.data as any;
+const allDrinks = drinksEntries
+  .map(e => ({ slug: e.id, ...(e.data as any) }))
+  .sort((a: any, b: any) => (a.menuOrder ?? 99) - (b.menuOrder ?? 99));
+
+// Locations are their own content collection too; drinks/categories reference
+// them by file path (same pattern as the category reference below).
+const LOCATIONS = locationEntries
+  .map((e: any) => ({
+    slug: e.id,
+    refId: e.filePath ?? `src/content/locations/${e.id}.yaml`,
+    name: e.data.name,
+    // "151 Coffee" is implied by the whole page -- repeating it on every
+    // single location button is just noise, so strip it for display only.
+    shortName: (e.data.name as string).replace(/^151 Coffee\s*/i, '') || e.data.name,
+    city: e.data.city,
+    state: e.data.state,
+    order: e.data.displayOrder ?? 99,
+  }))
+  .sort((a: any, b: any) => a.order - b.order || a.name.localeCompare(b.name));
+
+const LOCATION_REFID_TO_SLUG: Record<string, string> = Object.fromEntries(
+  LOCATIONS.map((loc: any) => [loc.refId, loc.slug])
+);
+
+function toLocationSlugs(refs: string[] | undefined): string[] {
+  return (refs ?? []).map((r) => LOCATION_REFID_TO_SLUG[r]).filter(Boolean);
+}
+
+// Categories are their own content collection (add / remove / edit in the Visual Editor).
+// One file per category; each drink's `category` field references that file's path.
+const CATEGORIES = categoryEntries
+  .map((e: any) => ({
+    tab: e.id,
+    // Use the entry's real source path (not a rebuilt "id + .yaml" guess) so
+    // filenames with capitals, spaces, or extra dots (e.g. "Misc..yaml",
+    // whose id gets slugified to "misc") still match the drink's `category`
+    // reference, which always stores the literal file path.
+    refId: e.filePath ?? `src/content/categories/${e.id}.yaml`,
+    num: e.data.number,
+    title: e.data.title,
+    desc: e.data.description,
+    extraCards: e.data.extraCards ?? [],
+    hiddenByDefault: !!e.data.hiddenByDefault,
+    unavailableAt: toLocationSlugs(e.data.unavailableAt),
+  }))
+  .sort((a: any, b: any) => (parseInt(a.num) || 99) - (parseInt(b.num) || 99));
+
+// Map a drink's category reference (file path) back to its category slug.
+const REFID_TO_SLUG: Record<string, string> = Object.fromEntries(
+  CATEGORIES.map((cat: any) => [cat.refId, cat.tab])
+);
+
+function catSlug(drink: any): string {
+  return REFID_TO_SLUG[drink.category] ?? '';
+}
+
+// Build DRINKS data object for the flavor + location filter JS
+const drinksDataObj: Record<string, { tags: string[]; catSlug: string; unavailableAt: string[] }> = {};
+for (const d of allDrinks) {
+  drinksDataObj[d.slug] = { tags: d.tags ?? [], catSlug: catSlug(d), unavailableAt: toLocationSlugs(d.unavailableAt) };
+}
+
+const categoriesMetaObj: Record<string, { hiddenByDefault: boolean; unavailableAt: string[] }> = {};
+for (const cat of CATEGORIES) {
+  categoriesMetaObj[cat.tab] = { hiddenByDefault: cat.hiddenByDefault, unavailableAt: cat.unavailableAt };
+}
+
+const locationsMetaObj: Record<string, { name: string; shortName: string; city: string; state: string }> = {};
+for (const loc of LOCATIONS) {
+  locationsMetaObj[loc.slug] = { name: loc.name, shortName: loc.shortName, city: loc.city, state: loc.state };
+}
+
+const drinksJson = JSON.stringify(drinksDataObj);
+const categoriesMetaJson = JSON.stringify(categoriesMetaObj);
+const locationsMetaJson = JSON.stringify(locationsMetaObj);
+
+// Group locations by state for the "Select Your Location" popup.
+const locationsByState: Record<string, typeof LOCATIONS> = {};
+for (const loc of LOCATIONS) {
+  (locationsByState[loc.state] ??= []).push(loc);
+}
+
+const milks: string[] = p.customize?.milks ?? [];
+const allFlavors: string[] = p.customize?.flavors ?? [];
+const sfFlavors: string[] = p.customize?.sfFlavors ?? [];
+
+// The flavor pills filter the menu by tag -- a flavor no drink currently
+// carries would just filter to an empty menu, so hide its selector. Food
+// items (Hot Food, Treats) are excluded from this check: their tags (e.g.
+// "Cinnamon" on a coffee cake) aren't real drink flavors, so they shouldn't
+// keep a flavor selector alive on their own. Keep each flavor's original
+// index (not its position in this filtered list) so its data-sb-field-path
+// still points at the right item in the Visual Editor.
+const FOOD_CATS = new Set(['hotfood', 'treats']);
+const FLAVORS_WITH_DRINKS = new Set(
+  allDrinks.filter((d: any) => !FOOD_CATS.has(catSlug(d))).flatMap((d: any) => d.tags ?? [])
+);
+const flavors: { value: string; index: number }[] = allFlavors
+  .map((f: string, index: number) => ({ value: f, index }))
+  .filter(({ value }: any) => FLAVORS_WITH_DRINKS.has(value));
+
+// Temporary placeholder: one representative stock photo per category,
+// standing in until real per-drink product shots are ready. Swap this out
+// for drink.image once photography exists for the new card layout.
+const CATEGORY_PLACEHOLDER_IMAGE: Record<string, string> = {
+  coffee: '/images/v5/coffee.jpg',
+  coldbrew: '/images/v5/coldbrew.jpg',
+  'Misc.': '/images/v5/misc.jpg',
+  misc: '/images/v5/misc.jpg',
+  energy: '/images/v5/energy.jpg',
+  dirtypop: '/images/v5/dirtypop.jpg',
+  refreshers: '/images/v5/refreshers.jpg',
+  smoothies: '/images/v5/smoothies.jpg',
+  teas: '/images/v5/teas.jpg',
+  kids: '/images/v5/kids.jpg',
+};
+---
+<Layout title={p.seo?.title ?? 'Menu | 151 Coffee - Coffee, Cold Brew, Energy & Dirty Pop'} description={p.seo?.description ?? 'Explore the full 151 Coffee menu. Signature espresso drinks, cold brew, blended energy, Dirty Pop sodas, refreshers, smoothies, teas, and more.'} ogImage={p.seo?.ogImage}>
+  <Fragment slot="head">
+    <link rel="stylesheet" href="/menu.css" />
+  </Fragment>
+
+  <Nav active="menu" />
+
+  <section class="menu-hero" data-sb-object-id="src/content/pages/menu.yaml">
+    <HeroVideo src={p.heroVideo} videoClass="hero-bg" />
+    <div class="menu-hero-content">
+      <h1 data-sb-field-path="hero.heading">{p.hero?.heading ?? 'Our Menu'}</h1>
+      <button type="button" class="location-trigger" id="locationTrigger">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M12 21s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12z" stroke="currentColor" stroke-width="1.8"/>
+          <circle cx="12" cy="9" r="2.3" stroke="currentColor" stroke-width="1.8"/>
+        </svg>
+        <span id="locationTriggerLabel" data-sb-field-path="locationPicker.triggerLabel">{p.locationPicker?.triggerLabel ?? 'Select Your Location'}</span>
+      </button>
+    </div>
+    <div class="cat-nav" id="catNav">
+      <div class="cat-nav-inner">
+        {CATEGORIES.map((cat: any, i: number) => (
+          <button class={`cat-link${i === 0 ? ' active' : ''}`} data-tab={cat.tab}
+            data-visible={cat.hiddenByDefault ? 'false' : undefined}
+            data-sb-object-id={cat.refId} data-sb-field-path="title">{cat.title}</button>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <div id="locationModal" class="modal" data-sb-object-id="src/content/pages/menu.yaml">
+    <div class="modal-content loc-modal-content">
+      <button type="button" class="modal-close" id="closeLocationModal" aria-label="Close">&times;</button>
+      <div class="loc-modal-inner">
+        <h2 data-sb-field-path="locationPicker.heading">{p.locationPicker?.heading ?? 'Select Your Location'}</h2>
+        <p data-sb-field-path="locationPicker.subtext">{p.locationPicker?.subtext ?? "See only what's available at your store. You can change this anytime."}</p>
+        <div class="loc-modal-list">
+          <button type="button" class="loc-modal-item loc-modal-item--all" data-store="" data-sb-field-path="locationPicker.allLabel">
+            {p.locationPicker?.allLabel ?? 'All Locations'}
+          </button>
+          {Object.entries(locationsByState).map(([state, locs]: [string, any]) => (
+            <div class="loc-modal-state">
+              <p class="loc-modal-state-label">{state}</p>
+              {locs.map((loc: any) => (
+                <button type="button" class="loc-modal-item" data-store={loc.slug}>
+                  {loc.shortName}
+                </button>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {(p.visibility?.timeline ?? true) && (
+  <section class="timeline-wrap" data-sb-object-id="src/content/pages/menu.yaml">
+    <div class="timeline-scroll" id="timelineScroll">
+      {CATEGORIES.map((cat: any, catIndex: number) => {
+        const drinks = allDrinks.filter((d: any) => catSlug(d) === cat.tab);
+        return (
+          <>
+            <div class="cat-title-card" id={`cat-${cat.tab}`} data-cat={cat.tab}
+              data-visible={cat.hiddenByDefault ? 'false' : undefined}
+              data-sb-object-id={cat.refId}>
+              <div class="cat-title-inner">
+                <h2 class="cat-title-text" data-sb-field-path="title">{cat.title}</h2>
+                <p class="cat-title-desc" data-sb-field-path="description">{cat.desc}</p>
+                <svg class="cat-arrow" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <line x1="4" y1="4" x2="28" y2="16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                  <line x1="28" y1="16" x2="4" y2="28" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                </svg>
+              </div>
+            </div>
+            {drinks.map((drink: any) => (
+              <a class={`drink-card${drink.slug === 'coldbrew-nitro-brew' ? ' nitro-card' : ''}`}
+                data-cat={cat.tab} href={`/drinks/${drink.slug}`}
+                data-visible={cat.hiddenByDefault ? 'false' : undefined}
+                data-sb-object-id={`src/content/drinks/${drink.slug}.yaml`}>
+                {drink.badge && <span class="drink-badge" data-sb-field-path="badge">{drink.badge}</span>}
+                <div class="drink-img-wrap">
+                  <img loading="lazy" decoding="async" src={CATEGORY_PLACEHOLDER_IMAGE[cat.tab] ?? '/images/v5/coffee.jpg'} alt={drink.name} />
+                </div>
+                <div class="drink-info">
+                  <h3 data-sb-field-path="name">{drink.name}</h3>
+                  {drink.subtitle && <p data-sb-field-path="subtitle">{drink.subtitle}</p>}
+                </div>
+              </a>
+            ))}
+            {cat.extraCards.map((card: any, cardIndex: number) => (
+              <div class="descriptor-card" data-cat={cat.tab}
+                data-visible={cat.hiddenByDefault ? 'false' : undefined}
+                data-sb-object-id={cat.refId}>
+                <p class="descriptor-label" data-sb-field-path={`extraCards.${cardIndex}.label`}>{card.label}</p>
+                <div class="descriptor-list" data-sb-field-path={`extraCards.${cardIndex}.items`}>
+                  {(card.items ?? []).map((item: string) => <span>{item}</span>)}
+                </div>
+              </div>
+            ))}
+          </>
+        );
+      })}
+
+      <div class="timeline-empty-state" id="timelineEmpty">
+        <p data-sb-field-path="labels.emptyHeading">{p.labels?.emptyHeading ?? 'Nothing here yet.'}</p>
+        <span data-sb-field-path="labels.emptySub">{p.labels?.emptySub ?? "But we're always working on something good."}</span>
+      </div>
+      <div class="timeline-end-spacer"></div>
+    </div>
+  </section>
+  )}
+
+  <BlockRenderer sections={p.sections} objectId="src/content/pages/menu.yaml" />
+
+  {(p.visibility?.customize ?? true) && (
+  <section class="customize-section" data-sb-object-id="src/content/pages/menu.yaml">
+    <div class="cz-inner">
+      <div class="cz-row">
+        <div class="cz-heading">
+          <h2 data-sb-field-path="customize.heading">{p.customize?.heading ?? 'Sort by Flavor'}</h2>
+          <p class="cz-filter-hint" id="czFilterHint" aria-live="polite"></p>
+        </div>
+        <div class="cz-block cz-flavor-block">
+          <p class="cz-label" data-sb-field-path="customize.flavorLabel">{p.customize?.flavorLabel ?? 'Tap to Filter the Menu'}</p>
+          <div class="cz-pills cz-pills--flavors" id="czFlavorPills" data-sb-field-path="customize.flavors">
+            {flavors.map(({ value: f, index: i }: any) => (
+              <span class="cpill cpill--filter" data-flavor={f} data-sb-field-path={`.${i}`}>{f}</span>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  )}
+
+  <Footer />
+
+  <script define:vars={{ drinksJson, categoriesMetaJson, locationsMetaJson, locationTriggerDefault: p.locationPicker?.triggerLabel ?? 'Select Your Location' }} is:inline>
+    window.DRINKS = JSON.parse(drinksJson);
+    window.CATEGORIES_META = JSON.parse(categoriesMetaJson);
+    window.LOCATIONS_META = JSON.parse(locationsMetaJson);
+    window.LOCATION_TRIGGER_DEFAULT = locationTriggerDefault;
+  </script>
+  <script is:inline>
+  (function () {
+    var scroll = document.getElementById('timelineScroll');
+    var catLinks = document.querySelectorAll('.cat-link');
+    var titleCards = document.querySelectorAll('.cat-title-card');
+    var descriptorCards = Array.from(scroll.querySelectorAll('.descriptor-card'));
+    var drinkCards = Array.from(scroll.querySelectorAll('a.drink-card'));
+    var timelineWrap = document.querySelector('.timeline-wrap');
+    var filterHint = document.getElementById('czFilterHint');
+    var emptyState = document.getElementById('timelineEmpty');
+
+    var mobileMq = window.matchMedia('(max-width: 768px)');
+    function isMobile() { return mobileMq.matches; }
+
+    function equalizeCards() {
+      var cards = scroll.querySelectorAll('.drink-card');
+      cards.forEach(function(c) { c.style.width = ''; c.style.minWidth = ''; });
+      if (isMobile()) return; // mobile uses a CSS grid; don't force fixed widths
+      var maxW = 0;
+      cards.forEach(function(c) { if (c.offsetWidth > maxW) maxW = c.offsetWidth; });
+      if (maxW > 0) cards.forEach(function(c) { c.style.width = maxW + 'px'; c.style.minWidth = maxW + 'px'; });
+    }
+    window.addEventListener('load', equalizeCards);
+    window.addEventListener('resize', equalizeCards);
+
+    // Keep the hero sized so navbar + hero + the timeline's first row
+    // always add up to exactly one viewport (see .menu-hero's --timeline-h
+    // usage in menu.css) -- measured live since the timeline's height
+    // depends on rendered category text, not just fixed image sizes.
+    function syncHeroHeight() {
+      if (isMobile()) return; // mobile hero sizes itself via aspect-ratio instead
+      var h = timelineWrap.getBoundingClientRect().height;
+      if (h > 0) document.documentElement.style.setProperty('--timeline-h', h + 'px');
+    }
+    window.addEventListener('load', syncHeroHeight);
+    window.addEventListener('resize', syncHeroHeight);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(syncHeroHeight);
+    syncHeroHeight();
+
+    function getActiveCat() {
+      var threshold = scroll.getBoundingClientRect().width * 0.35;
+      var active = null;
+      titleCards.forEach(function(card) {
+        if (card.offsetParent === null) return; // hidden by a flavor/location filter
+        var left = card.offsetLeft - scroll.scrollLeft;
+        if (left <= threshold) active = card.dataset.cat;
+      });
+      if (active) return active;
+      for (var i = 0; i < titleCards.length; i++) {
+        if (titleCards[i].offsetParent !== null) return titleCards[i].dataset.cat;
+      }
+      return null;
+    }
+    function applyActiveCat(cat) {
+      // While a flavor filter is active most category cards are hidden
+      // (display:none), which breaks the "leftmost card" position heuristic
+      // below -- and a highlighted category doesn't mean anything in filter
+      // view anyway, so just show none.
+      if (activeFilter) {
+        catLinks.forEach(function(btn) { btn.classList.remove('active'); });
+        scroll.querySelectorAll('[data-cat]').forEach(function(el) { el.classList.remove('cat-active'); });
+        return;
+      }
+      catLinks.forEach(function(btn) { btn.classList.toggle('active', btn.dataset.tab === cat); });
+      scroll.querySelectorAll('[data-cat]').forEach(function(el) { el.classList.toggle('cat-active', el.dataset.cat === cat); });
+    }
+    scroll.addEventListener('scroll', function() { applyActiveCat(getActiveCat()); }, { passive: true });
+    applyActiveCat('coffee');
+
+    catLinks.forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        stopAutoScroll();
+        // A category is hidden by the current flavor filter, so clicking it
+        // wouldn't visibly go anywhere -- clear the filter first so every
+        // category (and this click) actually does something.
+        if (activeFilter) clearFilter();
+        var target = document.getElementById('cat-' + btn.dataset.tab);
+        if (!target) return;
+        if (isMobile()) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } else {
+          scroll.scrollTo({ left: target.offsetLeft - 24, behavior: 'smooth' });
+        }
+        applyActiveCat(btn.dataset.tab);
+      });
+    });
+
+    var rafId = null;
+    var autoScrollStopped = false;
+    var SCROLL_SPEED = 0.6;
+    function autoScroll() {
+      if (autoScrollStopped) return;
+      scroll.scrollLeft += SCROLL_SPEED;
+      rafId = requestAnimationFrame(autoScroll);
+    }
+    function stopAutoScroll() {
+      autoScrollStopped = true;
+      if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+    }
+    ['wheel','mousedown','touchstart'].forEach(function(evt) { scroll.addEventListener(evt, stopAutoScroll, { once: true, passive: true }); });
+    if (!isMobile()) rafId = requestAnimationFrame(autoScroll);
+    setTimeout(function() { scroll.classList.add('timeline-ready'); }, 80);
+
+    scroll.addEventListener('wheel', function(e) {
+      if (isMobile()) return; // let the page scroll vertically on mobile
+      if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) { e.preventDefault(); scroll.scrollLeft += e.deltaY * 3; }
+    }, { passive: false });
+
+    // On mobile the timeline scrolls vertically, so highlight the category
+    // whose header is currently in view.
+    if (isMobile() && 'IntersectionObserver' in window) {
+      var catObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) { if (e.isIntersecting) applyActiveCat(e.target.dataset.cat); });
+      }, { rootMargin: '-45% 0px -50% 0px' });
+      titleCards.forEach(function(c) { catObserver.observe(c); });
+    }
+
+    var paramTab = (window.location.hash || '').replace(/^#/, '') || new URLSearchParams(window.location.search).get('tab');
+    if (paramTab && document.getElementById('cat-' + paramTab)) {
+      window.addEventListener('load', function() {
+        stopAutoScroll(); equalizeCards();
+        var target = document.getElementById('cat-' + paramTab);
+        if (isMobile()) {
+          target.scrollIntoView({ behavior: 'instant', block: 'start' });
+        } else {
+          scroll.scrollTo({ left: target.offsetLeft - 24, behavior: 'instant' });
+        }
+        applyActiveCat(paramTab);
+      });
+    }
+
+    function animateOut(el) {
+      el.classList.remove('filter-animating-in'); el.classList.add('filter-animating-out');
+      setTimeout(function() { el.classList.remove('filter-animating-out'); el.style.display = 'none'; }, 180);
+    }
+    function animateIn(el, delay) {
+      el.style.display = ''; el.classList.remove('filter-animating-out','filter-animating-in');
+      void el.offsetWidth; el.style.animationDelay = (delay || 0) + 'ms';
+      el.classList.add('filter-animating-in');
+      el.addEventListener('animationend', function() { el.classList.remove('filter-animating-in'); el.style.animationDelay = ''; }, { once: true });
+    }
+    // Only actually animates elements whose visibility changed since the
+    // last refresh -- otherwise every store/flavor change would re-trigger
+    // the entrance animation on cards that were already showing.
+    // data-visible is the single source of truth for whether an element is
+    // shown -- both the CSS default-hide rule and this change-tracking key
+    // off it, so an element only re-animates when it actually flips state.
+    // Absent = visible (matches everything that isn't hidden-by-default).
+    function setVisible(el, visible, delay) {
+      var was = el.dataset.visible !== 'false';
+      el.dataset.visible = visible ? 'true' : 'false';
+      if (was === visible) return false;
+      if (visible) animateIn(el, delay || 0); else animateOut(el);
+      return true;
+    }
+
+    // ── Combined flavor + location filtering ──
+    var activeFilter = null;   // flavor string, or null
+    var selectedStore = null;  // location slug, or null (= no location picked)
+
+    function categoryVisible(tab) {
+      var meta = CATEGORIES_META[tab];
+      if (!meta) return true;
+      if (!selectedStore) return !meta.hiddenByDefault;
+      return meta.unavailableAt.indexOf(selectedStore) === -1;
+    }
+    function drinkVisible(slug) {
+      var d = DRINKS[slug];
+      if (!d) return false;
+      if (!categoryVisible(d.catSlug)) return false;
+      if (selectedStore && d.unavailableAt.indexOf(selectedStore) !== -1) return false;
+      if (activeFilter && (!d.tags || d.tags.indexOf(activeFilter) === -1)) return false;
+      return true;
+    }
+    function drinkSlug(card) { return (card.getAttribute('href') || '').replace('/drinks/', ''); }
+
+    function refresh() {
+      var filtering = !!activeFilter || !!selectedStore;
+
+      if (!isMobile()) {
+        if (timelineWrap) timelineWrap.style.minHeight = timelineWrap.offsetHeight + 'px';
+        scroll.style.minHeight = scroll.offsetHeight + 'px';
+      }
+      scroll.classList.toggle('has-filter', filtering);
+      if (activeFilter) {
+        catLinks.forEach(function(btn) { btn.classList.remove('active'); });
+        scroll.querySelectorAll('[data-cat]').forEach(function(el) { el.classList.remove('cat-active'); });
+      }
+
+      catLinks.forEach(function(btn) {
+        // The [data-visible="false"] CSS rule is what actually hides this
+        // (same mechanism as setVisible) -- a plain style.display toggle
+        // would be overridden by that rule the moment it's cleared, since
+        // clearing an inline style just falls back to the stylesheet.
+        btn.dataset.visible = categoryVisible(btn.dataset.tab) ? 'true' : 'false';
+      });
+
+      var visibleCatSet = {};
+      drinkCards.forEach(function(card) {
+        var d = DRINKS[drinkSlug(card)];
+        if (d && drinkVisible(drinkSlug(card))) visibleCatSet[d.catSlug] = true;
+      });
+
+      descriptorCards.forEach(function(c) {
+        setVisible(c, categoryVisible(c.dataset.cat) && !activeFilter, 0);
+      });
+
+      var mi = 0;
+      titleCards.forEach(function(card) {
+        var tab = card.dataset.cat;
+        var visible = categoryVisible(tab) && (!activeFilter || visibleCatSet[tab]);
+        if (setVisible(card, visible, mi * 30) && visible) mi++;
+      });
+
+      var mi2 = 0, totalVisible = 0;
+      drinkCards.forEach(function(card) {
+        var visible = drinkVisible(drinkSlug(card));
+        if (visible) totalVisible++;
+        if (setVisible(card, visible, mi2 * 18) && visible) mi2++;
+      });
+
+      if (emptyState) emptyState.classList.toggle('visible', filtering && totalVisible === 0);
+      if (filterHint) filterHint.textContent = activeFilter ? ('Showing drinks with: ' + activeFilter + ' - tap again to clear') : '';
+
+      if (!isMobile()) {
+        setTimeout(function() { if (timelineWrap) timelineWrap.style.minHeight = ''; scroll.style.minHeight = ''; }, 600);
+      }
+    }
+
+    function clearFilter() {
+      activeFilter = null;
+      document.querySelectorAll('.cpill--filter').forEach(function(p) { p.classList.remove('cpill--active'); });
+      refresh();
+    }
+
+    document.querySelectorAll('.cpill--filter').forEach(function(pill) {
+      pill.addEventListener('click', function() {
+        var flavor = pill.dataset.flavor;
+        if (activeFilter === flavor) { clearFilter(); }
+        else {
+          activeFilter = flavor;
+          document.querySelectorAll('.cpill--filter').forEach(function(p) { p.classList.remove('cpill--active'); });
+          document.querySelectorAll('.cpill--filter[data-flavor="' + flavor + '"]').forEach(function(p) { p.classList.add('cpill--active'); });
+          refresh();
+          document.querySelector('.timeline-wrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+
+    // ── "Select Your Location" popup ──
+    var LOCATION_KEY = '151_selected_location';
+    var locationModal = document.getElementById('locationModal');
+    var locationTrigger = document.getElementById('locationTrigger');
+    var locationTriggerLabel = document.getElementById('locationTriggerLabel');
+    var closeLocationModal = document.getElementById('closeLocationModal');
+
+    function updateTriggerUI() {
+      var loc = selectedStore && LOCATIONS_META[selectedStore];
+      locationTriggerLabel.textContent = loc ? loc.shortName : (window.LOCATION_TRIGGER_DEFAULT || 'Select Your Location');
+      locationTrigger.classList.toggle('has-location', !!loc);
+      document.querySelectorAll('.loc-modal-item').forEach(function(btn) {
+        btn.classList.toggle('active', (btn.dataset.store || '') === (selectedStore || ''));
+      });
+    }
+    function openLocationModal() { locationModal.classList.add('active'); }
+    function closeModal() { locationModal.classList.remove('active'); }
+
+    function selectStore(slug) {
+      selectedStore = (slug && LOCATIONS_META[slug]) ? slug : null;
+      try {
+        if (selectedStore) localStorage.setItem(LOCATION_KEY, selectedStore);
+        else localStorage.removeItem(LOCATION_KEY);
+      } catch (e) {}
+      updateTriggerUI();
+      refresh();
+      closeModal();
+    }
+
+    locationTrigger.addEventListener('click', openLocationModal);
+    closeLocationModal.addEventListener('click', closeModal);
+    locationModal.addEventListener('click', function(e) { if (e.target === locationModal) closeModal(); });
+    document.querySelectorAll('.loc-modal-item').forEach(function(btn) {
+      btn.addEventListener('click', function() { selectStore(btn.dataset.store); });
+    });
+
+    // A location's "See This Store's Menu" button links here with
+    // ?store=<slug> -- honor that over anything already saved.
+    var queryStore = new URLSearchParams(window.location.search).get('store');
+    var storedStore = null;
+    try { storedStore = localStorage.getItem(LOCATION_KEY); } catch (e) {}
+
+    if (queryStore && LOCATIONS_META[queryStore]) {
+      selectStore(queryStore);
+    } else if (storedStore && LOCATIONS_META[storedStore]) {
+      selectedStore = storedStore;
+      updateTriggerUI();
+      refresh();
+    } else {
+      // First visit (no saved preference) -- invite them to pick a location.
+      setTimeout(openLocationModal, 700);
+    }
+  })();
+  </script>
+</Layout>

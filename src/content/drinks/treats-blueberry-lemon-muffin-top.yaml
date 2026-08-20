@@ -1,0 +1,12 @@
+type: Drink
+name: Blueberry-Lemon Muffin Top
+category: src/content/categories/treats.yaml
+subtitle: Tangy & Sweet
+description: >-
+  Bursting blueberries and bright lemon zest baked into a golden muffin top.
+  Tangy, sweet, and perfectly domed. It's the muffin top that earns its
+  reputation.
+image: /images/blueberry-lemon-muffin-top.webp
+tags:
+  - Lemon
+menuOrder: 99

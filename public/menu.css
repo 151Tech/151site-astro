@@ -1,0 +1,1104 @@
+/* ─── Menu Hero ─── */
+.menu-hero {
+    min-height: 40vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: var(--black);
+    position: relative;
+    overflow: hidden;
+    margin-top: 58px;
+}
+
+/* Desktop/tablet: the nav bar (58px), hero, and the timeline's own intrinsic
+   height (set live in JS as --timeline-h, since it depends on rendered
+   text/category content, not just fixed image sizes) are sized to add up
+   to exactly one viewport, so clicking "Menu" shows the whole hero AND the
+   whole first row of the timeline with the timeline's bottom edge meeting
+   the bottom of the screen -- zero scrolling needed. max() keeps the hero
+   from collapsing into nothing on very short screens. The 473.69px fallback
+   only applies for the split-second before JS measures the real value. */
+@media (min-width: 769px) {
+    .menu-hero {
+        height: max(320px, calc(100vh - 58px - var(--timeline-h, 473.69px)));
+        min-height: max(320px, calc(100vh - 58px - var(--timeline-h, 473.69px)));
+    }
+}
+
+.menu-hero .hero-bg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: cover;
+    z-index: 0;
+}
+
+.menu-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(17, 17, 17, 0.3);
+    z-index: 1;
+}
+
+.menu-hero-content {
+    position: relative;
+    z-index: 2;
+    padding: 3rem 2rem 5rem;
+}
+
+.menu-hero-content h1 {
+    color: var(--white);
+    font-size: clamp(3.5rem, 9vw, 7rem);
+    line-height: 0.95;
+    margin-bottom: 0.5rem;
+}
+
+.menu-hero-content > p {
+    color: rgba(245, 245, 245, 0.7);
+    font-size: 1.15rem;
+    margin: 0;
+}
+
+/* ─── Category Nav ─── */
+.cat-nav {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    background: linear-gradient(to bottom, transparent 0%, rgba(17,17,17,0.88) 100%);
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding-top: 3rem;
+}
+
+.cat-nav::-webkit-scrollbar { display: none; }
+
+.cat-nav-inner {
+    display: flex;
+    width: 100%;
+}
+
+.cat-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.3em;
+    flex: 1;
+    color: rgba(255,255,255,0.55);
+    background: rgba(255,255,255,0.05);
+    border: 1.5px solid rgba(255,255,255,0.12);
+    border-radius: 999px;
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(0.5rem, 1.1vw, 0.8rem);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 0.5rem 0.4rem;
+    margin: 0 0.2rem 0.75rem;
+    cursor: pointer;
+    transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+    white-space: nowrap;
+}
+
+.cat-link:hover,
+.cat-link.active {
+    color: var(--white);
+    background: var(--red);
+    border-color: var(--red);
+}
+
+/* ═══ V5: GALLERY OVERHAUL — drinks as the hero, everything else quiet ═══ */
+
+/* ─── Timeline Wrap ─── */
+/* Light studio backdrop: same idea as before (photo texture pushed way
+   down so it reads as ambience, not competition) but bright/warm instead
+   of near-black. */
+.timeline-wrap {
+    background-color: #f4efe9;
+    background-image:
+        linear-gradient(rgba(244,239,233,0.94), rgba(244,239,233,0.94)),
+        url('/images/background1.webp');
+    background-size: cover, cover;
+    background-position: center, center;
+    background-repeat: no-repeat, no-repeat;
+    position: relative;
+    z-index: 2;
+    padding: 3.25rem 0 1.25rem;
+    overflow-x: clip;
+}
+
+.timeline-wrap::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(120% 60% at 50% 0%,   rgba(230,57,70,0.08) 0%, transparent 60%),
+        radial-gradient(120% 60% at 50% 100%, rgba(230,57,70,0.06) 0%, transparent 60%),
+        radial-gradient(60% 100% at 0% 50%,   rgba(230,57,70,0.06) 0%, transparent 55%),
+        radial-gradient(60% 100% at 100% 50%, rgba(230,57,70,0.06) 0%, transparent 55%);
+    pointer-events: none;
+}
+
+/* ─── Timeline Scroll ─── */
+.timeline-scroll {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    gap: 3.5rem;
+    overflow-x: auto;
+    padding: 2rem 3rem 3rem;
+    margin-top: -2rem;
+    margin-bottom: -3rem;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    cursor: grab;
+    position: relative;
+    z-index: 1;
+    /* Break out to full viewport */
+    left: 50%;
+    margin-left: -50vw;
+    width: 100vw;
+    box-sizing: border-box;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+}
+
+.timeline-scroll.timeline-ready {
+    opacity: 1;
+}
+
+.timeline-scroll::-webkit-scrollbar { display: none; }
+.timeline-scroll:active { cursor: grabbing; }
+
+.timeline-end-spacer {
+    flex: 0 0 2rem;
+}
+
+/* ─── Category Title Card ─── */
+/* No box at all — just a slim red rule and big quiet typography, so it
+   reads as a chapter marker rather than another product tile. */
+.cat-title-card {
+    position: relative;
+    flex: 0 0 auto;
+    width: 220px;
+    min-height: 334px;
+    background: transparent;
+    display: flex;
+    align-items: stretch;
+    transition: transform 0.3s ease;
+    margin-left: 1.5rem; /* extra separation from previous category */
+}
+
+/* Dividing rule -- pseudo-element instead of a border so it can run 40px
+   taller than the card box itself, past the top edge. */
+.cat-title-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: -40px;
+    bottom: 0;
+    width: 3px;
+    background: var(--red);
+}
+
+/* First title card has no extra left margin */
+.cat-title-card:first-child {
+    margin-left: 0;
+}
+
+.cat-title-inner {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 0 1.75rem 1.75rem;
+    width: 100%;
+    height: 100%;
+}
+
+.cat-title-inner .cat-arrow {
+    margin-top: 1.25rem;
+}
+
+.cat-title-text {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.3rem, 4.8vw, 4.1rem);
+    letter-spacing: 0.03em;
+    color: #1a1512;
+    line-height: 0.95;
+    margin: 0;
+}
+
+/* "Refreshers" and "Smoothies" are single long words with no natural
+   line break, so at the default size they run past the card -- scale
+   them down a notch to fit cleanly. */
+.cat-title-card[data-cat="refreshers"] .cat-title-text,
+.cat-title-card[data-cat="smoothies"] .cat-title-text {
+    font-size: clamp(1.9rem, 3.9vw, 3.3rem);
+}
+
+.cat-title-desc {
+    font-size: 0.95rem;
+    color: rgba(20,17,14,0.55);
+    line-height: 1.6;
+    margin: 0.7rem 0 0;
+    max-width: 30ch;
+    font-weight: 400;
+}
+
+.cat-arrow {
+    width: 72px;
+    height: auto;
+    color: rgba(20,17,14,0.35);
+    flex-shrink: 0;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+/* Active state — title card + all cards in that category */
+.cat-title-card.cat-active {
+    border-left-color: #1a1512;
+}
+
+.cat-title-card.cat-active .cat-arrow {
+    color: var(--red);
+}
+
+/* ─── Drink Card ─── */
+/* No container at all — the photo floats on its own soft ground-shadow,
+   like a studio product shot. Name sits large and confident underneath. */
+.drink-card {
+    position: relative;
+    flex: 0 0 auto;
+    width: 260px;
+    background: transparent;
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: inherit;
+}
+
+/* ─── Drink Image ─── */
+/* A clean white container -- future product shots will come with their
+   own backgrounds, so this masks them into a consistent, tidy tile
+   instead of relying on transparent cutouts. */
+.drink-img-wrap {
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 22px;
+    box-shadow: 0 18px 40px rgba(20,17,14,0.16);
+    transition: box-shadow 0.35s ease;
+}
+
+.drink-img-wrap img {
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    display: block;
+    object-fit: cover;
+    border-radius: 22px;
+    transform-origin: center center;
+    transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+    position: relative;
+    z-index: 2;
+}
+
+@keyframes drink-shake {
+    0%   { rotate: 0deg; }
+    15%  { rotate: -3deg; }
+    35%  { rotate: 3deg; }
+    55%  { rotate: -2deg; }
+    75%  { rotate: 2deg; }
+    90%  { rotate: -1deg; }
+    100% { rotate: 0deg; }
+}
+
+/* Hover-only lift/scale effects -- gated to real pointer devices so a
+   tap on mobile doesn't trigger and stick a "hover" state. */
+@media (hover: hover) and (pointer: fine) {
+    .drink-card:hover {
+        transform: translateY(-10px);
+    }
+
+    .drink-card:hover .drink-img-wrap {
+        box-shadow: 0 24px 50px rgba(20,17,14,0.22);
+    }
+
+    .drink-card:hover .drink-img-wrap img {
+        transform: scale(1.06);
+    }
+}
+
+/* ─── Drink Info ─── */
+/* A fixed reserved height (sized for the longest realistic case: a 2-line
+   name plus a 2-line description) instead of hugging the actual text --
+   otherwise a card with a longer name/description is simply taller, and
+   since the whole card is vertically centered in the row, that pushes its
+   photo up relative to shorter neighbors. Reserving the space up front
+   keeps every photo in the row at the same height regardless of how much
+   text sits below it. */
+.drink-info {
+    padding: 1.25rem 0.5rem 0;
+    min-height: 128px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    background: transparent;
+    position: relative;
+    z-index: 1;
+    text-align: center;
+}
+
+.drink-info h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    color: #1a1512;
+    font-size: 1.7rem;
+    line-height: 1.1;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+}
+
+.drink-info p {
+    color: rgba(20,17,14,0.55);
+    font-size: 0.76rem;
+    line-height: 1.5;
+    margin: 0;
+    letter-spacing: 0.02em;
+}
+
+/* ─── Descriptor Card ─── */
+/* A free-form "also available: ..." style list card. Any category can have
+   any number of these (see the category's extraCards field, editable in the
+   Visual Editor) -- the soda list on Dirty Pop is just the first example. */
+.descriptor-card {
+    position: relative;
+    flex: 0 0 auto;
+    width: 340px;
+    background: transparent;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0.5rem 0 0.5rem 1.5rem;
+    gap: 0.9rem;
+}
+
+/* Dividing rule -- pseudo-element instead of a border so it can run 40px
+   taller than the card box itself, past the top edge. */
+.descriptor-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: -40px;
+    bottom: 0;
+    width: 3px;
+    background: rgba(20,17,14,0.15);
+}
+
+.descriptor-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: rgba(20,17,14,0.45);
+    margin: 0;
+}
+
+.descriptor-list {
+    display: grid;
+    grid-template-rows: repeat(6, auto);
+    grid-auto-flow: column;
+    gap: 0.15rem 1.5rem;
+}
+
+.descriptor-list span {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: rgba(20,17,14,0.8);
+    padding: 0.2rem 0;
+    white-space: nowrap;
+}
+
+/* ─── Customize Section ─── */
+/* The timeline above is the light studio backdrop; this section goes dark
+   again (matching the rest of the site) instead of stacking two bright
+   sections back to back. */
+.customize-section {
+    background-color: #2b2521;
+    background-image:
+        linear-gradient(rgba(38,32,28,0.82), rgba(38,32,28,0.82)),
+        url('/images/background1.webp');
+    background-size: cover, cover;
+    background-position: center, center;
+    background-repeat: no-repeat, no-repeat;
+    position: relative;
+    padding: 3rem 0 3.5rem;
+}
+
+.customize-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(80% 50% at 50% 0%, rgba(230,57,70,0.1) 0%, transparent 65%);
+    pointer-events: none;
+}
+
+.cz-inner {
+    position: relative;
+    z-index: 1;
+    max-width: 100%;
+    padding: 0 2.5rem;
+}
+
+.cz-row {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    background: rgba(255,255,255,0.035);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: var(--radius);
+    padding: 1.75rem 2.25rem;
+}
+
+.cz-heading {
+    text-align: left;
+    flex: 0 0 auto;
+    max-width: 280px;
+    padding-right: 2rem;
+    border-right: 1px solid rgba(255,255,255,0.1);
+}
+
+.cz-heading h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(1.8rem, 3.2vw, 2.4rem);
+    letter-spacing: 0.03em;
+    color: #f5efe8;
+    font-weight: 400;
+    line-height: 1.1;
+    margin: 0;
+}
+
+.cz-heading h2 span { color: var(--red); }
+
+.cz-flavor-block {
+    flex: 1;
+    min-width: 0;
+}
+
+.cz-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--red);
+    margin: 0 0 0.75rem;
+}
+
+.cz-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+
+.cpill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.78);
+    font-size: 0.78rem;
+    font-weight: 500;
+    padding: 0.32rem 0.8rem;
+    border-radius: 999px;
+    transition: background 0.2s, border-color 0.2s, color 0.2s;
+    white-space: nowrap;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .cpill:hover {
+        background: rgba(230,57,70,0.18);
+        border-color: rgba(230,57,70,0.4);
+        color: #fff;
+    }
+}
+
+.cz-pills--flavors { gap: 0.4rem; }
+
+.cpill-dot {
+    color: var(--red);
+    font-size: 0.65rem;
+    margin: 0 0.28rem;
+    vertical-align: middle;
+}
+
+.cpill-sf {
+    color: #fff;
+    font-weight: 800;
+    font-size: 0.7rem;
+}
+
+/* ─── Merch Page ─── */
+.merch-section {
+    padding: 3rem 0 5rem;
+    background-color: var(--red);
+    background-image: radial-gradient(rgba(255,255,255,0.18) 2px, transparent 2.5px);
+    background-size: 26px 26px;
+    position: relative;
+}
+
+.merch-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(120% 60% at 50% 0%,   rgba(255,255,255,0.22) 0%, transparent 55%),
+        radial-gradient(120% 60% at 50% 100%, rgba(255,255,255,0.14) 0%, transparent 55%),
+        radial-gradient(60%  100% at 0%   50%, rgba(255,255,255,0.10) 0%, transparent 55%),
+        radial-gradient(60%  100% at 100% 50%, rgba(255,255,255,0.10) 0%, transparent 55%);
+    pointer-events: none;
+}
+
+.merch-section .container {
+    position: relative;
+    z-index: 1;
+}
+
+.merch-filter {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.6rem;
+    padding: 2.75rem 0 0;
+}
+
+.merch-pill {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.92);
+    background: rgba(20, 15, 16, 0.42);
+    border: 1.5px solid rgba(255, 255, 255, 0.3);
+    border-radius: 999px;
+    padding: 0.55rem 1.3rem;
+    cursor: pointer;
+    transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+}
+
+.merch-pill:hover {
+    color: #fff;
+    background: rgba(20, 15, 16, 0.6);
+    border-color: #fff;
+}
+
+.merch-pill.active {
+    color: var(--red);
+    background: #fff;
+    border-color: #fff;
+}
+
+.merch-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(215px, 1fr));
+    gap: 1.75rem;
+    padding: 2.75rem 0 0;
+}
+
+.merch-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(165deg, rgba(28,22,23,0.62) 0%, rgba(18,14,15,0.48) 100%);
+    backdrop-filter: blur(16px) saturate(160%);
+    -webkit-backdrop-filter: blur(16px) saturate(160%);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: var(--radius);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.32);
+    cursor: pointer;
+    overflow: visible;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.merch-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(230, 57, 70, 0.5);
+    box-shadow: 0 18px 44px rgba(0, 0, 0, 0.45);
+    z-index: 3;
+}
+
+.merch-icon-wrap {
+    height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: visible;
+    border-radius: var(--radius) var(--radius) 0 0;
+}
+
+.merch-icon-wrap::before {
+    content: '';
+    position: absolute;
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(230,57,70,0.45) 0%, rgba(230,57,70,0.12) 45%, transparent 72%);
+    z-index: 0;
+}
+
+.merch-icon {
+    font-size: 3.4rem;
+    line-height: 1;
+    position: relative;
+    z-index: 1;
+    transform-origin: center bottom;
+    filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.4));
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), rotate 0.3s ease;
+}
+
+.merch-card:hover .merch-icon {
+    transform: scale(1.18) translateY(-6%);
+    animation: drink-shake 0.7s cubic-bezier(0.36, 0.07, 0.19, 0.97) 0.15s 1 forwards;
+}
+
+.merch-body {
+    padding: 0.4rem 1.1rem 1.35rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.25rem;
+}
+
+.merch-cat {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.merch-body h3 {
+    color: #fff;
+    font-size: 1rem;
+    line-height: 1.2;
+    margin: 0;
+}
+
+.merch-price {
+    color: var(--red);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.35rem;
+    letter-spacing: 0.04em;
+}
+
+/* ─── Flavor filter ─── */
+.cpill--filter {
+    cursor: pointer;
+    transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease, transform 0.15s ease, box-shadow 0.18s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .cpill--filter:hover {
+        background: rgba(255,255,255,0.14);
+        border-color: rgba(255,255,255,0.45);
+        transform: translateY(-1px);
+    }
+}
+
+.cpill--filter.cpill--active {
+    background: var(--red);
+    color: #fff;
+    border-color: transparent;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.25);
+}
+
+@keyframes filter-card-in {
+    from { opacity: 0; transform: translateY(14px) scale(0.88); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes filter-card-out {
+    from { opacity: 1; transform: translateY(0) scale(1); }
+    to   { opacity: 0; transform: translateY(8px) scale(0.9); }
+}
+
+.drink-card.filter-animating-in {
+    animation: filter-card-in 0.28s cubic-bezier(0.34, 1.4, 0.64, 1) both;
+}
+
+.cat-title-card.filter-animating-in {
+    animation: filter-card-in 0.24s ease both;
+}
+
+.drink-card.filter-animating-out,
+.cat-title-card.filter-animating-out {
+    animation: filter-card-out 0.16s ease forwards;
+    pointer-events: none;
+}
+
+.timeline-empty-state {
+    display: none;
+    flex: 0 0 auto;
+    width: 100vw;
+    min-width: min(520px, 80vw);
+    align-self: stretch;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 0 2rem;
+    text-align: center;
+}
+
+.timeline-scroll.has-filter .timeline-empty-state.visible {
+    display: flex;
+}
+
+.timeline-empty-state p {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    color: rgba(255,255,255,0.9);
+    letter-spacing: 0.04em;
+    margin: 0;
+    line-height: 1.25;
+}
+
+.timeline-empty-state span {
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.45);
+    font-weight: 400;
+    letter-spacing: 0.04em;
+}
+
+.timeline-scroll.has-filter .drink-card.filter-match {
+    border-color: rgba(255,255,255,0.55);
+    box-shadow: 0 0 0 1px rgba(255,255,255,0.2), 0 16px 42px rgba(0,0,0,0.4);
+}
+
+.cz-filter-tip {
+    font-size: 0.72rem;
+    font-weight: 400;
+    opacity: 0.45;
+    letter-spacing: 0;
+    text-transform: none;
+    font-family: inherit;
+}
+
+.cz-filter-hint {
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.55);
+    margin: 0.25rem 0 0;
+    min-height: 1.2em;
+    font-style: italic;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+    /* Just a still photo on mobile (no video to size around). Sized to the
+       photo's own 16:9 aspect ratio so object-fit:cover shows nearly the
+       whole frame instead of cropping big chunks off the sides. */
+    .menu-hero {
+        aspect-ratio: 16 / 9;
+        height: auto;
+        min-height: 220px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding-bottom: 0;
+    }
+
+    /* The shared .hero-bg sizing (width/height:auto + min-width/height:100%)
+       only grows a source that's SMALLER than its container -- this photo
+       (1280x720) is larger than the mobile hero box in both dimensions, so
+       those mins are already satisfied and the browser renders it at full
+       native size, showing only a tiny native-pixel crop from the center.
+       Force real percentage sizing here so object-fit:cover actually scales
+       it down to fill the box instead. */
+    .menu-hero .hero-bg.hero-mobile-still {
+        width: 100%;
+        height: 100%;
+        min-width: 0;
+        min-height: 0;
+    }
+
+    .menu-hero-content {
+        padding: 2.5rem 1.5rem;
+    }
+
+    /* On mobile the horizontal timeline becomes a vertical, wrapping grid:
+       category headers span a full row, drinks show two per row, and the
+       page scrolls normally so you can browse many drinks at once. */
+    .timeline-wrap {
+        padding: 1.25rem 0 3rem;
+    }
+
+    .timeline-scroll {
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        align-items: stretch;
+        /* Without this, flex's default align-content:stretch distributes any
+           leftover height (e.g. from a stale min-height lock, or simply few
+           rows left after filtering) across the visible rows, stretching
+           cards to abnormal heights instead of folding away cleanly. */
+        align-content: flex-start;
+        overflow-x: visible;
+        overflow-y: visible;
+        left: auto;
+        margin: 0;
+        width: 100%;
+        padding: 0 1rem;
+        gap: 0.875rem;
+        cursor: default;
+        opacity: 1;                 /* always visible on mobile */
+        scroll-behavior: auto;
+    }
+
+    /* Category header — full width, compact banner */
+    .cat-title-card {
+        flex: 0 0 100%;
+        width: 100% !important;
+        min-width: 0 !important;
+        min-height: 0;
+        margin-left: 0;
+        margin-top: 0.75rem;
+        scroll-margin-top: 70px;    /* clear the fixed site nav on jump */
+    }
+    .cat-title-card:first-child { margin-top: 0; }
+
+    /* The desktop divider rule runs 40px above the card on purpose (past
+       the title card's own top edge, toward the previous category) -- with
+       mobile's much smaller top spacing that same 40px now overshoots past
+       the timeline entirely and bleeds into the hero above it. */
+    .cat-title-card::before {
+        top: 0;
+    }
+
+    .cat-title-inner {
+        padding: 0.5rem 1.25rem 1.4rem;
+        justify-content: flex-start;
+    }
+    .cat-title-inner .cat-num { position: static; margin-bottom: 0.25rem; }
+    .cat-title-inner .cat-arrow { display: none; }
+    .cat-title-text { font-size: clamp(2rem, 8vw, 3rem); }
+    .cat-title-desc { max-width: none; }
+
+    /* Drinks — two per row */
+    .drink-card {
+        flex: 0 0 calc(50% - 0.4375rem);
+        width: calc(50% - 0.4375rem) !important;
+        min-width: 0 !important;
+    }
+
+    /* v5 card = photo fills a white container edge-to-edge; on the 2-up
+       mobile grid the container just needs a shorter, tighter height. */
+    .drink-img-wrap {
+        padding: 0;
+        aspect-ratio: 1 / 1;
+        border-radius: 16px;
+    }
+    .drink-img-wrap img {
+        height: 100%;
+        max-width: none;
+        border-radius: 16px;
+    }
+    .drink-info { padding: 0.75rem 0.5rem 0; min-height: 92px; }
+    .drink-info h3 { font-size: 1.05rem; }
+    .drink-info p { font-size: 0.72rem; }
+
+    /* Full-width helper cards */
+    .descriptor-card { flex: 0 0 100%; width: 100%; }
+    .timeline-empty-state { width: 100%; min-width: 0; }
+    .timeline-end-spacer { display: none; }
+
+    /* Category nav is hidden on mobile -- the vertical timeline below already
+       lets you scroll straight through every category. */
+    .cat-nav {
+        display: none;
+    }
+}
+
+@media (max-width: 900px) {
+    .cz-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1.25rem;
+        padding: 1.5rem 1.5rem 1.75rem;
+    }
+    .cz-heading {
+        max-width: none;
+        padding-right: 0;
+        padding-bottom: 1.25rem;
+        border-right: none;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        width: 100%;
+    }
+    .cz-inner {
+        padding: 0 1.25rem;
+    }
+    .cz-pills--flavors {
+        gap: 0.4rem;
+    }
+    .cpill {
+        font-size: 0.78rem;
+        padding: 0.35rem 0.8rem;
+    }
+}
+
+/* ─── Location filtering ─── */
+/* Elements start with data-visible="false" server-side when their category
+   is hidden-by-default (Hot Food, Treats), so there's no flash of content
+   that then disappears. The location-filter script keeps this attribute in
+   sync from then on as the single source of truth for visibility -- it's
+   what setVisible()'s change-tracking reads/writes, not just a CSS hook. */
+[data-visible="false"] {
+    display: none;
+}
+
+.location-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.25rem;
+    background: rgba(255,255,255,0.08);
+    border: 1.5px solid rgba(255,255,255,0.25);
+    color: var(--white);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    padding: 0.6rem 1.1rem;
+    border-radius: var(--radius-pill);
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.location-trigger svg { width: 18px; height: 18px; flex-shrink: 0; }
+
+.location-trigger.has-location {
+    background: var(--red);
+    border-color: var(--red);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .location-trigger:hover {
+        background: rgba(255,255,255,0.16);
+        border-color: rgba(255,255,255,0.45);
+    }
+
+    .location-trigger.has-location:hover { background: var(--red-soft); }
+}
+
+/* ─── "Select Your Location" modal ─── */
+.loc-modal-content {
+    max-width: 700px;
+    padding: 2.5rem 2rem;
+    background: #E4E4E4;
+}
+
+.loc-modal-inner h2 {
+    font-size: 1.8rem;
+    color: var(--black);
+    margin-bottom: 0.4rem;
+}
+
+.loc-modal-inner > p {
+    color: var(--light-gray);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.92rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Same pill treatment as the flavor filters (.filter-pill), just in the
+   modal's light color context -- everything visible at once, no inner
+   scroll, wraps like any other pill group. */
+.loc-modal-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.loc-modal-state {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.loc-modal-state-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(0,0,0,0.35);
+    width: 100%;
+    margin: 0.75rem 0 0;
+}
+
+.loc-modal-state:first-of-type .loc-modal-state-label { margin-top: 0.25rem; }
+
+.loc-modal-item {
+    display: inline-flex;
+    align-items: center;
+    background: var(--white);
+    border: 1px solid rgba(0,0,0,0.08);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    color: var(--black);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    padding: 0.5rem 1.15rem;
+    border-radius: var(--radius-pill);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: border-color 0.18s ease, background 0.18s ease, color 0.18s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .loc-modal-item:hover {
+        border-color: var(--red);
+        color: var(--red);
+    }
+}
+
+.loc-modal-item.active {
+    background: var(--red);
+    border-color: var(--red);
+    color: var(--white);
+}
+
+.loc-modal-item--all {
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+}
+
+@media (max-width: 520px) {
+    .loc-modal-content { padding: 2rem 1.25rem; }
+    .location-trigger { margin-top: 0.25rem; font-size: 0.76rem; }
+    .loc-modal-item { font-size: 0.8rem; padding: 0.45rem 1rem; }
+}

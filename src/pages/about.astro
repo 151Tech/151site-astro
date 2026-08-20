@@ -1,0 +1,242 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import BlockRenderer from '../components/blocks/BlockRenderer.astro';
+import { getEntry } from 'astro:content';
+
+const aboutEntry = await getEntry('pages', 'about');
+const p = aboutEntry!.data as any;
+---
+<Layout
+  title={p.seo?.title ?? 'About 151 Coffee | Our Story & Founder Mark Wattles'}
+  description={p.seo?.description ?? '151 Coffee is not your typical coffee shop. Founded in 2017 by entrepreneur Mark Wattles, we serve the best-tasting coffee and blended energy drinks fast.'}
+  ogImage={p.seo?.ogImage ?? 'https://www.151coffee.com/images/splash1.jpg'}
+>
+  <style is:global slot="head">
+    .about-hero { margin-top: 58px; background-image: url('/images/splash1.jpg'); background-size: cover; background-position: center 30%; position: relative; padding: 8rem 0 7rem; text-align: center; }
+    .about-hero::before { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.50) 0%, rgba(0,0,0,0.32) 50%, rgba(0,0,0,0.60) 100%); pointer-events: none; }
+    .about-hero-content { position: relative; z-index: 1; }
+    .about-hero h1 { font-size: clamp(2.8rem, 6vw, 5rem); color: #fff; line-height: 1; margin-bottom: 0.75rem; }
+    .about-hero h1 span { color: var(--red); }
+    .about-hero p { font-family: 'Inter', sans-serif; font-size: 1.1rem; color: rgba(255,255,255,0.80); max-width: 520px; margin: 0 auto; }
+    .about-intro { background: #f4efe9; padding: var(--section-pad); }
+    .about-intro-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+    .about-intro-text h2 { font-size: clamp(1.8rem, 3.5vw, 2.8rem); color: var(--black); line-height: 1.12; margin-bottom: 1.25rem; }
+    .about-intro-text h2 span { color: var(--red); }
+    .about-intro-text .about-intro-tagline { font-family: 'Bebas Neue', sans-serif; font-size: clamp(1.8rem, 3.5vw, 2.8rem); color: var(--black); line-height: 1.12; letter-spacing: 0.04em; text-transform: uppercase; font-weight: 400; margin-top: 1.75rem; }
+    .about-intro-text p { font-family: 'Inter', sans-serif; font-size: 1rem; line-height: 1.75; color: rgba(17,17,17,0.62); }
+    .about-intro-img { border-radius: var(--radius); overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.22); position: relative; aspect-ratio: 1 / 1; }
+    .about-intro-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .about-intro-img::after { content: ''; position: absolute; inset: 0; border: 1px solid rgba(0,0,0,0.06); border-radius: var(--radius); pointer-events: none; }
+    .about-stats { background-color: var(--red); background-image: radial-gradient(rgba(255,255,255,0.18) 2px, transparent 2.5px); background-size: 26px 26px; position: relative; padding: 4rem 0; }
+    .about-stats::before { content: ''; position: absolute; inset: 0; background: radial-gradient(120% 60% at 50% 0%, rgba(255,255,255,0.22) 0%, transparent 55%), radial-gradient(120% 60% at 50% 100%, rgba(255,255,255,0.14) 0%, transparent 55%); pointer-events: none; }
+    .about-stats .container { position: relative; z-index: 1; }
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; text-align: center; }
+    .stat-number { font-size: clamp(2rem, 4vw, 3rem); font-weight: 900; color: #fff; line-height: 1; margin-bottom: 0.4rem; }
+    .stat-label { font-family: 'Inter', sans-serif; font-size: 0.82rem; font-weight: 600; color: rgba(255,255,255,0.80); text-transform: uppercase; letter-spacing: 0.1em; }
+    .about-history { background: #f4efe9; padding: var(--section-pad); }
+    .about-history .section-header h2 { color: var(--red); }
+    .history-body { max-width: 780px; margin: 2rem auto 0; font-family: 'Inter', sans-serif; font-size: 1rem; line-height: 1.78; color: rgba(17,17,17,0.62); }
+    .history-body p { margin-bottom: 1.25rem; }
+    .history-timeline { display: flex; flex-direction: column; gap: 1.5rem; margin-top: 3rem; max-width: 780px; margin-left: auto; margin-right: auto; }
+    .timeline-item { display: flex; gap: 1.5rem; align-items: flex-start; }
+    .timeline-year { flex-shrink: 0; width: 56px; font-family: 'Inter', sans-serif; font-size: 0.8rem; font-weight: 800; color: var(--red); letter-spacing: 0.06em; padding-top: 0.15rem; }
+    .timeline-bar { flex-shrink: 0; display: flex; flex-direction: column; align-items: center; }
+    .timeline-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--red); flex-shrink: 0; margin-top: 0.3rem; }
+    .timeline-line { width: 2px; flex: 1; background: rgba(17,17,17,0.10); min-height: 32px; }
+    .timeline-content { padding-bottom: 0.5rem; }
+    .timeline-content p { font-family: 'Inter', sans-serif; font-size: 0.92rem; line-height: 1.65; color: rgba(17,17,17,0.60); margin: 0; }
+    .timeline-item:last-child .timeline-line { display: none; }
+    .about-founder { background: var(--black); position: relative; overflow: hidden; padding: 6.5rem 0; }
+    .about-founder > .container { display: flex; height: 100%; justify-content: center; }
+    .founder-left { position: relative; z-index: 1; display: flex; align-items: center; box-sizing: border-box; }
+    .founder-hero-img { position: absolute; inset: 0; left: 46%; width: 54%; }
+    .founder-hero-img img {
+      width: 100%; height: 100%; object-fit: cover; object-position: top; display: block;
+      -webkit-mask-image: linear-gradient(90deg, transparent 0%, transparent 34%, rgba(0,0,0,0.06) 42%, rgba(0,0,0,0.22) 50%, rgba(0,0,0,0.45) 58%, rgba(0,0,0,0.7) 66%, rgba(0,0,0,0.9) 74%, #000 82%);
+      mask-image: linear-gradient(90deg, transparent 0%, transparent 34%, rgba(0,0,0,0.06) 42%, rgba(0,0,0,0.22) 50%, rgba(0,0,0,0.45) 58%, rgba(0,0,0,0.7) 66%, rgba(0,0,0,0.9) 74%, #000 82%);
+    }
+    .founder-inner { max-width: 680px; }
+    .founder-text { max-width: 680px; }
+    .founder-text h2 { font-size: clamp(1.8rem, 3vw, 2.6rem); color: #fff; line-height: 1.1; margin-bottom: 0.35rem; text-align: center; }
+    .founder-title { font-family: 'Inter', sans-serif; font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--red); margin-bottom: 1.5rem; text-align: center; }
+    .founder-text p { font-family: 'Inter', sans-serif; font-size: 0.97rem; line-height: 1.75; color: rgba(255,255,255,0.62); margin-bottom: 1rem; }
+    .founder-ventures { margin-top: 1.75rem; display: flex; flex-direction: column; gap: 1rem; }
+    .venture-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 1.1rem 1.25rem; transition: border-color 0.2s; }
+    .venture-card:hover { border-color: rgba(230,57,70,0.35); }
+    .venture-name { font-family: 'Inter', sans-serif; font-size: 0.88rem; font-weight: 700; color: #fff; margin-bottom: 0.3rem; }
+    .venture-desc { font-family: 'Inter', sans-serif; font-size: 0.8rem; line-height: 1.55; color: rgba(255,255,255,0.50); }
+    .about-cta { background-color: var(--red); background-image: radial-gradient(rgba(255,255,255,0.18) 2px, transparent 2.5px); background-size: 26px 26px; position: relative; padding: 5rem 0; text-align: center; }
+    .about-cta::before { content: ''; position: absolute; inset: 0; background: radial-gradient(120% 60% at 50% 0%, rgba(255,255,255,0.22) 0%, transparent 55%), radial-gradient(120% 60% at 50% 100%, rgba(255,255,255,0.14) 0%, transparent 55%); pointer-events: none; }
+    .about-cta .container { position: relative; z-index: 1; }
+    .about-cta h2 { font-size: clamp(2rem, 4vw, 3rem); color: #fff; margin-bottom: 0.75rem; line-height: 1.1; }
+    .about-cta p { font-family: 'Inter', sans-serif; font-size: 1rem; color: rgba(255,255,255,0.94); max-width: 500px; margin: 0 auto 2rem; line-height: 1.6; }
+    .about-cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .about-cta .btn-white { background: #fff; color: var(--red); padding: 0.85rem 2rem; border-radius: var(--radius-pill); font-family: 'Inter', sans-serif; font-size: 0.88rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; text-decoration: none; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 18px rgba(0,0,0,0.18); }
+    .about-cta .btn-white:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,0,0,0.25); }
+    .about-cta .btn-outline-white { background: transparent; color: #fff; padding: 0.85rem 2rem; border-radius: var(--radius-pill); border: 2px solid rgba(255,255,255,0.7); font-family: 'Inter', sans-serif; font-size: 0.88rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; text-decoration: none; transition: border-color 0.2s, background 0.2s; }
+    .about-cta .btn-outline-white:hover { border-color: #fff; background: rgba(255,255,255,0.1); }
+    @media (max-width: 900px) {
+      .about-intro-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 2rem; }
+      .founder-hero-img { position: relative; left: 0; width: 100%; height: 260px; }
+      .founder-hero-img img { -webkit-mask-image: none; mask-image: none; }
+      .founder-hero-img::before { display: none; }
+      .founder-hero-img img { mask-image: linear-gradient(180deg, transparent 0%, #000 25%, #000 75%, transparent 100%); -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 25%, #000 75%, transparent 100%); }
+      .about-founder { padding: 0 0 var(--section-pad); }
+      .about-founder > .container { flex-direction: column; height: auto; padding: 0; }
+      .founder-left { width: 100%; padding: 2.5rem 1.5rem 0; }
+      .founder-inner { max-width: 100%; }
+      .founder-text { max-width: 100%; }
+    }
+    @media (max-width: 600px) {
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .about-hero { padding: 6rem 0 5rem; }
+    }
+  </style>
+
+  <Nav active="about" />
+
+  <section class="about-hero" data-sb-object-id="src/content/pages/about.yaml">
+    <div class="about-hero-content container">
+      <h1 data-sb-field-path="hero.heading">{p.hero?.heading ?? 'About 151 Coffee'}</h1>
+      <p data-sb-field-path="hero.subheading">{p.hero?.subheading ?? "It's a Good Day to Have a Good Day."}</p>
+    </div>
+  </section>
+
+  <BlockRenderer sections={p.sections} objectId="src/content/pages/about.yaml" />
+
+  {(p.visibility?.intro ?? true) && (
+  <section class="about-intro" data-sb-object-id="src/content/pages/about.yaml">
+    <div class="container">
+      <div class="about-intro-inner">
+        <div class="about-intro-text">
+          <h2><span data-sb-field-path="intro.heading" style="color:inherit">{p.intro?.heading ?? 'Not Your Typical'}</span><br><span data-sb-field-path="intro.headingSpan">{p.intro?.headingSpan ?? 'Coffee Shop.'}</span></h2>
+          {(p.intro?.paragraphs ?? [
+            '151 Coffee is not your typical coffee shop. Fun and happiness drive our culture and music drives our speed, that\'s why we live by the 151 motto "It\'s a good day to have a good day."',
+            "Each of our drive-thru stores serves the best tasting coffee and blended energy drinks faster than anyone. If you're thirsty and looking for a tasty beverage to buzz your day, swing through our drive thru, say hi, and drive with the 151 vibe.",
+          ]).map((para: string, i: number) => (
+            <p data-sb-field-path={`intro.paragraphs.${i}`}>{para}</p>
+          ))}
+          <p class="about-intro-tagline" data-sb-field-path="intro.tagline">{p.intro?.tagline ?? "It's a Good Day to have a Good Day."}</p>
+        </div>
+        <div class="about-intro-img">
+          <img loading="lazy" decoding="async"
+            src={p.intro?.image ?? 'https://static.wixstatic.com/media/b45796_b6c019a088b74b3ba49d658de7304879~mv2.jpg/v1/fill/w_900,h_700,al_c,q_85,usm_0.66_1.00_0.01/350630772_586994276756053_9082157421413125565_n.jpg'}
+            alt={p.intro?.imageAlt ?? '151 Coffee store'}
+            data-sb-field-path="intro.image"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+  )}
+
+  {(p.visibility?.stats ?? true) && (
+  <section class="about-stats" data-sb-object-id="src/content/pages/about.yaml">
+    <div class="container">
+      <div class="stats-grid">
+        {(p.stats ?? [
+          { number: '2017', label: 'Founded' },
+          { number: '15+', label: 'Locations' },
+          { number: '$2B', label: "Founder's Track Record" },
+          { number: '500', label: 'Stores by 2028' },
+        ]).map((stat: any, i: number) => (
+          <div class="stat-item" data-sb-field-path={`stats.${i}`}>
+            <div class="stat-number" data-sb-field-path="number">{stat.number}</div>
+            <div class="stat-label" data-sb-field-path="label">{stat.label}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+  )}
+
+  {(p.visibility?.history ?? true) && (
+  <section class="about-history" data-sb-object-id="src/content/pages/about.yaml">
+    <div class="container">
+      <div class="section-header">
+        <h2 data-sb-field-path="history.heading">{p.history?.heading ?? 'History of 151 Coffee'}</h2>
+      </div>
+      <div class="history-body">
+        {(p.history?.body ?? [
+          '151 Coffee is a whole new coffee concept started in 2017. Founded and funded by Mark Wattles, who has founded and financed multiple national $100MM to $2B companies.',
+          'At 151, we intend to leverage the experience of our founder and the 151 Team to grow rapidly and create opportunities for our employees while never forgetting our #1 mission: to have fun!',
+        ]).map((para: string, i: number) => (
+          <p data-sb-field-path={`history.body.${i}`}>{para}</p>
+        ))}
+      </div>
+      <div class="history-timeline">
+        {(p.history?.timeline ?? [
+          { year: '2017', text: 'First 151 Coffee location opens in the Dallas Fort Worth area.' },
+          { year: '2018', text: 'Second location opens in Flower Mound, TX.' },
+          { year: '2019-22', text: 'Thirteen more locations open across Texas, then expansion into Kansas.' },
+          { year: 'Today', text: '16 locations across Texas and Kansas. Goal: 500 stores by 2028.' },
+        ]).map((item: any, i: number) => (
+          <div class="timeline-item" data-sb-field-path={`history.timeline.${i}`}>
+            <div class="timeline-year" data-sb-field-path="year">{item.year}</div>
+            <div class="timeline-bar"><div class="timeline-dot"></div><div class="timeline-line"></div></div>
+            <div class="timeline-content"><p data-sb-field-path="text">{item.text}</p></div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+  )}
+
+  {(p.visibility?.founder ?? true) && (
+  <section class="about-founder" data-sb-object-id="src/content/pages/about.yaml">
+    <div class="founder-hero-img">
+      <img loading="lazy" decoding="async"
+        src={p.founder?.image ?? 'https://static.wixstatic.com/media/f82c08_7c5d93e4326449d3a489c3d11538de1b~mv2.jpg/v1/fill/w_800,h_1000,al_c,q_85,usm_0.66_1.00_0.01/RightCallout.jpg'}
+        alt={p.founder?.imageAlt ?? 'Mark Wattles - Founder of 151 Coffee'}
+        data-sb-field-path="founder.image"
+      />
+    </div>
+    <div class="container">
+    <div class="founder-left">
+      <div class="founder-inner">
+        <div class="founder-text">
+          <h2 data-sb-field-path="founder.heading">{p.founder?.heading ?? 'Meet the Founder'}</h2>
+          <div class="founder-title" data-sb-field-path="founder.name">{p.founder?.name ?? 'Mark Wattles'}</div>
+          {(p.founder?.bio ?? [
+            'Mark is a highly accomplished entrepreneur with a strong background in business development and growth. Born and raised in both Santa Monica and Texas, he developed a passion for surfing, wakeboarding, and snowboarding from a young age.',
+            'Instead of pursuing a traditional college education, Mark chose to dive into the world of business and has since built an impressive portfolio of successful national ventures.',
+          ]).map((para: string, i: number) => (
+            <p data-sb-field-path={`founder.bio.${i}`}>{para}</p>
+          ))}
+          <div class="founder-ventures">
+            {(p.founder?.ventures ?? [
+              { name: 'Hollywood Entertainment, Inc.', desc: 'Started in 1988. Grew from one store to 1,000 corporate-owned stores in just ten years — reaching $2 Billion in revenue and 2,000 company-owned stores. Sold in 2005.' },
+              { name: 'HomeAdvisor.com', desc: 'Co-founder of the B2C online home improvement marketplace. Sold to IAC/InterActiveCorp (Nasdaq: IAC).' },
+              { name: 'Firebirds Wood Fired Grill', desc: 'One of four partners who built this full-service restaurant chain to 45 locations across 18 states. Majority stake sold to Angelo Gordon.' },
+            ]).map((v: any, i: number) => (
+              <div class="venture-card" data-sb-field-path={`founder.ventures.${i}`}>
+                <div class="venture-name" data-sb-field-path="name">{v.name}</div>
+                <div class="venture-desc" data-sb-field-path="desc">{v.desc}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </section>
+  )}
+
+  {(p.visibility?.cta ?? true) && (
+  <section class="about-cta" data-sb-object-id="src/content/pages/about.yaml">
+    <div class="container">
+      <h2 data-sb-field-path="cta.heading">{p.cta?.heading ?? 'Interested in Joining the 151 Team?'}</h2>
+      <p data-sb-field-path="cta.body">{p.cta?.body ?? '151 Coffee is not your typical coffee shop - fun and happiness drive our culture. Come be part of something good.'}</p>
+      <div class="about-cta-buttons">
+        <a href={p.cta?.primaryHref ?? 'https://www.workstream.us/j/224b40b5/151-coffee'} target="_blank" rel="noopener noreferrer" class="btn-white" data-sb-field-path="cta.primaryLabel">{p.cta?.primaryLabel ?? 'Apply Now'}</a>
+        <a href={p.cta?.secondaryHref ?? '/locations'} class="btn-outline-white" data-sb-field-path="cta.secondaryLabel">{p.cta?.secondaryLabel ?? 'Find a Store'}</a>
+      </div>
+    </div>
+  </section>
+  )}
+
+  <Footer />
+</Layout>

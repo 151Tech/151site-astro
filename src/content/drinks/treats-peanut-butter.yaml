@@ -1,0 +1,10 @@
+type: Drink
+name: Peanut Butter Cookie
+category: src/content/categories/treats.yaml
+subtitle: Rich & Chewy Peanut Butter Cookie
+description: >-
+  Dense, rich, and perfectly chewy. Made for peanut butter people, the ones who
+  don't mess around when it comes to their cookies.
+image: /images/peanut-butter-cookie.webp
+tags: null
+menuOrder: 99

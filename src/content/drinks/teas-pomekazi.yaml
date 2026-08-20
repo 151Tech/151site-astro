@@ -1,0 +1,12 @@
+type: Drink
+name: Pomekazi
+category: src/content/categories/teas.yaml
+subtitle: Pomegranate & Peach
+description: >-
+  Pomegranate and peach join forces in a bright, fruity iced tea that's
+  refreshing from first sip to last.
+image: /images/pomekazi.webp
+tags:
+  - Pomegranate
+  - Peach
+menuOrder: 99

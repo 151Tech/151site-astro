@@ -1,0 +1,59 @@
+---
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const locations = await getCollection('locations');
+  const paths = [];
+  for (const loc of locations) {
+    const props = { slug: loc.id, name: (loc.data as any).name };
+    // Name-based slug (e.g. /menu/keller) for internal links (Store Info
+    // pages, etc.), plus the numbered short URL (e.g. /menu/8) that matches
+    // the QR codes already printed for each store -- displayOrder is that
+    // same 1-15 numbering (see Location content/Stackbit field).
+    paths.push({ params: { store: loc.id.replace(/^151-coffee-/, '') }, props });
+    const order = (loc.data as any).displayOrder;
+    if (order != null) paths.push({ params: { store: String(order) }, props });
+  }
+  return paths;
+}
+
+const { slug, name } = Astro.props as { slug: string; name: string };
+const target = `/menu?store=${slug}`;
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="refresh" content={`0;url=${target}`} />
+  <link rel="canonical" href={`https://www.151coffee.com${target}`} />
+  <meta name="robots" content="noindex" />
+  <title>{name} Menu | 151 Coffee</title>
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #111;
+      font-family: 'Inter', sans-serif;
+      color: #fff;
+    }
+    .wrap { text-align: center; padding: 2rem; }
+    img { width: 56px; height: 56px; margin-bottom: 1rem; }
+    p { color: rgba(255,255,255,0.6); font-size: 0.95rem; }
+    a { color: #e63946; text-decoration: none; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <img src="/images/logo.png" alt="151 Coffee" width="56" height="56" />
+    <p>Loading the menu for {name}&hellip;</p>
+    <noscript><p><a href={target}>Tap here if you're not redirected</a></p></noscript>
+  </div>
+  <script define:vars={{ target }} is:inline>
+    window.location.replace(target);
+  </script>
+</body>
+</html>

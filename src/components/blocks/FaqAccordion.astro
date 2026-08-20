@@ -1,0 +1,21 @@
+---
+interface Item { question: string; answer: string; }
+interface Props {
+  heading?: string;
+  items?: Item[];
+}
+const { heading, items = [], ...rest } = Astro.props as Props & Record<string, any>;
+---
+<section class="blk blk-faq" {...rest}>
+  <div class="container">
+    {heading && <div class="section-header"><h2>{heading}</h2></div>}
+    <div class="blk-faq-list">
+      {items.map((item, i) => (
+        <details open={i === 0}>
+          <summary>{item.question}</summary>
+          <p>{item.answer}</p>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>

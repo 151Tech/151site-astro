@@ -1,0 +1,10 @@
+type: Drink
+name: Boston
+category: src/content/categories/desserts.yaml
+subtitle: ''
+description: ''
+menuOrder: 99
+image: /images/drinks/energy/151 Blue Energy Hand (1).png
+tags:
+  - Caramel
+  - ''

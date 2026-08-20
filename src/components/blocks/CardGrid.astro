@@ -1,0 +1,29 @@
+---
+interface Card { title: string; subtitle?: string; image?: string; href: string; label?: string; }
+interface Props {
+  heading?: string;
+  cards?: Card[];
+  background?: 'light' | 'dark';
+}
+const { heading, cards = [], background = 'dark', ...rest } = Astro.props as Props & Record<string, any>;
+const bgClass = background === 'dark' ? 'blk-cardgrid--dark' : '';
+---
+<section class={`blk blk-cardgrid ${bgClass}`} {...rest}>
+  <div class="container">
+    {heading && <div class="section-header"><h2>{heading}</h2></div>}
+    <div class="blk-card-grid">
+      {cards.map((card) => (
+        <a href={card.href} class="blk-card">
+          {card.image && <div class="blk-card-img" style={`background-image:url('${card.image}')`}></div>}
+          <div class="blk-card-body">
+            <div>
+              <h3>{card.title}</h3>
+              {card.subtitle && <p>{card.subtitle}</p>}
+            </div>
+            {card.label && <span class="blk-card-btn">{card.label}</span>}
+          </div>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>
