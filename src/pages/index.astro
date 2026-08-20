@@ -4,22 +4,24 @@ import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import HeroVideo from '../components/HeroVideo.astro';
 import BlockRenderer from '../components/blocks/BlockRenderer.astro';
-import { getEntry, getCollection } from 'astro:content';
+import { getPage, getSettings, getLocations, unwrapSingletons } from '../lib/storyblok';
 
-const [homeEntry, settingsEntry, locationsEntries] = await Promise.all([
-  getEntry('pages', 'home'),
-  getEntry('settings', 'global'),
-  getCollection('locations'),
+const [homeData, settingsData, locationsEntries] = await Promise.all([
+  getPage('home'),
+  getSettings(),
+  getLocations(),
 ]);
 
-const p = homeEntry!.data as any;
-const s = settingsEntry?.data as any ?? {};
+const p = unwrapSingletons(homeData as any, [
+  'seo', 'hero', 'visibility', 'featuredDrink', 'menuSection', 'locationsSection',
+  'cta', 'reviews', 'investment', 'faqs', 'contact',
+]);
+const s = (settingsData as any) ?? {};
 const locations = locationsEntries
-  .map(e => e.data)
-  .sort((a: any, b: any) => (a.displayOrder ?? 99) - (b.displayOrder ?? 99));
+  .sort((a: any, b: any) => (Number(a.displayOrder) || 99) - (Number(b.displayOrder) || 99));
 
 const storesJson = JSON.stringify(locations.map((l: any) => ({
-  name: l.name, address: l.address, city: l.city, state: l.state, zip: l.zip, lat: l.lat, lng: l.lng,
+  name: l.name, address: l.address, city: l.city, state: l.state, zip: l.zip, lat: Number(l.lat), lng: Number(l.lng),
 })));
 
 ---

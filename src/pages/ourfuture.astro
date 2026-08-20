@@ -3,10 +3,11 @@ import Layout from '../layouts/Layout.astro';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import BlockRenderer from '../components/blocks/BlockRenderer.astro';
-import { getEntry } from 'astro:content';
+import { getPage, unwrapSingletons } from '../lib/storyblok';
 
-const entry = await getEntry('pages', 'ourfuture');
-const p = entry!.data as any;
+const p = unwrapSingletons((await getPage('ourfuture')) as any, [
+  'seo', 'hero', 'visibility', 'overview', 'criteria', 'idealSite', 'markets', 'contact',
+]);
 ---
 <Layout
   title={p.seo?.title ?? 'Real Estate & Site Development | 151 Coffee Drive-Thru Expansion'}

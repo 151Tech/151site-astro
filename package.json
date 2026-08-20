@@ -9,13 +9,19 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "storyblok:generate": "node storyblok/generate-schema.mjs",
+    "storyblok:migrate": "node storyblok/migrate.mjs"
   },
   "dependencies": {
-    "@astrojs/netlify": "^8.2.1",
     "@astrojs/sitemap": "^3.7.3",
     "@stackbit/cms-git": "1.0.38",
     "@stackbit/types": "2.1.15",
-    "astro": "^7.2.2"
+    "astro": "^7.2.2",
+    "storyblok-js-client": "^6.10.7"
+  },
+  "devDependencies": {
+    "dotenv": "^16.4.5",
+    "js-yaml": "^4.1.0"
   }
 }

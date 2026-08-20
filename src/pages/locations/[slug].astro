@@ -2,27 +2,26 @@
 import Layout from '../../layouts/Layout.astro';
 import Nav from '../../components/Nav.astro';
 import Footer from '../../components/Footer.astro';
-import { getCollection, getEntry } from 'astro:content';
+import { getLocations, getSettings, getPage, unwrapSingletons } from '../../lib/storyblok';
 
 export async function getStaticPaths() {
-  const locations = await getCollection('locations');
-  return locations.map(loc => ({ params: { slug: loc.id } }));
+  const locations = await getLocations();
+  return locations.map((loc: any) => ({ params: { slug: loc.slug } }));
 }
 
 const { slug } = Astro.params;
-const [locations, settingsEntry, pageEntry] = await Promise.all([
-  getCollection('locations'),
-  getEntry('settings', 'global'),
-  getEntry('pages', 'locations'),
+const [locations, settingsData, pageData] = await Promise.all([
+  getLocations(),
+  getSettings(),
+  getPage('locations'),
 ]);
-const locEntry = locations.find(e => e.id === slug);
+const loc = locations.find((e: any) => e.slug === slug);
 
-if (!locEntry) return Astro.redirect('/locations');
-const loc = locEntry.data as any;
-const s = (settingsEntry?.data as any) ?? {};
+if (!loc) return Astro.redirect('/locations');
+const s = (settingsData as any) ?? {};
 // Shared store-detail UI labels live on the Locations page (mirrors how the
 // drink detail page pulls its labels from the Menu page).
-const lp = (pageEntry?.data as any) ?? {};
+const lp = unwrapSingletons((pageData as any) ?? {}, ['seo', 'visibility', 'hero', 'storeDetail']);
 const dl = lp.storeDetail ?? {};
 
 const hours = loc.hours || s.hours || 'Open daily 6 AM - 8 PM';
@@ -101,7 +100,7 @@ const ogImage = `https://www.151coffee.com${encodeURI(image)}`;
 
   <Footer />
 
-  <script define:vars={{ lat: loc.lat, lng: loc.lng, name: loc.name, address: `${loc.address}, ${loc.city}, ${loc.state} ${loc.zip}` }} is:inline>
+  <script define:vars={{ lat: Number(loc.lat), lng: Number(loc.lng), name: loc.name, address: `${loc.address}, ${loc.city}, ${loc.state} ${loc.zip}` }} is:inline>
     window.STORE_MAP = { lat, lng, name, address };
   </script>
   <script src="/js/store-map-loader.js" is:inline></script>

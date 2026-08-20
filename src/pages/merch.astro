@@ -2,10 +2,9 @@
 import Layout from '../layouts/Layout.astro';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
-import { getEntry } from 'astro:content';
+import { getPage, unwrapSingletons } from '../lib/storyblok';
 
-const entry = await getEntry('pages', 'merch');
-const p = entry!.data as any;
+const p = unwrapSingletons((await getPage('merch')) as any, ['seo', 'visibility', 'hero']);
 
 const categories = ['All', ...Array.from(new Set((p.items ?? []).map((i: any) => i.category))) as string[]];
 ---

@@ -3,6 +3,10 @@ dist/
 # generated types
 .astro/
 
+# Storyblok migration dry-run output (regenerate with `npm run storyblok:generate`)
+storyblok/components.generated.json
+storyblok/content.generated.json
+
 # dependencies
 node_modules/
 

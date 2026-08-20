@@ -1,7 +1,6 @@
 ---
-import { getEntry } from 'astro:content';
-const g = await getEntry('settings', 'global');
-const s = (g?.data as any) ?? {};
+import { getSettings, unwrapSingletons } from '../lib/storyblok';
+const s = unwrapSingletons((await getSettings()) as any, ['social', 'footer']);
 const f = s.footer ?? {};
 const companyLinks: { label: string; href: string }[] = f.companyLinks ?? [
   { label: 'About Us', href: '/about' },

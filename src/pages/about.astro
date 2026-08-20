@@ -3,10 +3,11 @@ import Layout from '../layouts/Layout.astro';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import BlockRenderer from '../components/blocks/BlockRenderer.astro';
-import { getEntry } from 'astro:content';
+import { getPage, unwrapSingletons } from '../lib/storyblok';
 
-const aboutEntry = await getEntry('pages', 'about');
-const p = aboutEntry!.data as any;
+const p = unwrapSingletons((await getPage('about')) as any, [
+  'seo', 'visibility', 'hero', 'intro', 'history', 'founder', 'cta',
+]);
 ---
 <Layout
   title={p.seo?.title ?? 'About 151 Coffee | Our Story & Founder Mark Wattles'}

@@ -2,28 +2,29 @@
 import Layout from '../../layouts/Layout.astro';
 import Nav from '../../components/Nav.astro';
 import Footer from '../../components/Footer.astro';
-import { getCollection, getEntry } from 'astro:content';
+import { getDrinks, getPage, getCategories, unwrapSingletons } from '../../lib/storyblok';
 
 export async function getStaticPaths() {
-  const drinks = await getCollection('drinks');
-  return drinks.map(drink => ({ params: { slug: drink.id } }));
+  const drinks = await getDrinks();
+  return drinks.map((drink: any) => ({ params: { slug: drink.slug } }));
 }
 
 const { slug } = Astro.params;
-const [drinks, menuEntry, categoryEntries] = await Promise.all([
-  getCollection('drinks'),
-  getEntry('pages', 'menu'),
-  getCollection('categories'),
+const [drinks, menuData, categoryEntries] = await Promise.all([
+  getDrinks(),
+  getPage('menu'),
+  getCategories(),
 ]);
-const drinkEntry = drinks.find(e => e.id === slug);
+const drink = drinks.find((e: any) => e.slug === slug);
 
-if (!drinkEntry) return Astro.redirect('/menu');
-const drink = drinkEntry.data as any;
-const m = menuEntry!.data as any;
+if (!drink) return Astro.redirect('/menu');
+const m = unwrapSingletons(menuData as any, [
+  'seo', 'visibility', 'hero', 'labels', 'locationPicker', 'drinkPage', 'customize',
+]);
 
-// drink.category holds a reference to a category file; resolve it to the title.
-const categoryEntry = categoryEntries.find((c: any) => `src/content/categories/${c.id}.yaml` === drink.category);
-const categoryTitle = categoryEntry ? (categoryEntry.data as any).title : '';
+// drink.category holds a Storyblok slug like "categories/coffee"; resolve it to the title.
+const categoryEntry = categoryEntries.find((c: any) => `categories/${c.slug}` === drink.category);
+const categoryTitle = categoryEntry ? categoryEntry.title : '';
 
 const ogImage = drink.image
   ? `https://www.151coffee.com${encodeURI(drink.image.startsWith('/') ? drink.image : '/' + drink.image)}`

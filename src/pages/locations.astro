@@ -3,22 +3,21 @@ import Layout from '../layouts/Layout.astro';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import BlockRenderer from '../components/blocks/BlockRenderer.astro';
-import { getCollection, getEntry } from 'astro:content';
+import { getLocations, getSettings, getPage, unwrapSingletons } from '../lib/storyblok';
 
-const [locationsEntries, settingsEntry, pageEntry] = await Promise.all([
-  getCollection('locations'),
-  getEntry('settings', 'global'),
-  getEntry('pages', 'locations'),
+const [locationsEntries, settingsData, pageData] = await Promise.all([
+  getLocations(),
+  getSettings(),
+  getPage('locations'),
 ]);
 
-const s = settingsEntry?.data as any ?? {};
-const p = pageEntry?.data as any ?? {};
+const s = (settingsData as any) ?? {};
+const p = unwrapSingletons((pageData as any) ?? {}, ['seo', 'visibility', 'hero', 'storeDetail']);
 const locations = locationsEntries
-  .map(e => ({ slug: e.id, ...(e.data as any) }))
-  .sort((a, b) => (a.displayOrder ?? 99) - (b.displayOrder ?? 99));
+  .sort((a: any, b: any) => (Number(a.displayOrder) || 99) - (Number(b.displayOrder) || 99));
 
 const storesJson = JSON.stringify(locations.map((l: any) => ({
-  name: l.name, address: l.address, city: l.city, state: l.state, zip: l.zip, lat: l.lat, lng: l.lng,
+  name: l.name, address: l.address, city: l.city, state: l.state, zip: l.zip, lat: Number(l.lat), lng: Number(l.lng),
   // Only this page's locator needs these -- their presence is what tells
   // locator.js to render a photo + "More Info" link on each list item.
   slug: l.slug,
