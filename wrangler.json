@@ -1,0 +1,8 @@
+{
+  "kv_namespaces": [
+    {
+      "binding": "SESSION",
+      "id": "123456789"
+    }
+  ]
+}
