@@ -1,4 +1,5 @@
 ---
+export const prerender = true;
 import Layout from '../layouts/Layout.astro';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
@@ -99,34 +100,34 @@ const p = unwrapSingletons((await getPage('about')) as any, [
 
   <Nav active="about" />
 
-  <section class="about-hero" data-sb-object-id="src/content/pages/about.yaml">
+  <section class="about-hero">
     <div class="about-hero-content container">
-      <h1 data-sb-field-path="hero.heading">{p.hero?.heading ?? 'About 151 Coffee'}</h1>
-      <p data-sb-field-path="hero.subheading">{p.hero?.subheading ?? "It's a Good Day to Have a Good Day."}</p>
+      <h1>{p.hero?.heading ?? 'About 151 Coffee'}</h1>
+      <p>{p.hero?.subheading ?? "It's a Good Day to Have a Good Day."}</p>
     </div>
   </section>
 
-  <BlockRenderer sections={p.sections} objectId="src/content/pages/about.yaml" />
+  <BlockRenderer sections={p.sections} />
 
   {(p.visibility?.intro ?? true) && (
-  <section class="about-intro" data-sb-object-id="src/content/pages/about.yaml">
+  <section class="about-intro">
     <div class="container">
       <div class="about-intro-inner">
         <div class="about-intro-text">
-          <h2><span data-sb-field-path="intro.heading" style="color:inherit">{p.intro?.heading ?? 'Not Your Typical'}</span><br><span data-sb-field-path="intro.headingSpan">{p.intro?.headingSpan ?? 'Coffee Shop.'}</span></h2>
+          <h2><span style="color:inherit">{p.intro?.heading ?? 'Not Your Typical'}</span><br><span>{p.intro?.headingSpan ?? 'Coffee Shop.'}</span></h2>
           {(p.intro?.paragraphs ?? [
             '151 Coffee is not your typical coffee shop. Fun and happiness drive our culture and music drives our speed, that\'s why we live by the 151 motto "It\'s a good day to have a good day."',
             "Each of our drive-thru stores serves the best tasting coffee and blended energy drinks faster than anyone. If you're thirsty and looking for a tasty beverage to buzz your day, swing through our drive thru, say hi, and drive with the 151 vibe.",
           ]).map((para: string, i: number) => (
-            <p data-sb-field-path={`intro.paragraphs.${i}`}>{para}</p>
+            <p>{para}</p>
           ))}
-          <p class="about-intro-tagline" data-sb-field-path="intro.tagline">{p.intro?.tagline ?? "It's a Good Day to have a Good Day."}</p>
+          <p class="about-intro-tagline">{p.intro?.tagline ?? "It's a Good Day to have a Good Day."}</p>
         </div>
         <div class="about-intro-img">
           <img loading="lazy" decoding="async"
             src={p.intro?.image ?? 'https://static.wixstatic.com/media/b45796_b6c019a088b74b3ba49d658de7304879~mv2.jpg/v1/fill/w_900,h_700,al_c,q_85,usm_0.66_1.00_0.01/350630772_586994276756053_9082157421413125565_n.jpg'}
             alt={p.intro?.imageAlt ?? '151 Coffee store'}
-            data-sb-field-path="intro.image"
+
           />
         </div>
       </div>
@@ -135,7 +136,7 @@ const p = unwrapSingletons((await getPage('about')) as any, [
   )}
 
   {(p.visibility?.stats ?? true) && (
-  <section class="about-stats" data-sb-object-id="src/content/pages/about.yaml">
+  <section class="about-stats">
     <div class="container">
       <div class="stats-grid">
         {(p.stats ?? [
@@ -144,9 +145,9 @@ const p = unwrapSingletons((await getPage('about')) as any, [
           { number: '$2B', label: "Founder's Track Record" },
           { number: '500', label: 'Stores by 2028' },
         ]).map((stat: any, i: number) => (
-          <div class="stat-item" data-sb-field-path={`stats.${i}`}>
-            <div class="stat-number" data-sb-field-path="number">{stat.number}</div>
-            <div class="stat-label" data-sb-field-path="label">{stat.label}</div>
+          <div class="stat-item">
+            <div class="stat-number">{stat.number}</div>
+            <div class="stat-label">{stat.label}</div>
           </div>
         ))}
       </div>
@@ -155,17 +156,17 @@ const p = unwrapSingletons((await getPage('about')) as any, [
   )}
 
   {(p.visibility?.history ?? true) && (
-  <section class="about-history" data-sb-object-id="src/content/pages/about.yaml">
+  <section class="about-history">
     <div class="container">
       <div class="section-header">
-        <h2 data-sb-field-path="history.heading">{p.history?.heading ?? 'History of 151 Coffee'}</h2>
+        <h2>{p.history?.heading ?? 'History of 151 Coffee'}</h2>
       </div>
       <div class="history-body">
         {(p.history?.body ?? [
           '151 Coffee is a whole new coffee concept started in 2017. Founded and funded by Mark Wattles, who has founded and financed multiple national $100MM to $2B companies.',
           'At 151, we intend to leverage the experience of our founder and the 151 Team to grow rapidly and create opportunities for our employees while never forgetting our #1 mission: to have fun!',
         ]).map((para: string, i: number) => (
-          <p data-sb-field-path={`history.body.${i}`}>{para}</p>
+          <p>{para}</p>
         ))}
       </div>
       <div class="history-timeline">
@@ -175,10 +176,10 @@ const p = unwrapSingletons((await getPage('about')) as any, [
           { year: '2019-22', text: 'Thirteen more locations open across Texas, then expansion into Kansas.' },
           { year: 'Today', text: '16 locations across Texas and Kansas. Goal: 500 stores by 2028.' },
         ]).map((item: any, i: number) => (
-          <div class="timeline-item" data-sb-field-path={`history.timeline.${i}`}>
-            <div class="timeline-year" data-sb-field-path="year">{item.year}</div>
+          <div class="timeline-item">
+            <div class="timeline-year">{item.year}</div>
             <div class="timeline-bar"><div class="timeline-dot"></div><div class="timeline-line"></div></div>
-            <div class="timeline-content"><p data-sb-field-path="text">{item.text}</p></div>
+            <div class="timeline-content"><p>{item.text}</p></div>
           </div>
         ))}
       </div>
@@ -187,25 +188,25 @@ const p = unwrapSingletons((await getPage('about')) as any, [
   )}
 
   {(p.visibility?.founder ?? true) && (
-  <section class="about-founder" data-sb-object-id="src/content/pages/about.yaml">
+  <section class="about-founder">
     <div class="founder-hero-img">
       <img loading="lazy" decoding="async"
         src={p.founder?.image ?? 'https://static.wixstatic.com/media/f82c08_7c5d93e4326449d3a489c3d11538de1b~mv2.jpg/v1/fill/w_800,h_1000,al_c,q_85,usm_0.66_1.00_0.01/RightCallout.jpg'}
         alt={p.founder?.imageAlt ?? 'Mark Wattles - Founder of 151 Coffee'}
-        data-sb-field-path="founder.image"
+
       />
     </div>
     <div class="container">
     <div class="founder-left">
       <div class="founder-inner">
         <div class="founder-text">
-          <h2 data-sb-field-path="founder.heading">{p.founder?.heading ?? 'Meet the Founder'}</h2>
-          <div class="founder-title" data-sb-field-path="founder.name">{p.founder?.name ?? 'Mark Wattles'}</div>
+          <h2>{p.founder?.heading ?? 'Meet the Founder'}</h2>
+          <div class="founder-title">{p.founder?.name ?? 'Mark Wattles'}</div>
           {(p.founder?.bio ?? [
             'Mark is a highly accomplished entrepreneur with a strong background in business development and growth. Born and raised in both Santa Monica and Texas, he developed a passion for surfing, wakeboarding, and snowboarding from a young age.',
             'Instead of pursuing a traditional college education, Mark chose to dive into the world of business and has since built an impressive portfolio of successful national ventures.',
           ]).map((para: string, i: number) => (
-            <p data-sb-field-path={`founder.bio.${i}`}>{para}</p>
+            <p>{para}</p>
           ))}
           <div class="founder-ventures">
             {(p.founder?.ventures ?? [
@@ -213,9 +214,9 @@ const p = unwrapSingletons((await getPage('about')) as any, [
               { name: 'HomeAdvisor.com', desc: 'Co-founder of the B2C online home improvement marketplace. Sold to IAC/InterActiveCorp (Nasdaq: IAC).' },
               { name: 'Firebirds Wood Fired Grill', desc: 'One of four partners who built this full-service restaurant chain to 45 locations across 18 states. Majority stake sold to Angelo Gordon.' },
             ]).map((v: any, i: number) => (
-              <div class="venture-card" data-sb-field-path={`founder.ventures.${i}`}>
-                <div class="venture-name" data-sb-field-path="name">{v.name}</div>
-                <div class="venture-desc" data-sb-field-path="desc">{v.desc}</div>
+              <div class="venture-card">
+                <div class="venture-name">{v.name}</div>
+                <div class="venture-desc">{v.desc}</div>
               </div>
             ))}
           </div>
@@ -227,13 +228,13 @@ const p = unwrapSingletons((await getPage('about')) as any, [
   )}
 
   {(p.visibility?.cta ?? true) && (
-  <section class="about-cta" data-sb-object-id="src/content/pages/about.yaml">
+  <section class="about-cta">
     <div class="container">
-      <h2 data-sb-field-path="cta.heading">{p.cta?.heading ?? 'Interested in Joining the 151 Team?'}</h2>
-      <p data-sb-field-path="cta.body">{p.cta?.body ?? '151 Coffee is not your typical coffee shop - fun and happiness drive our culture. Come be part of something good.'}</p>
+      <h2>{p.cta?.heading ?? 'Interested in Joining the 151 Team?'}</h2>
+      <p>{p.cta?.body ?? '151 Coffee is not your typical coffee shop - fun and happiness drive our culture. Come be part of something good.'}</p>
       <div class="about-cta-buttons">
-        <a href={p.cta?.primaryHref ?? 'https://www.workstream.us/j/224b40b5/151-coffee'} target="_blank" rel="noopener noreferrer" class="btn-white" data-sb-field-path="cta.primaryLabel">{p.cta?.primaryLabel ?? 'Apply Now'}</a>
-        <a href={p.cta?.secondaryHref ?? '/locations'} class="btn-outline-white" data-sb-field-path="cta.secondaryLabel">{p.cta?.secondaryLabel ?? 'Find a Store'}</a>
+        <a href={p.cta?.primaryHref ?? 'https://www.workstream.us/j/224b40b5/151-coffee'} target="_blank" rel="noopener noreferrer" class="btn-white">{p.cta?.primaryLabel ?? 'Apply Now'}</a>
+        <a href={p.cta?.secondaryHref ?? '/locations'} class="btn-outline-white">{p.cta?.secondaryLabel ?? 'Find a Store'}</a>
       </div>
     </div>
   </section>

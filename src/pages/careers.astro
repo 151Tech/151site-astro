@@ -1,4 +1,5 @@
 ---
+export const prerender = true;
 import Layout from '../layouts/Layout.astro';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
@@ -159,40 +160,40 @@ const p = unwrapSingletons((await getPage('careers')) as any, ['seo', 'agegate',
   <Nav active="careers" />
 
   <!-- Age gate -->
-  <div class="age-gate-page" id="ageGatePage" data-sb-object-id="src/content/pages/careers.yaml">
+  <div class="age-gate-page" id="ageGatePage">
     <HeroVideo src={p.heroVideo} videoClass="age-bg-video" />
     <div class="age-overlay"></div>
     <div class="age-gate">
       <div class="age-card" id="ageCard">
-        <span class="eyebrow" data-sb-field-path="agegate.eyebrow">{p.agegate?.eyebrow ?? 'Join the Team'}</span>
-        <h1 data-sb-field-path="agegate.heading">{p.agegate?.heading ?? <>Join <span>151 Coffee</span></>}</h1>
-        <p class="sub" data-sb-field-path="agegate.body">{p.agegate?.body ?? 'Fun and happiness drive our culture. Music drives our speed. Before we send you to our openings - are you 18 or older?'}</p>
+        <span class="eyebrow">{p.agegate?.eyebrow ?? 'Join the Team'}</span>
+        <h1>{p.agegate?.heading ?? <>Join <span>151 Coffee</span></>}</h1>
+        <p class="sub">{p.agegate?.body ?? 'Fun and happiness drive our culture. Music drives our speed. Before we send you to our openings - are you 18 or older?'}</p>
         <div class="age-buttons">
-          <button id="ageYes" class="age-btn-yes" data-sb-field-path="agegate.yesLabel">{p.agegate?.yesLabel ?? "Yes, I'm 18 or Older"}</button>
-          <button id="ageNo" class="age-btn-no" data-sb-field-path="agegate.noLabel">{p.agegate?.noLabel ?? 'Not Quite Yet'}</button>
+          <button id="ageYes" class="age-btn-yes">{p.agegate?.yesLabel ?? "Yes, I'm 18 or Older"}</button>
+          <button id="ageNo" class="age-btn-no">{p.agegate?.noLabel ?? 'Not Quite Yet'}</button>
         </div>
       </div>
       <div class="age-under" id="ageUnder">
-        <h2 data-sb-field-path="under18.heading">{p.under18?.heading ?? <>Come back when you're <span>ready.</span></>}</h2>
+        <h2>{p.under18?.heading ?? <>Come back when you're <span>ready.</span></>}</h2>
         {(p.under18?.body ?? ['We appreciate your honesty. Check out our menu in the meantime!']).map((para: string, i: number) => (
-          <p data-sb-field-path={`under18.body.${i}`}>{para}</p>
+          <p>{para}</p>
         ))}
-        <a href="/" class="back-link" data-sb-field-path="under18.linkText">{p.under18?.linkText ?? '← Back to Home'}</a>
+        <a href="/" class="back-link">{p.under18?.linkText ?? '← Back to Home'}</a>
       </div>
     </div>
   </div>
 
   <!-- Careers content (revealed after age gate) -->
   <div id="careersContent" style="display:none;">
-    <BlockRenderer sections={p.sections} objectId="src/content/pages/careers.yaml" />
+    <BlockRenderer sections={p.sections} />
 
-    <section class="careers-hero" data-sb-object-id="src/content/pages/careers.yaml">
+    <section class="careers-hero">
       <HeroVideo src={p.heroVideo} videoClass="hero-bg" />
       <div class="careers-hero-content">
-        <h1 data-sb-field-path="hero.heading">{p.hero?.heading ?? 'Join the 151 Team'}</h1>
-        <p data-sb-field-path="hero.subheading">{p.hero?.subheading ?? 'Fun, fast, and built on good vibes. See what\'s open.'}</p>
+        <h1>{p.hero?.heading ?? 'Join the 151 Team'}</h1>
+        <p>{p.hero?.subheading ?? 'Fun, fast, and built on good vibes. See what\'s open.'}</p>
         <a href={p.workstreamHref ?? '#'} target="_blank" rel="noopener noreferrer" class="btn-primary"
-          style="font-size:1.1rem;padding:1rem 2.5rem;" data-sb-field-path="workstreamLabel">
+          style="font-size:1.1rem;padding:1rem 2.5rem;">
           {p.workstreamLabel ?? 'View Open Positions'}
         </a>
       </div>

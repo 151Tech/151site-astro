@@ -1,4 +1,5 @@
 ---
+export const prerender = true;
 import Layout from '../layouts/Layout.astro';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
@@ -48,14 +49,14 @@ const STATE_NAMES: Record<string, string> = Object.fromEntries(
 
   <Nav active="locations" />
 
-  <BlockRenderer sections={p.sections} objectId="src/content/pages/locations.yaml" />
+  <BlockRenderer sections={p.sections} />
 
   {(p.visibility?.map ?? true) && (
   <div class="loc-bg">
-    <section class="loc-map-section" data-sb-object-id="src/content/pages/locations.yaml">
+    <section class="loc-map-section">
       <div class="container">
         <div class="loc-hero-content">
-          <h1 data-sb-field-path="hero.heading">{p.hero?.heading ?? 'Find Your 151'}</h1>
+          <h1>{p.hero?.heading ?? 'Find Your 151'}</h1>
         </div>
       </div>
       <div class="locator locator--stacked">
@@ -69,7 +70,7 @@ const STATE_NAMES: Record<string, string> = Object.fromEntries(
           <span class="loc-count-wrap">
             <span class="loc-count-number">{locations.length}</span>
             <span class="loc-count loc-count--badge">
-              <span class="loc-count-label" data-sb-field-path="hero.countSuffix">{p.hero?.countSuffix ?? 'Locations Open'}</span>
+              <span class="loc-count-label">{p.hero?.countSuffix ?? 'Locations Open'}</span>
             </span>
           </span>
         </div>
@@ -92,7 +93,7 @@ const STATE_NAMES: Record<string, string> = Object.fromEntries(
                   class="locator__item locator-photo-card"
                   data-store-card
                   data-href={`/locations/${loc.slug}`}
-                  data-sb-object-id={`src/content/locations/${loc.slug}.yaml`}
+
                 >
                   <img
                     class="locator__item-photo"
@@ -109,7 +110,7 @@ const STATE_NAMES: Record<string, string> = Object.fromEntries(
                     decoding="async"
                   />
                   <div class="locator__item-info">
-                    <h3 data-sb-field-path="city">{loc.city}</h3>
+                    <h3>{loc.city}</h3>
                     <p>{loc.address}<br />{loc.city}, {loc.state} {loc.zip}</p>
                   </div>
                   <div class="locator__item-actions">

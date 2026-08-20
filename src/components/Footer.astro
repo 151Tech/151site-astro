@@ -19,17 +19,17 @@ const igAppUrl = igUsername ? `instagram://user?username=${igUsername}` : undefi
 ---
 <footer>
   <div class="container">
-    <div class="footer-content" style="padding:2rem;border:2px solid var(--red);border-radius:24px;" data-sb-object-id="src/content/settings/global.yaml">
+    <div class="footer-content" style="padding:2rem;border:2px solid var(--red);border-radius:24px;">
       <div class="footer-section">
-        <h4 data-sb-field-path="footer.companyHeading">{f.companyHeading ?? 'Company'}</h4>
+        <h4>{f.companyHeading ?? 'Company'}</h4>
         <ul>
           {companyLinks.map((link, i) => (
-            <li><a href={link.href} data-sb-field-path={`footer.companyLinks.${i}.label`}>{link.label}</a></li>
+            <li><a href={link.href}>{link.label}</a></li>
           ))}
         </ul>
       </div>
       <div class="footer-social-section">
-        <h4 data-sb-field-path="footer.socialHeading">{f.socialHeading ?? 'Social'}</h4>
+        <h4>{f.socialHeading ?? 'Social'}</h4>
         <ul>
           <li><a href={s.social?.tiktok ?? '#'} target="_blank" rel="noopener noreferrer">TikTok</a></li>
           <li><a href={s.social?.facebook ?? '#'} target="_blank" rel="noopener noreferrer">Facebook</a></li>
@@ -38,12 +38,12 @@ const igAppUrl = igUsername ? `instagram://user?username=${igUsername}` : undefi
         </ul>
       </div>
       <div class="footer-section">
-        <h4 data-sb-field-path="footer.supportHeading">{f.supportHeading ?? 'Support'}</h4>
+        <h4>{f.supportHeading ?? 'Support'}</h4>
         <ul>
-          <li><a href={`mailto:${s.email ?? 'Contact@151Coffee.com'}`} data-sb-field-path="footer.contactLabel">{f.contactLabel ?? 'Contact'}</a></li>
-          <li><a href={`tel:${(s.phone ?? '').replace(/\D/g,'')}`} data-sb-field-path="footer.callLabel">{f.callLabel ?? 'Call Us'}</a></li>
-          <li><a href={`mailto:${s.email ?? 'Contact@151Coffee.com'}`} data-sb-field-path="footer.supportLabel">{f.supportLabel ?? 'Support'}</a></li>
-          <li><button type="button" id="giftCardFooterSupportBtn" data-sb-field-path="footer.giftCardCheckLabel">{f.giftCardCheckLabel ?? 'Check Gift Card'}</button></li>
+          <li><a href={`mailto:${s.email ?? 'Contact@151Coffee.com'}`}>{f.contactLabel ?? 'Contact'}</a></li>
+          <li><a href={`tel:${(s.phone ?? '').replace(/\D/g,'')}`}>{f.callLabel ?? 'Call Us'}</a></li>
+          <li><a href={`mailto:${s.email ?? 'Contact@151Coffee.com'}`}>{f.supportLabel ?? 'Support'}</a></li>
+          <li><button type="button" id="giftCardFooterSupportBtn">{f.giftCardCheckLabel ?? 'Check Gift Card'}</button></li>
         </ul>
       </div>
     </div>
@@ -57,11 +57,11 @@ const igAppUrl = igUsername ? `instagram://user?username=${igUsername}` : undefi
       <p class="footer-web-design footer-web-design-desktop">
         <span>Design by</span> <a href="https://stillbuilt.co" target="_blank" rel="noopener noreferrer" aria-label="Stillbuilt"><img src="/images/stillbuilt-logo-animated-blink.svg" alt="Stillbuilt" width="802" height="130" class="footer-web-design-logo" /></a>
       </p>
-      <div class="footer-gc" data-sb-object-id="src/content/settings/global.yaml">
-        <button id="giftCardFooterBtn" class="gc-btn" data-sb-field-path="footer.giftCardButtonLabel">{f.giftCardButtonLabel ?? 'Check Gift Card Balance'}</button>
+      <div class="footer-gc">
+        <button id="giftCardFooterBtn" class="gc-btn">{f.giftCardButtonLabel ?? 'Check Gift Card Balance'}</button>
       </div>
-      <div class="footer-credits" data-sb-object-id="src/content/settings/global.yaml">
-        <p data-sb-field-path="copyright">{s.copyright ?? "© 151 Coffee, LLC. It's a Good Day to Have a Good Day."}</p>
+      <div class="footer-credits">
+        <p>{s.copyright ?? "© 151 Coffee, LLC. It's a Good Day to Have a Good Day."}</p>
         <p class="footer-web-design footer-web-design-mobile">
           <span>Design by</span> <a href="https://stillbuilt.co" target="_blank" rel="noopener noreferrer" aria-label="Stillbuilt"><img src="/images/stillbuilt-logo-animated-blink.svg" alt="Stillbuilt" width="802" height="130" class="footer-web-design-logo" /></a>
         </p>

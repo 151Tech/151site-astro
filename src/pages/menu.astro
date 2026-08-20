@@ -1,4 +1,5 @@
 ---
+export const prerender = true;
 import Layout from '../layouts/Layout.astro';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
@@ -102,8 +103,7 @@ const sfFlavors: string[] = p.customize?.sfFlavors ?? [];
 // items (Hot Food, Treats) are excluded from this check: their tags (e.g.
 // "Cinnamon" on a coffee cake) aren't real drink flavors, so they shouldn't
 // keep a flavor selector alive on their own. Keep each flavor's original
-// index (not its position in this filtered list) so its data-sb-field-path
-// still points at the right item in the Visual Editor.
+// index (not its position in this filtered list) for stable identity.
 const FOOD_CATS = new Set(['hotfood', 'treats']);
 const FLAVORS_WITH_DRINKS = new Set(
   allDrinks.filter((d: any) => !FOOD_CATS.has(catSlug(d))).flatMap((d: any) => d.tags ?? [])
@@ -135,16 +135,16 @@ const CATEGORY_PLACEHOLDER_IMAGE: Record<string, string> = {
 
   <Nav active="menu" />
 
-  <section class="menu-hero" data-sb-object-id="src/content/pages/menu.yaml">
+  <section class="menu-hero">
     <HeroVideo src={p.heroVideo} videoClass="hero-bg" />
     <div class="menu-hero-content">
-      <h1 data-sb-field-path="hero.heading">{p.hero?.heading ?? 'Our Menu'}</h1>
+      <h1>{p.hero?.heading ?? 'Our Menu'}</h1>
       <button type="button" class="location-trigger" id="locationTrigger">
         <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <path d="M12 21s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12z" stroke="currentColor" stroke-width="1.8"/>
           <circle cx="12" cy="9" r="2.3" stroke="currentColor" stroke-width="1.8"/>
         </svg>
-        <span id="locationTriggerLabel" data-sb-field-path="locationPicker.triggerLabel">{p.locationPicker?.triggerLabel ?? 'Select Your Location'}</span>
+        <span id="locationTriggerLabel">{p.locationPicker?.triggerLabel ?? 'Select Your Location'}</span>
       </button>
     </div>
     <div class="cat-nav" id="catNav">
@@ -152,20 +152,20 @@ const CATEGORY_PLACEHOLDER_IMAGE: Record<string, string> = {
         {CATEGORIES.map((cat: any, i: number) => (
           <button class={`cat-link${i === 0 ? ' active' : ''}`} data-tab={cat.tab}
             data-visible={cat.hiddenByDefault ? 'false' : undefined}
-            data-sb-object-id={cat.refId} data-sb-field-path="title">{cat.title}</button>
+>{cat.title}</button>
         ))}
       </div>
     </div>
   </section>
 
-  <div id="locationModal" class="modal" data-sb-object-id="src/content/pages/menu.yaml">
+  <div id="locationModal" class="modal">
     <div class="modal-content loc-modal-content">
       <button type="button" class="modal-close" id="closeLocationModal" aria-label="Close">&times;</button>
       <div class="loc-modal-inner">
-        <h2 data-sb-field-path="locationPicker.heading">{p.locationPicker?.heading ?? 'Select Your Location'}</h2>
-        <p data-sb-field-path="locationPicker.subtext">{p.locationPicker?.subtext ?? "See only what's available at your store. You can change this anytime."}</p>
+        <h2>{p.locationPicker?.heading ?? 'Select Your Location'}</h2>
+        <p>{p.locationPicker?.subtext ?? "See only what's available at your store. You can change this anytime."}</p>
         <div class="loc-modal-list">
-          <button type="button" class="loc-modal-item loc-modal-item--all" data-store="" data-sb-field-path="locationPicker.allLabel">
+          <button type="button" class="loc-modal-item loc-modal-item--all" data-store="">
             {p.locationPicker?.allLabel ?? 'All Locations'}
           </button>
           {Object.entries(locationsByState).map(([state, locs]: [string, any]) => (
@@ -184,7 +184,7 @@ const CATEGORY_PLACEHOLDER_IMAGE: Record<string, string> = {
   </div>
 
   {(p.visibility?.timeline ?? true) && (
-  <section class="timeline-wrap" data-sb-object-id="src/content/pages/menu.yaml">
+  <section class="timeline-wrap">
     <div class="timeline-scroll" id="timelineScroll">
       {CATEGORIES.map((cat: any, catIndex: number) => {
         const drinks = allDrinks.filter((d: any) => catSlug(d) === cat.tab);
@@ -192,10 +192,10 @@ const CATEGORY_PLACEHOLDER_IMAGE: Record<string, string> = {
           <>
             <div class="cat-title-card" id={`cat-${cat.tab}`} data-cat={cat.tab}
               data-visible={cat.hiddenByDefault ? 'false' : undefined}
-              data-sb-object-id={cat.refId}>
+>
               <div class="cat-title-inner">
-                <h2 class="cat-title-text" data-sb-field-path="title">{cat.title}</h2>
-                <p class="cat-title-desc" data-sb-field-path="description">{cat.desc}</p>
+                <h2 class="cat-title-text">{cat.title}</h2>
+                <p class="cat-title-desc">{cat.desc}</p>
                 <svg class="cat-arrow" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <line x1="4" y1="4" x2="28" y2="16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
                   <line x1="28" y1="16" x2="4" y2="28" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
@@ -206,23 +206,23 @@ const CATEGORY_PLACEHOLDER_IMAGE: Record<string, string> = {
               <a class={`drink-card${drink.slug === 'coldbrew-nitro-brew' ? ' nitro-card' : ''}`}
                 data-cat={cat.tab} href={`/drinks/${drink.slug}`}
                 data-visible={cat.hiddenByDefault ? 'false' : undefined}
-                data-sb-object-id={`src/content/drinks/${drink.slug}.yaml`}>
-                {drink.badge && <span class="drink-badge" data-sb-field-path="badge">{drink.badge}</span>}
+>
+                {drink.badge && <span class="drink-badge">{drink.badge}</span>}
                 <div class="drink-img-wrap">
                   <img loading="lazy" decoding="async" src={CATEGORY_PLACEHOLDER_IMAGE[cat.tab] ?? '/images/v5/coffee.jpg'} alt={drink.name} />
                 </div>
                 <div class="drink-info">
-                  <h3 data-sb-field-path="name">{drink.name}</h3>
-                  {drink.subtitle && <p data-sb-field-path="subtitle">{drink.subtitle}</p>}
+                  <h3>{drink.name}</h3>
+                  {drink.subtitle && <p>{drink.subtitle}</p>}
                 </div>
               </a>
             ))}
             {cat.extraCards.map((card: any, cardIndex: number) => (
               <div class="descriptor-card" data-cat={cat.tab}
                 data-visible={cat.hiddenByDefault ? 'false' : undefined}
-                data-sb-object-id={cat.refId}>
-                <p class="descriptor-label" data-sb-field-path={`extraCards.${cardIndex}.label`}>{card.label}</p>
-                <div class="descriptor-list" data-sb-field-path={`extraCards.${cardIndex}.items`}>
+>
+                <p class="descriptor-label">{card.label}</p>
+                <div class="descriptor-list">
                   {(card.items ?? []).map((item: string) => <span>{item}</span>)}
                 </div>
               </div>
@@ -232,29 +232,29 @@ const CATEGORY_PLACEHOLDER_IMAGE: Record<string, string> = {
       })}
 
       <div class="timeline-empty-state" id="timelineEmpty">
-        <p data-sb-field-path="labels.emptyHeading">{p.labels?.emptyHeading ?? 'Nothing here yet.'}</p>
-        <span data-sb-field-path="labels.emptySub">{p.labels?.emptySub ?? "But we're always working on something good."}</span>
+        <p>{p.labels?.emptyHeading ?? 'Nothing here yet.'}</p>
+        <span>{p.labels?.emptySub ?? "But we're always working on something good."}</span>
       </div>
       <div class="timeline-end-spacer"></div>
     </div>
   </section>
   )}
 
-  <BlockRenderer sections={p.sections} objectId="src/content/pages/menu.yaml" />
+  <BlockRenderer sections={p.sections} />
 
   {(p.visibility?.customize ?? true) && (
-  <section class="customize-section" data-sb-object-id="src/content/pages/menu.yaml">
+  <section class="customize-section">
     <div class="cz-inner">
       <div class="cz-row">
         <div class="cz-heading">
-          <h2 data-sb-field-path="customize.heading">{p.customize?.heading ?? 'Sort by Flavor'}</h2>
+          <h2>{p.customize?.heading ?? 'Sort by Flavor'}</h2>
           <p class="cz-filter-hint" id="czFilterHint" aria-live="polite"></p>
         </div>
         <div class="cz-block cz-flavor-block">
-          <p class="cz-label" data-sb-field-path="customize.flavorLabel">{p.customize?.flavorLabel ?? 'Tap to Filter the Menu'}</p>
-          <div class="cz-pills cz-pills--flavors" id="czFlavorPills" data-sb-field-path="customize.flavors">
+          <p class="cz-label">{p.customize?.flavorLabel ?? 'Tap to Filter the Menu'}</p>
+          <div class="cz-pills cz-pills--flavors" id="czFlavorPills">
             {flavors.map(({ value: f, index: i }: any) => (
-              <span class="cpill cpill--filter" data-flavor={f} data-sb-field-path={`.${i}`}>{f}</span>
+              <span class="cpill cpill--filter" data-flavor={f}>{f}</span>
             ))}
           </div>
         </div>

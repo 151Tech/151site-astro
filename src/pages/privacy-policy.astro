@@ -1,4 +1,5 @@
 ---
+export const prerender = true;
 import Layout from '../layouts/Layout.astro';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
@@ -10,22 +11,22 @@ const sections: any[] = p.sections ?? [];
 <Layout title={p.seo?.title ?? 'Privacy Policy | 151 Coffee'} description={p.seo?.description ?? '151 Coffee privacy policy - how we collect, use, and protect your information.'} ogImage={p.seo?.ogImage}>
   <Nav />
 
-  <section class="page-hero" style="min-height:30vh;" data-sb-object-id="src/content/pages/privacy.yaml">
+  <section class="page-hero" style="min-height:30vh;">
     <div class="page-hero-overlay"></div>
     <div class="container">
       <div class="page-hero-content">
-        <h1 data-sb-field-path="hero.heading">{p.hero?.heading ?? 'Privacy Policy'}</h1>
-        <p data-sb-field-path="hero.subheading">{p.hero?.subheading ?? 'Last updated: June 2025'}</p>
+        <h1>{p.hero?.heading ?? 'Privacy Policy'}</h1>
+        <p>{p.hero?.subheading ?? 'Last updated: June 2025'}</p>
       </div>
     </div>
   </section>
 
-  <section class="legal-content" data-sb-object-id="src/content/pages/privacy.yaml">
+  <section class="legal-content">
     <div class="container" style="max-width:800px;padding:4rem 1rem;">
       {sections.map((sec: any, i: number) => (
-        <div data-sb-field-path={`sections.${i}`}>
-          <h2 data-sb-field-path="heading">{sec.heading}</h2>
-          <p data-sb-field-path="body">{sec.body}</p>
+        <div>
+          <h2>{sec.heading}</h2>
+          <p>{sec.body}</p>
         </div>
       ))}
     </div>

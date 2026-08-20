@@ -1,4 +1,5 @@
 ---
+export const prerender = true;
 import Layout from '../layouts/Layout.astro';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
@@ -11,18 +12,18 @@ const categories = ['All', ...Array.from(new Set((p.items ?? []).map((i: any) =>
 <Layout title={p.seo?.title ?? '151 Coffee Merch | Rep Your Favorite Coffee'} description={p.seo?.description} ogImage={p.seo?.ogImage}>
   <Nav />
 
-  <section class="page-hero" data-sb-object-id="src/content/pages/merch.yaml">
+  <section class="page-hero">
     <div class="page-hero-overlay"></div>
     <div class="container">
       <div class="page-hero-content">
-        <h1 data-sb-field-path="hero.heading">{p.hero?.heading}</h1>
-        <p data-sb-field-path="hero.subheading">{p.hero?.subheading}</p>
+        <h1>{p.hero?.heading}</h1>
+        <p>{p.hero?.subheading}</p>
       </div>
     </div>
   </section>
 
   {(p.visibility?.products ?? true) && (
-  <section class="merch-section" data-sb-object-id="src/content/pages/merch.yaml">
+  <section class="merch-section">
     <div class="container">
       <div class="merch-filters">
         {categories.map(cat => (
@@ -31,16 +32,16 @@ const categories = ['All', ...Array.from(new Set((p.items ?? []).map((i: any) =>
       </div>
       <div class="merch-grid">
         {(p.items ?? []).map((item: any, i: number) => (
-          <div class="merch-card" data-category={item.category} data-sb-field-path={`items.${i}`}>
+          <div class="merch-card" data-category={item.category}>
             <div class="merch-img-wrap">
               {item.image
-                ? <img src={item.image} alt={item.name} loading="lazy" data-sb-field-path="image" />
+                ? <img src={item.image} alt={item.name} loading="lazy" />
                 : <div class="merch-placeholder"></div>
               }
             </div>
             <div class="merch-info">
-              <h3 data-sb-field-path="name">{item.name}</h3>
-              <span class="merch-price" data-sb-field-path="price">{item.price}</span>
+              <h3>{item.name}</h3>
+              <span class="merch-price">{item.price}</span>
             </div>
           </div>
         ))}

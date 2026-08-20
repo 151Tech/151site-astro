@@ -15,8 +15,6 @@
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.3",
-    "@stackbit/cms-git": "1.0.38",
-    "@stackbit/types": "2.1.15",
     "astro": "^7.2.2",
     "storyblok-js-client": "^6.10.7"
   },

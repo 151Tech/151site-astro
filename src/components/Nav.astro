@@ -31,16 +31,16 @@ function isActive(href: string): boolean {
 <div class="loading-bar"></div>
 <nav>
   <div class="nav-container">
-    <a href="/" class="logo" data-sb-object-id="src/content/settings/global.yaml">
-      <img src={logo} alt={`${siteName} logo`} width="512" height="512" style="width:3rem;height:auto;" data-sb-field-path="logo" />
-      <span data-sb-field-path="siteName">{siteName}</span>
+    <a href="/" class="logo">
+      <img src={logo} alt={`${siteName} logo`} width="512" height="512" style="width:3rem;height:auto;" />
+      <span>{siteName}</span>
     </a>
-    <ul class="nav-links" data-sb-object-id="src/content/settings/global.yaml">
+    <ul class="nav-links">
       {navLinks.map((link, i) => (
-        <li><a href={link.href} class={`nav-link${isActive(link.href) ? ' active' : ''}`} data-sb-field-path={`nav.${i}.label`}>{link.label}</a></li>
+        <li><a href={link.href} class={`nav-link${isActive(link.href) ? ' active' : ''}`}>{link.label}</a></li>
       ))}
     </ul>
-    <button type="button" id="giftCardNavBtn" class="main-menu-btn" data-sb-object-id="src/content/settings/global.yaml" data-sb-field-path="giftCardLabel">{giftCardLabel}</button>
+    <button type="button" id="giftCardNavBtn" class="main-menu-btn">{giftCardLabel}</button>
     <div class="menu-toggle" role="button" tabindex="0" aria-label="Toggle navigation menu" aria-expanded="false">
       <span></span><span></span><span></span>
     </div>

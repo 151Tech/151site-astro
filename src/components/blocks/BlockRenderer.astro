@@ -1,9 +1,7 @@
 ---
 // Loops over a page's `sections` array (each entry: { type, ...fields })
 // and renders the matching block component. Add a new block type by
-// creating its component and adding one line to this map -- the Visual
-// Editor side (stackbit.config.ts) needs a matching model added too so
-// editors can pick it from the "Add Section" list.
+// creating its component and adding one line to this map.
 import PromoBanner from './PromoBanner.astro';
 import ImageBanner from './ImageBanner.astro';
 import SplitFeature from './SplitFeature.astro';
@@ -13,13 +11,7 @@ import StatStrip from './StatStrip.astro';
 import FaqAccordion from './FaqAccordion.astro';
 import CardGrid from './CardGrid.astro';
 
-// Keyed by the exact Stackbit model name (e.g. "PromoBannerBlock") -- the
-// Visual Editor's GitContentSource writes its own `type` field on every
-// polymorphic list item, and that value MUST equal the model's registered
-// `name` or it can no longer resolve which model an item is (breaks
-// edit/delete, even though the initial "Add" still works since it's
-// creating a fresh object from the picked model). Don't declare a custom
-// `type` field on these models in stackbit.config.ts -- Stackbit owns it.
+// Keyed by each block's `type` value on the section's content.
 const BLOCK_COMPONENTS: Record<string, any> = {
   PromoBannerBlock: PromoBanner,
   ImageBannerBlock: ImageBanner,
@@ -33,16 +25,8 @@ const BLOCK_COMPONENTS: Record<string, any> = {
 
 interface Props {
   sections?: Array<Record<string, any>>;
-  // The content file this `sections` array lives on (e.g.
-  // "src/content/pages/home.yaml") -- needed to point the Visual Editor's
-  // click-to-select at the right document + field path per block.
-  objectId: string;
-  // The YAML key this array lives under (e.g. "sections" or
-  // "sectionsAfterHero") -- a page can have more than one insertion point,
-  // each backed by its own field, so the field-path prefix must match.
-  fieldPrefix?: string;
 }
-const { sections = [], objectId, fieldPrefix = 'sections' } = Astro.props as Props;
+const { sections = [] } = Astro.props as Props;
 
 // Tolerate sections created before this fix, whose `type` was accidentally
 // written without the "Block" suffix (e.g. "PromoBanner" instead of
@@ -58,8 +42,8 @@ function resolveComponent(type: string | undefined) {
   return (
     <Component
       {...section}
-      data-sb-object-id={objectId}
-      data-sb-field-path={`${fieldPrefix}.${i}`}
+
+
     />
   );
 })}

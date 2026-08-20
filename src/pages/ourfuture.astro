@@ -1,4 +1,5 @@
 ---
+export const prerender = true;
 import Layout from '../layouts/Layout.astro';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
@@ -102,28 +103,28 @@ const p = unwrapSingletons((await getPage('ourfuture')) as any, [
 
   <Nav active="ourfuture" />
 
-  <section class="re-hero" data-sb-object-id="src/content/pages/ourfuture.yaml">
+  <section class="re-hero">
     <div class="re-hero-content container">
-      <span class="eyebrow" data-sb-field-path="hero.eyebrow">{p.hero?.eyebrow ?? 'Est. 2017'}</span>
-      <h1 data-sb-field-path="hero.heading">{p.hero?.heading ?? 'Here We Grow Again.'}</h1>
-      <p data-sb-field-path="hero.body">{p.hero?.body ?? '151 Coffee is expanding rapidly across the country. If you have a site that fits our criteria, we want to hear from you.'}</p>
-      <a href={p.hero?.ctaHref ?? '#contact'} class="btn-white" data-sb-field-path="hero.ctaLabel">{p.hero?.ctaLabel ?? 'Get in Touch'}</a>
+      <span class="eyebrow">{p.hero?.eyebrow ?? 'Est. 2017'}</span>
+      <h1>{p.hero?.heading ?? 'Here We Grow Again.'}</h1>
+      <p>{p.hero?.body ?? '151 Coffee is expanding rapidly across the country. If you have a site that fits our criteria, we want to hear from you.'}</p>
+      <a href={p.hero?.ctaHref ?? '#contact'} class="btn-white">{p.hero?.ctaLabel ?? 'Get in Touch'}</a>
     </div>
   </section>
 
-  <BlockRenderer sections={p.sections} objectId="src/content/pages/ourfuture.yaml" />
+  <BlockRenderer sections={p.sections} />
 
   {(p.visibility?.overview ?? true) && (
-  <section class="re-overview" data-sb-object-id="src/content/pages/ourfuture.yaml">
+  <section class="re-overview">
     <div class="container">
       <div class="re-overview-inner">
         <div class="re-overview-text">
-          <h2><span data-sb-field-path="overview.heading" style="color:inherit">{p.overview?.heading ?? 'A Brand Built for'}</span> <span data-sb-field-path="overview.headingSpan">{p.overview?.headingSpan ?? 'Fast Growth.'}</span></h2>
+          <h2><span style="color:inherit">{p.overview?.heading ?? 'A Brand Built for'}</span> <span>{p.overview?.headingSpan ?? 'Fast Growth.'}</span></h2>
           {(p.overview?.body ?? [
             '151 Coffee currently operates 16 locations across the Dallas-Fort Worth metro and Kansas City metro areas, with 4 more stores opening in 2026 and many more in the pipeline.',
             'Founded and funded by Mark Wattles - who built a 2,000-store retail chain, co-founded HomeAdvisor, and scaled Firebirds Wood Fired Grill to 45 locations - 151 Coffee is built to grow fast without losing what makes it special.',
           ]).map((para: string, i: number) => (
-            <p data-sb-field-path={`overview.body.${i}`}>{para}</p>
+            <p>{para}</p>
           ))}
           <div class="re-stats">
             {(p.overview?.stats ?? [
@@ -132,9 +133,9 @@ const p = unwrapSingletons((await getPage('ourfuture')) as any, [
               { number: '500', label: 'Goal by 2028' },
               { number: '950sf', label: 'Building Footprint' },
             ]).map((stat: any, i: number) => (
-              <div class="re-stat" data-sb-field-path={`overview.stats.${i}`}>
-                <div class="re-stat-num" data-sb-field-path="number">{stat.number}</div>
-                <div class="re-stat-label" data-sb-field-path="label">{stat.label}</div>
+              <div class="re-stat">
+                <div class="re-stat-num">{stat.number}</div>
+                <div class="re-stat-label">{stat.label}</div>
               </div>
             ))}
           </div>
@@ -146,11 +147,11 @@ const p = unwrapSingletons((await getPage('ourfuture')) as any, [
             { image: '/images/store1.jpg', imageAlt: '151 Coffee store exterior' },
             { image: '/images/store1.jpg', imageAlt: '151 Coffee store exterior' },
           ]).map((photo: any, i: number) => (
-            <div class="re-map-img" data-sb-field-path={`overview.images.${i}`}>
+            <div class="re-map-img">
               <img loading="lazy" decoding="async"
                 src={photo.image}
                 alt={photo.imageAlt}
-                data-sb-field-path="image"
+
               />
             </div>
           ))}
@@ -161,11 +162,11 @@ const p = unwrapSingletons((await getPage('ourfuture')) as any, [
   )}
 
   {(p.visibility?.criteria ?? true) && (
-  <section class="re-criteria" id="criteria" data-sb-object-id="src/content/pages/ourfuture.yaml">
+  <section class="re-criteria" id="criteria">
     <div class="container">
       <div class="section-header">
-        <h2 data-sb-field-path="criteria.heading">{p.criteria?.heading ?? 'Property Site Criteria'}</h2>
-        <p data-sb-field-path="criteria.subheading">{p.criteria?.subheading ?? 'We need a minimum of 25-30k sq ft of usable land for our prototype 950 sq ft building plus 800 sq ft of covered exterior seating.'}</p>
+        <h2>{p.criteria?.heading ?? 'Property Site Criteria'}</h2>
+        <p>{p.criteria?.subheading ?? 'We need a minimum of 25-30k sq ft of usable land for our prototype 950 sq ft building plus 800 sq ft of covered exterior seating.'}</p>
       </div>
       <div class="criteria-grid">
         {(p.criteria?.cards ?? [
@@ -176,10 +177,10 @@ const p = unwrapSingletons((await getPage('ourfuture')) as any, [
           { title: 'Target Markets', body: 'Currently expanding in DFW and Kansas City metros. Actively seeking new markets with strong suburban and commuter traffic.' },
           { title: 'Pad or Ground Lease', body: 'Open to outparcel pads, ground leases, and build-to-suit opportunities. Flexible on deal structure.' },
         ]).map((card: any, i: number) => (
-          <div class="criteria-card" data-sb-field-path={`criteria.cards.${i}`}>
+          <div class="criteria-card">
             <span class="criteria-icon"></span>
-            <h3 data-sb-field-path="title">{card.title}</h3>
-            <p data-sb-field-path="body">{card.body}</p>
+            <h3>{card.title}</h3>
+            <p>{card.body}</p>
           </div>
         ))}
       </div>
@@ -188,10 +189,10 @@ const p = unwrapSingletons((await getPage('ourfuture')) as any, [
   )}
 
   {(p.visibility?.idealSite ?? true) && (
-  <section class="re-ideal" data-sb-object-id="src/content/pages/ourfuture.yaml">
+  <section class="re-ideal">
     <div class="container">
       <div class="section-header">
-        <h2 data-sb-field-path="idealSite.heading">{p.idealSite?.heading ?? 'Our Ideal Drive-Thru Site'}</h2>
+        <h2>{p.idealSite?.heading ?? 'Our Ideal Drive-Thru Site'}</h2>
       </div>
       <div class="ideal-list">
         {(p.idealSite?.items ?? [
@@ -202,7 +203,7 @@ const p = unwrapSingletons((await getPage('ourfuture')) as any, [
           'High-visibility corner or outparcel location preferred',
           'Suburban and commuter-heavy demographics',
         ]).map((item: string, i: number) => (
-          <div class="ideal-item" data-sb-field-path={`idealSite.items.${i}`}>
+          <div class="ideal-item">
             <div class="ideal-check"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
             <p>{item}</p>
           </div>
@@ -213,11 +214,11 @@ const p = unwrapSingletons((await getPage('ourfuture')) as any, [
   )}
 
   {(p.visibility?.markets ?? true) && (
-  <section class="re-locations" data-sb-object-id="src/content/pages/ourfuture.yaml">
+  <section class="re-locations">
     <div class="container">
       <div class="section-header">
-        <h2 data-sb-field-path="markets.heading">{p.markets?.heading ?? 'Current & Target Markets'}</h2>
-        <p data-sb-field-path="markets.subheading">{p.markets?.subheading ?? 'Open in DFW and Kansas City. Actively expanding to new metros.'}</p>
+        <h2>{p.markets?.heading ?? 'Current & Target Markets'}</h2>
+        <p>{p.markets?.subheading ?? 'Open in DFW and Kansas City. Actively expanding to new metros.'}</p>
       </div>
       <div class="re-location-tags">
         {(p.markets?.tags ?? [
@@ -226,7 +227,7 @@ const p = unwrapSingletons((await getPage('ourfuture')) as any, [
           'Westworth Village, TX','The Colony, TX','Tanger Outlets, TX',
           'Lawrence, KS','Manhattan, KS','Overland Park, KS','+ New Markets Coming',
         ]).map((tag: string, i: number) => (
-          <span class={`re-location-tag${tag.startsWith('+') ? ' expanding' : ''}`} data-sb-field-path={`markets.tags.${i}`}>{tag}</span>
+          <span class={`re-location-tag${tag.startsWith('+') ? ' expanding' : ''}`}>{tag}</span>
         ))}
       </div>
     </div>
@@ -234,10 +235,10 @@ const p = unwrapSingletons((await getPage('ourfuture')) as any, [
   )}
 
   {(p.visibility?.contact ?? true) && (
-  <section class="re-contact" id="contact" data-sb-object-id="src/content/pages/ourfuture.yaml">
+  <section class="re-contact" id="contact">
     <div class="container">
       <div class="section-header">
-        <h2 data-sb-field-path="contact.heading">{p.contact?.heading ?? 'For More Information'}</h2>
+        <h2>{p.contact?.heading ?? 'For More Information'}</h2>
       </div>
       <div class="re-contact-inner">
         <div class="contact-form-wrapper">
@@ -245,12 +246,12 @@ const p = unwrapSingletons((await getPage('ourfuture')) as any, [
             <input type="hidden" name="form-name" value="realestate-inquiry" />
             <p style="display:none"><label>Leave this field blank: <input name="bot-field" /></label></p>
             <div class="form-header">
-              <h3 data-sb-field-path="contact.formHeading">{p.contact?.formHeading ?? 'Real Estate Inquiry'}</h3>
-              <p data-sb-field-path="contact.formSubtext">{p.contact?.formSubtext ?? 'Contact Mark Wattles directly about site opportunities across our target markets.'}</p>
+              <h3>{p.contact?.formHeading ?? 'Real Estate Inquiry'}</h3>
+              <p>{p.contact?.formSubtext ?? 'Contact Mark Wattles directly about site opportunities across our target markets.'}</p>
             </div>
-            <div class="form-group full-width"><label for="re-site" data-sb-field-path="contact.propertyLabel">{p.contact?.propertyLabel ?? 'Property Address / Market'}</label><input type="text" id="re-site" name="property" placeholder="Address or city you're submitting" /></div>
-            <div class="form-group full-width"><label for="re-message" data-sb-field-path="contact.detailsLabel">{p.contact?.detailsLabel ?? 'Site Details'}</label><textarea id="re-message" name="message" placeholder="Tell us about your site - size, traffic count, current use, deal structure..."></textarea></div>
-            <button type="submit" class="form-submit"><span data-sb-field-path="contact.buttonLabel">{p.contact?.buttonLabel ?? 'Submit Inquiry'}</span></button>
+            <div class="form-group full-width"><label for="re-site">{p.contact?.propertyLabel ?? 'Property Address / Market'}</label><input type="text" id="re-site" name="property" placeholder="Address or city you're submitting" /></div>
+            <div class="form-group full-width"><label for="re-message">{p.contact?.detailsLabel ?? 'Site Details'}</label><textarea id="re-message" name="message" placeholder="Tell us about your site - size, traffic count, current use, deal structure..."></textarea></div>
+            <button type="submit" class="form-submit"><span>{p.contact?.buttonLabel ?? 'Submit Inquiry'}</span></button>
           </form>
         </div>
       </div>

@@ -1,4 +1,5 @@
 ---
+export const prerender = true;
 import { getLocations } from '../../lib/storyblok';
 
 export async function getStaticPaths() {
@@ -9,7 +10,7 @@ export async function getStaticPaths() {
     // Name-based slug (e.g. /menu/keller) for internal links (Store Info
     // pages, etc.), plus the numbered short URL (e.g. /menu/8) that matches
     // the QR codes already printed for each store -- displayOrder is that
-    // same 1-15 numbering (see Location content/Stackbit field).
+    // same 1-15 numbering (see the location's displayOrder field).
     paths.push({ params: { store: loc.slug.replace(/^151-coffee-/, '') }, props });
     const order = loc.displayOrder;
     if (order != null) paths.push({ params: { store: String(Number(order)) } , props });
