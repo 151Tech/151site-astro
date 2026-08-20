@@ -1,8 +1,0 @@
-type: Drink
-name: Apple Juice
-category: src/content/categories/kids.yaml
-subtitle: Fresh & Sweet
-description: Fresh, sweet apple juice served cold. The classic kid's drink.
-image: /images/apple-juice.webp
-tags: null
-menuOrder: 99
