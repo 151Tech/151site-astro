@@ -1,0 +1,58 @@
+// Polled by .github/workflows/storyblok-rebuild.yml on a schedule. Webflow
+// Cloud only redeploys on a git push to the tracked branch -- there's no
+// deploy-hook/webhook-triggered rebuild for it -- so this is the bridge:
+// check whether anything in the Storyblok space was published more recently
+// than our last known rebuild, and if so, touch a marker file and let the
+// workflow commit + push it, which is what actually triggers the redeploy.
+import 'dotenv/config';
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import StoryblokClient from 'storyblok-js-client';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const markerPath = path.join(__dirname, '.last-rebuild-check.json');
+
+const spaceId = process.env.STORYBLOK_SPACE_ID;
+const oauthToken = process.env.STORYBLOK_OAUTH_TOKEN;
+if (!spaceId || !oauthToken) {
+  console.error('Missing STORYBLOK_SPACE_ID / STORYBLOK_OAUTH_TOKEN');
+  process.exit(1);
+}
+
+const client = new StoryblokClient({ oauthToken });
+// Folders (is_folder: true) always sort ahead of real stories here since
+// their published_at is null -- pull a page and skip past them to find the
+// most recently published real story.
+const { data } = await client.get(`spaces/${spaceId}/stories`, {
+  sort_by: 'published_at:desc',
+  per_page: 25,
+});
+const latest = (data.stories ?? []).find((s) => !s.is_folder && s.published_at);
+const latestPublishedAt = latest?.published_at ?? null;
+
+let last = null;
+if (fs.existsSync(markerPath)) {
+  try {
+    last = JSON.parse(fs.readFileSync(markerPath, 'utf8')).lastPublishedAt ?? null;
+  } catch {
+    last = null;
+  }
+}
+
+if (!latestPublishedAt) {
+  console.log('No published stories found -- nothing to do.');
+  process.exit(0);
+}
+
+if (latestPublishedAt === last) {
+  console.log(`No new publishes since last check (${last}).`);
+  process.exit(0);
+}
+
+fs.writeFileSync(markerPath, JSON.stringify({ lastPublishedAt: latestPublishedAt }, null, 2) + '\n');
+console.log(`New publish detected: ${latest.name} (${latest.full_slug}) at ${latestPublishedAt}. Marker updated.`);
+// Signal to the workflow that a commit is needed.
+if (process.env.GITHUB_OUTPUT) {
+  fs.appendFileSync(process.env.GITHUB_OUTPUT, 'changed=true\n');
+}

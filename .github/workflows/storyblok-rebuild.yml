@@ -1,0 +1,43 @@
+name: Rebuild on Storyblok publish
+
+# Webflow Cloud only redeploys this site on a git push to the tracked
+# branch -- it has no deploy-hook / webhook-triggered rebuild. So instead
+# of a Storyblok webhook (which would need its own hosted receiver to call
+# back into GitHub), we poll Storyblok's Management API every 5 minutes for
+# a newer "published_at" and, when found, push a trivial commit. That push
+# is what actually triggers Webflow Cloud to rebuild and deploy.
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  check-and-rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - run: npm install --no-save storyblok-js-client dotenv
+
+      - name: Check for new Storyblok publishes
+        id: check
+        env:
+          STORYBLOK_SPACE_ID: ${{ secrets.STORYBLOK_SPACE_ID }}
+          STORYBLOK_OAUTH_TOKEN: ${{ secrets.STORYBLOK_OAUTH_TOKEN }}
+        run: node storyblok/check-rebuild.mjs
+
+      - name: Commit marker + trigger rebuild
+        if: steps.check.outputs.changed == 'true'
+        run: |
+          git config user.name "storyblok-rebuild-bot"
+          git config user.email "actions@github.com"
+          git add storyblok/.last-rebuild-check.json
+          git commit -m "chore: rebuild for Storyblok content published $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          git push
