@@ -4,7 +4,8 @@ import Layout from '../layouts/Layout.astro';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import BlockRenderer from '../components/blocks/BlockRenderer.astro';
-import { getPage, unwrapSingletons } from '../lib/storyblok';
+import Editable from '../components/Editable.astro';
+import { getPage, unwrapSingletons, imageUrl } from '../lib/storyblok';
 
 const p = unwrapSingletons((await getPage('about')) as any, [
   'seo', 'visibility', 'hero', 'intro', 'history', 'founder', 'cta',
@@ -13,7 +14,7 @@ const p = unwrapSingletons((await getPage('about')) as any, [
 <Layout
   title={p.seo?.title ?? 'About 151 Coffee | Our Story & Founder Mark Wattles'}
   description={p.seo?.description ?? '151 Coffee is not your typical coffee shop. Founded in 2017 by entrepreneur Mark Wattles, we serve the best-tasting coffee and blended energy drinks fast.'}
-  ogImage={p.seo?.ogImage ?? 'https://www.151coffee.com/images/splash1.jpg'}
+  ogImage={imageUrl(p.seo?.ogImage) ?? 'https://www.151coffee.com/images/splash1.jpg'}
 >
   <style is:global slot="head">
     .about-hero { margin-top: 58px; background-image: url('/images/splash1.jpg'); background-size: cover; background-position: center 30%; position: relative; padding: 8rem 0 7rem; text-align: center; }
@@ -102,6 +103,7 @@ const p = unwrapSingletons((await getPage('about')) as any, [
 
   <section class="about-hero">
     <div class="about-hero-content container">
+      <Editable blok={p} />
       <h1>{p.hero?.heading ?? 'About 151 Coffee'}</h1>
       <p>{p.hero?.subheading ?? "It's a Good Day to Have a Good Day."}</p>
     </div>
@@ -113,6 +115,7 @@ const p = unwrapSingletons((await getPage('about')) as any, [
   <section class="about-intro">
     <div class="container">
       <div class="about-intro-inner">
+        <Editable blok={p.intro} />
         <div class="about-intro-text">
           <h2><span style="color:inherit">{p.intro?.heading ?? 'Not Your Typical'}</span><br><span>{p.intro?.headingSpan ?? 'Coffee Shop.'}</span></h2>
           {(p.intro?.paragraphs ?? [
@@ -125,7 +128,7 @@ const p = unwrapSingletons((await getPage('about')) as any, [
         </div>
         <div class="about-intro-img">
           <img loading="lazy" decoding="async"
-            src={p.intro?.image ?? 'https://static.wixstatic.com/media/b45796_b6c019a088b74b3ba49d658de7304879~mv2.jpg/v1/fill/w_900,h_700,al_c,q_85,usm_0.66_1.00_0.01/350630772_586994276756053_9082157421413125565_n.jpg'}
+            src={imageUrl(p.intro?.image) ?? 'https://static.wixstatic.com/media/b45796_b6c019a088b74b3ba49d658de7304879~mv2.jpg/v1/fill/w_900,h_700,al_c,q_85,usm_0.66_1.00_0.01/350630772_586994276756053_9082157421413125565_n.jpg'}
             alt={p.intro?.imageAlt ?? '151 Coffee store'}
 
           />
@@ -158,6 +161,7 @@ const p = unwrapSingletons((await getPage('about')) as any, [
   {(p.visibility?.history ?? true) && (
   <section class="about-history">
     <div class="container">
+      <Editable blok={p.history} />
       <div class="section-header">
         <h2>{p.history?.heading ?? 'History of 151 Coffee'}</h2>
       </div>
@@ -189,9 +193,10 @@ const p = unwrapSingletons((await getPage('about')) as any, [
 
   {(p.visibility?.founder ?? true) && (
   <section class="about-founder">
+    <Editable blok={p.founder} />
     <div class="founder-hero-img">
       <img loading="lazy" decoding="async"
-        src={p.founder?.image ?? 'https://static.wixstatic.com/media/f82c08_7c5d93e4326449d3a489c3d11538de1b~mv2.jpg/v1/fill/w_800,h_1000,al_c,q_85,usm_0.66_1.00_0.01/RightCallout.jpg'}
+        src={imageUrl(p.founder?.image) ?? 'https://static.wixstatic.com/media/f82c08_7c5d93e4326449d3a489c3d11538de1b~mv2.jpg/v1/fill/w_800,h_1000,al_c,q_85,usm_0.66_1.00_0.01/RightCallout.jpg'}
         alt={p.founder?.imageAlt ?? 'Mark Wattles - Founder of 151 Coffee'}
 
       />
@@ -230,6 +235,7 @@ const p = unwrapSingletons((await getPage('about')) as any, [
   {(p.visibility?.cta ?? true) && (
   <section class="about-cta">
     <div class="container">
+      <Editable blok={p.cta} />
       <h2>{p.cta?.heading ?? 'Interested in Joining the 151 Team?'}</h2>
       <p>{p.cta?.body ?? '151 Coffee is not your typical coffee shop - fun and happiness drive our culture. Come be part of something good.'}</p>
       <div class="about-cta-buttons">

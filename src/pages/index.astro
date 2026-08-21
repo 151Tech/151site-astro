@@ -5,7 +5,8 @@ import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import HeroVideo from '../components/HeroVideo.astro';
 import BlockRenderer from '../components/blocks/BlockRenderer.astro';
-import { getPage, getSettings, getLocations, unwrapSingletons } from '../lib/storyblok';
+import Editable from '../components/Editable.astro';
+import { getPage, getSettings, getLocations, unwrapSingletons, imageUrl } from '../lib/storyblok';
 
 const [homeData, settingsData, locationsEntries] = await Promise.all([
   getPage('home'),
@@ -26,7 +27,7 @@ const storesJson = JSON.stringify(locations.map((l: any) => ({
 })));
 
 ---
-<Layout title={p.seo?.title ?? '151 Coffee | Drive-Thru Coffee, Cold Brew & Energy Drinks'} description={p.seo?.description} ogImage={p.seo?.ogImage}>
+<Layout title={p.seo?.title ?? '151 Coffee | Drive-Thru Coffee, Cold Brew & Energy Drinks'} description={p.seo?.description} ogImage={imageUrl(p.seo?.ogImage)}>
   <fragment slot="head">
     <link rel="preconnect" href="https://unpkg.com" crossorigin />
     <script type="application/ld+json" set:html={JSON.stringify({
@@ -46,10 +47,11 @@ const storesJson = JSON.stringify(locations.map((l: any) => ({
   <!-- Hero -->
   <section class="hero">
     <div>
-      <HeroVideo src={p.hero?.videoUrl} videoClass="hero-video" />
+      <HeroVideo src={imageUrl(p.hero?.videoUrl)} videoClass="hero-video" />
     </div>
     <div class="container">
       <div class="hero-content">
+        <Editable blok={p} />
         <h1>{p.hero?.heading}<br /><span>{p.hero?.subheadingLine1}</span><br /><span>{p.hero?.subheadingLine2}</span></h1>
         <div class="hero-buttons">
           <a href={p.hero?.ctaHref ?? '/menu'} class="main-menu-btn2">{p.hero?.ctaLabel}</a>
@@ -64,11 +66,12 @@ const storesJson = JSON.stringify(locations.map((l: any) => ({
   {p.featuredDrink?.visible !== false && (
     <section class="featured-drink">
       <div class="featured-inner">
+        <Editable blok={p.featuredDrink} />
         <div class="featured-visual">
           <h2 class="featured-mobile-name">{p.featuredDrink?.name} <span>{p.featuredDrink?.nameBold}</span></h2>
           <div class="featured-card">
             <div class="drink-img-wrap">
-              <img src={p.featuredDrink?.image ?? '/images/v5/coffee.jpg'} alt={p.featuredDrink?.imageAlt ?? p.featuredDrink?.name ?? 'Featured drink'} width="480" height="480" decoding="async" />
+              <img src={imageUrl(p.featuredDrink?.image) ?? '/images/v5/coffee.jpg'} alt={p.featuredDrink?.imageAlt ?? p.featuredDrink?.name ?? 'Featured drink'} width="480" height="480" decoding="async" />
             </div>
           </div>
         </div>
@@ -86,6 +89,7 @@ const storesJson = JSON.stringify(locations.map((l: any) => ({
   {(p.visibility?.locations ?? true) && (
   <section class="spaces" id="spaces">
     <div class="container">
+      <Editable blok={p.locationsSection} />
       <div class="section-header"><h2>{p.locationsSection?.heading ?? 'Find Your Location'}</h2></div>
       <div class="locator">
         <div class="locator__panel">
@@ -104,11 +108,13 @@ const storesJson = JSON.stringify(locations.map((l: any) => ({
   {(p.visibility?.menuGrid ?? true) && (
   <section class="features" id="features">
     <div class="container">
+      <Editable blok={p.menuSection} />
       <div class="section-header"><h2>{p.menuSection?.heading}</h2></div>
       <div class="features-grid">
         {(p.menuSection?.cards ?? []).map((card: any, i: number) => (
           <a href={card.href} class="feature-card">
-            <div class="feature-card-img" style={`background-image:url('${card.image}')`}></div>
+            <Editable blok={card} />
+            <div class="feature-card-img" style={`background-image:url('${imageUrl(card.image)}')`}></div>
             <div class="card-content">
               <h3>
                 {card.title}
@@ -128,6 +134,7 @@ const storesJson = JSON.stringify(locations.map((l: any) => ({
   <section class="cta">
     <div class="container">
       <div class="cta-inner">
+        <Editable blok={p.cta} />
         <div class="cta-content">
           <h2>{p.cta?.heading}</h2>
           <p>{p.cta?.body}</p>
@@ -138,7 +145,8 @@ const storesJson = JSON.stringify(locations.map((l: any) => ({
         <div class="cta-photo-stack">
           {(p.cta?.photos ?? []).map((photo: any, i: number) => (
             <div class={`cta-photo cta-photo--c${i}`}>
-              <img loading="lazy" decoding="async" src={photo.image} alt={photo.alt ?? ''} />
+              <Editable blok={photo} />
+              <img loading="lazy" decoding="async" src={imageUrl(photo.image)} alt={photo.alt ?? ''} />
               <div class="cta-signature">{photo.signature}</div>
             </div>
           ))}
@@ -156,6 +164,7 @@ const storesJson = JSON.stringify(locations.map((l: any) => ({
       <div class="pricing-grid">
         {(p.reviews?.items ?? []).map((r: any, i: number) => (
           <div class="pricing-card">
+            <Editable blok={r} />
             <p class="plan-price">{r.quote}</p>
             <div class="review-byline">
               <span class="review-avatar">{(r.name ?? '?').charAt(0)}</span>
@@ -179,6 +188,7 @@ const storesJson = JSON.stringify(locations.map((l: any) => ({
       <div class="faq-list">
         {(p.faqs?.items ?? []).map((faq: any, i: number) => (
           <details open={i===0}>
+            <Editable blok={faq} />
             <summary>{faq.question}</summary>
             <p>{faq.answer}</p>
           </details>
