@@ -26,14 +26,20 @@ const version =
       ? 'draft'
       : 'published';
 
-// Strips Storyblok's bookkeeping keys (component/_uid/_editable) and
-// flattens `bloks` fields built from a single `text_item` component back
-// into a plain array of strings, so callers get roughly the same shape the
-// old YAML content had. Fields that were a *singleton* nested object in the
-// original YAML (e.g. `cta`, `social`) come back as a one-item array --
-// callers unwrap those explicitly with `[0]`, since that ambiguity can't be
-// resolved generically (Storyblok has no "single nested object" field type,
-// only arrays of bloks).
+// Strips Storyblok's bookkeeping keys (component/_uid) and flattens `bloks`
+// fields built from a single `text_item` component back into a plain array
+// of strings, so callers get roughly the same shape the old YAML content
+// had. Fields that were a *singleton* nested object in the original YAML
+// (e.g. `cta`, `social`) come back as a one-item array -- callers unwrap
+// those explicitly with `[0]`, since that ambiguity can't be resolved
+// generically (Storyblok has no "single nested object" field type, only
+// arrays of bloks).
+//
+// `_editable` is kept (not stripped) -- it's the HTML comment Storyblok's
+// bridge scans for to draw click-to-highlight outlines in the Visual
+// Editor's preview pane. It's only present when fetched in draft mode, so
+// it's absent (and a no-op) on normal published/production reads. Render it
+// with the <Editable blok={...}> component right before a block's markup.
 function denormalize(node: any): any {
   if (Array.isArray(node)) {
     if (node.length === 0) return [];
@@ -80,7 +86,7 @@ export function unwrapSingletons<T extends Record<string, any>>(obj: T, keys: st
 function denormalizeObject(obj: Record<string, any>) {
   const out: Record<string, any> = {};
   for (const [key, value] of Object.entries(obj)) {
-    if (key === 'component' || key === '_uid' || key === '_editable') continue;
+    if (key === 'component' || key === '_uid') continue;
     out[FIELD_CASE_MAP[key] ?? key] = denormalize(value);
   }
   return out;

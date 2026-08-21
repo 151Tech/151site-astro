@@ -4,6 +4,7 @@ import Layout from '../../layouts/Layout.astro';
 import Nav from '../../components/Nav.astro';
 import Footer from '../../components/Footer.astro';
 import { getDrinks, getPage, getCategories, unwrapSingletons, imageUrl } from '../../lib/storyblok';
+import Editable from '../../components/Editable.astro';
 
 export async function getStaticPaths() {
   const drinks = await getDrinks();
@@ -47,6 +48,7 @@ const ogImage = drinkImage
 
   <!-- Red polka-dot hero -->
   <section class="dk-hero" style="margin-top:58px;">
+    <Editable blok={drink} />
     <div class="dk-hero-bg"></div>
     <div class="dk-hero-inner">
       <a href="/menu" class="dk-back">
