@@ -6,6 +6,7 @@ import Footer from '../components/Footer.astro';
 import HeroVideo from '../components/HeroVideo.astro';
 import BlockRenderer from '../components/blocks/BlockRenderer.astro';
 import { getPage, unwrapSingletons, imageUrl } from '../lib/storyblok';
+import Editable from '../components/Editable.astro';
 
 const p = unwrapSingletons((await getPage('careers')) as any, ['seo', 'agegate', 'under18']);
 const heroVideoSrc = imageUrl(p.heroVideo);
@@ -166,6 +167,7 @@ const heroVideoSrc = imageUrl(p.heroVideo);
     <div class="age-overlay"></div>
     <div class="age-gate">
       <div class="age-card" id="ageCard">
+        <Editable blok={p} />
         <span class="eyebrow">{p.agegate?.eyebrow ?? 'Join the Team'}</span>
         <h1>{p.agegate?.heading ?? <>Join <span>151 Coffee</span></>}</h1>
         <p class="sub">{p.agegate?.body ?? 'Fun and happiness drive our culture. Music drives our speed. Before we send you to our openings - are you 18 or older?'}</p>

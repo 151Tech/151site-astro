@@ -5,6 +5,7 @@ import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import BlockRenderer from '../components/blocks/BlockRenderer.astro';
 import { getPage, unwrapSingletons, imageUrl } from '../lib/storyblok';
+import Editable from '../components/Editable.astro';
 
 const p = unwrapSingletons((await getPage('ourfuture')) as any, [
   'seo', 'hero', 'visibility', 'overview', 'criteria', 'idealSite', 'markets', 'contact',
@@ -105,6 +106,7 @@ const p = unwrapSingletons((await getPage('ourfuture')) as any, [
 
   <section class="re-hero">
     <div class="re-hero-content container">
+      <Editable blok={p} />
       <span class="eyebrow">{p.hero?.eyebrow ?? 'Est. 2017'}</span>
       <h1>{p.hero?.heading ?? 'Here We Grow Again.'}</h1>
       <p>{p.hero?.body ?? '151 Coffee is expanding rapidly across the country. If you have a site that fits our criteria, we want to hear from you.'}</p>

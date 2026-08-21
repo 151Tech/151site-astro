@@ -1,5 +1,6 @@
 ---
 import { getSettings, unwrapSingletons } from '../lib/storyblok';
+import Editable from './Editable.astro';
 const s = unwrapSingletons((await getSettings()) as any, ['social', 'footer']);
 const f = s.footer ?? {};
 const companyLinks: { label: string; href: string }[] = f.companyLinks ?? [
@@ -20,6 +21,7 @@ const igAppUrl = igUsername ? `instagram://user?username=${igUsername}` : undefi
 <footer>
   <div class="container">
     <div class="footer-content" style="padding:2rem;border:2px solid var(--red);border-radius:24px;">
+      <Editable blok={f} />
       <div class="footer-section">
         <h4>{f.companyHeading ?? 'Company'}</h4>
         <ul>

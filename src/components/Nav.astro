@@ -1,5 +1,6 @@
 ---
 import { getSettings, imageUrl } from '../lib/storyblok';
+import Editable from './Editable.astro';
 interface Props {
   active?: string;
 }
@@ -32,6 +33,7 @@ function isActive(href: string): boolean {
 <nav>
   <div class="nav-container">
     <a href="/" class="logo">
+      <Editable blok={s} />
       <img src={logo} alt={`${siteName} logo`} width="512" height="512" style="width:3rem;height:auto;" />
       <span>{siteName}</span>
     </a>

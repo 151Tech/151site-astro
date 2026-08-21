@@ -6,6 +6,7 @@ import Footer from '../components/Footer.astro';
 import HeroVideo from '../components/HeroVideo.astro';
 import BlockRenderer from '../components/blocks/BlockRenderer.astro';
 import { getPage, getDrinks, getCategories, getLocations, unwrapSingletons, imageUrl } from '../lib/storyblok';
+import Editable from '../components/Editable.astro';
 
 const [menuData, drinksEntries, categoryEntries, locationEntries] = await Promise.all([
   getPage('menu'),
@@ -57,6 +58,7 @@ const CATEGORIES = categoryEntries
     extraCards: e.extraCards ?? [],
     hiddenByDefault: !!e.hiddenByDefault,
     unavailableAt: toLocationSlugs(e.unavailableAt),
+    _editable: e._editable,
   }))
   .sort((a: any, b: any) => (parseInt(a.num) || 99) - (parseInt(b.num) || 99));
 
@@ -137,6 +139,7 @@ const CATEGORY_PLACEHOLDER_IMAGE: Record<string, string> = {
   <Nav active="menu" />
 
   <section class="menu-hero">
+    <Editable blok={p} />
     <HeroVideo src={heroVideoSrc} videoClass="hero-bg" />
     <div class="menu-hero-content">
       <h1>{p.hero?.heading ?? 'Our Menu'}</h1>
@@ -194,6 +197,7 @@ const CATEGORY_PLACEHOLDER_IMAGE: Record<string, string> = {
             <div class="cat-title-card" id={`cat-${cat.tab}`} data-cat={cat.tab}
               data-visible={cat.hiddenByDefault ? 'false' : undefined}
 >
+              <Editable blok={cat} />
               <div class="cat-title-inner">
                 <h2 class="cat-title-text">{cat.title}</h2>
                 <p class="cat-title-desc">{cat.desc}</p>
@@ -208,6 +212,7 @@ const CATEGORY_PLACEHOLDER_IMAGE: Record<string, string> = {
                 data-cat={cat.tab} href={`/drinks/${drink.slug}`}
                 data-visible={cat.hiddenByDefault ? 'false' : undefined}
 >
+                <Editable blok={drink} />
                 {drink.badge && <span class="drink-badge">{drink.badge}</span>}
                 <div class="drink-img-wrap">
                   <img loading="lazy" decoding="async" src={CATEGORY_PLACEHOLDER_IMAGE[cat.tab] ?? '/images/v5/coffee.jpg'} alt={drink.name} />

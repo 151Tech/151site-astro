@@ -5,6 +5,7 @@ import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import BlockRenderer from '../components/blocks/BlockRenderer.astro';
 import { getLocations, getSettings, getPage, unwrapSingletons, imageUrl } from '../lib/storyblok';
+import Editable from '../components/Editable.astro';
 
 const toImageSrc = (field: any) => {
   const url = imageUrl(field);
@@ -61,6 +62,7 @@ const STATE_NAMES: Record<string, string> = Object.fromEntries(
     <section class="loc-map-section">
       <div class="container">
         <div class="loc-hero-content">
+          <Editable blok={p} />
           <h1>{p.hero?.heading ?? 'Find Your 151'}</h1>
         </div>
       </div>
@@ -100,6 +102,7 @@ const STATE_NAMES: Record<string, string> = Object.fromEntries(
                   data-href={`/locations/${loc.slug}`}
 
                 >
+                  <Editable blok={loc} />
                   <img
                     class="locator__item-photo"
                     src={(() => {

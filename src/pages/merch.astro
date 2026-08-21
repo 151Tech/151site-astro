@@ -4,6 +4,7 @@ import Layout from '../layouts/Layout.astro';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import { getPage, unwrapSingletons, imageUrl } from '../lib/storyblok';
+import Editable from '../components/Editable.astro';
 
 const p = unwrapSingletons((await getPage('merch')) as any, ['seo', 'visibility', 'hero']);
 
@@ -16,6 +17,7 @@ const categories = ['All', ...Array.from(new Set((p.items ?? []).map((i: any) =>
     <div class="page-hero-overlay"></div>
     <div class="container">
       <div class="page-hero-content">
+        <Editable blok={p} />
         <h1>{p.hero?.heading}</h1>
         <p>{p.hero?.subheading}</p>
       </div>
@@ -33,6 +35,7 @@ const categories = ['All', ...Array.from(new Set((p.items ?? []).map((i: any) =>
       <div class="merch-grid">
         {(p.items ?? []).map((item: any, i: number) => (
           <div class="merch-card" data-category={item.category}>
+            <Editable blok={item} />
             <div class="merch-img-wrap">
               {imageUrl(item.image)
                 ? <img src={imageUrl(item.image)} alt={item.name} loading="lazy" />
