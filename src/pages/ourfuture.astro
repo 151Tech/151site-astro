@@ -14,7 +14,7 @@ const p = unwrapSingletons((await getPage('ourfuture')) as any, [
 <Layout
   title={p.seo?.title ?? 'Real Estate & Site Development | 151 Coffee Drive-Thru Expansion'}
   description={p.seo?.description ?? '151 Coffee is expanding across Texas and Kansas. Seeking drive-thru pad sites of 25,000+ sq ft with 30,000+ VPD. See our site criteria and submit your property.'}
-  ogImage={imageUrl(p.seo?.ogImage) ?? 'https://www.151coffee.com/images/store1.jpg'}
+  ogImage={imageUrl(p.seo?.ogImage, { width: 1200, height: 630 }) ?? 'https://www.151coffee.com/images/store1.jpg'}
 >
   <style is:global slot="head">
     .re-hero { margin-top: 58px; background-color: var(--red); background-image: radial-gradient(rgba(255,255,255,0.18) 2px, transparent 2.5px); background-size: 26px 26px; position: relative; padding: 6rem 0 5rem; text-align: center; }
@@ -151,7 +151,7 @@ const p = unwrapSingletons((await getPage('ourfuture')) as any, [
           ]).map((photo: any, i: number) => (
             <div class="re-map-img">
               <img loading="lazy" decoding="async"
-                src={imageUrl(photo.image) ?? '/images/store1.jpg'}
+                src={imageUrl(photo.image, { width: 700 }) ?? '/images/store1.jpg'}
                 alt={photo.imageAlt}
 
               />

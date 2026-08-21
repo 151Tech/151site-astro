@@ -11,7 +11,7 @@ import Editable from '../components/Editable.astro';
 const p = unwrapSingletons((await getPage('careers')) as any, ['seo', 'agegate', 'under18']);
 const heroVideoSrc = imageUrl(p.heroVideo);
 ---
-<Layout title={p.seo?.title ?? 'Careers at 151 Coffee | Join Our Team'} description={p.seo?.description} ogImage={imageUrl(p.seo?.ogImage)}>
+<Layout title={p.seo?.title ?? 'Careers at 151 Coffee | Join Our Team'} description={p.seo?.description} ogImage={imageUrl(p.seo?.ogImage, { width: 1200, height: 630 })}>
   <Fragment slot="head">
     <style>
       body { overflow: hidden; }

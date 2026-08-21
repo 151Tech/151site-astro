@@ -7,7 +7,7 @@ interface Props {
 const { active = '' } = Astro.props;
 const s = (await getSettings()) as any;
 const siteName = s.siteName ?? '151 Coffee';
-const logo = imageUrl(s.logo) ?? '/images/logo.png';
+const logo = imageUrl(s.logo, { width: 128 }) ?? '/images/logo.png';
 const giftCardLabel = s.giftCardLabel ?? 'Gift Card';
 
 const navLinks: { label: string; href: string }[] = s.nav ?? [

@@ -10,7 +10,7 @@ const p = unwrapSingletons((await getPage('merch')) as any, ['seo', 'visibility'
 
 const categories = ['All', ...Array.from(new Set((p.items ?? []).map((i: any) => i.category))) as string[]];
 ---
-<Layout title={p.seo?.title ?? '151 Coffee Merch | Rep Your Favorite Coffee'} description={p.seo?.description} ogImage={imageUrl(p.seo?.ogImage)}>
+<Layout title={p.seo?.title ?? '151 Coffee Merch | Rep Your Favorite Coffee'} description={p.seo?.description} ogImage={imageUrl(p.seo?.ogImage, { width: 1200, height: 630 })}>
   <Nav />
 
   <section class="page-hero">
@@ -38,7 +38,7 @@ const categories = ['All', ...Array.from(new Set((p.items ?? []).map((i: any) =>
             <Editable blok={item} />
             <div class="merch-img-wrap">
               {imageUrl(item.image)
-                ? <img src={imageUrl(item.image)} alt={item.name} loading="lazy" />
+                ? <img src={imageUrl(item.image, { width: 700 })} alt={item.name} loading="lazy" />
                 : <div class="merch-placeholder"></div>
               }
             </div>

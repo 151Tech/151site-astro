@@ -9,7 +9,7 @@ import Editable from '../components/Editable.astro';
 const p = unwrapSingletons((await getPage('privacy')) as any, ['seo', 'hero']);
 const sections: any[] = p.sections ?? [];
 ---
-<Layout title={p.seo?.title ?? 'Privacy Policy | 151 Coffee'} description={p.seo?.description ?? '151 Coffee privacy policy - how we collect, use, and protect your information.'} ogImage={imageUrl(p.seo?.ogImage)}>
+<Layout title={p.seo?.title ?? 'Privacy Policy | 151 Coffee'} description={p.seo?.description ?? '151 Coffee privacy policy - how we collect, use, and protect your information.'} ogImage={imageUrl(p.seo?.ogImage, { width: 1200, height: 630 })}>
   <Nav />
 
   <section class="page-hero" style="min-height:30vh;">

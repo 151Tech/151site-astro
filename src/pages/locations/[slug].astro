@@ -29,7 +29,7 @@ const dl = lp.storeDetail ?? {};
 const hours = loc.hours || s.hours || 'Open daily 6 AM - 8 PM';
 const phone = s.phone || '(682) 325-2124';
 const phoneTel = phone.replace(/\D/g, '');
-const locImage = imageUrl(loc.image);
+const locImage = imageUrl(loc.image, { width: 1600 });
 const image = locImage
   ? (locImage.startsWith('http') || locImage.startsWith('/') ? locImage : '/' + locImage)
   : '/images/store1.jpg';

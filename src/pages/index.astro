@@ -27,7 +27,7 @@ const storesJson = JSON.stringify(locations.map((l: any) => ({
 })));
 
 ---
-<Layout title={p.seo?.title ?? '151 Coffee | Drive-Thru Coffee, Cold Brew & Energy Drinks'} description={p.seo?.description} ogImage={imageUrl(p.seo?.ogImage)}>
+<Layout title={p.seo?.title ?? '151 Coffee | Drive-Thru Coffee, Cold Brew & Energy Drinks'} description={p.seo?.description} ogImage={imageUrl(p.seo?.ogImage, { width: 1200, height: 630 })}>
   <fragment slot="head">
     <link rel="preconnect" href="https://unpkg.com" crossorigin />
     <script type="application/ld+json" set:html={JSON.stringify({
@@ -71,7 +71,7 @@ const storesJson = JSON.stringify(locations.map((l: any) => ({
           <h2 class="featured-mobile-name">{p.featuredDrink?.name} <span>{p.featuredDrink?.nameBold}</span></h2>
           <div class="featured-card">
             <div class="drink-img-wrap">
-              <img src={imageUrl(p.featuredDrink?.image) ?? '/images/v5/coffee.jpg'} alt={p.featuredDrink?.imageAlt ?? p.featuredDrink?.name ?? 'Featured drink'} width="480" height="480" decoding="async" />
+              <img src={imageUrl(p.featuredDrink?.image, { width: 960 }) ?? '/images/v5/coffee.jpg'} alt={p.featuredDrink?.imageAlt ?? p.featuredDrink?.name ?? 'Featured drink'} width="480" height="480" decoding="async" />
             </div>
           </div>
         </div>
@@ -114,7 +114,7 @@ const storesJson = JSON.stringify(locations.map((l: any) => ({
         {(p.menuSection?.cards ?? []).map((card: any, i: number) => (
           <a href={card.href} class="feature-card">
             <Editable blok={card} />
-            <div class="feature-card-img" style={`background-image:url('${imageUrl(card.image)}')`}></div>
+            <div class="feature-card-img" style={`background-image:url('${imageUrl(card.image, { width: 700 })}')`}></div>
             <div class="card-content">
               <h3>
                 {card.title}
@@ -146,7 +146,7 @@ const storesJson = JSON.stringify(locations.map((l: any) => ({
           {(p.cta?.photos ?? []).map((photo: any, i: number) => (
             <div class={`cta-photo cta-photo--c${i}`}>
               <Editable blok={photo} />
-              <img loading="lazy" decoding="async" src={imageUrl(photo.image)} alt={photo.alt ?? ''} />
+              <img loading="lazy" decoding="async" src={imageUrl(photo.image, { width: 600 })} alt={photo.alt ?? ''} />
               <div class="cta-signature">{photo.signature}</div>
             </div>
           ))}
@@ -202,6 +202,7 @@ const storesJson = JSON.stringify(locations.map((l: any) => ({
   {(p.visibility?.contact ?? true) && (
   <section class="contact" id="contact">
     <div class="container">
+      <Editable blok={p.contact} />
       <div class="section-header"><h2>{p.contact?.heading}</h2></div>
       <div class="contact-form-wrapper">
         <form class="contact-form" name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field">

@@ -8,7 +8,7 @@ import { getLocations, getSettings, getPage, unwrapSingletons, imageUrl } from '
 import Editable from '../components/Editable.astro';
 
 const toImageSrc = (field: any) => {
-  const url = imageUrl(field);
+  const url = imageUrl(field, { width: 300 });
   return url ? (url.startsWith('http') || url.startsWith('/') ? url : '/' + url) : '/images/store1.jpg';
 };
 
@@ -47,7 +47,7 @@ const STATE_NAMES: Record<string, string> = Object.fromEntries(
 <Layout
   title={p.seo?.title ?? '151 Coffee Locations | Find a Drive-Thru Near You'}
   description={p.seo?.description ?? 'Find your nearest 151 Coffee drive-thru. 15+ locations across Texas and Kansas with more opening soon.'}
-  ogImage={imageUrl(p.seo?.ogImage) ?? 'https://www.151coffee.com/images/store1.jpg'}
+  ogImage={imageUrl(p.seo?.ogImage, { width: 1200, height: 630 }) ?? 'https://www.151coffee.com/images/store1.jpg'}
 >
   <fragment slot="head">
     <link rel="preconnect" href="https://unpkg.com" crossorigin />

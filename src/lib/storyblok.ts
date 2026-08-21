@@ -70,10 +70,25 @@ function denormalize(node: any): any {
 // `/images/...` path) -- pass those through unchanged so nothing breaks
 // until an editor re-picks the image in Storyblok. Returns undefined when
 // there's no image at all, so callers can fall back to a placeholder.
-export function imageUrl(field: any): string | undefined {
+// Resizes/re-encodes via Storyblok's built-in Image Service (free, CDN-cached
+// -- just a URL suffix, no re-upload or separate service needed). `width` is
+// required and should be the largest real render size for that call site
+// (e.g. the desktop width of a product's own detail page, even if smaller
+// crops of the same image are used elsewhere in cards/thumbnails); `height`
+// defaults to `width` since editors are asked to upload 1:1 photos. Only
+// applies to actual Storyblok assets (a.storyblok.com) -- legacy string
+// paths (local /images/... or old Wix URLs from pre-migration content)
+// pass through untouched since they can't be transformed this way.
+export function imageUrl(
+  field: any,
+  opts?: { width: number; height?: number; quality?: number },
+): string | undefined {
   if (!field) return undefined;
-  if (typeof field === 'string') return field || undefined;
-  return field.filename || undefined;
+  const raw = typeof field === 'string' ? field : field.filename;
+  if (!raw) return undefined;
+  if (!opts || !raw.includes('a.storyblok.com')) return raw || undefined;
+  const { width, height = width, quality = 80 } = opts;
+  return `${raw}/m/${width}x${height}/filters:quality(${quality}):format(webp)`;
 }
 
 export function unwrapSingletons<T extends Record<string, any>>(obj: T, keys: string[]): T {

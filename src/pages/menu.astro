@@ -131,7 +131,7 @@ const CATEGORY_PLACEHOLDER_IMAGE: Record<string, string> = {
   kids: '/images/v5/kids.jpg',
 };
 ---
-<Layout title={p.seo?.title ?? 'Menu | 151 Coffee - Coffee, Cold Brew, Energy & Dirty Pop'} description={p.seo?.description ?? 'Explore the full 151 Coffee menu. Signature espresso drinks, cold brew, blended energy, Dirty Pop sodas, refreshers, smoothies, teas, and more.'} ogImage={imageUrl(p.seo?.ogImage)}>
+<Layout title={p.seo?.title ?? 'Menu | 151 Coffee - Coffee, Cold Brew, Energy & Dirty Pop'} description={p.seo?.description ?? 'Explore the full 151 Coffee menu. Signature espresso drinks, cold brew, blended energy, Dirty Pop sodas, refreshers, smoothies, teas, and more.'} ogImage={imageUrl(p.seo?.ogImage, { width: 1200, height: 630 })}>
   <Fragment slot="head">
     <link rel="stylesheet" href="/menu.css" />
   </Fragment>
