@@ -4,7 +4,7 @@ import Layout from '../layouts/Layout.astro';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import BlockRenderer from '../components/blocks/BlockRenderer.astro';
-import { getPage, unwrapSingletons } from '../lib/storyblok';
+import { getPage, unwrapSingletons, imageUrl } from '../lib/storyblok';
 
 const p = unwrapSingletons((await getPage('ourfuture')) as any, [
   'seo', 'hero', 'visibility', 'overview', 'criteria', 'idealSite', 'markets', 'contact',
@@ -13,7 +13,7 @@ const p = unwrapSingletons((await getPage('ourfuture')) as any, [
 <Layout
   title={p.seo?.title ?? 'Real Estate & Site Development | 151 Coffee Drive-Thru Expansion'}
   description={p.seo?.description ?? '151 Coffee is expanding across Texas and Kansas. Seeking drive-thru pad sites of 25,000+ sq ft with 30,000+ VPD. See our site criteria and submit your property.'}
-  ogImage={p.seo?.ogImage ?? 'https://www.151coffee.com/images/store1.jpg'}
+  ogImage={imageUrl(p.seo?.ogImage) ?? 'https://www.151coffee.com/images/store1.jpg'}
 >
   <style is:global slot="head">
     .re-hero { margin-top: 58px; background-color: var(--red); background-image: radial-gradient(rgba(255,255,255,0.18) 2px, transparent 2.5px); background-size: 26px 26px; position: relative; padding: 6rem 0 5rem; text-align: center; }
@@ -141,15 +141,15 @@ const p = unwrapSingletons((await getPage('ourfuture')) as any, [
           </div>
         </div>
         <div class="re-map-grid">
-          {(p.overview?.images ?? [
-            { image: p.overview?.image ?? '/images/store1.jpg', imageAlt: p.overview?.imageAlt ?? '151 Coffee store exterior' },
-            { image: '/images/store1.jpg', imageAlt: '151 Coffee store exterior' },
-            { image: '/images/store1.jpg', imageAlt: '151 Coffee store exterior' },
-            { image: '/images/store1.jpg', imageAlt: '151 Coffee store exterior' },
+          {(p.overview?.images?.length ? p.overview.images : [
+            { image: p.overview?.image, imageAlt: p.overview?.imageAlt ?? '151 Coffee store exterior' },
+            { image: null, imageAlt: '151 Coffee store exterior' },
+            { image: null, imageAlt: '151 Coffee store exterior' },
+            { image: null, imageAlt: '151 Coffee store exterior' },
           ]).map((photo: any, i: number) => (
             <div class="re-map-img">
               <img loading="lazy" decoding="async"
-                src={photo.image}
+                src={imageUrl(photo.image) ?? '/images/store1.jpg'}
                 alt={photo.imageAlt}
 
               />

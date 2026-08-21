@@ -3,7 +3,7 @@ export const prerender = true;
 import Layout from '../../layouts/Layout.astro';
 import Nav from '../../components/Nav.astro';
 import Footer from '../../components/Footer.astro';
-import { getDrinks, getPage, getCategories, unwrapSingletons } from '../../lib/storyblok';
+import { getDrinks, getPage, getCategories, unwrapSingletons, imageUrl } from '../../lib/storyblok';
 
 export async function getStaticPaths() {
   const drinks = await getDrinks();
@@ -27,8 +27,11 @@ const m = unwrapSingletons(menuData as any, [
 const categoryEntry = categoryEntries.find((c: any) => `categories/${c.slug}` === drink.category);
 const categoryTitle = categoryEntry ? categoryEntry.title : '';
 
-const ogImage = drink.image
-  ? `https://www.151coffee.com${encodeURI(drink.image.startsWith('/') ? drink.image : '/' + drink.image)}`
+const drinkImage = imageUrl(drink.image);
+const ogImage = drinkImage
+  ? drinkImage.startsWith('http')
+    ? drinkImage
+    : `https://www.151coffee.com${encodeURI(drinkImage.startsWith('/') ? drinkImage : '/' + drinkImage)}`
   : undefined;
 ---
 <Layout
@@ -75,8 +78,8 @@ const ogImage = drink.image
             <div class="drink-img-wrap">
               {drink.badge && <span class="drink-badge">{drink.badge}</span>}
               {(() => {
-                const src = drink.image
-                  ? (drink.image.startsWith('/') ? drink.image : '/' + drink.image)
+                const src = drinkImage
+                  ? (drinkImage.startsWith('http') || drinkImage.startsWith('/') ? drinkImage : '/' + drinkImage)
                   : '/images/drinks/energy/151 Blue Energy Hand (1).png';
                 return <img src={src} alt={drink.name} />;
               })()}

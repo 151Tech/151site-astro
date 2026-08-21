@@ -3,7 +3,7 @@ export const prerender = true;
 import Layout from '../../layouts/Layout.astro';
 import Nav from '../../components/Nav.astro';
 import Footer from '../../components/Footer.astro';
-import { getLocations, getSettings, getPage, unwrapSingletons } from '../../lib/storyblok';
+import { getLocations, getSettings, getPage, unwrapSingletons, imageUrl } from '../../lib/storyblok';
 
 export async function getStaticPaths() {
   const locations = await getLocations();
@@ -28,7 +28,10 @@ const dl = lp.storeDetail ?? {};
 const hours = loc.hours || s.hours || 'Open daily 6 AM - 8 PM';
 const phone = s.phone || '(682) 325-2124';
 const phoneTel = phone.replace(/\D/g, '');
-const image = loc.image ? (loc.image.startsWith('/') ? loc.image : '/' + loc.image) : '/images/store1.jpg';
+const locImage = imageUrl(loc.image);
+const image = locImage
+  ? (locImage.startsWith('http') || locImage.startsWith('/') ? locImage : '/' + locImage)
+  : '/images/store1.jpg';
 const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${loc.lat},${loc.lng}`;
 const shortName = (loc.name as string).replace(/^151 Coffee\s*/i, '') || loc.name;
 

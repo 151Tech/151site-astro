@@ -1,12 +1,12 @@
 ---
-import { getSettings } from '../lib/storyblok';
+import { getSettings, imageUrl } from '../lib/storyblok';
 interface Props {
   active?: string;
 }
 const { active = '' } = Astro.props;
 const s = (await getSettings()) as any;
 const siteName = s.siteName ?? '151 Coffee';
-const logo = s.logo ?? '/images/logo.png';
+const logo = imageUrl(s.logo) ?? '/images/logo.png';
 const giftCardLabel = s.giftCardLabel ?? 'Gift Card';
 
 const navLinks: { label: string; href: string }[] = s.nav ?? [

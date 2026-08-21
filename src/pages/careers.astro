@@ -5,11 +5,12 @@ import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import HeroVideo from '../components/HeroVideo.astro';
 import BlockRenderer from '../components/blocks/BlockRenderer.astro';
-import { getPage, unwrapSingletons } from '../lib/storyblok';
+import { getPage, unwrapSingletons, imageUrl } from '../lib/storyblok';
 
 const p = unwrapSingletons((await getPage('careers')) as any, ['seo', 'agegate', 'under18']);
+const heroVideoSrc = imageUrl(p.heroVideo);
 ---
-<Layout title={p.seo?.title ?? 'Careers at 151 Coffee | Join Our Team'} description={p.seo?.description} ogImage={p.seo?.ogImage}>
+<Layout title={p.seo?.title ?? 'Careers at 151 Coffee | Join Our Team'} description={p.seo?.description} ogImage={imageUrl(p.seo?.ogImage)}>
   <Fragment slot="head">
     <style>
       body { overflow: hidden; }
@@ -161,7 +162,7 @@ const p = unwrapSingletons((await getPage('careers')) as any, ['seo', 'agegate',
 
   <!-- Age gate -->
   <div class="age-gate-page" id="ageGatePage">
-    <HeroVideo src={p.heroVideo} videoClass="age-bg-video" />
+    <HeroVideo src={heroVideoSrc} videoClass="age-bg-video" />
     <div class="age-overlay"></div>
     <div class="age-gate">
       <div class="age-card" id="ageCard">
@@ -188,7 +189,7 @@ const p = unwrapSingletons((await getPage('careers')) as any, ['seo', 'agegate',
     <BlockRenderer sections={p.sections} />
 
     <section class="careers-hero">
-      <HeroVideo src={p.heroVideo} videoClass="hero-bg" />
+      <HeroVideo src={heroVideoSrc} videoClass="hero-bg" />
       <div class="careers-hero-content">
         <h1>{p.hero?.heading ?? 'Join the 151 Team'}</h1>
         <p>{p.hero?.subheading ?? 'Fun, fast, and built on good vibes. See what\'s open.'}</p>

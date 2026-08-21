@@ -57,6 +57,19 @@ function denormalize(node: any): any {
 // there's no "single nested object" field type, only arrays of bloks. Call
 // this on the known singleton field names after fetching a story to unwrap
 // them back to plain objects; real lists are left untouched.
+// Storyblok "asset" fields come back as an object like
+// `{ filename: "https://a.storyblok.com/...", alt, id, ... }`, or `{}`/null
+// when nothing has been picked yet. Older content migrated before the
+// asset-field switchover may still hold a plain string (a local
+// `/images/...` path) -- pass those through unchanged so nothing breaks
+// until an editor re-picks the image in Storyblok. Returns undefined when
+// there's no image at all, so callers can fall back to a placeholder.
+export function imageUrl(field: any): string | undefined {
+  if (!field) return undefined;
+  if (typeof field === 'string') return field || undefined;
+  return field.filename || undefined;
+}
+
 export function unwrapSingletons<T extends Record<string, any>>(obj: T, keys: string[]): T {
   for (const key of keys) {
     obj[key as keyof T] = ((obj[key] ?? [])[0] ?? {}) as any;

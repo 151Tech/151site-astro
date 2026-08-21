@@ -4,7 +4,12 @@ import Layout from '../layouts/Layout.astro';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import BlockRenderer from '../components/blocks/BlockRenderer.astro';
-import { getLocations, getSettings, getPage, unwrapSingletons } from '../lib/storyblok';
+import { getLocations, getSettings, getPage, unwrapSingletons, imageUrl } from '../lib/storyblok';
+
+const toImageSrc = (field: any) => {
+  const url = imageUrl(field);
+  return url ? (url.startsWith('http') || url.startsWith('/') ? url : '/' + url) : '/images/store1.jpg';
+};
 
 const [locationsEntries, settingsData, pageData] = await Promise.all([
   getLocations(),
@@ -22,7 +27,7 @@ const storesJson = JSON.stringify(locations.map((l: any) => ({
   // Only this page's locator needs these -- their presence is what tells
   // locator.js to render a photo + "More Info" link on each list item.
   slug: l.slug,
-  image: l.image ? (l.image.startsWith('/') ? l.image : '/' + l.image) : '/images/store1.jpg',
+  image: toImageSrc(l.image),
 })));
 
 // Group locations by state for the cards grid
@@ -41,7 +46,7 @@ const STATE_NAMES: Record<string, string> = Object.fromEntries(
 <Layout
   title={p.seo?.title ?? '151 Coffee Locations | Find a Drive-Thru Near You'}
   description={p.seo?.description ?? 'Find your nearest 151 Coffee drive-thru. 15+ locations across Texas and Kansas with more opening soon.'}
-  ogImage={p.seo?.ogImage ?? 'https://www.151coffee.com/images/store1.jpg'}
+  ogImage={imageUrl(p.seo?.ogImage) ?? 'https://www.151coffee.com/images/store1.jpg'}
 >
   <fragment slot="head">
     <link rel="preconnect" href="https://unpkg.com" crossorigin />
@@ -98,7 +103,7 @@ const STATE_NAMES: Record<string, string> = Object.fromEntries(
                   <img
                     class="locator__item-photo"
                     src={(() => {
-                      const full = loc.image ? (loc.image.startsWith('/') ? loc.image : '/' + loc.image) : '/images/store1.jpg';
+                      const full = toImageSrc(loc.image);
                       // Cards render this at ~260px wide -- use the pre-generated
                       // thumbnail instead of the full-size photo the location
                       // detail page needs.

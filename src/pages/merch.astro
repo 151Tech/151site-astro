@@ -3,13 +3,13 @@ export const prerender = true;
 import Layout from '../layouts/Layout.astro';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
-import { getPage, unwrapSingletons } from '../lib/storyblok';
+import { getPage, unwrapSingletons, imageUrl } from '../lib/storyblok';
 
 const p = unwrapSingletons((await getPage('merch')) as any, ['seo', 'visibility', 'hero']);
 
 const categories = ['All', ...Array.from(new Set((p.items ?? []).map((i: any) => i.category))) as string[]];
 ---
-<Layout title={p.seo?.title ?? '151 Coffee Merch | Rep Your Favorite Coffee'} description={p.seo?.description} ogImage={p.seo?.ogImage}>
+<Layout title={p.seo?.title ?? '151 Coffee Merch | Rep Your Favorite Coffee'} description={p.seo?.description} ogImage={imageUrl(p.seo?.ogImage)}>
   <Nav />
 
   <section class="page-hero">
@@ -34,8 +34,8 @@ const categories = ['All', ...Array.from(new Set((p.items ?? []).map((i: any) =>
         {(p.items ?? []).map((item: any, i: number) => (
           <div class="merch-card" data-category={item.category}>
             <div class="merch-img-wrap">
-              {item.image
-                ? <img src={item.image} alt={item.name} loading="lazy" />
+              {imageUrl(item.image)
+                ? <img src={imageUrl(item.image)} alt={item.name} loading="lazy" />
                 : <div class="merch-placeholder"></div>
               }
             </div>

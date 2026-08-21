@@ -20,10 +20,32 @@ export const COMPONENTS = {
     is_root: true,
     schema: {
       name: { type: 'text' },
-      category: { type: 'text' }, // Storyblok slug of the matching category story
+      category: {
+        type: 'option',
+        display_name: 'Category',
+        description: 'Which menu section this drink belongs under (Coffee, Cold Brew, Energy, etc.). Controls where it appears on the menu.',
+        options: [
+          { value: 'categories/coffee', name: 'Coffee' },
+          { value: 'categories/coldbrew', name: 'Cold Brew' },
+          { value: 'categories/dirtypop', name: 'Dirty Pop' },
+          { value: 'categories/energy', name: 'Energy Drinks' },
+          { value: 'categories/hotfood', name: 'Hot Food' },
+          { value: 'categories/kids', name: 'Kids' },
+          { value: 'categories/refreshers', name: 'Refreshers' },
+          { value: 'categories/smoothies', name: 'Smoothies' },
+          { value: 'categories/teas', name: 'Teas' },
+          { value: 'categories/treats', name: 'Treats' },
+          { value: 'categories/misc', name: 'Misc' },
+        ],
+      }, // Storyblok slug of the matching category story
       subtitle: { type: 'text' },
       description: { type: 'textarea' },
-      image: { type: 'text' }, // TODO: swap to type 'asset' once images are uploaded to the Storyblok asset library
+      image: {
+        type: 'asset',
+        filetypes: ['images'],
+        display_name: 'Photo',
+        description: 'The picture of this drink shown on the menu and its detail page. Click to choose or upload an image.',
+      },
       badge: { type: 'text' },
       tags: { type: 'bloks', restrict_components: true, component_whitelist: ['text_item'] },
       menuOrder: { type: 'number' },
@@ -61,7 +83,12 @@ export const COMPONENTS = {
       lat: { type: 'number' },
       lng: { type: 'number' },
       displayOrder: { type: 'number' },
-      image: { type: 'text' }, // TODO: asset
+      image: {
+        type: 'asset',
+        filetypes: ['images'],
+        display_name: 'Store Photo',
+        description: 'The picture of this store shown on its location page. Click to choose or upload an image.',
+      },
       hours: { type: 'text' },
     },
   },
@@ -74,7 +101,12 @@ export const COMPONENTS = {
     is_root: true,
     schema: {
       siteName: { type: 'text' },
-      logo: { type: 'text' }, // TODO: asset
+      logo: {
+        type: 'asset',
+        filetypes: ['images'],
+        display_name: 'Logo',
+        description: 'The site logo shown in the header and footer. Click to choose or upload an image.',
+      },
       slogan: { type: 'text' },
       copyright: { type: 'text' },
       phone: { type: 'text' },

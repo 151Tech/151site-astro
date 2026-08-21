@@ -5,7 +5,7 @@ import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import HeroVideo from '../components/HeroVideo.astro';
 import BlockRenderer from '../components/blocks/BlockRenderer.astro';
-import { getPage, getDrinks, getCategories, getLocations, unwrapSingletons } from '../lib/storyblok';
+import { getPage, getDrinks, getCategories, getLocations, unwrapSingletons, imageUrl } from '../lib/storyblok';
 
 const [menuData, drinksEntries, categoryEntries, locationEntries] = await Promise.all([
   getPage('menu'),
@@ -17,6 +17,7 @@ const [menuData, drinksEntries, categoryEntries, locationEntries] = await Promis
 const p = unwrapSingletons(menuData as any, [
   'seo', 'visibility', 'hero', 'labels', 'locationPicker', 'drinkPage', 'customize',
 ]);
+const heroVideoSrc = imageUrl(p.heroVideo);
 const allDrinks = drinksEntries
   .sort((a: any, b: any) => (Number(a.menuOrder) || 99) - (Number(b.menuOrder) || 99));
 
@@ -128,7 +129,7 @@ const CATEGORY_PLACEHOLDER_IMAGE: Record<string, string> = {
   kids: '/images/v5/kids.jpg',
 };
 ---
-<Layout title={p.seo?.title ?? 'Menu | 151 Coffee - Coffee, Cold Brew, Energy & Dirty Pop'} description={p.seo?.description ?? 'Explore the full 151 Coffee menu. Signature espresso drinks, cold brew, blended energy, Dirty Pop sodas, refreshers, smoothies, teas, and more.'} ogImage={p.seo?.ogImage}>
+<Layout title={p.seo?.title ?? 'Menu | 151 Coffee - Coffee, Cold Brew, Energy & Dirty Pop'} description={p.seo?.description ?? 'Explore the full 151 Coffee menu. Signature espresso drinks, cold brew, blended energy, Dirty Pop sodas, refreshers, smoothies, teas, and more.'} ogImage={imageUrl(p.seo?.ogImage)}>
   <Fragment slot="head">
     <link rel="stylesheet" href="/menu.css" />
   </Fragment>
@@ -136,7 +137,7 @@ const CATEGORY_PLACEHOLDER_IMAGE: Record<string, string> = {
   <Nav active="menu" />
 
   <section class="menu-hero">
-    <HeroVideo src={p.heroVideo} videoClass="hero-bg" />
+    <HeroVideo src={heroVideoSrc} videoClass="hero-bg" />
     <div class="menu-hero-content">
       <h1>{p.hero?.heading ?? 'Our Menu'}</h1>
       <button type="button" class="location-trigger" id="locationTrigger">
