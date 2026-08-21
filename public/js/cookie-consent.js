@@ -37,12 +37,12 @@
                 <div class="cc-text">
                     <div>
                         <strong>We use cookies 🍪</strong>
-                        <p>Unlike our menu, these cookies won't give you a sugar rush — just a better site (faster pages, smarter recommendations, that sort of thing). No crumbs, we promise. Accept all, or keep it to the necessary ones.</p>
+                        <p>Unlike our menu, these cookies won't give you a sugar rush, just a better site (faster pages, smarter recommendations, that sort of thing). No crumbs, we promise. Accept all, or keep it to the necessary ones.</p>
                     </div>
                 </div>
                 <div class="cc-actions">
                     <button class="cc-btn cc-decline" id="ccDecline">Necessary Only</button>
-                    <button class="cc-btn cc-accept" id="ccAccept">Accept All 🍪</button>
+                    <button class="cc-btn cc-accept" id="ccAccept">Accept All</button>
                 </div>
                 <button class="cc-close" id="ccClose" aria-label="Close">&times;</button>
             </div>
