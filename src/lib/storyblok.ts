@@ -107,16 +107,52 @@ function denormalizeObject(obj: Record<string, any>) {
   return out;
 }
 
+// Nav and Footer both call getSettings() independently, and several pages
+// fetch it again themselves -- without caching, a single page load could
+// fire the identical Storyblok request 2-3 times, multiplying the chance
+// that a slow request pushes total render time past Cloudflare Workers'
+// execution limit (the "Worker exceeded resource limits" hang). This caches
+// the *raw* API response (pre-denormalize) for a short window, keyed by
+// request path + version, and de-dupes concurrent in-flight requests for
+// the same key. Callers still get a fresh `denormalize()` output each call
+// -- never a shared object -- since `unwrapSingletons` mutates its input
+// and different call sites unwrap different keys on the same story
+// (e.g. Footer unwraps 'social'/'footer' out of the same settings object
+// Nav reads 'logo'/'siteName' from).
+const CACHE_TTL_MS = 30_000;
+const responseCache = new Map<string, { data: any; expires: number }>();
+const inFlight = new Map<string, Promise<any>>();
+
+async function cachedGet(path: string, params: Record<string, any>) {
+  const key = `${path}?${JSON.stringify(params)}`;
+  const cached = responseCache.get(key);
+  if (cached && cached.expires > Date.now()) return cached.data;
+
+  const pending = inFlight.get(key);
+  if (pending) return pending;
+
+  const promise = client.get(path, params).then(({ data }) => {
+    responseCache.set(key, { data, expires: Date.now() + CACHE_TTL_MS });
+    inFlight.delete(key);
+    return data;
+  }, (err) => {
+    inFlight.delete(key);
+    throw err;
+  });
+  inFlight.set(key, promise);
+  return promise;
+}
+
 // A single story by full slug, e.g. "pages/home" or "locations/151-coffee-keller".
 export async function getStory(slug: string) {
-  const { data } = await client.get(`cdn/stories/${slug}`, { version });
+  const data = await cachedGet(`cdn/stories/${slug}`, { version });
   return denormalize(data.story.content);
 }
 
 // All stories under a folder, e.g. "drinks", "locations", "categories" --
 // mirrors the old astro:content getCollection(name) shape (slug + content).
 export async function getStories(startsWith: string) {
-  const { data } = await client.get('cdn/stories', {
+  const data = await cachedGet('cdn/stories', {
     starts_with: `${startsWith}/`,
     version,
     per_page: 100,
