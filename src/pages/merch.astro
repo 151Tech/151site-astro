@@ -17,8 +17,8 @@ const categories = ['All', ...Array.from(new Set((p.items ?? []).map((i: any) =>
     <div class="container">
       <div class="page-hero-content">
         <Editable blok={p} />
-        <h1>{p.hero?.heading}</h1>
-        <p>{p.hero?.subheading}</p>
+        <h1>{p.hero?.heading ?? '151 Coffee Merch'}</h1>
+        <p>{p.hero?.subheading ?? 'Rep your favorite coffee shop.'}</p>
       </div>
     </div>
   </section>

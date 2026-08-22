@@ -51,9 +51,9 @@ const storesJson = JSON.stringify(locations.map((l: any) => ({
     <div class="container">
       <div class="hero-content">
         <Editable blok={p} />
-        <h1>{p.hero?.heading}<br /><span>{p.hero?.subheadingLine1}</span><br /><span>{p.hero?.subheadingLine2}</span></h1>
+        <h1>{p.hero?.heading ?? '151 Coffee'}<br /><span>{p.hero?.subheadingLine1 ?? "It's a Good Day"}</span><br /><span>{p.hero?.subheadingLine2 ?? 'to Have a Good Day'}</span></h1>
         <div class="hero-buttons">
-          <a href={p.hero?.ctaHref ?? '/menu'} class="main-menu-btn2">{p.hero?.ctaLabel}</a>
+          <a href={p.hero?.ctaHref ?? '/menu'} class="main-menu-btn2">{p.hero?.ctaLabel ?? 'See Our Menu'}</a>
         </div>
       </div>
     </div>
@@ -67,7 +67,7 @@ const storesJson = JSON.stringify(locations.map((l: any) => ({
       <div class="featured-inner">
         <Editable blok={p.featuredDrink} />
         <div class="featured-visual">
-          <h2 class="featured-mobile-name">{p.featuredDrink?.name} <span>{p.featuredDrink?.nameBold}</span></h2>
+          <h2 class="featured-mobile-name">{p.featuredDrink?.name ?? 'Our'} <span>{p.featuredDrink?.nameBold ?? 'Coffee'}</span></h2>
           <div class="featured-card">
             <div class="drink-img-wrap">
               <img src={imageUrl(p.featuredDrink?.image, { width: 960 }) ?? '/images/v5/coffee.jpg'} alt={p.featuredDrink?.imageAlt ?? p.featuredDrink?.name ?? 'Featured drink'} width="480" height="480" decoding="async" />
@@ -75,10 +75,10 @@ const storesJson = JSON.stringify(locations.map((l: any) => ({
           </div>
         </div>
         <div class="featured-text">
-          <span class="featured-badge">{p.featuredDrink?.badge}</span>
-          <h2>{p.featuredDrink?.name}<br /><span>{p.featuredDrink?.nameBold}</span></h2>
-          <p>{p.featuredDrink?.description}</p>
-          <a href={p.featuredDrink?.ctaHref} class="featured-cta">{p.featuredDrink?.ctaLabel}</a>
+          <span class="featured-badge">{p.featuredDrink?.badge ?? 'Featured Drink'}</span>
+          <h2>{p.featuredDrink?.name ?? 'Our'}<br /><span>{p.featuredDrink?.nameBold ?? 'Coffee'}</span></h2>
+          <p>{p.featuredDrink?.description ?? 'Handcrafted espresso, cold brew, and energy drinks made your way.'}</p>
+          <a href={p.featuredDrink?.ctaHref ?? '/menu'} class="featured-cta">{p.featuredDrink?.ctaLabel ?? 'Explore the Menu'}</a>
         </div>
       </div>
     </section>
@@ -108,7 +108,7 @@ const storesJson = JSON.stringify(locations.map((l: any) => ({
   <section class="features" id="features">
     <div class="container">
       <Editable blok={p.menuSection} />
-      <div class="section-header"><h2>{p.menuSection?.heading}</h2></div>
+      <div class="section-header"><h2>{p.menuSection?.heading ?? 'Explore Our Menu'}</h2></div>
       <div class="features-grid">
         {(p.menuSection?.cards ?? []).map((card: any, i: number) => (
           <a href={card.href} class="feature-card">
@@ -135,10 +135,10 @@ const storesJson = JSON.stringify(locations.map((l: any) => ({
       <div class="cta-inner">
         <Editable blok={p.cta} />
         <div class="cta-content">
-          <h2>{p.cta?.heading}</h2>
-          <p>{p.cta?.body}</p>
+          <h2>{p.cta?.heading ?? 'Ready for a Good Day?'}</h2>
+          <p>{p.cta?.body ?? 'Find your nearest 151 Coffee and see what everyone is talking about.'}</p>
           <div class="cta-buttons">
-            <a href={p.cta?.ctaHref} class="btn-primary">{p.cta?.ctaLabel}</a>
+            <a href={p.cta?.ctaHref ?? '/locations'} class="btn-primary">{p.cta?.ctaLabel ?? 'Find a Location'}</a>
           </div>
         </div>
         <div class="cta-photo-stack">
@@ -159,7 +159,7 @@ const storesJson = JSON.stringify(locations.map((l: any) => ({
   {(p.visibility?.reviews ?? true) && (
   <section class="pricing" id="pricing">
     <div class="container">
-      <div class="section-header"><h2>{p.reviews?.heading}</h2></div>
+      <div class="section-header"><h2>{p.reviews?.heading ?? 'What People Are Saying'}</h2></div>
       <div class="pricing-grid">
         {(p.reviews?.items ?? []).map((r: any, i: number) => (
           <div class="pricing-card">
@@ -183,7 +183,7 @@ const storesJson = JSON.stringify(locations.map((l: any) => ({
   {(p.visibility?.faq ?? true) && (
   <section class="faq" id="faq">
     <div class="container">
-      <div class="section-header"><h2>{p.faqs?.heading}</h2></div>
+      <div class="section-header"><h2>{p.faqs?.heading ?? 'Frequently Asked Questions'}</h2></div>
       <div class="faq-list">
         {(p.faqs?.items ?? []).map((faq: any, i: number) => (
           <details open={i===0}>
@@ -202,14 +202,14 @@ const storesJson = JSON.stringify(locations.map((l: any) => ({
   <section class="contact" id="contact">
     <div class="container">
       <Editable blok={p.contact} />
-      <div class="section-header"><h2>{p.contact?.heading}</h2></div>
+      <div class="section-header"><h2>{p.contact?.heading ?? 'Get In Touch'}</h2></div>
       <div class="contact-form-wrapper">
         <form class="contact-form" name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field">
           <input type="hidden" name="form-name" value="contact" />
           <p style="display:none"><label>Leave this field blank: <input name="bot-field" /></label></p>
           <div class="form-header">
-            <h3>{p.contact?.formHeading}</h3>
-            <p>{p.contact?.subheading}</p>
+            <h3>{p.contact?.formHeading ?? 'Send Us a Message'}</h3>
+            <p>{p.contact?.subheading ?? "We'd love to hear from you."}</p>
           </div>
           <div class="form-row">
             <div class="form-group"><label for="firstName">{p.contact?.firstNameLabel ?? 'First Name'}</label><input type="text" id="firstName" name="firstName" placeholder="First" required /></div>
