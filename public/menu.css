@@ -96,7 +96,7 @@
     background: rgba(255,255,255,0.05);
     border: 1.5px solid rgba(255,255,255,0.12);
     border-radius: 999px;
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-inter), sans-serif;
     font-size: clamp(0.5rem, 1.1vw, 0.8rem);
     font-weight: 600;
     text-transform: uppercase;
@@ -229,7 +229,7 @@
 }
 
 .cat-title-text {
-    font-family: 'Bebas Neue', sans-serif;
+    font-family: var(--font-bebas-neue), sans-serif;
     font-size: clamp(2.3rem, 4.8vw, 4.1rem);
     letter-spacing: 0.03em;
     color: #1a1512;
@@ -368,7 +368,7 @@
 }
 
 .drink-info h3 {
-    font-family: 'Bebas Neue', sans-serif;
+    font-family: var(--font-bebas-neue), sans-serif;
     color: #1a1512;
     font-size: 1.7rem;
     line-height: 1.1;
@@ -413,7 +413,7 @@
 }
 
 .descriptor-label {
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-inter), sans-serif;
     font-size: 0.65rem;
     font-weight: 700;
     text-transform: uppercase;
@@ -430,7 +430,7 @@
 }
 
 .descriptor-list span {
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-inter), sans-serif;
     font-size: 0.85rem;
     font-weight: 500;
     color: rgba(20,17,14,0.8);
@@ -488,7 +488,7 @@
 }
 
 .cz-heading h2 {
-    font-family: 'Bebas Neue', sans-serif;
+    font-family: var(--font-bebas-neue), sans-serif;
     font-size: clamp(1.8rem, 3.2vw, 2.4rem);
     letter-spacing: 0.03em;
     color: #f5efe8;
@@ -592,7 +592,7 @@
 }
 
 .merch-pill {
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-inter), sans-serif;
     font-size: 0.78rem;
     font-weight: 600;
     letter-spacing: 0.05em;
@@ -692,7 +692,7 @@
 }
 
 .merch-cat {
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-inter), sans-serif;
     font-size: 0.6rem;
     font-weight: 700;
     letter-spacing: 0.16em;
@@ -709,7 +709,7 @@
 
 .merch-price {
     color: var(--red);
-    font-family: 'Bebas Neue', sans-serif;
+    font-family: var(--font-bebas-neue), sans-serif;
     font-size: 1.35rem;
     letter-spacing: 0.04em;
 }
@@ -778,7 +778,7 @@
 }
 
 .timeline-empty-state p {
-    font-family: 'Bebas Neue', sans-serif;
+    font-family: var(--font-bebas-neue), sans-serif;
     font-size: clamp(1.6rem, 4vw, 2.4rem);
     color: rgba(255,255,255,0.9);
     letter-spacing: 0.04em;
@@ -985,7 +985,7 @@
     background: rgba(255,255,255,0.08);
     border: 1.5px solid rgba(255,255,255,0.25);
     color: var(--white);
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-inter), sans-serif;
     font-size: 0.82rem;
     font-weight: 600;
     letter-spacing: 0.03em;
@@ -1026,7 +1026,7 @@
 
 .loc-modal-inner > p {
     color: var(--light-gray);
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-inter), sans-serif;
     font-size: 0.92rem;
     margin-bottom: 1.5rem;
 }
@@ -1049,7 +1049,7 @@
 }
 
 .loc-modal-state-label {
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-inter), sans-serif;
     font-size: 0.7rem;
     font-weight: 700;
     letter-spacing: 0.12em;
@@ -1068,7 +1068,7 @@
     border: 1px solid rgba(0,0,0,0.08);
     box-shadow: 0 1px 3px rgba(0,0,0,0.08);
     color: var(--black);
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-inter), sans-serif;
     font-size: 0.85rem;
     font-weight: 600;
     letter-spacing: 0.01em;

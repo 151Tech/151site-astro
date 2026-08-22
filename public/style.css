@@ -54,7 +54,7 @@ body.page-exiting {
 
 /* ─── Base ─── */
 body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: var(--font-inter), -apple-system, BlinkMacSystemFont, sans-serif;
     background-color: var(--black);
     color: var(--white);
     line-height: 1.6;
@@ -62,7 +62,7 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-    font-family: 'Bebas Neue', 'Impact', sans-serif;
+    font-family: var(--font-bebas-neue), 'Impact', sans-serif;
     font-weight: 400;
     letter-spacing: 0.04em;
     text-transform: uppercase;
@@ -135,7 +135,7 @@ nav.nav-scrolled .nav-container {
     align-items: center;
     gap: 0.6rem;
     font-size: 1.8rem;
-    font-family: 'Bebas Neue', 'Impact', sans-serif;
+    font-family: var(--font-bebas-neue), 'Impact', sans-serif;
     font-weight: 400;
     color: var(--black);
     text-decoration: none;
@@ -162,7 +162,7 @@ nav.nav-scrolled .nav-container {
 .nav-links a {
     color: var(--black);
     text-decoration: none;
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-inter), sans-serif;
     font-weight: 600;
     text-transform: uppercase;
     font-size: 0.78rem;
@@ -193,7 +193,7 @@ nav.nav-scrolled .nav-container {
     color: var(--white);
     padding: 0.75rem 1.75rem;
     text-decoration: none;
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-inter), sans-serif;
     font-weight: 700;
     text-transform: uppercase;
     font-size: 0.82rem;
@@ -232,7 +232,7 @@ nav.nav-scrolled .nav-container {
     color: var(--white);
     padding: 0.75rem 1.75rem;
     text-decoration: none;
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-inter), sans-serif;
     font-weight: 700;
     text-transform: uppercase;
     font-size: 0.82rem;
@@ -355,7 +355,7 @@ nav.nav-scrolled .nav-container {
 .mobile-nav-drawer .nav-links a {
     display: block;
     color: var(--black);
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-inter), sans-serif;
     font-size: 1rem;
     font-weight: 600;
     text-transform: uppercase;
@@ -600,7 +600,7 @@ nav.nav-scrolled .nav-container {
     display: inline-block;
     background: var(--red);
     color: #fff;
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-inter), sans-serif;
     font-size: 0.7rem;
     font-weight: 700;
     text-transform: uppercase;
@@ -667,7 +667,7 @@ nav.nav-scrolled .nav-container {
     display: inline-block;
     background: linear-gradient(135deg, var(--red) 0%, var(--red-soft) 100%);
     color: #fff;
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-inter), sans-serif;
     font-weight: 600;
     font-size: 0.95rem;
     letter-spacing: 0.02em;
@@ -866,7 +866,7 @@ nav.nav-scrolled .nav-container {
     position: absolute;
     left: 50%;
     bottom: 1.1rem;
-    font-family: 'Caveat', cursive;
+    font-family: var(--font-caveat), cursive;
     font-size: 1.9rem;
     font-weight: 600;
     color: #2b2b2b;
@@ -999,7 +999,7 @@ nav.nav-scrolled .nav-container {
 }
 
 .feature-card h3 { color: var(--white); font-size: 1.3rem; margin: 0; }
-.feature-card-subtitle { display: block; color: var(--red-soft); font-family: 'Inter', sans-serif; font-size: 0.86rem; font-weight: 400; text-transform: none; letter-spacing: normal; margin-top: 0.2rem; }
+.feature-card-subtitle { display: block; color: var(--red-soft); font-family: var(--font-inter), sans-serif; font-size: 0.86rem; font-weight: 400; text-transform: none; letter-spacing: normal; margin-top: 0.2rem; }
 .feature-card .menu-btn { flex-shrink: 0; padding: 0.6rem 1.1rem; font-size: 0.72rem; }
 
 /* ─── Locations ─── */
@@ -1055,7 +1055,7 @@ nav.nav-scrolled .nav-container {
     border-radius: var(--radius-pill);
     background: #fbf8f4;
     color: var(--black);
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-inter), sans-serif;
     font-size: 0.9rem;
     outline: none;
     transition: all 0.2s ease;
@@ -1087,7 +1087,7 @@ nav.nav-scrolled .nav-container {
 .locator__item.active { border-color: var(--red); background: rgba(230,57,70,0.04); }
 
 .locator__item-info h3 {
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-inter), sans-serif;
     font-size: 0.95rem;
     font-weight: 700;
     text-transform: none;
@@ -1134,7 +1134,7 @@ nav.nav-scrolled .nav-container {
     background: linear-gradient(135deg, var(--red) 0%, var(--red-soft) 100%);
     color: var(--white);
     text-decoration: none;
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-inter), sans-serif;
     font-size: 0.72rem;
     font-weight: 700;
     text-transform: uppercase;
@@ -1177,7 +1177,7 @@ nav.nav-scrolled .nav-container {
     border: 1px solid rgba(0,0,0,0.1);
     border-radius: var(--radius-pill);
     box-shadow: 0 2px 8px rgba(0,0,0,0.18);
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-inter), sans-serif;
     font-size: 0.72rem;
     font-weight: 700;
     padding: 0.25rem 0.65rem;
@@ -1270,7 +1270,7 @@ nav.nav-scrolled .nav-container {
     left: 50%;
     bottom: -0.55rem;
     transform: translate(-57.5%, 0);
-    font-family: 'Bebas Neue', sans-serif;
+    font-family: var(--font-bebas-neue), sans-serif;
     font-size: 12rem;
     line-height: 1;
     background: linear-gradient(135deg, var(--red) 0%, var(--red-soft) 100%);
@@ -1301,7 +1301,7 @@ nav.nav-scrolled .nav-container {
 .loc-count-label {
     position: relative;
     z-index: 2;
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-inter), sans-serif;
     font-size: 0.68rem;
     font-weight: 800;
     letter-spacing: 0.08em;
@@ -1460,7 +1460,7 @@ nav.nav-scrolled .nav-container {
 }
 
 .locator-photo-card .locator__item-info h3 {
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-inter), sans-serif;
     font-size: 1rem;
     font-weight: 700;
     text-transform: none;
@@ -1506,7 +1506,7 @@ nav.nav-scrolled .nav-container {
     border: none;
     padding: 0;
     border-radius: 0;
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-inter), sans-serif;
     font-size: 0.72rem;
     font-weight: 700;
     text-transform: uppercase;
@@ -1579,7 +1579,7 @@ nav.nav-scrolled .nav-container {
 .pricing-card::before {
     content: '\201C';
     display: block;
-    font-family: 'Bebas Neue', sans-serif;
+    font-family: var(--font-bebas-neue), sans-serif;
     font-size: 3.5rem;
     line-height: 1;
     color: var(--red);
@@ -1598,7 +1598,7 @@ nav.nav-scrolled .nav-container {
     color: rgba(245,245,245,0.82);
     margin-bottom: 1.5rem;
     text-align: left;
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-inter), sans-serif;
     font-style: normal;
 }
 
@@ -1621,7 +1621,7 @@ nav.nav-scrolled .nav-container {
     border-radius: 50%;
     background: linear-gradient(135deg, var(--red) 0%, var(--red-soft) 100%);
     color: #fff;
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-inter), sans-serif;
     font-size: 0.95rem;
     font-weight: 700;
 }
@@ -1633,7 +1633,7 @@ nav.nav-scrolled .nav-container {
 }
 
 .plan-name {
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-inter), sans-serif;
     font-size: 0.85rem;
     font-weight: 700;
     text-align: left;
@@ -1643,7 +1643,7 @@ nav.nav-scrolled .nav-container {
 }
 
 .review-location {
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-inter), sans-serif;
     font-size: 0.78rem;
     color: rgba(245,245,245,0.5);
 }
@@ -1722,7 +1722,7 @@ nav.nav-scrolled .nav-container {
 
 .special-feature-number {
     display: block;
-    font-family: 'Bebas Neue', sans-serif;
+    font-family: var(--font-bebas-neue), sans-serif;
     font-size: 2.4rem;
     color: var(--red);
     letter-spacing: 0.05em;
@@ -1730,7 +1730,7 @@ nav.nav-scrolled .nav-container {
 }
 
 .special-feature-label {
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-inter), sans-serif;
     font-size: 0.78rem;
     color: var(--light-gray);
     text-transform: uppercase;
@@ -1824,7 +1824,7 @@ nav.nav-scrolled .nav-container {
     margin-bottom: 0.6rem;
     color: rgba(245,245,245,0.6);
     text-transform: uppercase;
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-inter), sans-serif;
     font-size: 0.72rem;
     letter-spacing: 0.14em;
     font-weight: 600;
@@ -1839,7 +1839,7 @@ nav.nav-scrolled .nav-container {
     border-radius: var(--radius-sm);
     color: var(--white);
     font-size: 0.95rem;
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-inter), sans-serif;
     transition: all 0.25s ease;
 }
 
@@ -1865,7 +1865,7 @@ nav.nav-scrolled .nav-container {
     border: none;
     border-radius: var(--radius-pill);
     text-transform: uppercase;
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-inter), sans-serif;
     font-weight: 700;
     letter-spacing: 0.12em;
     font-size: 0.82rem;
@@ -1909,7 +1909,7 @@ footer {
 
 .footer-section h4,
 .footer-social-section h4 {
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-inter), sans-serif;
     font-size: 0.72rem;
     font-weight: 700;
     color: var(--red);
@@ -1934,7 +1934,7 @@ footer {
 .footer-social-section ul li button {
     color: var(--light-gray);
     text-decoration: none;
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-inter), sans-serif;
     font-size: 0.9rem;
     transition: color 0.2s ease;
     background: none;
@@ -1959,7 +1959,7 @@ footer {
 }
 
 .footer-credits p {
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-inter), sans-serif;
     font-size: 0.82rem;
     color: var(--light-gray);
 }
@@ -1976,7 +1976,7 @@ footer {
 }
 
 .footer-web-design span {
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-inter), sans-serif;
     font-size: 0.82rem;
     color: var(--light-gray);
 }
@@ -2017,7 +2017,7 @@ footer {
     justify-content: center;
     text-decoration: none;
     color: var(--light-gray);
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-inter), sans-serif;
     font-size: 0.75rem;
     font-weight: 700;
     transition: all 0.25s ease;
@@ -2071,7 +2071,7 @@ footer {
     transition: background 0.2s ease, transform 0.2s ease;
     z-index: 2001;
     line-height: 1;
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-inter), sans-serif;
 }
 
 .modal-close:hover {
@@ -2160,14 +2160,14 @@ footer {
 }
 .cc-text strong {
     display: block;
-    font-family: 'Bebas Neue', sans-serif;
+    font-family: var(--font-bebas-neue), sans-serif;
     font-size: 1.15rem;
     letter-spacing: 0.04em;
     color: var(--white);
     margin-bottom: 0.25rem;
 }
 .cc-text p {
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-inter), sans-serif;
     font-size: 0.82rem;
     color: rgba(255,255,255,0.60);
     line-height: 1.55;
@@ -2179,7 +2179,7 @@ footer {
     justify-content: flex-end;
 }
 .cc-btn {
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-inter), sans-serif;
     font-size: 0.82rem;
     font-weight: 600;
     padding: 0.55rem 1.25rem;
@@ -2235,7 +2235,7 @@ footer {
 }
 .loc-hero-content { position: relative; z-index: 1; text-align: center; margin-bottom: 1rem; }
 .loc-hero-content h1 { font-size: clamp(2.8rem, 6vw, 4.8rem); color: #fff; line-height: 1; margin-bottom: 0.6rem; }
-.loc-hero-content p { color: rgba(255,255,255,0.94); font-family: 'Inter', sans-serif; font-size: 1.05rem; font-weight: 400; }
+.loc-hero-content p { color: rgba(255,255,255,0.94); font-family: var(--font-inter), sans-serif; font-size: 1.05rem; font-weight: 400; }
 .loc-count {
     display: inline-block;
     margin-top: 0.5rem;
@@ -2243,7 +2243,7 @@ footer {
     border: 1px solid rgba(255,255,255,0.28);
     border-radius: 999px;
     padding: 0.38rem 1.1rem;
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-inter), sans-serif;
     font-size: 0.82rem;
     font-weight: 700;
     color: #fff;
@@ -2271,7 +2271,7 @@ footer {
 .loc-grid-section .container { position: relative; z-index: 1; }
 .loc-state-group { margin-bottom: 3rem; }
 .loc-state-label {
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-inter), sans-serif;
     font-size: 0.95rem;
     font-weight: 800;
     letter-spacing: 0.14em;
@@ -2334,7 +2334,7 @@ footer {
 .faq details:hover { transform: translateY(-2px); box-shadow: 0 14px 34px rgba(0,0,0,0.2); }
 .faq details[open] { border-color: rgba(230,57,70,0.4); box-shadow: 0 16px 38px rgba(0,0,0,0.22); }
 .faq summary {
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-inter), sans-serif;
     font-weight: 700;
     font-size: 1.08rem;
     color: #fff;
@@ -2364,7 +2364,7 @@ footer {
 }
 .faq details[open] summary::after { transform: rotate(45deg); }
 .faq details p {
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-inter), sans-serif;
     font-size: 0.99rem;
     line-height: 1.7;
     color: rgba(255,255,255,0.72);
@@ -2493,7 +2493,7 @@ footer {
     margin-bottom: 0.75rem;
 }
 .page-hero-content p {
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-inter), sans-serif;
     font-size: 1.1rem;
     color: rgba(20,17,14,0.6);
     max-width: 540px;
@@ -2513,7 +2513,7 @@ footer {
     background: rgba(255,255,255,0.05);
     border: 1px solid rgba(255,255,255,0.12);
     color: rgba(255,255,255,0.72);
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-inter), sans-serif;
     font-size: 0.82rem;
     font-weight: 600;
     letter-spacing: 0.02em;
@@ -2559,7 +2559,7 @@ footer {
 }
 .merch-info { padding: 1.1rem 1.25rem 1.35rem; text-align: center; }
 .merch-info h3 {
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-inter), sans-serif;
     font-size: 0.95rem;
     font-weight: 700;
     color: #fff;
@@ -2567,7 +2567,7 @@ footer {
     letter-spacing: normal;
     margin-bottom: 0.35rem;
 }
-.merch-price { font-family: 'Inter', sans-serif; font-size: 0.9rem; font-weight: 700; color: var(--red); }
+.merch-price { font-family: var(--font-inter), sans-serif; font-size: 0.9rem; font-weight: 700; color: var(--red); }
 
 /* ===== Legal / privacy ===== */
 .legal-content { background: var(--black); }
@@ -2578,7 +2578,7 @@ footer {
 }
 .legal-content > .container > div:first-child h2 { margin-top: 0; }
 .legal-content p {
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-inter), sans-serif;
     font-size: 1rem;
     line-height: 1.75;
     color: rgba(255,255,255,0.65);
@@ -2665,7 +2665,7 @@ footer {
 }
 
 .featured-card .drink-info h3 {
-    font-family: 'Bebas Neue', sans-serif;
+    font-family: var(--font-bebas-neue), sans-serif;
     color: var(--black);
     font-size: 1.7rem;
     line-height: 1.1;
@@ -2692,7 +2692,7 @@ footer {
     -webkit-backdrop-filter: blur(6px);
     border: 1px solid rgba(255,255,255,0.18);
     color: #fff;
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-inter), sans-serif;
     font-size: 0.66rem;
     font-weight: 700;
     letter-spacing: 0.06em;

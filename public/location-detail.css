@@ -56,7 +56,7 @@
     background: rgba(255,255,255,0.18);
     color: var(--white);
     border-radius: 100px;
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-inter), sans-serif;
     font-size: 0.72rem;
     font-weight: 700;
     letter-spacing: 0.1em;
@@ -72,7 +72,7 @@
 
 .ld-addr {
     color: rgba(255,255,255,0.85);
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-inter), sans-serif;
     font-size: 1rem;
 }
 
@@ -121,7 +121,7 @@
 .ld-detail-row { display: flex; flex-direction: column; gap: 0.3rem; }
 
 .ld-detail-label {
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-inter), sans-serif;
     font-size: 0.7rem;
     font-weight: 700;
     letter-spacing: 0.12em;
@@ -131,7 +131,7 @@
 
 .ld-detail-val {
     color: var(--white);
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-inter), sans-serif;
     font-size: 1rem;
     font-weight: 500;
 }
@@ -159,7 +159,7 @@
     justify-content: center;
     padding: 0.85rem 1.5rem;
     border-radius: var(--radius-pill);
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-inter), sans-serif;
     font-weight: 700;
     font-size: 0.85rem;
     letter-spacing: 0.03em;

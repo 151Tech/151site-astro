@@ -1,4 +1,7 @@
 ---
+import Font from 'astro/components/Font.astro';
+import { ClientRouter } from 'astro:transitions';
+
 interface Props {
   title: string;
   description?: string;
@@ -23,10 +26,9 @@ const canonicalUrl = canonical ?? new URL(Astro.url.pathname, 'https://www.151co
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Caveat:wght@600&family=Inter:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'" />
-  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Caveat:wght@600&family=Inter:wght@400;500;600;700&display=swap" /></noscript>
+  <Font cssVariable="--font-inter" preload />
+  <Font cssVariable="--font-bebas-neue" preload />
+  <Font cssVariable="--font-caveat" />
 
   <title>{title}</title>
   <meta name="description" content={description} />
@@ -52,6 +54,7 @@ const canonicalUrl = canonical ?? new URL(Astro.url.pathname, 'https://www.151co
   <link rel="apple-touch-icon" href="/images/logo.png" />
   <link rel="stylesheet" href="/style.css" />
   <link rel="stylesheet" href="/blocks.css" />
+  <ClientRouter />
   <slot name="head" />
   <script is:inline>if(!window.matchMedia('(prefers-reduced-motion:reduce)').matches)document.documentElement.classList.add('js-anim');</script>
 </head>

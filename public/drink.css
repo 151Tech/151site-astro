@@ -98,7 +98,7 @@
 }
 
 .dk-title {
-    font-family: 'Bebas Neue', sans-serif;
+    font-family: var(--font-bebas-neue), sans-serif;
     font-size: clamp(3rem, 7vw, 6rem);
     color: #fff;
     line-height: 1;
@@ -204,7 +204,7 @@
 }
 
 .dk-detail-name {
-    font-family: 'Bebas Neue', sans-serif;
+    font-family: var(--font-bebas-neue), sans-serif;
     font-size: clamp(2.2rem, 4vw, 3.4rem);
     color: #fff;
     line-height: 1;
@@ -289,7 +289,7 @@
 }
 
 .dk-customize-heading {
-    font-family: 'Bebas Neue', sans-serif;
+    font-family: var(--font-bebas-neue), sans-serif;
     font-size: clamp(1.15rem, 1.8vw, 1.4rem);
     color: var(--red);
     letter-spacing: 0.02em;
@@ -309,7 +309,7 @@
 }
 
 .dk-customize-row h4 {
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-inter), sans-serif;
     font-size: 0.7rem;
     font-weight: 700;
     letter-spacing: 0.14em;
@@ -330,7 +330,7 @@
     color: rgba(255,255,255,0.75);
     border: 1px solid rgba(255,255,255,0.1);
     border-radius: 100px;
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-inter), sans-serif;
     font-size: 0.78rem;
     font-weight: 500;
     padding: 0.3rem 0.75rem;
