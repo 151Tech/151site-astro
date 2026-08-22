@@ -123,12 +123,6 @@
    of near-black. */
 .timeline-wrap {
     background-color: #f4efe9;
-    background-image:
-        linear-gradient(rgba(244,239,233,0.94), rgba(244,239,233,0.94)),
-        url('/images/background1.webp');
-    background-size: cover, cover;
-    background-position: center, center;
-    background-repeat: no-repeat, no-repeat;
     position: relative;
     z-index: 2;
     padding: 3.25rem 0 1.25rem;
@@ -444,12 +438,6 @@
    sections back to back. */
 .customize-section {
     background-color: #2b2521;
-    background-image:
-        linear-gradient(rgba(38,32,28,0.82), rgba(38,32,28,0.82)),
-        url('/images/background1.webp');
-    background-size: cover, cover;
-    background-position: center, center;
-    background-repeat: no-repeat, no-repeat;
     position: relative;
     padding: 3rem 0 3.5rem;
 }

@@ -114,21 +114,6 @@ const flavors: { value: string; index: number }[] = allFlavors
   .map((f: string, index: number) => ({ value: f, index }))
   .filter(({ value }: any) => FLAVORS_WITH_DRINKS.has(value));
 
-// Temporary placeholder: one representative stock photo per category,
-// standing in until real per-drink product shots are ready. Swap this out
-// for drink.image once photography exists for the new card layout.
-const CATEGORY_PLACEHOLDER_IMAGE: Record<string, string> = {
-  coffee: '/images/v5/coffee.jpg',
-  coldbrew: '/images/v5/coldbrew.jpg',
-  'Misc.': '/images/v5/misc.jpg',
-  misc: '/images/v5/misc.jpg',
-  energy: '/images/v5/energy.jpg',
-  dirtypop: '/images/v5/dirtypop.jpg',
-  refreshers: '/images/v5/refreshers.jpg',
-  smoothies: '/images/v5/smoothies.jpg',
-  teas: '/images/v5/teas.jpg',
-  kids: '/images/v5/kids.jpg',
-};
 ---
 <Layout title={p.seo?.title ?? 'Menu | 151 Coffee - Coffee, Cold Brew, Energy & Dirty Pop'} description={p.seo?.description ?? 'Explore the full 151 Coffee menu. Signature espresso drinks, cold brew, blended energy, Dirty Pop sodas, refreshers, smoothies, teas, and more.'} ogImage={imageUrl(p.seo?.ogImage, { width: 1200, height: 630 })}>
   <Fragment slot="head">
@@ -214,7 +199,9 @@ const CATEGORY_PLACEHOLDER_IMAGE: Record<string, string> = {
                 <Editable blok={drink} />
                 {drink.badge && <span class="drink-badge">{drink.badge}</span>}
                 <div class="drink-img-wrap">
-                  <img loading="lazy" decoding="async" src={CATEGORY_PLACEHOLDER_IMAGE[cat.tab] ?? '/images/v5/coffee.jpg'} alt={drink.name} />
+                  {imageUrl(drink.image, { width: 480 }) && (
+                    <img loading="lazy" decoding="async" src={imageUrl(drink.image, { width: 480 })} alt={drink.name} />
+                  )}
                 </div>
                 <div class="drink-info">
                   <h3>{drink.name}</h3>

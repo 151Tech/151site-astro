@@ -78,10 +78,8 @@ const ogImage = drinkImage
           <div class="featured-card">
             <div class="drink-img-wrap">
               {drink.badge && <span class="drink-badge">{drink.badge}</span>}
-              {(() => {
-                const src = drinkImage
-                  ? (drinkImage.startsWith('http') || drinkImage.startsWith('/') ? drinkImage : '/' + drinkImage)
-                  : '/images/drinks/energy/151 Blue Energy Hand (1).png';
+              {drinkImage && (() => {
+                const src = drinkImage.startsWith('http') || drinkImage.startsWith('/') ? drinkImage : '/' + drinkImage;
                 return <img src={src} alt={drink.name} />;
               })()}
             </div>

@@ -3,12 +3,11 @@
 //  - a YouTube link (any format)  -> autoplay/muted/looping embed
 //  - a Vimeo link                 -> autoplay/muted/looping embed
 //  - a direct video file (.mp4)   -> <video> tag
-//  - blank                        -> falls back to the default brand video
+//  - blank                        -> renders nothing
 // videoClass is the existing hero CSS class (positioning / opacity / z-index).
 interface Props {
   src?: string;
   videoClass?: string;
-  fallback?: string;
   // Adds a second, blurred/cover copy of the video behind the main one on
   // mobile, so a contain-fit video (full frame visible, no cropping) isn't
   // surrounded by bare letterbox bars. Desktop is unaffected -- the backdrop
@@ -19,9 +18,9 @@ interface Props {
   // Desktop is unaffected and keeps playing the normal video.
   mobileImage?: string;
 }
-const { src, videoClass = '', fallback = '/videos/landing_bg.mp4', blurBackdrop = false, mobileImage } = Astro.props;
+const { src, videoClass = '', blurBackdrop = false, mobileImage } = Astro.props;
 
-const raw = (src && src.trim()) ? src.trim() : fallback;
+const raw = (src && src.trim()) ? src.trim() : '';
 
 const ytMatch = raw.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/|v\/|live\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/);
 const vimeoMatch = ytMatch ? null : raw.match(/vimeo\.com\/(?:video\/)?(\d+)/);
@@ -38,7 +37,7 @@ if (ytMatch) {
   embedUrl = `https://player.vimeo.com/video/${vimeoMatch[1]}?background=1&autoplay=1&muted=1&loop=1`;
 }
 ---
-{embedUrl ? (
+{!raw ? null : embedUrl ? (
   <div class={`hero-embed-wrap ${videoClass}`} aria-hidden="true">
     <iframe
       class="hero-embed"

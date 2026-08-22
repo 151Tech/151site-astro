@@ -34,7 +34,7 @@ const storesJson = JSON.stringify(locations.map((l: any) => ({
       "@type": "Organization",
       "name": s.siteName ?? "151 Coffee",
       "url": "https://www.151coffee.com/",
-      "logo": "https://www.151coffee.com/images/logo.png",
+      "logo": imageUrl(s.logo, { width: 512 }),
       "telephone": s.phone ?? "+1-682-325-2124",
       "email": s.email ?? "Contact@151Coffee.com",
       "slogan": s.slogan ?? "It's a Good Day to Have a Good Day.",
@@ -70,7 +70,9 @@ const storesJson = JSON.stringify(locations.map((l: any) => ({
           <h2 class="featured-mobile-name">{p.featuredDrink?.name ?? 'Our'} <span>{p.featuredDrink?.nameBold ?? 'Coffee'}</span></h2>
           <div class="featured-card">
             <div class="drink-img-wrap">
-              <img src={imageUrl(p.featuredDrink?.image, { width: 960 }) ?? '/images/v5/coffee.jpg'} alt={p.featuredDrink?.imageAlt ?? p.featuredDrink?.name ?? 'Featured drink'} width="480" height="480" decoding="async" />
+              {imageUrl(p.featuredDrink?.image, { width: 960 }) && (
+                <img src={imageUrl(p.featuredDrink?.image, { width: 960 })} alt={p.featuredDrink?.imageAlt ?? p.featuredDrink?.name ?? 'Featured drink'} width="480" height="480" decoding="async" />
+              )}
             </div>
           </div>
         </div>

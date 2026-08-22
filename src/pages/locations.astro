@@ -8,7 +8,7 @@ import Editable from '../components/Editable.astro';
 
 const toImageSrc = (field: any) => {
   const url = imageUrl(field, { width: 300 });
-  return url ? (url.startsWith('http') || url.startsWith('/') ? url : '/' + url) : '/images/store1.jpg';
+  return url ? (url.startsWith('http') || url.startsWith('/') ? url : '/' + url) : undefined;
 };
 
 const [locationsEntries, settingsData, pageData] = await Promise.all([
@@ -46,7 +46,7 @@ const STATE_NAMES: Record<string, string> = Object.fromEntries(
 <Layout
   title={p.seo?.title ?? '151 Coffee Locations | Find a Drive-Thru Near You'}
   description={p.seo?.description ?? 'Find your nearest 151 Coffee drive-thru. 15+ locations across Texas and Kansas with more opening soon.'}
-  ogImage={imageUrl(p.seo?.ogImage, { width: 1200, height: 630 }) ?? 'https://www.151coffee.com/images/store1.jpg'}
+  ogImage={imageUrl(p.seo?.ogImage, { width: 1200, height: 630 })}
 >
   <fragment slot="head">
     <link rel="preconnect" href="https://unpkg.com" crossorigin />
@@ -102,20 +102,15 @@ const STATE_NAMES: Record<string, string> = Object.fromEntries(
 
                 >
                   <Editable blok={loc} />
-                  <img
-                    class="locator__item-photo"
-                    src={(() => {
-                      const full = toImageSrc(loc.image);
-                      // Cards render this at ~260px wide -- use the pre-generated
-                      // thumbnail instead of the full-size photo the location
-                      // detail page needs.
-                      const m = full.match(/^\/images\/locations\/(.+)\.webp$/);
-                      return m ? `/images/locations/${m[1]}-thumb.webp` : full;
-                    })()}
-                    alt=""
-                    loading="lazy"
-                    decoding="async"
-                  />
+                  {toImageSrc(loc.image) && (
+                    <img
+                      class="locator__item-photo"
+                      src={toImageSrc(loc.image)}
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  )}
                   <div class="locator__item-info">
                     <h3>{loc.city}</h3>
                     <p>{loc.address}<br />{loc.city}, {loc.state} {loc.zip}</p>

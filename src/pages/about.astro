@@ -13,10 +13,10 @@ const p = unwrapSingletons((await getPage('about')) as any, [
 <Layout
   title={p.seo?.title ?? 'About 151 Coffee | Our Story & Founder Mark Wattles'}
   description={p.seo?.description ?? '151 Coffee is not your typical coffee shop. Founded in 2017 by entrepreneur Mark Wattles, we serve the best-tasting coffee and blended energy drinks fast.'}
-  ogImage={imageUrl(p.seo?.ogImage, { width: 1200, height: 630 }) ?? 'https://www.151coffee.com/images/splash1.jpg'}
+  ogImage={imageUrl(p.seo?.ogImage, { width: 1200, height: 630 })}
 >
   <style is:global slot="head">
-    .about-hero { margin-top: 58px; background-image: url('/images/splash1.jpg'); background-size: cover; background-position: center 30%; position: relative; padding: 8rem 0 7rem; text-align: center; }
+    .about-hero { margin-top: 58px; background-color: var(--black); background-size: cover; background-position: center 30%; position: relative; padding: 8rem 0 7rem; text-align: center; }
     .about-hero::before { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.50) 0%, rgba(0,0,0,0.32) 50%, rgba(0,0,0,0.60) 100%); pointer-events: none; }
     .about-hero-content { position: relative; z-index: 1; }
     .about-hero h1 { font-size: clamp(2.8rem, 6vw, 5rem); color: #fff; line-height: 1; margin-bottom: 0.75rem; }
@@ -100,7 +100,7 @@ const p = unwrapSingletons((await getPage('about')) as any, [
 
   <Nav active="about" />
 
-  <section class="about-hero">
+  <section class="about-hero" style={imageUrl(p.hero?.backgroundImage, { width: 1920 }) ? `background-image:url('${imageUrl(p.hero?.backgroundImage, { width: 1920 })}')` : undefined}>
     <div class="about-hero-content container">
       <Editable blok={p} />
       <h1>{p.hero?.heading ?? 'About 151 Coffee'}</h1>

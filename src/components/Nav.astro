@@ -7,7 +7,7 @@ interface Props {
 const { active = '' } = Astro.props;
 const s = (await getSettings()) as any;
 const siteName = s.siteName ?? '151 Coffee';
-const logo = imageUrl(s.logo, { width: 128 }) ?? '/images/logo.png';
+const logo = imageUrl(s.logo, { width: 128 });
 const giftCardLabel = s.giftCardLabel ?? 'Gift Card';
 
 const navLinks: { label: string; href: string }[] = s.nav ?? [
@@ -34,7 +34,7 @@ function isActive(href: string): boolean {
   <div class="nav-container">
     <a href="/" class="logo">
       <Editable blok={s} />
-      <img src={logo} alt={`${siteName} logo`} width="512" height="512" style="width:3rem;height:auto;" />
+      {logo && <img src={logo} alt={`${siteName} logo`} width="512" height="512" style="width:3rem;height:auto;" />}
       <span>{siteName}</span>
     </a>
     <ul class="nav-links">

@@ -13,7 +13,7 @@ interface Props {
 const {
   title,
   description = '151 Coffee is a fast drive-thru coffee shop serving handcrafted espresso, cold brew, blended energy drinks, smoothies, teas & breakfast across Texas and Kansas.',
-  ogImage = 'https://www.151coffee.com/images/splash1.jpg',
+  ogImage,
   canonical,
   bodyClass = '',
 } = Astro.props;
@@ -42,16 +42,15 @@ const canonicalUrl = canonical ?? new URL(Astro.url.pathname, 'https://www.151co
   <meta property="og:title" content={title} />
   <meta property="og:description" content={description} />
   <meta property="og:url" content={canonicalUrl} />
-  <meta property="og:image" content={ogImage} />
+  {ogImage && <meta property="og:image" content={ogImage} />}
   <meta property="og:locale" content="en_US" />
 
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content={title} />
   <meta name="twitter:description" content={description} />
-  <meta name="twitter:image" content={ogImage} />
+  {ogImage && <meta name="twitter:image" content={ogImage} />}
 
   <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-  <link rel="apple-touch-icon" href="/images/logo.png" />
   <link rel="stylesheet" href="/style.css" />
   <link rel="stylesheet" href="/blocks.css" />
   <ClientRouter />

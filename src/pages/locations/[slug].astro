@@ -31,11 +31,11 @@ const phoneTel = phone.replace(/\D/g, '');
 const locImage = imageUrl(loc.image, { width: 1600 });
 const image = locImage
   ? (locImage.startsWith('http') || locImage.startsWith('/') ? locImage : '/' + locImage)
-  : '/images/store1.jpg';
+  : undefined;
 const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${loc.lat},${loc.lng}`;
 const shortName = (loc.name as string).replace(/^151 Coffee\s*/i, '') || loc.name;
 
-const ogImage = `https://www.151coffee.com${encodeURI(image)}`;
+const ogImage = image ? (image.startsWith('http') ? image : `https://www.151coffee.com${encodeURI(image)}`) : undefined;
 ---
 <Layout
   title={`151 Coffee ${shortName} | Store Info & Hours`}
@@ -70,7 +70,7 @@ const ogImage = `https://www.151coffee.com${encodeURI(image)}`;
   <section class="ld-body">
     <div class="ld-body-inner">
       <div class="ld-img-col">
-        <img class="ld-photo" src={image} alt={`151 Coffee ${shortName}`} width="1200" height="900" decoding="async" />
+        {image && <img class="ld-photo" src={image} alt={`151 Coffee ${shortName}`} width="1200" height="900" decoding="async" />}
       </div>
 
       <div class="ld-detail-col">
