@@ -120,8 +120,23 @@ function denormalizeObject(obj: Record<string, any>) {
 // (e.g. Footer unwraps 'social'/'footer' out of the same settings object
 // Nav reads 'logo'/'siteName' from).
 const CACHE_TTL_MS = 30_000;
+// Cloudflare kills a request that stalls rather than erroring it out, so a
+// slow Storyblok fetch has to be preempted client-side well before that
+// point -- 5s is generous for a CDN API call but far under where the
+// Workers runtime gives up on the whole request as "hung".
+const REQUEST_TIMEOUT_MS = 5_000;
 const responseCache = new Map<string, { data: any; expires: number }>();
 const inFlight = new Map<string, Promise<any>>();
+
+function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
+  return new Promise((resolve, reject) => {
+    const timer = setTimeout(() => reject(new Error(`Storyblok request timed out after ${ms}ms`)), ms);
+    promise.then(
+      (value) => { clearTimeout(timer); resolve(value); },
+      (err) => { clearTimeout(timer); reject(err); },
+    );
+  });
+}
 
 async function cachedGet(path: string, params: Record<string, any>) {
   const key = `${path}?${JSON.stringify(params)}`;
@@ -131,12 +146,16 @@ async function cachedGet(path: string, params: Record<string, any>) {
   const pending = inFlight.get(key);
   if (pending) return pending;
 
-  const promise = client.get(path, params).then(({ data }) => {
+  const promise = withTimeout(client.get(path, params), REQUEST_TIMEOUT_MS).then(({ data }) => {
     responseCache.set(key, { data, expires: Date.now() + CACHE_TTL_MS });
     inFlight.delete(key);
     return data;
   }, (err) => {
     inFlight.delete(key);
+    // A timed-out or failed fetch falls back to the last good response for
+    // this key, however stale, rather than hanging or failing the whole
+    // page -- an outdated page beats a dead one.
+    if (cached) return cached.data;
     throw err;
   });
   inFlight.set(key, promise);
