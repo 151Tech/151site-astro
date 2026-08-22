@@ -119,14 +119,59 @@ function denormalizeObject(obj: Record<string, any>) {
 // and different call sites unwrap different keys on the same story
 // (e.g. Footer unwraps 'social'/'footer' out of the same settings object
 // Nav reads 'logo'/'siteName' from).
-const CACHE_TTL_MS = 30_000;
+// This site's content (hours, menu copy, careers copy...) changes on the
+// order of days/weeks, not seconds -- 30s was overly cautious and meant
+// nearly every request re-hit Storyblok. 10 minutes still feels live to an
+// editor publishing a change, but cuts live Storyblok traffic drastically.
+const CACHE_TTL_MS = 10 * 60_000;
 // Cloudflare kills a request that stalls rather than erroring it out, so a
 // slow Storyblok fetch has to be preempted client-side well before that
 // point -- 5s is generous for a CDN API call but far under where the
 // Workers runtime gives up on the whole request as "hung".
 const REQUEST_TIMEOUT_MS = 5_000;
-const responseCache = new Map<string, { data: any; expires: number }>();
 const inFlight = new Map<string, Promise<any>>();
+
+// Per-isolate fallback used whenever the Cache API isn't available (local
+// `astro dev`, or a runtime without it) -- functionally identical to the
+// edge cache below, just scoped to one warm isolate instead of Cloudflare's
+// whole edge network.
+const memoryCache = new Map<string, { data: any; expires: number }>();
+
+// On Cloudflare Workers, `caches.default` is a real edge cache shared across
+// every isolate/PoP, unlike a plain in-memory Map, which resets every time
+// Workers spins up a fresh isolate (frequent, and effectively made our old
+// cache far leakier than its 30s TTL suggested). Caching there means most
+// requests -- even ones landing on an isolate that's never run before --
+// can be served without ever calling Storyblok. Falls back to `memoryCache`
+// wherever `caches` doesn't exist (local dev).
+const edgeCache: Cache | undefined = typeof caches !== 'undefined' ? (caches as any).default : undefined;
+
+function cacheKeyRequest(key: string): Request {
+  // The Cache API only keys off a Request/URL, not an arbitrary string --
+  // this synthetic same-origin URL is never actually fetched, just used as
+  // a cache key.
+  return new Request(`https://storyblok-cache.internal/${encodeURIComponent(key)}`);
+}
+
+async function readCache(key: string): Promise<{ data: any; expires: number } | undefined> {
+  const mem = memoryCache.get(key);
+  if (mem) return mem;
+  if (!edgeCache) return undefined;
+  const res = await edgeCache.match(cacheKeyRequest(key));
+  if (!res) return undefined;
+  const entry = await res.json();
+  memoryCache.set(key, entry);
+  return entry;
+}
+
+async function writeCache(key: string, entry: { data: any; expires: number }) {
+  memoryCache.set(key, entry);
+  if (!edgeCache) return;
+  const res = new Response(JSON.stringify(entry), {
+    headers: { 'Cache-Control': `max-age=${Math.ceil(CACHE_TTL_MS / 1000)}` },
+  });
+  await edgeCache.put(cacheKeyRequest(key), res);
+}
 
 function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
   return new Promise((resolve, reject) => {
@@ -140,14 +185,14 @@ function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
 
 async function cachedGet(path: string, params: Record<string, any>) {
   const key = `${path}?${JSON.stringify(params)}`;
-  const cached = responseCache.get(key);
+  const cached = await readCache(key);
   if (cached && cached.expires > Date.now()) return cached.data;
 
   const pending = inFlight.get(key);
   if (pending) return pending;
 
-  const promise = withTimeout(client.get(path, params), REQUEST_TIMEOUT_MS).then(({ data }) => {
-    responseCache.set(key, { data, expires: Date.now() + CACHE_TTL_MS });
+  const promise = withTimeout(client.get(path, params), REQUEST_TIMEOUT_MS).then(async ({ data }) => {
+    await writeCache(key, { data, expires: Date.now() + CACHE_TTL_MS });
     inFlight.delete(key);
     return data;
   }, (err) => {
