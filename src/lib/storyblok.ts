@@ -143,8 +143,18 @@ const memoryCache = new Map<string, { data: any; expires: number }>();
 // cache far leakier than its 30s TTL suggested). Caching there means most
 // requests -- even ones landing on an isolate that's never run before --
 // can be served without ever calling Storyblok. Falls back to `memoryCache`
-// wherever `caches` doesn't exist (local dev).
-const edgeCache: Cache | undefined = typeof caches !== 'undefined' ? (caches as any).default : undefined;
+// wherever it's unavailable or errors (local dev, or a sandboxed Workers
+// environment that restricts it) -- resolved lazily inside each call rather
+// than once at module load, since Workers can throw on touching `caches`
+// outside an actual request context, which would otherwise break every
+// export in this file the moment the module loads, not just caching.
+function getEdgeCache(): Cache | undefined {
+  try {
+    return typeof caches !== 'undefined' ? (caches as any).default : undefined;
+  } catch {
+    return undefined;
+  }
+}
 
 function cacheKeyRequest(key: string): Request {
   // The Cache API only keys off a Request/URL, not an arbitrary string --
@@ -156,21 +166,31 @@ function cacheKeyRequest(key: string): Request {
 async function readCache(key: string): Promise<{ data: any; expires: number } | undefined> {
   const mem = memoryCache.get(key);
   if (mem) return mem;
+  const edgeCache = getEdgeCache();
   if (!edgeCache) return undefined;
-  const res = await edgeCache.match(cacheKeyRequest(key));
-  if (!res) return undefined;
-  const entry = await res.json();
-  memoryCache.set(key, entry);
-  return entry;
+  try {
+    const res = await edgeCache.match(cacheKeyRequest(key));
+    if (!res) return undefined;
+    const entry = await res.json();
+    memoryCache.set(key, entry);
+    return entry;
+  } catch {
+    return undefined;
+  }
 }
 
 async function writeCache(key: string, entry: { data: any; expires: number }) {
   memoryCache.set(key, entry);
+  const edgeCache = getEdgeCache();
   if (!edgeCache) return;
-  const res = new Response(JSON.stringify(entry), {
-    headers: { 'Cache-Control': `max-age=${Math.ceil(CACHE_TTL_MS / 1000)}` },
-  });
-  await edgeCache.put(cacheKeyRequest(key), res);
+  try {
+    const res = new Response(JSON.stringify(entry), {
+      headers: { 'Cache-Control': `max-age=${Math.ceil(CACHE_TTL_MS / 1000)}` },
+    });
+    await edgeCache.put(cacheKeyRequest(key), res);
+  } catch {
+    // Edge cache write failures are non-fatal -- memoryCache already has it.
+  }
 }
 
 function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
