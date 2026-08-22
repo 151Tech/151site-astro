@@ -33,11 +33,17 @@ jobs:
           STORYBLOK_OAUTH_TOKEN: ${{ secrets.STORYBLOK_OAUTH_TOKEN }}
         run: node storyblok/check-rebuild.mjs
 
-      - name: Commit marker + trigger rebuild
+      - name: Refresh content snapshot
+        if: steps.check.outputs.changed == 'true'
+        env:
+          STORYBLOK_TOKEN: ${{ secrets.STORYBLOK_TOKEN }}
+        run: node storyblok/snapshot.mjs
+
+      - name: Commit marker + snapshot, trigger rebuild
         if: steps.check.outputs.changed == 'true'
         run: |
           git config user.name "storyblok-rebuild-bot"
           git config user.email "actions@github.com"
-          git add storyblok/.last-rebuild-check.json
+          git add storyblok/.last-rebuild-check.json src/data/storyblok-snapshot.json
           git commit -m "chore: rebuild for Storyblok content published $(date -u +%Y-%m-%dT%H:%M:%SZ)"
           git push

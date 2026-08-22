@@ -1,5 +1,15 @@
 import StoryblokClient from 'storyblok-js-client';
 import fieldCaseMap from '../../storyblok/field-case-map.json';
+import snapshot from '../data/storyblok-snapshot.json';
+
+// Webflow Cloud's sandboxed network path to Storyblok is unreliable enough
+// (build-time hangs, request timeouts, and a hard `caches.default` denial)
+// that production reads content from a build-time snapshot committed by
+// .github/workflows/storyblok-rebuild.yml (see storyblok/snapshot.mjs)
+// instead of ever calling the live API. Local `astro dev` still hits the
+// live API directly below, since that's what the Storyblok Visual Editor's
+// draft preview needs.
+const USE_SNAPSHOT = !import.meta.env.DEV;
 
 // Storyblok lowercases every schema field name server-side, regardless of
 // the case it's created with -- so all our camelCase YAML field names
@@ -235,6 +245,14 @@ async function cachedGet(path: string, params: Record<string, any>) {
 // template's existing `?? default` fallback text is far better than no
 // page at all.
 export async function getStory(slug: string) {
+  if (USE_SNAPSHOT) {
+    const content = (snapshot.stories as Record<string, any>)[slug];
+    if (!content) {
+      console.error(`[storyblok] getStory(${slug}) missing from snapshot, rendering with empty content`);
+      return {};
+    }
+    return denormalize(content);
+  }
   try {
     const data = await cachedGet(`cdn/stories/${slug}`, { version });
     return denormalize(data.story.content);
@@ -249,6 +267,14 @@ export async function getStory(slug: string) {
 // Same fail-soft reasoning as getStory: an empty list degrades pages that
 // list/redirect on missing entries instead of crashing the request.
 export async function getStories(startsWith: string) {
+  if (USE_SNAPSHOT) {
+    const entries = (snapshot.collections as Record<string, any[]>)[startsWith];
+    if (!entries) {
+      console.error(`[storyblok] getStories(${startsWith}) missing from snapshot, rendering with empty list`);
+      return [];
+    }
+    return entries.map((story: any) => ({ slug: story.slug, ...denormalize(story.content) }));
+  }
   try {
     const data = await cachedGet('cdn/stories', {
       starts_with: `${startsWith}/`,

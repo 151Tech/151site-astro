@@ -11,7 +11,8 @@
     "preview": "astro preview",
     "astro": "astro",
     "storyblok:generate": "node storyblok/generate-schema.mjs",
-    "storyblok:migrate": "node storyblok/migrate.mjs"
+    "storyblok:migrate": "node storyblok/migrate.mjs",
+    "storyblok:snapshot": "node storyblok/snapshot.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.3",
