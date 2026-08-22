@@ -56,11 +56,9 @@ if (ytMatch) {
   <Fragment>
     {blurBackdrop && (
       <video muted loop playsinline preload="none" class={`${videoClass}-backdrop`} data-hero-video data-mobile-only aria-hidden="true"
-        data-src={raw}
-        poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1' height='1'%3E%3Crect width='1' height='1' fill='%23111111'/%3E%3C/svg%3E"></video>
+        data-src={raw}></video>
     )}
-    <video muted loop playsinline preload="none" class={videoClass} data-hero-video data-src={raw} data-mobile-skip={mobileImage ? 'true' : undefined} aria-hidden="true"
-      poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1' height='1'%3E%3Crect width='1' height='1' fill='%23111111'/%3E%3C/svg%3E"></video>
+    <video muted loop playsinline preload="none" class={videoClass} data-hero-video data-src={raw} data-mobile-skip={mobileImage ? 'true' : undefined} aria-hidden="true"></video>
     {mobileImage && (
       <img class={`${videoClass} hero-mobile-still`} src={mobileImage} alt="" aria-hidden="true" />
     )}
