@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-22T17:23:35.198Z",
+  "generatedAt": "2026-08-22T17:55:44.563Z",
   "stories": {
     "settings/global": {
       "nav": [
@@ -377,7 +377,9 @@
         {
           "_uid": "4f344bcb-b5e6-4328-8519-2c0213be971c",
           "title": "About 151 Coffee | Our Story & Founder Mark Wattles",
-          "ogimage": "https://www.151coffee.com/images/splash1.jpg",
+          "ogimage": {
+            "filename": "https://www.151coffee.com/images/splash1.jpg"
+          },
           "component": "page_about_seo",
           "description": "151 Coffee is not your typical coffee shop. Founded in 2017 by entrepreneur Mark Wattles, we serve the best-tasting coffee and blended energy drinks fast."
         }
@@ -394,7 +396,7 @@
       "intro": [
         {
           "_uid": "fa40690e-9e58-4059-9886-29002efb3d35",
-          "image": "https://static.wixstatic.com/media/b45796_b6c019a088b74b3ba49d658de7304879~mv2.jpg/v1/fill/w_900,h_700,al_c,q_85,usm_0.66_1.00_0.01/350630772_586994276756053_9082157421413125565_n.jpg",
+          "image": {},
           "heading": "Not Your Typical",
           "tagline": "It's a Good Day to have a Good Day.",
           "imagealt": "151 Coffee store",
@@ -456,7 +458,9 @@
           ],
           "_uid": "f418ce11-063c-49df-bddb-ad15cc17b894",
           "name": "Mark Wattles",
-          "image": "/images/255396.jpg",
+          "image": {
+            "filename": "/images/255396.jpg"
+          },
           "title": "Founder",
           "heading": "Meet the Founder",
           "imagealt": "Mark Wattles - Founder of 151 Coffee",
@@ -592,7 +596,9 @@
         {
           "_uid": "3cfd8d0f-ed0b-44a9-9932-7940717cd3e8",
           "title": "151 Coffee Locations | Find a Drive-Thru Near You",
-          "ogimage": "https://www.151coffee.com/images/store1.jpg",
+          "ogimage": {
+            "filename": "https://www.151coffee.com/images/store1.jpg"
+          },
           "component": "page_locations_seo",
           "description": "Find your nearest 151 Coffee drive-thru. 15+ locations across Texas and Kansas with more opening soon."
         }
@@ -608,7 +614,7 @@
         }
       ],
       "component": "page_locations",
-      "herovideo": "https://scontent-dfw6-1.xx.fbcdn.net/v/t39.30808-6/491996811_1232502918876601_3850273075378943154_n.jpg?stp=dst-jpg_tt6&cstp=mx1454x960&ctp=s1454x960&_nc_cat=102&ccb=1-7&_nc_sid=127cfc&_nc_ohc=J-sL1aH3hekQ7kNvwGKnGTA&_nc_oc=AdqlB4OmGbtsL3YnbF8cnyfXChWJCN2zN0PnlKSZ_nJ2ainsZHOBoJNQjWlkWC0gbL0ALY5DMaUynyadrLPa53V3&_nc_zt=23&_nc_ht=scontent-dfw6-1.xx&_nc_gid=crEK5AyWC6ObK9pmbF0onQ&_nc_ss=7b289&oh=00_AQDReTIE4Y8W_MBkec8MQ7K5n4RnFy7YOe6gULoyBvKtAA&oe=6A5C3170",
+      "herovideo": {},
       "statenames": [
         {
           "_uid": "4ab30415-eb85-435f-9115-31e969d3bb4d",
