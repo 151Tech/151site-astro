@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-22T17:55:44.563Z",
+  "generatedAt": "2026-08-22T19:02:30.090Z",
   "stories": {
     "settings/global": {
       "nav": [
@@ -614,7 +614,7 @@
         }
       ],
       "component": "page_locations",
-      "herovideo": {},
+      "herovideo": "",
       "statenames": [
         {
           "_uid": "4ab30415-eb85-435f-9115-31e969d3bb4d",
