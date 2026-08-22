@@ -163,23 +163,41 @@ async function cachedGet(path: string, params: Record<string, any>) {
 }
 
 // A single story by full slug, e.g. "pages/home" or "locations/151-coffee-keller".
+// On a cold cache with no fallback to serve, cachedGet's timeout still
+// rejects -- letting that escape here would crash the whole page render
+// with a bare 500 (as happened on Webflow Cloud when Storyblok itself was
+// briefly unreachable). A page rendered with empty content and every
+// template's existing `?? default` fallback text is far better than no
+// page at all.
 export async function getStory(slug: string) {
-  const data = await cachedGet(`cdn/stories/${slug}`, { version });
-  return denormalize(data.story.content);
+  try {
+    const data = await cachedGet(`cdn/stories/${slug}`, { version });
+    return denormalize(data.story.content);
+  } catch (err) {
+    console.error(`[storyblok] getStory(${slug}) failed, rendering with empty content:`, err);
+    return {};
+  }
 }
 
 // All stories under a folder, e.g. "drinks", "locations", "categories" --
 // mirrors the old astro:content getCollection(name) shape (slug + content).
+// Same fail-soft reasoning as getStory: an empty list degrades pages that
+// list/redirect on missing entries instead of crashing the request.
 export async function getStories(startsWith: string) {
-  const data = await cachedGet('cdn/stories', {
-    starts_with: `${startsWith}/`,
-    version,
-    per_page: 100,
-  });
-  return data.stories.map((story: any) => ({
-    slug: story.slug,
-    ...denormalize(story.content),
-  }));
+  try {
+    const data = await cachedGet('cdn/stories', {
+      starts_with: `${startsWith}/`,
+      version,
+      per_page: 100,
+    });
+    return data.stories.map((story: any) => ({
+      slug: story.slug,
+      ...denormalize(story.content),
+    }));
+  } catch (err) {
+    console.error(`[storyblok] getStories(${startsWith}) failed, rendering with empty list:`, err);
+    return [];
+  }
 }
 
 // Convenience wrappers matching the old astro:content call sites 1:1, so
