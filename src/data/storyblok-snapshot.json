@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-25T13:39:53.854Z",
+  "generatedAt": "2026-08-25T13:59:17.828Z",
   "stories": {
     "settings/global": {
       "nav": [
@@ -112,37 +112,99 @@
           "body": "151 Coffee is not your typical coffee shop. Fun and happiness drive our culture and music drives our speed, that's why we live by the 151 motto \"it's a good day to have a good day.\"",
           "photos": [
             {
-              "alt": "The 151 Coffee team",
+              "alt": "The 151 Coffee Keller Team",
               "_uid": "2a5250bc-da39-4ea9-8f22-d0fb0319fd23",
               "image": {
-                "filename": "/images/july-social.jpg"
+                "id": 212895260256795,
+                "alt": "151 Coffee's Keller Team",
+                "name": "",
+                "focus": "",
+                "title": "Keller Team",
+                "source": "151 Coffee",
+                "filename": "https://a.storyblok.com/f/294671107081428/899x898/f5819d1436/kellerteam.jpg",
+                "copyright": "151 Coffee 2026",
+                "fieldtype": "asset",
+                "meta_data": {
+                  "alt": "151 Coffee's Keller Team",
+                  "size": "899x898",
+                  "title": "Keller Team",
+                  "source": "151 Coffee",
+                  "copyright": "151 Coffee 2026"
+                },
+                "is_external_url": false
               },
               "component": "page_home_cta_photos_item",
               "signature": "Keller Team"
             },
             {
-              "alt": "",
+              "alt": "The 151 Coffee Plano Team",
               "_uid": "ee966c9e-366e-4129-842b-433e96b8d353",
               "image": {
-                "filename": "/images/nowhiring.webp"
+                "id": 212895036152333,
+                "alt": "Our Plano team giving a cheers before a rush.",
+                "name": "",
+                "focus": "",
+                "title": "Plano Team",
+                "source": "151 Coffee",
+                "filename": "https://a.storyblok.com/f/294671107081428/664x664/ac27806f7f/planoteam.png",
+                "copyright": "151 Coffee 2026",
+                "fieldtype": "asset",
+                "meta_data": {
+                  "alt": "Our Plano team giving a cheers before a rush.",
+                  "size": "664x664",
+                  "title": "Plano Team",
+                  "source": "151 Coffee",
+                  "copyright": "151 Coffee 2026"
+                },
+                "is_external_url": false
               },
               "component": "page_home_cta_photos_item",
               "signature": "Plano Team"
             },
             {
-              "alt": "",
+              "alt": "It's a Good Day to Have a Good Day",
               "_uid": "a93b41c8-938b-4c56-bd1a-464e2c7527fa",
               "image": {
-                "filename": "/images/team-photo-2.jpg"
+                "id": 212895866149447,
+                "alt": "2 of our baristas posing during a shift.",
+                "name": "",
+                "focus": "",
+                "title": "It's a Good Day",
+                "source": "151 Coffee",
+                "filename": "https://a.storyblok.com/f/294671107081428/3984x3984/c3ccc0b759/itsagoodday.jpg",
+                "copyright": "151 Coffee 2026",
+                "fieldtype": "asset",
+                "meta_data": {
+                  "alt": "2 of our baristas posing during a shift.",
+                  "title": "It's a Good Day",
+                  "source": "151 Coffee",
+                  "copyright": "151 Coffee 2026"
+                },
+                "is_external_url": false
               },
               "component": "page_home_cta_photos_item",
               "signature": "its a good day"
             },
             {
-              "alt": "",
+              "alt": "The 151 Coffee Overland Park Team",
               "_uid": "cc976a84-2756-4f1f-86db-4fa21b9a83e3",
               "image": {
-                "filename": "/images/team-photo-3.jpg"
+                "id": 212895533914675,
+                "alt": "151 Coffee's Overland Park Team",
+                "name": "",
+                "focus": "",
+                "title": "Overland Park Team",
+                "source": "151",
+                "filename": "https://a.storyblok.com/f/294671107081428/3915x3915/4f856e8bb2/opteam.jpg",
+                "copyright": "151 Coffee 2026",
+                "fieldtype": "asset",
+                "meta_data": {
+                  "alt": "151 Coffee's Overland Park Team",
+                  "title": "Overland Park Team",
+                  "source": "151",
+                  "copyright": "151 Coffee 2026"
+                },
+                "is_external_url": false
               },
               "component": "page_home_cta_photos_item",
               "signature": "Overland Park Team"
@@ -217,7 +279,7 @@
           "ctahref": "/menu",
           "heading": "151 Coffee",
           "ctalabel": "See Our Menu",
-          "videourl": "/videos/menu_bg.mp4",
+          "videourl": "https://www.youtube.com/watch?v=KF06kokt9xI",
           "component": "page_home_hero",
           "subheadingline1": "It's a Good Day",
           "subheadingline2": "to have a good day"
@@ -328,7 +390,23 @@
               "_uid": "3f48d2eb-c59a-4d21-aa76-f2d461d808c3",
               "href": "/menu",
               "image": {
-                "filename": "/images/July Social Media (8).jpg"
+                "id": 212893930822068,
+                "alt": "An iced Blondie and iced Snickers coffee.",
+                "name": "",
+                "focus": "",
+                "title": "Drink Menu",
+                "source": "151 Coffee",
+                "filename": "https://a.storyblok.com/f/294671107081428/3711x3722/33161d12f5/drinkmenu.jpg",
+                "copyright": "151 Coffee 2026",
+                "fieldtype": "asset",
+                "meta_data": {
+                  "alt": "An iced Blondie and iced Snickers coffee.",
+                  "size": "3711x3722",
+                  "title": "Drink Menu",
+                  "source": "151 Coffee",
+                  "copyright": "151 Coffee 2026"
+                },
+                "is_external_url": false
               },
               "label": "Drink Menu",
               "title": "Drink Menu",
@@ -339,7 +417,23 @@
               "_uid": "62b43dbd-d290-414f-bfd2-509a3fa27028",
               "href": "/menu#hotfood",
               "image": {
-                "filename": "/images/Burritos - Green Chile.JPG"
+                "id": 212894227614158,
+                "alt": "Green Chile Burrito",
+                "name": "",
+                "focus": "",
+                "title": "Food Menu",
+                "source": "151 Coffee",
+                "filename": "https://a.storyblok.com/f/294671107081428/1600x1600/f74432ca16/foodmenu.JPG",
+                "copyright": "151 Coffee 2026",
+                "fieldtype": "asset",
+                "meta_data": {
+                  "alt": "Green Chile Burrito",
+                  "size": "1600x1600",
+                  "title": "Food Menu",
+                  "source": "151 Coffee",
+                  "copyright": "151 Coffee 2026"
+                },
+                "is_external_url": false
               },
               "label": "Food Menu",
               "title": "Food Menu",
@@ -357,7 +451,23 @@
           "name": "Tigers",
           "badge": "Summer's Featured Drink",
           "image": {
-            "filename": "/images/tigers-blood-featured.jpg"
+            "id": 212893419575699,
+            "alt": "Iced Tiger's Blood Energy made with our Clarity energy blend.",
+            "name": "",
+            "focus": "",
+            "title": "Clarity Energy - Tiger's Blood",
+            "source": "",
+            "filename": "https://a.storyblok.com/f/294671107081428/2000x2000/79b6a96d0f/clarity-tigersblood.jpg",
+            "copyright": "151 Coffee 2026",
+            "fieldtype": "asset",
+            "meta_data": {
+              "alt": "Iced Tiger's Blood Energy made with our Clarity energy blend.",
+              "size": "2000x2000",
+              "title": "Clarity Energy - Tiger's Blood",
+              "source": "",
+              "copyright": "151 Coffee 2026"
+            },
+            "is_external_url": false
           },
           "ctahref": "/menu",
           "visible": true,
