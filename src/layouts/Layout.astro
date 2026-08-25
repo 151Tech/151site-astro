@@ -70,12 +70,12 @@ const favicon = imageUrl(settingsData?.favicon) ?? '/favicon.ico';
 
   <!--
     Storyblok's Visual Editor loads pages inside an iframe with a
-    `_storyblok` query param -- only load its bridge there, never for real
+    `_storyblok` query param. Only load its bridge there, never for real
     visitors. The bridge gives us click-to-highlight between the editor
     sidebar and this preview (via the `_editable` markers rendered by
     <Editable blok={...} />) and reloads the page on save/publish. A reload
     only pulls fresh *draft* content when this page is server-rendered per
-    request (`npm run dev`, or a future draft deployment) -- on the static
+    request (`npm run dev`, or a future draft deployment). On the static
     production build it just reloads the same prebuilt HTML, which is
     expected until the next auto-rebuild picks up the publish.
   -->

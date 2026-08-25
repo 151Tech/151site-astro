@@ -12,7 +12,7 @@
     --steel: #2c2c2c;
     --red: #E63946;
     --red-soft: #e36b75;
-    --red-dark: #ad2b35; /* AA-safe red for small/bold text on light backgrounds -- var(--red) alone fails contrast there */
+    --red-dark: #ad2b35; /* AA-safe red for small/bold text on light backgrounds, var(--red) alone fails contrast there */
     --light-gray: #888888;
     --mid-gray: #444444;
     --white: #F5F5F5;
@@ -24,7 +24,7 @@
 }
 
 /* Tighten vertical rhythm on mobile so sections don't waste screen height.
-   Single source of truth -- every section using var(--section-pad) shrinks. */
+   Single source of truth, every section using var(--section-pad) shrinks. */
 @media (max-width: 768px) {
     :root { --section-pad: 3.75rem 0; }
 
@@ -395,7 +395,7 @@ nav.nav-scrolled .nav-container {
 /* Hamburger → X when open */
 @media (max-width: 900px) {
     /* The full desktop nav (6 links + logo + gift-card button) gets cramped
-       well before phone widths -- switch to the hamburger drawer here too
+       well before phone widths, switch to the hamburger drawer here too
        so tablets get the same clean, already-solved mobile top bar. */
     .menu-toggle { display: flex; }
     .main-menu-btn { display: none; }
@@ -510,7 +510,7 @@ nav.nav-scrolled .nav-container {
 /* Desktop/tablet: the hero's own height already shrinks (via the calc()
    above) whenever --fd-img-h/--fd-pad grow on a short window, but the
    heading's font-size and this gap were purely width-driven (vw) with no
-   floor tied to the window's actual height -- so on a wide-but-short
+   floor tied to the window's actual height, so on a wide-but-short
    window the 3-line heading + button no longer fit the shrunken hero and
    felt cramped/clipped. Folding a vh term into both via min() makes them
    shrink together with the hero's own height, not just its width. */
@@ -635,7 +635,7 @@ nav.nav-scrolled .nav-container {
    to that height; any excess text just centers within it. */
 /* Same reasoning as the hero heading above: the badge/heading/paragraph's
    sizing and gaps were width-driven only, with no floor tied to how much
-   vertical room --fd-img-h actually leaves on a short window -- so they
+   vertical room --fd-img-h actually leaves on a short window, so they
    could outgrow the row and get clipped by overflow:hidden below. Folding
    vh into each clamp/margin lets them shrink together with the row's own
    height; overflow stays visible as a safety net so if anything still
@@ -703,7 +703,7 @@ nav.nav-scrolled .nav-container {
     }
 
     /* Un-box the visual/text wrappers so their children become direct
-       flex items of .featured-inner -- lets us reorder badge, title,
+       flex items of .featured-inner, lets us reorder badge, title,
        picture, description, and CTA into one straight column without
        duplicating markup for mobile vs. desktop. */
     .featured-visual { display: contents; }
@@ -778,10 +778,10 @@ nav.nav-scrolled .nav-container {
     width: min(300px, 100%);
 }
 
-/* Polaroid-style frame -- a thick white border around the photo, like the
+/* Polaroid-style frame: a thick white border around the photo, like the
    drink cards elsewhere on the page, so it reads as a placed photograph
    rather than a cropped background fill. Bottom border is deliberately
-   tall -- like a real polaroid -- to leave room for a signature. */
+   tall, like a real polaroid, to leave room for a signature. */
 .cta-photo {
     background: #fff;
     width: 100%;
@@ -810,8 +810,8 @@ nav.nav-scrolled .nav-container {
 
 /* Idle loop for a 4-card deck: every card runs the SAME keyframe track, just
    a quarter-cycle out of phase from the others (see the animation-delay
-   values above), so at any instant the 4 cards occupy the 4 distinct slots
-   -- front, and three progressively-deeper "back" positions. A card's
+   values above), so at any instant the 4 cards occupy the 4 distinct slots:
+   front, and three progressively-deeper "back" positions. A card's
    journey: dwell at front -> slide right and clear the stack -> drop to the
    deepest back slot -> advance forward one slot at a time, dwelling in
    each -> promote back to front. Every z-index change sits on a stationary
@@ -945,7 +945,7 @@ nav.nav-scrolled .nav-container {
     margin-top: 1rem;
 }
 
-/* The photo is the focus here -- full, unobscured, with the caption living
+/* The photo is the focus here, full, unobscured, with the caption living
    in its own solid-color strip below rather than a dark scrim on top of it. */
 .feature-card {
     display: flex;
@@ -1169,7 +1169,7 @@ nav.nav-scrolled .nav-container {
     box-shadow: 0 4px 10px rgba(0,0,0,0.4);
 }
 
-/* Small bubble above each pin naming that store -- always visible while
+/* Small bubble above each pin naming that store, always visible while
    panning/zooming, not just on hover, so the map reads clearly at a glance. */
 .leaflet-tooltip.locator__marker-tooltip {
     background: #fff;
@@ -1201,9 +1201,9 @@ nav.nav-scrolled .nav-container {
     .locator__map { flex: none; height: 320px; }
 }
 
-/* ─── Locator, locations page only: map on top, full-width list of photo
+/* Locator, locations page only: map on top, full-width list of photo
    cards below (instead of the homepage's narrow sidebar). Both match the
-   page's normal max-width -- no full-bleed breakout. ─── */
+   page's normal max-width, no full-bleed breakout. */
 .locator--stacked {
     display: block;
     height: auto;
@@ -1215,7 +1215,7 @@ nav.nav-scrolled .nav-container {
     padding: 0 2rem;
 }
 
-/* Search panel + map are visually one card here -- the card look (bg,
+/* Search panel + map are visually one card here, the card look (bg,
    border, shadow, radius) lives on .locator__clip instead of on each piece
    individually, so there's no seam between them. .locator__card itself
    stays un-clipped so the count badge below can hang off its corner. */
@@ -1232,7 +1232,7 @@ nav.nav-scrolled .nav-container {
     overflow: hidden;
 }
 
-/* Count "badge" -- taped onto the map's bottom-left corner, hanging
+/* Count "badge", taped onto the map's bottom-left corner, hanging
    partially off both the map and the card so it reads like a sticker
    rather than a section pill. The big number is a true sibling behind
    the pill (not nested inside it) so the pill's own background fully
@@ -1320,7 +1320,7 @@ nav.nav-scrolled .nav-container {
 }
 
 /* Search floats directly on top of the map instead of living in its own
-   panel -- a red "liquid glass" bar: blurred + translucent so the map
+   panel, a red "liquid glass" bar: blurred + translucent so the map
    shows through, but opaque enough to stay legible over any tile color. */
 .locator__search--floating {
     position: absolute;
@@ -1397,7 +1397,7 @@ nav.nav-scrolled .nav-container {
 }
 
 /* Photo-background card design, shared by the live searchable list above
-   AND the static state-grouped grid below -- one consistent card style
+   AND the static state-grouped grid below, one consistent card style
    for every location card on this page (locations page only; the
    homepage's plain .locator__item list doesn't carry this class). */
 .locator-photo-card {
@@ -2624,7 +2624,7 @@ footer {
 
 /* LTO section only: the featured-drink image container must always render
    as a perfect square on every breakpoint, whatever crop/size the source
-   photo is -- width tracks the height (mobile's clamp, desktop's
+   photo is, width tracks the height (mobile's clamp, desktop's
    --fd-img-h) instead of the column width, and aspect-ratio is a safety
    net for any browser edge case. .featured-card is also reused on the
    per-drink page, so this is scoped to .featured-drink to leave that alone. */
@@ -2641,7 +2641,7 @@ footer {
     }
 }
 
-/* Source photos aren't guaranteed to be 1:1 -- cover (crop-to-fill) instead
+/* Source photos aren't guaranteed to be 1:1, cover (crop-to-fill) instead
    of contain so the square container never shows letterboxing/white bars. */
 .featured-drink .featured-card .drink-img-wrap img {
     object-fit: cover;

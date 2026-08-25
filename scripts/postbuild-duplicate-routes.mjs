@@ -2,7 +2,7 @@
 // regenerates its own from a template, which forces directory-style output
 // (/page/index.html) regardless of what we set locally. Requesting /page
 // (no trailing slash) then needs a redirect to /page/ to find that
-// index.html -- and that redirect fights a separate edge rule on Webflow's
+// index.html, and that redirect fights a separate edge rule on Webflow's
 // side that strips trailing slashes, causing an infinite loop.
 //
 // This runs after the build (works whether Astro emits directory or file

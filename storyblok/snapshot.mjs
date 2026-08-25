@@ -2,7 +2,7 @@
 // the getPage/getSettings/getDrinks/getCategories/getLocations call sites
 // in src/pages and src/components) and writes the raw published content to
 // src/data/storyblok-snapshot.json. Production reads that file as a plain
-// JS import in src/lib/storyblok.ts -- no live Storyblok API call at
+// JS import in src/lib/storyblok.ts, with no live Storyblok API call at
 // request or Webflow-build time, which is what actually caused the
 // timeouts, the "not permitted to access the default cache" crash, and the
 // occasional bare page failures: Webflow Cloud's sandboxed network path to
@@ -11,7 +11,7 @@
 //
 // Run manually with `npm run storyblok:snapshot`, or automatically by
 // .github/workflows/storyblok-rebuild.yml whenever it detects a new
-// publish -- that workflow commits this file alongside its rebuild marker,
+// publish. That workflow commits this file alongside its rebuild marker,
 // so the next Webflow Cloud build picks up the fresh content.
 import 'dotenv/config';
 import fs from 'node:fs';

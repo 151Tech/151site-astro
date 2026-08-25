@@ -30,7 +30,7 @@ const { sections = [] } = Astro.props as Props;
 
 // Tolerate sections created before this fix, whose `type` was accidentally
 // written without the "Block" suffix (e.g. "PromoBanner" instead of
-// "PromoBannerBlock") -- try the raw value first, then with "Block" appended.
+// "PromoBannerBlock"). Try the raw value first, then with "Block" appended.
 function resolveComponent(type: string | undefined) {
   if (!type) return null;
   return BLOCK_COMPONENTS[type] ?? BLOCK_COMPONENTS[`${type}Block`] ?? null;

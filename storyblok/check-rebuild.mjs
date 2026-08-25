@@ -1,6 +1,6 @@
 // Polled by .github/workflows/storyblok-rebuild.yml on a schedule. Webflow
-// Cloud only redeploys on a git push to the tracked branch -- there's no
-// deploy-hook/webhook-triggered rebuild for it -- so this is the bridge:
+// Cloud only redeploys on a git push to the tracked branch. There's no
+// deploy-hook/webhook-triggered rebuild for it, so this is the bridge:
 // check whether anything in the Storyblok space was published more recently
 // than our last known rebuild, and if so, touch a marker file and let the
 // workflow commit + push it, which is what actually triggers the redeploy.
@@ -22,7 +22,7 @@ if (!spaceId || !oauthToken) {
 
 const client = new StoryblokClient({ oauthToken });
 // Folders (is_folder: true) always sort ahead of real stories here since
-// their published_at is null -- pull a page and skip past them to find the
+// their published_at is null. Pull a page and skip past them to find the
 // most recently published real story.
 const { data } = await client.get(`spaces/${spaceId}/stories`, {
   sort_by: 'published_at:desc',
@@ -41,7 +41,7 @@ if (fs.existsSync(markerPath)) {
 }
 
 if (!latestPublishedAt) {
-  console.log('No published stories found -- nothing to do.');
+  console.log('No published stories found, nothing to do.');
   process.exit(0);
 }
 

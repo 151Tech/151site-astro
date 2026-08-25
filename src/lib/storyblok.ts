@@ -12,13 +12,13 @@ import snapshot from '../data/storyblok-snapshot.json';
 const USE_SNAPSHOT = !import.meta.env.DEV;
 
 // Storyblok lowercases every schema field name server-side, regardless of
-// the case it's created with -- so all our camelCase YAML field names
+// the case it's created with, so all our camelCase YAML field names
 // (ctaLabel, menuOrder, siteName, ...) come back lowercased in content.
 // This restores the original casing so templates can keep using the old
 // YAML property names unchanged. See storyblok/field-case-map.json.
 const FIELD_CASE_MAP: Record<string, string> = fieldCaseMap;
 
-// Content Delivery API client -- read-only, safe to use at build/request
+// Content Delivery API client, read-only and safe to use at build/request
 // time. Falls back to the "published" version unless STORYBLOK_DRAFT=1 is
 // set (used by the visual editor preview / draft deploys later).
 const client = new StoryblokClient({
@@ -26,7 +26,7 @@ const client = new StoryblokClient({
 });
 
 // Draft by default in dev (nothing may be published yet), published by
-// default in prod builds -- override either way with STORYBLOK_DRAFT.
+// default in prod builds. Override either way with STORYBLOK_DRAFT.
 const version =
   import.meta.env.STORYBLOK_DRAFT != null
     ? import.meta.env.STORYBLOK_DRAFT === 'true'
@@ -40,12 +40,12 @@ const version =
 // fields built from a single `text_item` component back into a plain array
 // of strings, so callers get roughly the same shape the old YAML content
 // had. Fields that were a *singleton* nested object in the original YAML
-// (e.g. `cta`, `social`) come back as a one-item array -- callers unwrap
+// (e.g. `cta`, `social`) come back as a one-item array. Callers unwrap
 // those explicitly with `[0]`, since that ambiguity can't be resolved
 // generically (Storyblok has no "single nested object" field type, only
 // arrays of bloks).
 //
-// `_editable` is kept (not stripped) -- it's the HTML comment Storyblok's
+// `_editable` is kept (not stripped): it's the HTML comment Storyblok's
 // bridge scans for to draw click-to-highlight outlines in the Visual
 // Editor's preview pane. It's only present when fetched in draft mode, so
 // it's absent (and a no-op) on normal published/production reads. Render it
@@ -69,7 +69,7 @@ function denormalize(node: any): any {
 }
 
 // A field that held a single nested object in the original YAML (e.g.
-// `cta`, `social`) always comes back from Storyblok as a one-item array --
+// `cta`, `social`) always comes back from Storyblok as a one-item array:
 // there's no "single nested object" field type, only arrays of bloks. Call
 // this on the known singleton field names after fetching a story to unwrap
 // them back to plain objects; real lists are left untouched.
@@ -77,16 +77,16 @@ function denormalize(node: any): any {
 // `{ filename: "https://a.storyblok.com/...", alt, id, ... }`, or `{}`/null
 // when nothing has been picked yet. Older content migrated before the
 // asset-field switchover may still hold a plain string (a local
-// `/images/...` path) -- pass those through unchanged so nothing breaks
+// `/images/...` path); pass those through unchanged so nothing breaks
 // until an editor re-picks the image in Storyblok. Returns undefined when
 // there's no image at all, so callers can fall back to a placeholder.
-// Resizes/re-encodes via Storyblok's built-in Image Service (free, CDN-cached
-// -- just a URL suffix, no re-upload or separate service needed). `width` is
+// Resizes/re-encodes via Storyblok's built-in Image Service (free, CDN-cached,
+// just a URL suffix, no re-upload or separate service needed). `width` is
 // required and should be the largest real render size for that call site
 // (e.g. the desktop width of a product's own detail page, even if smaller
 // crops of the same image are used elsewhere in cards/thumbnails); `height`
 // defaults to `width` since editors are asked to upload 1:1 photos. Only
-// applies to actual Storyblok assets (a.storyblok.com) -- legacy string
+// applies to actual Storyblok assets (a.storyblok.com); legacy string
 // paths (local /images/... or old Wix URLs from pre-migration content)
 // pass through untouched since they can't be transformed this way.
 export function imageUrl(
@@ -118,31 +118,31 @@ function denormalizeObject(obj: Record<string, any>) {
 }
 
 // Nav and Footer both call getSettings() independently, and several pages
-// fetch it again themselves -- without caching, a single page load could
+// fetch it again themselves. Without caching, a single page load could
 // fire the identical Storyblok request 2-3 times, multiplying the chance
 // that a slow request pushes total render time past Cloudflare Workers'
 // execution limit (the "Worker exceeded resource limits" hang). This caches
 // the *raw* API response (pre-denormalize) for a short window, keyed by
 // request path + version, and de-dupes concurrent in-flight requests for
-// the same key. Callers still get a fresh `denormalize()` output each call
-// -- never a shared object -- since `unwrapSingletons` mutates its input
+// the same key. Callers still get a fresh `denormalize()` output each call,
+// never a shared object, since `unwrapSingletons` mutates its input
 // and different call sites unwrap different keys on the same story
 // (e.g. Footer unwraps 'social'/'footer' out of the same settings object
 // Nav reads 'logo'/'siteName' from).
 // This site's content (hours, menu copy, careers copy...) changes on the
-// order of days/weeks, not seconds -- 30s was overly cautious and meant
+// order of days/weeks, not seconds, so 30s was overly cautious and meant
 // nearly every request re-hit Storyblok. 10 minutes still feels live to an
 // editor publishing a change, but cuts live Storyblok traffic drastically.
 const CACHE_TTL_MS = 10 * 60_000;
 // Cloudflare kills a request that stalls rather than erroring it out, so a
 // slow Storyblok fetch has to be preempted client-side well before that
-// point -- 5s is generous for a CDN API call but far under where the
+// point. 5s is generous for a CDN API call but far under where the
 // Workers runtime gives up on the whole request as "hung".
 const REQUEST_TIMEOUT_MS = 5_000;
 const inFlight = new Map<string, Promise<any>>();
 
 // Per-isolate fallback used whenever the Cache API isn't available (local
-// `astro dev`, or a runtime without it) -- functionally identical to the
+// `astro dev`, or a runtime without it). Functionally identical to the
 // edge cache below, just scoped to one warm isolate instead of Cloudflare's
 // whole edge network.
 const memoryCache = new Map<string, { data: any; expires: number }>();
@@ -151,10 +151,10 @@ const memoryCache = new Map<string, { data: any; expires: number }>();
 // every isolate/PoP, unlike a plain in-memory Map, which resets every time
 // Workers spins up a fresh isolate (frequent, and effectively made our old
 // cache far leakier than its 30s TTL suggested). Caching there means most
-// requests -- even ones landing on an isolate that's never run before --
+// requests, even ones landing on an isolate that's never run before,
 // can be served without ever calling Storyblok. Falls back to `memoryCache`
 // wherever it's unavailable or errors (local dev, or a sandboxed Workers
-// environment that restricts it) -- resolved lazily inside each call rather
+// environment that restricts it), resolved lazily inside each call rather
 // than once at module load, since Workers can throw on touching `caches`
 // outside an actual request context, which would otherwise break every
 // export in this file the moment the module loads, not just caching.
@@ -167,8 +167,8 @@ function getEdgeCache(): Cache | undefined {
 }
 
 function cacheKeyRequest(key: string): Request {
-  // The Cache API only keys off a Request/URL, not an arbitrary string --
-  // this synthetic same-origin URL is never actually fetched, just used as
+  // The Cache API only keys off a Request/URL, not an arbitrary string.
+  // This synthetic same-origin URL is never actually fetched, just used as
   // a cache key.
   return new Request(`https://storyblok-cache.internal/${encodeURIComponent(key)}`);
 }
@@ -199,7 +199,7 @@ async function writeCache(key: string, entry: { data: any; expires: number }) {
     });
     await edgeCache.put(cacheKeyRequest(key), res);
   } catch {
-    // Edge cache write failures are non-fatal -- memoryCache already has it.
+    // Edge cache write failures are non-fatal since memoryCache already has it.
   }
 }
 
@@ -229,7 +229,7 @@ async function cachedGet(path: string, params: Record<string, any>) {
     inFlight.delete(key);
     // A timed-out or failed fetch falls back to the last good response for
     // this key, however stale, rather than hanging or failing the whole
-    // page -- an outdated page beats a dead one.
+    // page: an outdated page beats a dead one.
     if (cached) return cached.data;
     throw err;
   });
@@ -239,7 +239,7 @@ async function cachedGet(path: string, params: Record<string, any>) {
 
 // A single story by full slug, e.g. "pages/home" or "locations/151-coffee-keller".
 // On a cold cache with no fallback to serve, cachedGet's timeout still
-// rejects -- letting that escape here would crash the whole page render
+// rejects. Letting that escape here would crash the whole page render
 // with a bare 500 (as happened on Webflow Cloud when Storyblok itself was
 // briefly unreachable). A page rendered with empty content and every
 // template's existing `?? default` fallback text is far better than no
@@ -262,8 +262,8 @@ export async function getStory(slug: string) {
   }
 }
 
-// All stories under a folder, e.g. "drinks", "locations", "categories" --
-// mirrors the old astro:content getCollection(name) shape (slug + content).
+// All stories under a folder, e.g. "drinks", "locations", "categories".
+// Mirrors the old astro:content getCollection(name) shape (slug + content).
 // Same fail-soft reasoning as getStory: an empty list degrades pages that
 // list/redirect on missing entries instead of crashing the request.
 export async function getStories(startsWith: string) {

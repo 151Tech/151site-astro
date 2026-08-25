@@ -16,7 +16,7 @@
    text/category content, not just fixed image sizes) are sized to add up
    to exactly one viewport, so clicking "Menu" shows the whole hero AND the
    whole first row of the timeline with the timeline's bottom edge meeting
-   the bottom of the screen -- zero scrolling needed. max() keeps the hero
+   the bottom of the screen, zero scrolling needed. max() keeps the hero
    from collapsing into nothing on very short screens. The 473.69px fallback
    only applies for the split-second before JS measures the real value. */
 @media (min-width: 769px) {
@@ -191,7 +191,7 @@
     margin-left: 1.5rem; /* extra separation from previous category */
 }
 
-/* Dividing rule -- pseudo-element instead of a border so it can run 40px
+/* Dividing rule, pseudo-element instead of a border so it can run 40px
    taller than the card box itself, past the top edge. */
 .cat-title-card::before {
     content: '';
@@ -232,7 +232,7 @@
 }
 
 /* "Refreshers" and "Smoothies" are single long words with no natural
-   line break, so at the default size they run past the card -- scale
+   line break, so at the default size they run past the card, scale
    them down a notch to fit cleanly. */
 .cat-title-card[data-cat="refreshers"] .cat-title-text,
 .cat-title-card[data-cat="smoothies"] .cat-title-text {
@@ -284,7 +284,7 @@
 }
 
 /* ─── Drink Image ─── */
-/* A clean white container -- future product shots will come with their
+/* A clean white container, future product shots will come with their
    own backgrounds, so this masks them into a consistent, tidy tile
    instead of relying on transparent cutouts. */
 .drink-img-wrap {
@@ -325,7 +325,7 @@
     100% { rotate: 0deg; }
 }
 
-/* Hover-only lift/scale effects -- gated to real pointer devices so a
+/* Hover-only lift/scale effects, gated to real pointer devices so a
    tap on mobile doesn't trigger and stick a "hover" state. */
 @media (hover: hover) and (pointer: fine) {
     .drink-card:hover {
@@ -381,7 +381,7 @@
 /* ─── Descriptor Card ─── */
 /* A free-form "also available: ..." style list card. Any category can have
    any number of these (see the category's extraCards field, editable in the
-   Visual Editor) -- the soda list on Dirty Pop is just the first example. */
+   Visual Editor), the soda list on Dirty Pop is just the first example. */
 .descriptor-card {
     position: relative;
     flex: 0 0 auto;
@@ -394,7 +394,7 @@
     gap: 0.9rem;
 }
 
-/* Dividing rule -- pseudo-element instead of a border so it can run 40px
+/* Dividing rule, pseudo-element instead of a border so it can run 40px
    taller than the card box itself, past the top edge. */
 .descriptor-card::before {
     content: '';
@@ -819,7 +819,7 @@
     }
 
     /* The shared .hero-bg sizing (width/height:auto + min-width/height:100%)
-       only grows a source that's SMALLER than its container -- this photo
+       only grows a source that's SMALLER than its container, this photo
        (1280x720) is larger than the mobile hero box in both dimensions, so
        those mins are already satisfied and the browser renders it at full
        native size, showing only a tiny native-pixel crop from the center.
@@ -877,7 +877,7 @@
     .cat-title-card:first-child { margin-top: 0; }
 
     /* The desktop divider rule runs 40px above the card on purpose (past
-       the title card's own top edge, toward the previous category) -- with
+       the title card's own top edge, toward the previous category), with
        mobile's much smaller top spacing that same 40px now overshoots past
        the timeline entirely and bleeds into the hero above it. */
     .cat-title-card::before {
@@ -921,7 +921,7 @@
     .timeline-empty-state { width: 100%; min-width: 0; }
     .timeline-end-spacer { display: none; }
 
-    /* Category nav is hidden on mobile -- the vertical timeline below already
+    /* Category nav is hidden on mobile, the vertical timeline below already
        lets you scroll straight through every category. */
     .cat-nav {
         display: none;
@@ -959,7 +959,7 @@
 /* Elements start with data-visible="false" server-side when their category
    is hidden-by-default (Hot Food, Treats), so there's no flash of content
    that then disappears. The location-filter script keeps this attribute in
-   sync from then on as the single source of truth for visibility -- it's
+   sync from then on as the single source of truth for visibility, it's
    what setVisible()'s change-tracking reads/writes, not just a CSS hook. */
 [data-visible="false"] {
     display: none;
@@ -1020,7 +1020,7 @@
 }
 
 /* Same pill treatment as the flavor filters (.filter-pill), just in the
-   modal's light color context -- everything visible at once, no inner
+   modal's light color context, everything visible at once, no inner
    scroll, wraps like any other pill group. */
 .loc-modal-list {
     display: flex;

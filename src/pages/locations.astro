@@ -25,7 +25,7 @@ const locations = locationsEntries
 
 const storesJson = JSON.stringify(locations.map((l: any) => ({
   name: l.name, address: l.address, city: l.city, state: l.state, zip: l.zip, lat: Number(l.lat), lng: Number(l.lng),
-  // Only this page's locator needs these -- their presence is what tells
+  // Only this page's locator needs these. Their presence is what tells
   // locator.js to render a photo + "More Info" link on each list item.
   slug: l.slug,
   image: toImageSrc(l.image),
@@ -153,8 +153,8 @@ const STATE_NAMES: Record<string, string> = Object.fromEntries(
   <script src="/js/locator-loader.js" is:inline></script>
   <script is:inline>
     // Whole card navigates to that store's info page, but clicks on either
-    // real link inside (Get Directions / Store Info) still behave normally
-    // -- Get Directions opens Google Maps in a new tab instead of also
+    // real link inside (Get Directions / Store Info) still behave normally:
+    // Get Directions opens Google Maps in a new tab instead of also
     // navigating this page.
     document.querySelectorAll('[data-store-card]').forEach(function (card) {
       card.addEventListener('click', function (e) {

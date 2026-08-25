@@ -3,8 +3,8 @@
 // the Storyblok component schemas + story content that `migrate.mjs` would
 // push, WITHOUT touching the network. Review the two output files before
 // running the real migration:
-//   storyblok/components.generated.json  -- one entry per Storyblok component
-//   storyblok/content.generated.json     -- one entry per story to create
+//   storyblok/components.generated.json  (one entry per Storyblok component)
+//   storyblok/content.generated.json     (one entry per story to create)
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';

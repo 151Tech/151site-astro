@@ -1,5 +1,5 @@
 // Hand-authored Storyblok schemas for the flat, repeated collections
-// (drinks, categories, locations, settings) -- these already have an exact
+// (drinks, categories, locations, settings). These already have an exact
 // shape defined in src/content.config.ts (Zod), so inferring them generically
 // per-file would risk two files with slightly different shapes (e.g. a
 // `tags: null` drink vs one with `tags: [...]`) fighting over one shared
@@ -150,7 +150,7 @@ const textItems = (arr) => (arr ?? []).map((v) => ({ component: 'text_item', _ui
 const navLinks = (arr) => (arr ?? []).map((l) => ({ component: 'nav_link', _uid: uid(), label: l.label ?? '', href: l.href ?? '' }));
 
 // Old YAML content referenced categories by file path
-// ("src/content/categories/coffee.yaml") -- convert that to the matching
+// ("src/content/categories/coffee.yaml"). Convert that to the matching
 // Storyblok slug ("categories/coffee") so the reference still resolves
 // once the content lives in Storyblok.
 function categorySlug(ref) {

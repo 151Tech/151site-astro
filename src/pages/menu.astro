@@ -29,8 +29,8 @@ const LOCATIONS = locationEntries
     slug: e.slug,
     refId: `locations/${e.slug}`,
     name: e.name,
-    // "151 Coffee" is implied by the whole page -- repeating it on every
-    // single location button is just noise, so strip it for display only.
+    // "151 Coffee" is implied by the whole page, so repeating it on every
+    // single location button is just noise. Strip it for display only.
     shortName: (e.name as string).replace(/^151 Coffee\s*/i, '') || e.name,
     city: e.city,
     state: e.state,
@@ -101,7 +101,7 @@ const milks: string[] = p.customize?.milks ?? [];
 const allFlavors: string[] = p.customize?.flavors ?? [];
 const sfFlavors: string[] = p.customize?.sfFlavors ?? [];
 
-// The flavor pills filter the menu by tag -- a flavor no drink currently
+// The flavor pills filter the menu by tag. A flavor no drink currently
 // carries would just filter to an empty menu, so hide its selector. Food
 // items (Hot Food, Treats) are excluded from this check: their tags (e.g.
 // "Cinnamon" on a coffee cake) aren't real drink flavors, so they shouldn't
@@ -291,7 +291,7 @@ const flavors: { value: string; index: number }[] = allFlavors
 
     // Keep the hero sized so navbar + hero + the timeline's first row
     // always add up to exactly one viewport (see .menu-hero's --timeline-h
-    // usage in menu.css) -- measured live since the timeline's height
+    // usage in menu.css). Measured live since the timeline's height
     // depends on rendered category text, not just fixed image sizes.
     function syncHeroHeight() {
       if (isMobile()) return; // mobile hero sizes itself via aspect-ratio instead
@@ -320,7 +320,7 @@ const flavors: { value: string; index: number }[] = allFlavors
     function applyActiveCat(cat) {
       // While a flavor filter is active most category cards are hidden
       // (display:none), which breaks the "leftmost card" position heuristic
-      // below -- and a highlighted category doesn't mean anything in filter
+      // below, and a highlighted category doesn't mean anything in filter
       // view anyway, so just show none.
       if (activeFilter) {
         catLinks.forEach(function(btn) { btn.classList.remove('active'); });
@@ -337,7 +337,7 @@ const flavors: { value: string; index: number }[] = allFlavors
       btn.addEventListener('click', function() {
         stopAutoScroll();
         // A category is hidden by the current flavor filter, so clicking it
-        // wouldn't visibly go anywhere -- clear the filter first so every
+        // wouldn't visibly go anywhere. Clear the filter first so every
         // category (and this click) actually does something.
         if (activeFilter) clearFilter();
         var target = document.getElementById('cat-' + btn.dataset.tab);
@@ -406,10 +406,10 @@ const flavors: { value: string; index: number }[] = allFlavors
       el.addEventListener('animationend', function() { el.classList.remove('filter-animating-in'); el.style.animationDelay = ''; }, { once: true });
     }
     // Only actually animates elements whose visibility changed since the
-    // last refresh -- otherwise every store/flavor change would re-trigger
+    // last refresh, otherwise every store/flavor change would re-trigger
     // the entrance animation on cards that were already showing.
     // data-visible is the single source of truth for whether an element is
-    // shown -- both the CSS default-hide rule and this change-tracking key
+    // shown. Both the CSS default-hide rule and this change-tracking key
     // off it, so an element only re-animates when it actually flips state.
     // Absent = visible (matches everything that isn't hidden-by-default).
     function setVisible(el, visible, delay) {
@@ -455,7 +455,7 @@ const flavors: { value: string; index: number }[] = allFlavors
 
       catLinks.forEach(function(btn) {
         // The [data-visible="false"] CSS rule is what actually hides this
-        // (same mechanism as setVisible) -- a plain style.display toggle
+        // (same mechanism as setVisible). A plain style.display toggle
         // would be overridden by that rule the moment it's cleared, since
         // clearing an inline style just falls back to the stylesheet.
         btn.dataset.visible = categoryVisible(btn.dataset.tab) ? 'true' : 'false';
@@ -550,7 +550,7 @@ const flavors: { value: string; index: number }[] = allFlavors
     });
 
     // A location's "See This Store's Menu" button links here with
-    // ?store=<slug> -- honor that over anything already saved.
+    // ?store=<slug>. Honor that over anything already saved.
     var queryStore = new URLSearchParams(window.location.search).get('store');
     var storedStore = null;
     try { storedStore = localStorage.getItem(LOCATION_KEY); } catch (e) {}
@@ -562,7 +562,7 @@ const flavors: { value: string; index: number }[] = allFlavors
       updateTriggerUI();
       refresh();
     } else {
-      // First visit (no saved preference) -- invite them to pick a location.
+      // First visit (no saved preference): invite them to pick a location.
       setTimeout(openLocationModal, 700);
     }
   })();

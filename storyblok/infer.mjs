@@ -6,7 +6,7 @@
 // fighting over the same component's schema). The flat, repeated
 // collections (drinks/categories/locations/settings) are hand-schema'd in
 // collections-schema.mjs instead, since content.config.ts already defines
-// their exact shape precisely -- inferring those generically risks a
+// their exact shape precisely. Inferring those generically risks a
 // component's schema silently drifting depending on which file happened to
 // be processed last.
 import crypto from 'node:crypto';
@@ -67,7 +67,7 @@ function convertValue(path, value, components) {
         content: value.map((v) => ({ component: 'text_item', _uid: uid(), value: String(v) })),
       };
     }
-    // Array of objects -- union the keys across every item so no field
+    // Array of objects. Union the keys across every item so no field
     // present on only some entries gets dropped from the schema.
     const compName = sanitizeName(`${path}_item`);
     const unionKeys = new Set();
@@ -89,7 +89,7 @@ function convertValue(path, value, components) {
     };
   }
 
-  // Plain nested object -- Storyblok has no bare "group of fields" content
+  // Plain nested object. Storyblok has no bare "group of fields" content
   // type, so this becomes a singleton bloks field (max 1 item) holding one
   // nested component, which is the standard Storyblok pattern for this.
   const compName = sanitizeName(path);
@@ -122,7 +122,7 @@ export function convertRoot(rootName, obj, components) {
     content[sanitizeName(key)] = c;
   }
   // Storyblok requires a story's root content component to be flagged as a
-  // "content type" (is_root: true) -- every nested component this function
+  // "content type" (is_root: true). Every nested component this function
   // registers along the way stays nestable-only (the default).
   components.set(rootName, { name: rootName, schema, is_root: true });
   return content;

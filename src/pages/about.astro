@@ -215,7 +215,7 @@ const p = unwrapSingletons((await getPage('about')) as any, [
           ))}
           <div class="founder-ventures">
             {(p.founder?.ventures ?? [
-              { name: 'Hollywood Entertainment, Inc.', desc: 'Started in 1988. Grew from one store to 1,000 corporate-owned stores in just ten years — reaching $2 Billion in revenue and 2,000 company-owned stores. Sold in 2005.' },
+              { name: 'Hollywood Entertainment, Inc.', desc: 'Started in 1988. Grew from one store to 1,000 corporate-owned stores in just ten years, reaching $2 Billion in revenue and 2,000 company-owned stores. Sold in 2005.' },
               { name: 'HomeAdvisor.com', desc: 'Co-founder of the B2C online home improvement marketplace. Sold to IAC/InterActiveCorp (Nasdaq: IAC).' },
               { name: 'Firebirds Wood Fired Grill', desc: 'One of four partners who built this full-service restaurant chain to 45 locations across 18 states. Majority stake sold to Angelo Gordon.' },
             ]).map((v: any, i: number) => (

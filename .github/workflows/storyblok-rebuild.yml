@@ -1,7 +1,7 @@
 name: Rebuild on Storyblok publish
 
 # Webflow Cloud only redeploys this site on a git push to the tracked
-# branch -- it has no deploy-hook / webhook-triggered rebuild. So instead
+# branch: it has no deploy-hook / webhook-triggered rebuild. So instead
 # of a Storyblok webhook (which would need its own hosted receiver to call
 # back into GitHub), we poll Storyblok's Management API every 5 minutes for
 # a newer "published_at" and, when found, push a trivial commit. That push

@@ -10,10 +10,10 @@ interface Props {
   videoClass?: string;
   // Adds a second, blurred/cover copy of the video behind the main one on
   // mobile, so a contain-fit video (full frame visible, no cropping) isn't
-  // surrounded by bare letterbox bars. Desktop is unaffected -- the backdrop
+  // surrounded by bare letterbox bars. Desktop is unaffected: the backdrop
   // copy is hidden there and the activation script skips loading it entirely.
   blurBackdrop?: boolean;
-  // On phones, show this still photo instead of the video entirely -- the
+  // On phones, show this still photo instead of the video entirely. The
   // video never even loads on mobile when this is set (saves bandwidth).
   // Desktop is unaffected and keeps playing the normal video.
   mobileImage?: string;
@@ -25,7 +25,7 @@ const raw = (src && src.trim()) ? src.trim() : '';
 const ytMatch = raw.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/|v\/|live\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/);
 const vimeoMatch = ytMatch ? null : raw.match(/vimeo\.com\/(?:video\/)?(\d+)/);
 // The Visual Editor's hero field is easy to mistake for a plain "background
-// image" field -- if it's a static image URL, render it as one instead of
+// image" field. If it's a static image URL, render it as one instead of
 // handing it to <video>, which can't play a jpg/png/webp.
 const isImage = !ytMatch && !vimeoMatch && /\.(jpe?g|png|webp|avif|gif)(\?.*)?$/i.test(raw);
 
@@ -72,9 +72,9 @@ if (ytMatch) {
     function activate() {
       document.querySelectorAll('video[data-hero-video]').forEach(function (v) {
         // The blurred backdrop copy only exists to fill space around a
-        // contain-fit video on mobile -- don't fetch/decode it on desktop.
+        // contain-fit video on mobile. Don't fetch/decode it on desktop.
         if (isDesktop && v.hasAttribute('data-mobile-only')) return;
-        // A still photo replaces the video entirely on mobile -- never
+        // A still photo replaces the video entirely on mobile, so never
         // download the video there.
         if (!isDesktop && v.hasAttribute('data-mobile-skip')) return;
         if (v.dataset.src && !v.src) {

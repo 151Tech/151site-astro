@@ -1,0 +1,84 @@
+---
+export const prerender = true;
+import Layout from '../layouts/Layout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+---
+<Layout title="Page Not Found | 151 Coffee" description="This page doesn't exist. Head back to 151 Coffee for the menu, locations, and more.">
+  <Nav />
+
+  <section class="notfound-hero loc-bg">
+    <div class="container notfound-content">
+      <p class="notfound-code">404</p>
+      <h1>It's Not a Good Day<br />to Have This Page</h1>
+      <p class="notfound-sub">The page you're looking for doesn't exist, or it moved. Let's get you back to something good.</p>
+      <div class="notfound-actions">
+        <a href="/" class="btn-primary">Back to Home</a>
+        <a href="/menu" class="btn-secondary">See the Menu</a>
+      </div>
+    </div>
+  </section>
+
+  <Footer />
+</Layout>
+
+<style>
+  .notfound-hero {
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 4rem 1rem;
+  }
+
+  .notfound-content {
+    max-width: 640px;
+  }
+
+  .notfound-code {
+    font-family: var(--font-bebas-neue);
+    font-size: clamp(5rem, 18vw, 10rem);
+    line-height: 1;
+    color: var(--red);
+    margin: 0;
+    letter-spacing: 0.02em;
+  }
+
+  .notfound-hero h1 {
+    color: var(--white);
+    font-size: clamp(1.75rem, 4vw, 2.75rem);
+    margin: 0.5rem 0 1rem;
+  }
+
+  .notfound-sub {
+    color: var(--light-gray);
+    font-size: 1.1rem;
+    margin: 0 0 2rem;
+  }
+
+  .notfound-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.9rem 1.8rem;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--border);
+    color: var(--white);
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.2s ease, border-color 0.2s ease;
+  }
+
+  .btn-secondary:hover {
+    background: rgba(255,255,255,0.06);
+    border-color: rgba(255,255,255,0.2);
+  }
+</style>

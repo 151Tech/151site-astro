@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Pushes the generated components + stories into the real Storyblok space.
 // Requires STORYBLOK_SPACE_ID and STORYBLOK_OAUTH_TOKEN (Management API
-// Personal Access Token, from My Account > Personal Access Tokens -- NOT
+// Personal Access Token, from My Account > Personal Access Tokens, NOT
 // the Content Delivery tokens used at runtime) in the environment or .env.
 //
 // Re-running this is safe: components are upserted by name, and stories are
@@ -21,7 +21,7 @@ const oauthToken = process.env.STORYBLOK_OAUTH_TOKEN;
 if (!spaceId || !oauthToken) {
   console.error(
     'Missing STORYBLOK_SPACE_ID and/or STORYBLOK_OAUTH_TOKEN.\n' +
-      'Set them in .env (see .env.example) -- the OAuth token is a Personal\n' +
+      'Set them in .env (see .env.example). The OAuth token is a Personal\n' +
       'Access Token from My Account > Personal Access Tokens in Storyblok,\n' +
       'not the Content Delivery/Preview/Public token.',
   );
@@ -108,7 +108,7 @@ async function main() {
 
 main().catch((err) => {
   // storyblok-js-client's thrown error often doesn't carry the response body
-  // (e.g. Storyblok's field-level validation messages) -- dump everything
+  // (e.g. Storyblok's field-level validation messages), so dump everything
   // enumerable so a failure is actually diagnosable.
   console.error(err?.response?.data ?? JSON.stringify(err, Object.getOwnPropertyNames(err), 2));
   process.exit(1);
