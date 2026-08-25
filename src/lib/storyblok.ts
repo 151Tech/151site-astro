@@ -1,4 +1,3 @@
-import StoryblokClient from 'storyblok-js-client';
 import fieldCaseMap from '../../storyblok/field-case-map.json';
 import snapshot from '../data/storyblok-snapshot.json';
 
@@ -24,12 +23,53 @@ const USE_SNAPSHOT = !import.meta.env.DEV && !DRAFT_MODE;
 // YAML property names unchanged. See storyblok/field-case-map.json.
 const FIELD_CASE_MAP: Record<string, string> = fieldCaseMap;
 
-// Content Delivery API client, read-only and safe to use at build/request
-// time. Falls back to the "published" version unless STORYBLOK_DRAFT=1 is
-// set (used by the visual editor preview / draft deploys later).
-const client = new StoryblokClient({
-  accessToken: import.meta.env.STORYBLOK_TOKEN,
-});
+// Deliberately a plain fetch instead of storyblok-js-client. On the preview
+// deployment the client hung the Worker outright ("detected that your
+// Worker's code had hung and would never generate a response"), because
+// three of its defaults are hostile to the Workers runtime:
+//
+//   1. It throttles to 5 requests/second using a setTimeout queue. Workers
+//      only advance timers while I/O is pending, so a request parked in
+//      that queue behind the rate limit can wait forever. Our busiest page
+//      (menu) issues 4 calls, which sits right on the limit -- exactly why
+//      this failed intermittently rather than every time.
+//   2. Its request timeout is opt-in (`this.timeout && setTimeout(...)`)
+//      and we never set it, so a stalled connection had nothing to abort it.
+//   3. maxRetries defaults to 10 with a 300ms timer-based backoff, so a
+//      flaky call compounds all of the above.
+//
+// A bare fetch with an AbortSignal has none of that machinery: one request,
+// one hard deadline, no queue and no timers of its own.
+const API_BASE = 'https://api.storyblok.com/v2/cdn';
+
+// Comfortably above a healthy response, far below the Worker's own limit,
+// so a slow call surfaces as the fallback below rather than as a hang.
+const REQUEST_TIMEOUT_MS = 4000;
+
+async function sbFetch(path: string, params: Record<string, string | number> = {}) {
+  const url = new URL(`${API_BASE}/${path}`);
+  url.searchParams.set('token', import.meta.env.STORYBLOK_TOKEN);
+  url.searchParams.set('version', version);
+  for (const [key, value] of Object.entries(params)) {
+    url.searchParams.set(key, String(value));
+  }
+
+  // One retry only, and only for a timeout or network error: Storyblok
+  // returning 404 means the story genuinely isn't there and retrying just
+  // spends the request budget twice before failing the same way.
+  let lastErr: unknown;
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      const res = await fetch(url, { signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS) });
+      if (!res.ok) throw new Error(`Storyblok ${res.status} for ${path}`);
+      return await res.json();
+    } catch (err) {
+      lastErr = err;
+      if (err instanceof Error && err.message.startsWith('Storyblok ')) throw err;
+    }
+  }
+  throw lastErr;
+}
 
 // Draft by default in dev (nothing may be published yet) and on the draft
 // preview deployment, published by default in prod builds. STORYBLOK_DRAFT
@@ -131,7 +171,7 @@ function denormalizeObject(obj: Record<string, any>) {
 
 // A single story by full slug, e.g. "pages/home" or "locations/151-coffee-keller".
 // In production this always reads USE_SNAPSHOT's committed JSON (see above),
-// so the plain client.get() below only ever runs in local `astro dev`
+// so the sbFetch() call below only ever runs in local `astro dev`
 // against the live API, for Visual Editor draft preview.
 export async function getStory(slug: string) {
   if (USE_SNAPSHOT) {
@@ -143,10 +183,20 @@ export async function getStory(slug: string) {
     return denormalize(content);
   }
   try {
-    const { data } = await client.get(`cdn/stories/${slug}`, { version });
+    const data = await sbFetch(`stories/${slug}`);
     return denormalize(data.story.content);
   } catch (err) {
-    console.error(`[storyblok] getStory(${slug}) failed, rendering with empty content:`, err);
+    // The committed snapshot is a strictly better degraded state than an
+    // empty page: on the preview deployment it means a slow API shows the
+    // last published version of the story instead of a blank layout. It is
+    // stale by definition, so say so loudly rather than let a silently
+    // out-of-date preview get mistaken for a working one.
+    const fallback = (snapshot.stories as Record<string, any>)[slug];
+    if (fallback) {
+      console.error(`[storyblok] getStory(${slug}) failed, serving STALE snapshot content:`, err);
+      return denormalize(fallback);
+    }
+    console.error(`[storyblok] getStory(${slug}) failed with no snapshot fallback, rendering empty:`, err);
     return {};
   }
 }
@@ -165,9 +215,8 @@ export async function getStories(startsWith: string) {
     return entries.map((story: any) => ({ slug: story.slug, ...denormalize(story.content) }));
   }
   try {
-    const { data } = await client.get('cdn/stories', {
+    const data = await sbFetch('stories', {
       starts_with: `${startsWith}/`,
-      version,
       per_page: 100,
     });
     return data.stories.map((story: any) => ({
@@ -175,7 +224,12 @@ export async function getStories(startsWith: string) {
       ...denormalize(story.content),
     }));
   } catch (err) {
-    console.error(`[storyblok] getStories(${startsWith}) failed, rendering with empty list:`, err);
+    const fallback = (snapshot.collections as Record<string, any[]>)[startsWith];
+    if (fallback) {
+      console.error(`[storyblok] getStories(${startsWith}) failed, serving STALE snapshot list:`, err);
+      return fallback.map((story: any) => ({ slug: story.slug, ...denormalize(story.content) }));
+    }
+    console.error(`[storyblok] getStories(${startsWith}) failed with no snapshot fallback, rendering empty:`, err);
     return [];
   }
 }
