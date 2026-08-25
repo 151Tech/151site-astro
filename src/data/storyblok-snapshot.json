@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-22T19:02:30.090Z",
+  "generatedAt": "2026-08-25T13:39:53.854Z",
   "stories": {
     "settings/global": {
       "nav": [
@@ -41,7 +41,9 @@
         }
       ],
       "_uid": "e0d9cb14-21ac-4740-9b81-17f5b1930aa3",
-      "logo": "/images/logo.png",
+      "logo": {
+        "filename": "/images/logo.png"
+      },
       "email": "Contact@151Coffee.com",
       "hours": "Open daily 6 AM - 8 PM",
       "phone": "(682) 325-2124",
@@ -112,28 +114,36 @@
             {
               "alt": "The 151 Coffee team",
               "_uid": "2a5250bc-da39-4ea9-8f22-d0fb0319fd23",
-              "image": "/images/july-social.jpg",
+              "image": {
+                "filename": "/images/july-social.jpg"
+              },
               "component": "page_home_cta_photos_item",
               "signature": "Keller Team"
             },
             {
               "alt": "",
               "_uid": "ee966c9e-366e-4129-842b-433e96b8d353",
-              "image": "/images/nowhiring.webp",
+              "image": {
+                "filename": "/images/nowhiring.webp"
+              },
               "component": "page_home_cta_photos_item",
               "signature": "Plano Team"
             },
             {
               "alt": "",
               "_uid": "a93b41c8-938b-4c56-bd1a-464e2c7527fa",
-              "image": "/images/team-photo-2.jpg",
+              "image": {
+                "filename": "/images/team-photo-2.jpg"
+              },
               "component": "page_home_cta_photos_item",
               "signature": "its a good day"
             },
             {
               "alt": "",
               "_uid": "cc976a84-2756-4f1f-86db-4fa21b9a83e3",
-              "image": "/images/team-photo-3.jpg",
+              "image": {
+                "filename": "/images/team-photo-3.jpg"
+              },
               "component": "page_home_cta_photos_item",
               "signature": "Overland Park Team"
             }
@@ -148,7 +158,9 @@
         {
           "_uid": "ef330c98-9339-4866-9cc0-ee8a50bb12e1",
           "title": "151 Coffee | Drive-Thru Coffee, Cold Brew & Energy Drinks",
-          "ogimage": "https://www.151coffee.com/images/splash1.jpg",
+          "ogimage": {
+            "filename": "https://www.151coffee.com/images/splash1.jpg"
+          },
           "component": "page_home_seo",
           "description": "151 Coffee is a fast drive-thru coffee shop serving handcrafted espresso, cold brew, blended energy drinks, smoothies, teas & breakfast across Texas and Kansas."
         }
@@ -315,7 +327,9 @@
             {
               "_uid": "3f48d2eb-c59a-4d21-aa76-f2d461d808c3",
               "href": "/menu",
-              "image": "/images/July Social Media (8).jpg",
+              "image": {
+                "filename": "/images/July Social Media (8).jpg"
+              },
               "label": "Drink Menu",
               "title": "Drink Menu",
               "subtitle": "43,000+ Flavor Combinations",
@@ -324,7 +338,9 @@
             {
               "_uid": "62b43dbd-d290-414f-bfd2-509a3fa27028",
               "href": "/menu#hotfood",
-              "image": "/images/Burritos - Green Chile.JPG",
+              "image": {
+                "filename": "/images/Burritos - Green Chile.JPG"
+              },
               "label": "Food Menu",
               "title": "Food Menu",
               "subtitle": "Select Locations Only",
@@ -340,7 +356,9 @@
           "_uid": "3bb4afb8-f837-40f9-88d2-19b1667eaf5d",
           "name": "Tigers",
           "badge": "Summer's Featured Drink",
-          "image": "/images/tigers-blood-featured.jpg",
+          "image": {
+            "filename": "/images/tigers-blood-featured.jpg"
+          },
           "ctahref": "/menu",
           "visible": true,
           "ctalabel": "Explore the Menu",
@@ -550,7 +568,9 @@
         {
           "_uid": "36734574-73af-45ad-9007-1842443f49f9",
           "title": "Careers at 151 Coffee | Join Our Team",
-          "ogimage": "https://www.151coffee.com/images/splash1.jpg",
+          "ogimage": {
+            "filename": "https://www.151coffee.com/images/splash1.jpg"
+          },
           "component": "page_careers_seo",
           "description": "Join the 151 Coffee team. Fun, fast, and built on good vibes. See what's open and apply today."
         }
@@ -658,7 +678,9 @@
         {
           "_uid": "758bbe27-ae14-4245-81fa-d83232e24489",
           "title": "Menu | 151 Coffee - Coffee, Cold Brew, Energy & Dirty Pop",
-          "ogimage": "https://www.151coffee.com/images/splash1.jpg",
+          "ogimage": {
+            "filename": "https://www.151coffee.com/images/splash1.jpg"
+          },
           "component": "page_menu_seo",
           "description": "Explore the full 151 Coffee menu. Signature espresso drinks, cold brew, blended energy, Dirty Pop sodas, refreshers, smoothies, teas, and more."
         }
@@ -1037,14 +1059,18 @@
           "triggerlabel": "Select Your Location"
         }
       ],
-      "heromobileimage": "/images/menu-hero-mobile-drinks.jpg"
+      "heromobileimage": {
+        "filename": "/images/menu-hero-mobile-drinks.jpg"
+      }
     },
     "pages/merch": {
       "seo": [
         {
           "_uid": "4aaa7271-6bc1-4b1f-a82b-69be9b4bbd30",
           "title": "151 Coffee Merch | Rep Your Favorite Coffee",
-          "ogimage": "https://www.151coffee.com/images/splash1.jpg",
+          "ogimage": {
+            "filename": "https://www.151coffee.com/images/splash1.jpg"
+          },
           "component": "page_merch_seo",
           "description": "Shop 151 Coffee merch - apparel, drinkware, accessories, and coffee beans. Rep your favorite drive-thru coffee."
         }
@@ -1062,7 +1088,7 @@
         {
           "_uid": "382395ab-4a46-4655-86ca-9dea43248e27",
           "name": "Classic Tee",
-          "image": "",
+          "image": {},
           "price": "$24",
           "category": "Apparel",
           "component": "page_merch_items_item"
@@ -1070,7 +1096,7 @@
         {
           "_uid": "06759248-0c08-4c0c-a059-6c2a50b54096",
           "name": "Pullover Hoodie",
-          "image": "",
+          "image": {},
           "price": "$48",
           "category": "Apparel",
           "component": "page_merch_items_item"
@@ -1078,7 +1104,7 @@
         {
           "_uid": "61b68780-cd1d-4944-9d58-f757617dff65",
           "name": "Dad Hat",
-          "image": "",
+          "image": {},
           "price": "$26",
           "category": "Apparel",
           "component": "page_merch_items_item"
@@ -1086,7 +1112,7 @@
         {
           "_uid": "e9140756-0fce-44b0-a829-5398a1799fa8",
           "name": "Beanie",
-          "image": "",
+          "image": {},
           "price": "$22",
           "category": "Apparel",
           "component": "page_merch_items_item"
@@ -1094,7 +1120,7 @@
         {
           "_uid": "3a4bc633-3eee-41eb-b835-ef51e4074fcf",
           "name": "Crew Socks",
-          "image": "",
+          "image": {},
           "price": "$12",
           "category": "Apparel",
           "component": "page_merch_items_item"
@@ -1102,7 +1128,7 @@
         {
           "_uid": "c1738cf0-87a4-472d-ad89-f83b48584dfb",
           "name": "Long Sleeve",
-          "image": "",
+          "image": {},
           "price": "$30",
           "category": "Apparel",
           "component": "page_merch_items_item"
@@ -1110,7 +1136,7 @@
         {
           "_uid": "91025f03-d709-4c9f-a929-1cfc0a091119",
           "name": "Ceramic Mug",
-          "image": "",
+          "image": {},
           "price": "$18",
           "category": "Drinkware",
           "component": "page_merch_items_item"
@@ -1118,7 +1144,7 @@
         {
           "_uid": "ea0f69ad-2efb-4f0a-b178-772f23642e46",
           "name": "Cold Cup - 24oz",
-          "image": "",
+          "image": {},
           "price": "$20",
           "category": "Drinkware",
           "component": "page_merch_items_item"
@@ -1126,7 +1152,7 @@
         {
           "_uid": "6532542a-d8d6-42dc-92ab-c20bda1f8999",
           "name": "Tumbler",
-          "image": "",
+          "image": {},
           "price": "$32",
           "category": "Drinkware",
           "component": "page_merch_items_item"
@@ -1134,7 +1160,7 @@
         {
           "_uid": "4c683852-60d0-4c47-99ba-35f45ba1b832",
           "name": "Water Bottle",
-          "image": "",
+          "image": {},
           "price": "$28",
           "category": "Drinkware",
           "component": "page_merch_items_item"
@@ -1142,7 +1168,7 @@
         {
           "_uid": "269b5701-260c-48a0-8cf0-1eebcf0d81ae",
           "name": "Tote Bag",
-          "image": "",
+          "image": {},
           "price": "$16",
           "category": "Accessories",
           "component": "page_merch_items_item"
@@ -1150,7 +1176,7 @@
         {
           "_uid": "77c03c66-a96b-4794-bf55-8f95c6b42643",
           "name": "Keychain",
-          "image": "",
+          "image": {},
           "price": "$8",
           "category": "Accessories",
           "component": "page_merch_items_item"
@@ -1158,7 +1184,7 @@
         {
           "_uid": "60984870-3149-4f14-8ce3-246db78e28eb",
           "name": "Sticker Pack",
-          "image": "",
+          "image": {},
           "price": "$6",
           "category": "Accessories",
           "component": "page_merch_items_item"
@@ -1166,7 +1192,7 @@
         {
           "_uid": "edafa916-4666-44ed-8426-dccd3a1aae2f",
           "name": "Bag of Beans - 12oz",
-          "image": "",
+          "image": {},
           "price": "$16",
           "category": "Coffee & Treats",
           "component": "page_merch_items_item"
@@ -1174,7 +1200,7 @@
         {
           "_uid": "d65775ae-4a91-410f-94ba-8b2f2f65d265",
           "name": "Cookie Tin",
-          "image": "",
+          "image": {},
           "price": "$14",
           "category": "Coffee & Treats",
           "component": "page_merch_items_item"
@@ -1194,7 +1220,9 @@
         {
           "_uid": "e909f809-3d30-4bca-98b5-f6f64d65e316",
           "title": "Real Estate & Site Development | 151 Coffee Drive-Thru Expansion",
-          "ogimage": "https://www.151coffee.com/images/store1.jpg",
+          "ogimage": {
+            "filename": "https://www.151coffee.com/images/store1.jpg"
+          },
           "component": "page_ourfuture_seo",
           "description": "151 Coffee is expanding across Texas and Kansas. Seeking drive-thru pad sites of 25,000+ sq ft with 30,000+ VPD. See our site criteria and submit your property."
         }
@@ -1385,7 +1413,9 @@
               "component": "text_item"
             }
           ],
-          "image": "/images/locations/151-coffee-burleson.webp",
+          "image": {
+            "filename": "/images/locations/151-coffee-burleson.webp"
+          },
           "stats": [
             {
               "_uid": "eba491a6-71f8-4907-a0c3-c140d4abca7e",
@@ -1415,25 +1445,33 @@
           "images": [
             {
               "_uid": "9819fbae-2a8d-4296-bbdf-8b325f9c1b83",
-              "image": "/images/locations/151-coffee-burleson.webp",
+              "image": {
+                "filename": "/images/locations/151-coffee-burleson.webp"
+              },
               "imagealt": "151 Coffee Burleson drive-thru",
               "component": "page_ourfuture_overview_images_item"
             },
             {
               "_uid": "975b8bb0-33b8-4a0c-b77a-6db4e32b69f5",
-              "image": "/images/locations/151-coffee-keller.webp",
+              "image": {
+                "filename": "/images/locations/151-coffee-keller.webp"
+              },
               "imagealt": "151 Coffee Keller drive-thru",
               "component": "page_ourfuture_overview_images_item"
             },
             {
               "_uid": "48387869-4528-47a4-8dd1-285279057b5d",
-              "image": "/images/locations/151-coffee-coppell.webp",
+              "image": {
+                "filename": "/images/locations/151-coffee-coppell.webp"
+              },
               "imagealt": "151 Coffee Coppell drive-thru",
               "component": "page_ourfuture_overview_images_item"
             },
             {
               "_uid": "b97ec4f5-f968-40b5-a6db-782711606762",
-              "image": "/images/locations/151-coffee-flower-mound.webp",
+              "image": {
+                "filename": "/images/locations/151-coffee-flower-mound.webp"
+              },
               "imagealt": "151 Coffee Flower Mound drive-thru",
               "component": "page_ourfuture_overview_images_item"
             }
@@ -1501,7 +1539,9 @@
         {
           "_uid": "fd561afc-dd68-4b4b-b4a0-6d7f64558670",
           "title": "Privacy Policy | 151 Coffee",
-          "ogimage": "https://www.151coffee.com/images/splash1.jpg",
+          "ogimage": {
+            "filename": "https://www.151coffee.com/images/splash1.jpg"
+          },
           "component": "page_privacy_seo",
           "description": "151 Coffee privacy policy - how we collect, use, and protect your information."
         }
@@ -1583,7 +1623,9 @@
             }
           ],
           "badge": "",
-          "image": "/images/whookie-cookie.webp",
+          "image": {
+            "filename": "/images/whookie-cookie.webp"
+          },
           "category": "categories/treats",
           "subtitle": "Chocolate Sandwich Cookie - Gluten Free",
           "component": "drink",
@@ -1605,7 +1647,9 @@
             }
           ],
           "badge": "",
-          "image": "/images/snickerdoodle.webp",
+          "image": {
+            "filename": "/images/snickerdoodle.webp"
+          },
           "category": "categories/treats",
           "subtitle": "Cinnamon Sugar Classic",
           "component": "drink",
@@ -1627,7 +1671,9 @@
             }
           ],
           "badge": "",
-          "image": "/images/sea-salt-chocolate-chip.webp",
+          "image": {
+            "filename": "/images/sea-salt-chocolate-chip.webp"
+          },
           "category": "categories/treats",
           "subtitle": "Classic Chocolate Chip with a Sea Salt Finish",
           "component": "drink",
@@ -1649,7 +1695,9 @@
             }
           ],
           "badge": "",
-          "image": "/images/pumpkin-spice-bread.webp",
+          "image": {
+            "filename": "/images/pumpkin-spice-bread.webp"
+          },
           "category": "categories/treats",
           "subtitle": "Warm Spiced Pumpkin Loaf",
           "component": "drink",
@@ -1665,7 +1713,9 @@
           "name": "Peanut Butter Cookie",
           "tags": [],
           "badge": "",
-          "image": "/images/peanut-butter-cookie.webp",
+          "image": {
+            "filename": "/images/peanut-butter-cookie.webp"
+          },
           "category": "categories/treats",
           "subtitle": "Rich & Chewy Peanut Butter Cookie",
           "component": "drink",
@@ -1687,7 +1737,9 @@
             }
           ],
           "badge": "",
-          "image": "/images/lemon-pound-cake.webp",
+          "image": {
+            "filename": "/images/lemon-pound-cake.webp"
+          },
           "category": "categories/treats",
           "subtitle": "Bright & Buttery",
           "component": "drink",
@@ -1703,7 +1755,9 @@
           "name": "\"Hippie\" GF Cookie",
           "tags": [],
           "badge": "",
-          "image": "/images/hippie-cookie.webp",
+          "image": {
+            "filename": "/images/hippie-cookie.webp"
+          },
           "category": "categories/treats",
           "subtitle": "Oatmeal & Cranberries - Gluten Free",
           "component": "drink",
@@ -1725,7 +1779,9 @@
             }
           ],
           "badge": "",
-          "image": "/images/cinnamon-chip-crumbcake.webp",
+          "image": {
+            "filename": "/images/cinnamon-chip-crumbcake.webp"
+          },
           "category": "categories/treats",
           "subtitle": "Muffin Top",
           "component": "drink",
@@ -1747,7 +1803,9 @@
             }
           ],
           "badge": "",
-          "image": "/images/cake-pops.webp",
+          "image": {
+            "filename": "/images/cake-pops.webp"
+          },
           "category": "categories/treats",
           "subtitle": "Birthday Cake, Cookies & Cream, or Triple Chocolate",
           "component": "drink",
@@ -1769,7 +1827,9 @@
             }
           ],
           "badge": "",
-          "image": "/images/blueberry-lemon-muffin-top.webp",
+          "image": {
+            "filename": "/images/blueberry-lemon-muffin-top.webp"
+          },
           "category": "categories/treats",
           "subtitle": "Tangy & Sweet",
           "component": "drink",
@@ -1791,7 +1851,9 @@
             }
           ],
           "badge": "",
-          "image": "/images/banana-walnut-bread.webp",
+          "image": {
+            "filename": "/images/banana-walnut-bread.webp"
+          },
           "category": "categories/treats",
           "subtitle": "Moist & Classic",
           "component": "drink",
@@ -1813,7 +1875,9 @@
             }
           ],
           "badge": "",
-          "image": "/images/sweet-tea.webp",
+          "image": {
+            "filename": "/images/sweet-tea.webp"
+          },
           "category": "categories/teas",
           "subtitle": "Black Tea with Cane Sugar",
           "component": "drink",
@@ -1840,7 +1904,9 @@
             }
           ],
           "badge": "",
-          "image": "/images/pomekazi.webp",
+          "image": {
+            "filename": "/images/pomekazi.webp"
+          },
           "category": "categories/teas",
           "subtitle": "Pomegranate & Peach",
           "component": "drink",
@@ -1867,7 +1933,9 @@
             }
           ],
           "badge": "",
-          "image": "/images/georgia-peach-2.webp",
+          "image": {
+            "filename": "/images/georgia-peach-2.webp"
+          },
           "category": "categories/teas",
           "subtitle": "Strawberry & Peach",
           "component": "drink",
@@ -1894,7 +1962,9 @@
             }
           ],
           "badge": "",
-          "image": "/images/berry-refresher.webp",
+          "image": {
+            "filename": "/images/berry-refresher.webp"
+          },
           "category": "categories/teas",
           "subtitle": "Strawberry & Raspberry",
           "component": "drink",
@@ -1921,7 +1991,9 @@
             }
           ],
           "badge": "",
-          "image": "/images/v5/smoothies.jpg",
+          "image": {
+            "filename": "/images/v5/smoothies.jpg"
+          },
           "category": "categories/smoothies",
           "subtitle": "Fresh & Tangy",
           "component": "drink",
@@ -1948,7 +2020,9 @@
             }
           ],
           "badge": "",
-          "image": "/images/v5/smoothies.jpg",
+          "image": {
+            "filename": "/images/v5/smoothies.jpg"
+          },
           "category": "categories/smoothies",
           "subtitle": "Coconut & Pineapple",
           "component": "drink",
@@ -1975,7 +2049,9 @@
             }
           ],
           "badge": "",
-          "image": "/images/v5/smoothies.jpg",
+          "image": {
+            "filename": "/images/v5/smoothies.jpg"
+          },
           "category": "categories/smoothies",
           "subtitle": "Strawberry & Peach",
           "component": "drink",
@@ -2007,7 +2083,9 @@
             }
           ],
           "badge": "",
-          "image": "/images/v5/smoothies.jpg",
+          "image": {
+            "filename": "/images/v5/smoothies.jpg"
+          },
           "category": "categories/smoothies",
           "subtitle": "Strawberry, Mango & Pineapple",
           "component": "drink",
@@ -2039,7 +2117,9 @@
             }
           ],
           "badge": "",
-          "image": "/images/v5/refreshers.jpg",
+          "image": {
+            "filename": "/images/v5/refreshers.jpg"
+          },
           "category": "categories/refreshers",
           "subtitle": "Lavender, Mango, Diced Dragon Fruit, Coconut Cream",
           "component": "drink",
@@ -2071,7 +2151,9 @@
             }
           ],
           "badge": "",
-          "image": "/images/v5/refreshers.jpg",
+          "image": {
+            "filename": "/images/v5/refreshers.jpg"
+          },
           "category": "categories/refreshers",
           "subtitle": "Strawberry, Passion Fruit, Coconut Milk",
           "component": "drink",
@@ -2098,7 +2180,9 @@
             }
           ],
           "badge": "",
-          "image": "/images/v5/refreshers.jpg",
+          "image": {
+            "filename": "/images/v5/refreshers.jpg"
+          },
           "category": "categories/refreshers",
           "subtitle": "Peach Puree & Vanilla Cream",
           "component": "drink",
@@ -2130,7 +2214,9 @@
             }
           ],
           "badge": "",
-          "image": "/images/v5/refreshers.jpg",
+          "image": {
+            "filename": "/images/v5/refreshers.jpg"
+          },
           "category": "categories/refreshers",
           "subtitle": "Mango Puree, SF Vanilla, Diced Mango, Coconut Cream",
           "component": "drink",
@@ -2152,7 +2238,9 @@
             }
           ],
           "badge": "",
-          "image": "/images/hot-cocoa-2.webp",
+          "image": {
+            "filename": "/images/hot-cocoa-2.webp"
+          },
           "category": "categories/kids",
           "subtitle": "Rich & Creamy",
           "component": "drink",
@@ -2168,7 +2256,9 @@
           "name": "Hot Cider",
           "tags": [],
           "badge": "",
-          "image": "/images/hot-cider.webp",
+          "image": {
+            "filename": "/images/hot-cider.webp"
+          },
           "category": "categories/kids",
           "subtitle": "Warm Apple Cider",
           "component": "drink",
@@ -2190,7 +2280,9 @@
             }
           ],
           "badge": "",
-          "image": "/images/chocolate-milk.webp",
+          "image": {
+            "filename": "/images/chocolate-milk.webp"
+          },
           "category": "categories/kids",
           "subtitle": "Cold & Delicious",
           "component": "drink",
@@ -2206,7 +2298,9 @@
           "name": "Apple Juice",
           "tags": [],
           "badge": "",
-          "image": "/images/apple-juice.webp",
+          "image": {
+            "filename": "/images/apple-juice.webp"
+          },
           "category": "categories/kids",
           "subtitle": "Fresh & Sweet",
           "component": "drink",
@@ -2222,7 +2316,9 @@
           "name": "The Ultimate Burrito",
           "tags": [],
           "badge": "",
-          "image": "/images/the-ultimate-burrito.webp",
+          "image": {
+            "filename": "/images/the-ultimate-burrito.webp"
+          },
           "category": "categories/hotfood",
           "subtitle": "Egg, Jack & Cheddar, Bacon, Sausage, Hash Browns & Gravy",
           "component": "drink",
@@ -2238,7 +2334,9 @@
           "name": "Sticky Bun Coffee Cake",
           "tags": [],
           "badge": "",
-          "image": "/images/sticky-bun-coffee-cake.webp",
+          "image": {
+            "filename": "/images/sticky-bun-coffee-cake.webp"
+          },
           "category": "categories/hotfood",
           "subtitle": "Served Warm",
           "component": "drink",
@@ -2254,7 +2352,9 @@
           "name": "Maple Waffle",
           "tags": [],
           "badge": "",
-          "image": "/images/maple-waffle.webp",
+          "image": {
+            "filename": "/images/maple-waffle.webp"
+          },
           "category": "categories/hotfood",
           "subtitle": "Sausage & Egg on a Maple Waffle",
           "component": "drink",
@@ -2270,7 +2370,9 @@
           "name": "Jalapeno Biscuit",
           "tags": [],
           "badge": "",
-          "image": "/images/jalapeno-biscuit.webp",
+          "image": {
+            "filename": "/images/jalapeno-biscuit.webp"
+          },
           "category": "categories/hotfood",
           "subtitle": "Spicy Sausage, Egg & Cheese on a Jalapeno Cheddar Biscuit",
           "component": "drink",
@@ -2286,7 +2388,9 @@
           "name": "Everything Bagel",
           "tags": [],
           "badge": "",
-          "image": "/images/everything-bagel.webp",
+          "image": {
+            "filename": "/images/everything-bagel.webp"
+          },
           "category": "categories/hotfood",
           "subtitle": "Spicy Sausage, Egg & Cheese on an Everything Bagel",
           "component": "drink",
@@ -2302,7 +2406,9 @@
           "name": "Egg White Frittata",
           "tags": [],
           "badge": "",
-          "image": "/images/egg-white-frittata.webp",
+          "image": {
+            "filename": "/images/egg-white-frittata.webp"
+          },
           "category": "categories/hotfood",
           "subtitle": "Spinach, Feta & Roasted Red Pepper",
           "component": "drink",
@@ -2318,7 +2424,9 @@
           "name": "Chorizo Burrito",
           "tags": [],
           "badge": "",
-          "image": "/images/chorizo-burrito.webp",
+          "image": {
+            "filename": "/images/chorizo-burrito.webp"
+          },
           "category": "categories/hotfood",
           "subtitle": "Egg, Jack & Cheddar, Chorizo, Hash Browns & Sour Cream",
           "component": "drink",
@@ -2334,7 +2442,9 @@
           "name": "Bacon Cheddar Egg Bites",
           "tags": [],
           "badge": "",
-          "image": "/images/bacon-cheddar-egg-bites.webp",
+          "image": {
+            "filename": "/images/bacon-cheddar-egg-bites.webp"
+          },
           "category": "categories/hotfood",
           "subtitle": "Three Per Order",
           "component": "drink",
@@ -2361,7 +2471,9 @@
             }
           ],
           "badge": "",
-          "image": "/images/v5/energy.jpg",
+          "image": {
+            "filename": "/images/v5/energy.jpg"
+          },
           "category": "categories/energy",
           "subtitle": "Strawberry & Coconut",
           "component": "drink",
@@ -2388,7 +2500,9 @@
             }
           ],
           "badge": "",
-          "image": "/images/v5/energy.jpg",
+          "image": {
+            "filename": "/images/v5/energy.jpg"
+          },
           "category": "categories/energy",
           "subtitle": "Red Raspberry & Blue Raspberry",
           "component": "drink",
@@ -2420,7 +2534,9 @@
             }
           ],
           "badge": "",
-          "image": "/images/v5/energy.jpg",
+          "image": {
+            "filename": "/images/v5/energy.jpg"
+          },
           "category": "categories/energy",
           "subtitle": "Blue Raspberry, Lime & Coconut",
           "component": "drink",
@@ -2447,7 +2563,9 @@
             }
           ],
           "badge": "",
-          "image": "/images/v5/energy.jpg",
+          "image": {
+            "filename": "/images/v5/energy.jpg"
+          },
           "category": "categories/energy",
           "subtitle": "Blue Raspberry & Green Apple",
           "component": "drink",
@@ -2474,7 +2592,9 @@
             }
           ],
           "badge": "",
-          "image": "/images/dr-feel-good.webp",
+          "image": {
+            "filename": "/images/dr-feel-good.webp"
+          },
           "category": "categories/dirtypop",
           "subtitle": "Dr. Pepper, Vanilla & Coconut Cream",
           "component": "drink",
@@ -2501,7 +2621,9 @@
             }
           ],
           "badge": "",
-          "image": "/images/dr-feel-good.webp",
+          "image": {
+            "filename": "/images/dr-feel-good.webp"
+          },
           "category": "categories/dirtypop",
           "subtitle": "Pepsi, Coconut, Vanilla & Half & Half",
           "component": "drink",
@@ -2528,7 +2650,9 @@
             }
           ],
           "badge": "",
-          "image": "/images/just-dew-it.webp",
+          "image": {
+            "filename": "/images/just-dew-it.webp"
+          },
           "category": "categories/dirtypop",
           "subtitle": "Mt. Dew, Strawberry & Mango Puree",
           "component": "drink",
@@ -2555,7 +2679,9 @@
             }
           ],
           "badge": "",
-          "image": "/images/dr-feel-good.webp",
+          "image": {
+            "filename": "/images/dr-feel-good.webp"
+          },
           "category": "categories/dirtypop",
           "subtitle": "Dr. Pepper, Raspberry Puree & Coconut Cream",
           "component": "drink",
@@ -2587,7 +2713,9 @@
             }
           ],
           "badge": "",
-          "image": "/images/castaway.webp",
+          "image": {
+            "filename": "/images/castaway.webp"
+          },
           "category": "categories/dirtypop",
           "subtitle": "Sprite, Coconut, Mango Puree & Fresh Lime",
           "component": "drink",
@@ -2614,7 +2742,9 @@
             }
           ],
           "badge": "",
-          "image": "/images/butter-brew.webp",
+          "image": {
+            "filename": "/images/butter-brew.webp"
+          },
           "category": "categories/dirtypop",
           "subtitle": "Root Beer, Butterscotch & Vanilla Cream",
           "component": "drink",
@@ -2641,7 +2771,9 @@
             }
           ],
           "badge": "",
-          "image": "/images/drinks/energy/151 Blue Energy Hand (1).png",
+          "image": {
+            "filename": "/images/drinks/energy/151 Blue Energy Hand (1).png"
+          },
           "category": "categories/desserts",
           "subtitle": "",
           "component": "drink",
@@ -2673,7 +2805,9 @@
             }
           ],
           "badge": "",
-          "image": "/images/v5/coldbrew.jpg",
+          "image": {
+            "filename": "/images/v5/coldbrew.jpg"
+          },
           "category": "categories/coldbrew",
           "subtitle": "Hazelnut & Caramel, Chocolate Milk",
           "component": "drink",
@@ -2689,7 +2823,9 @@
           "name": "Nitro Brew",
           "tags": [],
           "badge": "",
-          "image": "/images/This one - black (2).jpg",
+          "image": {
+            "filename": "/images/This one - black (2).jpg"
+          },
           "category": "categories/coldbrew",
           "subtitle": "Velvety Nitro-Infused Cold Brew",
           "component": "drink",
@@ -2716,7 +2852,9 @@
             }
           ],
           "badge": "",
-          "image": "/images/v5/coldbrew.jpg",
+          "image": {
+            "filename": "/images/v5/coldbrew.jpg"
+          },
           "category": "categories/coldbrew",
           "subtitle": "White Chocolate & Brown Sugar Cinnamon",
           "component": "drink",
@@ -2732,7 +2870,9 @@
           "name": "Cold Brew",
           "tags": [],
           "badge": "",
-          "image": "/images/v5/coldbrew.jpg",
+          "image": {
+            "filename": "/images/v5/coldbrew.jpg"
+          },
           "category": "categories/coldbrew",
           "subtitle": "Smooth & Bold",
           "component": "drink",
@@ -2748,7 +2888,9 @@
           "name": "Cold Brew with Cream",
           "tags": [],
           "badge": "",
-          "image": "/images/v5/coldbrew.jpg",
+          "image": {
+            "filename": "/images/v5/coldbrew.jpg"
+          },
           "category": "categories/coldbrew",
           "subtitle": "Silky, Smooth Cream on Top",
           "component": "drink",
@@ -2775,7 +2917,9 @@
             }
           ],
           "badge": "",
-          "image": "/images/v5/coldbrew.jpg",
+          "image": {
+            "filename": "/images/v5/coldbrew.jpg"
+          },
           "category": "categories/coldbrew",
           "subtitle": "Caramel & Vanilla",
           "component": "drink",
@@ -2797,7 +2941,9 @@
             }
           ],
           "badge": "",
-          "image": "/images/v5/coldbrew.jpg",
+          "image": {
+            "filename": "/images/v5/coldbrew.jpg"
+          },
           "category": "categories/coldbrew",
           "subtitle": "Dark Chocolate & Milk",
           "component": "drink",
@@ -2824,7 +2970,9 @@
             }
           ],
           "badge": "",
-          "image": "/images/v5/coffee.jpg",
+          "image": {
+            "filename": "/images/v5/coffee.jpg"
+          },
           "category": "categories/coffee",
           "subtitle": "White Chocolate & Macadamia Nut",
           "component": "drink",
@@ -2856,7 +3004,9 @@
             }
           ],
           "badge": "",
-          "image": "/images/v5/coffee.jpg",
+          "image": {
+            "filename": "/images/v5/coffee.jpg"
+          },
           "category": "categories/coffee",
           "subtitle": "Hazelnut & Caramel, Chocolate Milk",
           "component": "drink",
@@ -2872,7 +3022,9 @@
           "name": "Latte",
           "tags": [],
           "badge": "",
-          "image": "/images/v5/latte.jpg",
+          "image": {
+            "filename": "/images/v5/latte.jpg"
+          },
           "category": "categories/coffee",
           "subtitle": "Smooth Espresso & Milk",
           "component": "drink",
@@ -2894,7 +3046,9 @@
             }
           ],
           "badge": "",
-          "image": "/images/v5/coffee.jpg",
+          "image": {
+            "filename": "/images/v5/coffee.jpg"
+          },
           "category": "categories/coffee",
           "subtitle": "Irish Cream",
           "component": "drink",
@@ -2916,7 +3070,9 @@
             }
           ],
           "badge": "",
-          "image": "/images/v5/misc.jpg",
+          "image": {
+            "filename": "/images/v5/misc.jpg"
+          },
           "category": "categories/misc",
           "subtitle": "Rich Creamy Chocolate",
           "component": "drink",
@@ -2948,7 +3104,9 @@
             }
           ],
           "badge": "",
-          "image": "/images/v5/coffee.jpg",
+          "image": {
+            "filename": "/images/v5/coffee.jpg"
+          },
           "category": "categories/coffee",
           "subtitle": "Coconut & Caramel, Chocolate Milk",
           "component": "drink",
@@ -2975,7 +3133,9 @@
             }
           ],
           "badge": "",
-          "image": "/images/v5/coffee.jpg",
+          "image": {
+            "filename": "/images/v5/coffee.jpg"
+          },
           "category": "categories/coffee",
           "subtitle": "Brown Sugar Cinnamon & Caramel",
           "component": "drink",
@@ -2991,7 +3151,9 @@
           "name": "Chai Latte",
           "tags": [],
           "badge": "",
-          "image": "/images/This One - black.jpg",
+          "image": {
+            "filename": "/images/This One - black.jpg"
+          },
           "category": "categories/misc",
           "subtitle": "Spiced Chai & Milk",
           "component": "drink",
@@ -3018,7 +3180,9 @@
             }
           ],
           "badge": "",
-          "image": "/images/v5/coffee.jpg",
+          "image": {
+            "filename": "/images/v5/coffee.jpg"
+          },
           "category": "categories/coffee",
           "subtitle": "Caramel & Vanilla",
           "component": "drink",
@@ -3034,7 +3198,9 @@
           "name": "Americano",
           "tags": [],
           "badge": "",
-          "image": "/images/v5/coffee.jpg",
+          "image": {
+            "filename": "/images/v5/coffee.jpg"
+          },
           "category": "categories/coffee",
           "subtitle": "Classic Bold Espresso",
           "component": "drink",
@@ -3061,7 +3227,9 @@
             }
           ],
           "badge": "",
-          "image": "/images/v5/coffee.jpg",
+          "image": {
+            "filename": "/images/v5/coffee.jpg"
+          },
           "category": "categories/coffee",
           "subtitle": "Caramel, Chocolate Milk",
           "component": "drink",
@@ -3375,7 +3543,7 @@
           "city": "Westworth Village",
           "name": "151 Coffee Westworth Village",
           "hours": "",
-          "image": "",
+          "image": {},
           "state": "TX",
           "address": "6720 Westworth Blvd",
           "component": "location",
@@ -3392,7 +3560,9 @@
           "city": "The Colony",
           "name": "151 Coffee The Colony",
           "hours": "",
-          "image": "/images/locations/151-coffee-the-colony.webp",
+          "image": {
+            "filename": "/images/locations/151-coffee-the-colony.webp"
+          },
           "state": "TX",
           "address": "4580 Destination Dr",
           "component": "location",
@@ -3409,7 +3579,9 @@
           "city": "Rowlett",
           "name": "151 Coffee Rowlett",
           "hours": "",
-          "image": "/images/locations/151-coffee-rowlett.webp",
+          "image": {
+            "filename": "/images/locations/151-coffee-rowlett.webp"
+          },
           "state": "TX",
           "address": "3525 Lakeview Pkwy",
           "component": "location",
@@ -3426,7 +3598,9 @@
           "city": "Roanoke",
           "name": "151 Coffee Roanoke",
           "hours": "",
-          "image": "/images/locations/151-coffee-roanoke.webp",
+          "image": {
+            "filename": "/images/locations/151-coffee-roanoke.webp"
+          },
           "state": "TX",
           "address": "1200 US-377",
           "component": "location",
@@ -3443,7 +3617,9 @@
           "city": "Plano",
           "name": "151 Coffee Plano",
           "hours": "",
-          "image": "/images/locations/151-coffee-plano.webp",
+          "image": {
+            "filename": "/images/locations/151-coffee-plano.webp"
+          },
           "state": "TX",
           "address": "1151 Preston Rd",
           "component": "location",
@@ -3460,7 +3636,7 @@
           "city": "Overland Park",
           "name": "151 Coffee Overland Park",
           "hours": "",
-          "image": "",
+          "image": {},
           "state": "KS",
           "address": "9180 Metcalf Ave",
           "component": "location",
@@ -3477,7 +3653,9 @@
           "city": "North Richland Hills",
           "name": "151 Coffee North Richland Hills",
           "hours": "",
-          "image": "/images/locations/151-coffee-north-richland-hills.webp",
+          "image": {
+            "filename": "/images/locations/151-coffee-north-richland-hills.webp"
+          },
           "state": "TX",
           "address": "6244 Rufe Snow Dr",
           "component": "location",
@@ -3494,7 +3672,9 @@
           "city": "Manhattan",
           "name": "151 Coffee Manhattan",
           "hours": "",
-          "image": "/images/locations/151-coffee-manhattan.webp",
+          "image": {
+            "filename": "/images/locations/151-coffee-manhattan.webp"
+          },
           "state": "KS",
           "address": "900 N 3rd St",
           "component": "location",
@@ -3511,7 +3691,9 @@
           "city": "Lewisville",
           "name": "151 Coffee Lewisville",
           "hours": "",
-          "image": "/images/locations/151-coffee-lewisville.webp",
+          "image": {
+            "filename": "/images/locations/151-coffee-lewisville.webp"
+          },
           "state": "TX",
           "address": "720 W Main St",
           "component": "location",
@@ -3528,7 +3710,7 @@
           "city": "Lawrence",
           "name": "151 Coffee Lawrence",
           "hours": "",
-          "image": "",
+          "image": {},
           "state": "KS",
           "address": "1533 W 23rd St",
           "component": "location",
@@ -3545,7 +3727,9 @@
           "city": "Keller",
           "name": "151 Coffee Keller",
           "hours": "",
-          "image": "/images/locations/151-coffee-keller.webp",
+          "image": {
+            "filename": "/images/locations/151-coffee-keller.webp"
+          },
           "state": "TX",
           "address": "1510 Keller Pkwy",
           "component": "location",
@@ -3562,7 +3746,9 @@
           "city": "Flower Mound",
           "name": "151 Coffee Flower Mound",
           "hours": "",
-          "image": "/images/locations/151-coffee-flower-mound.webp",
+          "image": {
+            "filename": "/images/locations/151-coffee-flower-mound.webp"
+          },
           "state": "TX",
           "address": "3343 Long Prairie Rd",
           "component": "location",
@@ -3579,7 +3765,9 @@
           "city": "Coppell",
           "name": "151 Coffee Coppell",
           "hours": "",
-          "image": "/images/locations/151-coffee-coppell.webp",
+          "image": {
+            "filename": "/images/locations/151-coffee-coppell.webp"
+          },
           "state": "TX",
           "address": "131 S Denton Tap Rd",
           "component": "location",
@@ -3596,7 +3784,9 @@
           "city": "Burleson",
           "name": "151 Coffee Burleson",
           "hours": "",
-          "image": "/images/locations/151-coffee-burleson.webp",
+          "image": {
+            "filename": "/images/locations/151-coffee-burleson.webp"
+          },
           "state": "TX",
           "address": "1484 SW Wilshire Blvd",
           "component": "location",
@@ -3613,7 +3803,9 @@
           "city": "Fort Worth",
           "name": "151 Coffee Alliance",
           "hours": "",
-          "image": "/images/locations/151-coffee-alliance.webp",
+          "image": {
+            "filename": "/images/locations/151-coffee-alliance.webp"
+          },
           "state": "TX",
           "address": "9301 N Fwy",
           "component": "location",
