@@ -1,6 +1,5 @@
 ---
 import Font from 'astro/components/Font.astro';
-import { ClientRouter } from 'astro:transitions';
 import { getSettings, imageUrl } from '../lib/storyblok';
 
 interface Props {
@@ -58,7 +57,6 @@ const favicon = imageUrl(settingsData?.favicon) ?? '/favicon.ico';
   <link rel="icon" href={favicon} />
   <link rel="stylesheet" href="/style.css" />
   <link rel="stylesheet" href="/blocks.css" />
-  <ClientRouter />
   <slot name="head" />
   <script is:inline>if(!window.matchMedia('(prefers-reduced-motion:reduce)').matches)document.documentElement.classList.add('js-anim');</script>
 </head>

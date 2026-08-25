@@ -253,33 +253,6 @@ document.querySelectorAll('form[data-netlify]').forEach(function (form) {
     });
 });
 
-// ── Page transition ──
-(function () {
-    document.addEventListener('click', function (e) {
-        const link = e.target.closest('a[href]');
-        if (!link) return;
-        const href = link.getAttribute('href');
-        if (!href) return;
-        // Skip external, pure hash anchors, javascript:, mailto:, tel:
-        if (
-            href.startsWith('http') ||
-            href.startsWith('//') ||
-            href.startsWith('#') ||
-            href.startsWith('javascript') ||
-            href.startsWith('mailto') ||
-            href.startsWith('tel')
-        ) return;
-        e.preventDefault();
-        document.body.classList.add('page-exiting');
-        setTimeout(function () { window.location.href = href; }, 220);
-    });
-
-    // Restore from bfcache without stuck exit state
-    window.addEventListener('pageshow', function (e) {
-        if (e.persisted) document.body.classList.remove('page-exiting');
-    });
-})();
-
 // ── Social links: open the native app on mobile instead of the web page ──
 // A plain https:// link to instagram.com opens the profile inside whatever
 // browser/webview the visitor is already in. On a phone with the Instagram
