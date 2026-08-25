@@ -1,6 +1,7 @@
 ---
 import Font from 'astro/components/Font.astro';
 import { ClientRouter } from 'astro:transitions';
+import { getSettings, imageUrl } from '../lib/storyblok';
 
 interface Props {
   title: string;
@@ -19,6 +20,10 @@ const {
 } = Astro.props;
 
 const canonicalUrl = canonical ?? new URL(Astro.url.pathname, 'https://www.151coffee.com').href;
+// Falls back to the static /favicon.ico in public/ until an editor picks one
+// in Storyblok (settings/global -> Favicon).
+const settingsData = (await getSettings()) as any;
+const favicon = imageUrl(settingsData?.favicon) ?? '/favicon.ico';
 ---
 <!DOCTYPE html>
 <html lang="en">
@@ -50,7 +55,7 @@ const canonicalUrl = canonical ?? new URL(Astro.url.pathname, 'https://www.151co
   <meta name="twitter:description" content={description} />
   {ogImage && <meta name="twitter:image" content={ogImage} />}
 
-  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <link rel="icon" href={favicon} />
   <link rel="stylesheet" href="/style.css" />
   <link rel="stylesheet" href="/blocks.css" />
   <ClientRouter />
