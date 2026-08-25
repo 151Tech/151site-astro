@@ -1,0 +1,61 @@
+name: Sync preview branch
+
+# Keeps the `preview` branch (the draft-preview Webflow app, which runs with
+# STORYBLOK_DRAFT_MODE=true) current with production code.
+#
+# The trigger is a push to storyblok-migration rather than a Storyblok
+# publish, because what drifts between the two branches is *code*, and a
+# publish doesn't change code. `preview` reads the live Storyblok API and
+# never touches the committed snapshot, so content publishes have nothing
+# to sync into it -- it shows drafts the moment they're saved, with no
+# rebuild at all.
+#
+# Snapshot-only commits are ignored for that same reason: they're what the
+# rebuild bot pushes on every content publish, and rebuilding the preview
+# app for a file it doesn't read would burn build minutes to change nothing.
+# paths-ignore skips a commit only when *every* changed path matches, so a
+# commit touching both code and the snapshot still syncs.
+on:
+  push:
+    branches: [storyblok-migration]
+    paths-ignore:
+      - 'src/data/storyblok-snapshot.json'
+      - 'storyblok/.last-rebuild-check.json'
+  workflow_dispatch: {}
+
+concurrency:
+  group: sync-preview
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      # Full history: a shallow clone can't merge.
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: preview
+
+      - name: Fast-forward preview to storyblok-migration
+        run: |
+          git config user.name "storyblok-rebuild-bot"
+          git config user.email "actions@github.com"
+
+          # preview is meant to be a pure downstream copy: same code, only
+          # the Webflow app's env vars differ. A fast-forward is therefore
+          # the expected outcome, and anything else means someone committed
+          # directly to preview. Fail loudly rather than papering over that
+          # with a merge commit nobody is expecting.
+          if git merge --ff-only origin/storyblok-migration; then
+            git push origin preview
+            echo "preview fast-forwarded to $(git rev-parse --short HEAD)"
+          else
+            echo "::error::preview has diverged from storyblok-migration and cannot fast-forward."
+            echo "::error::Someone committed directly to preview. Reconcile it by hand:"
+            echo "::error::  git checkout preview && git rebase storyblok-migration"
+            exit 1
+          fi
