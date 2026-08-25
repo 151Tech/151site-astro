@@ -1,15 +1,34 @@
 name: Rebuild on Storyblok publish
 
 # Webflow Cloud only redeploys this site on a git push to the tracked
-# branch: it has no deploy-hook / webhook-triggered rebuild. So instead
-# of a Storyblok webhook (which would need its own hosted receiver to call
-# back into GitHub), we poll Storyblok's Management API every 5 minutes for
-# a newer "published_at" and, when found, push a trivial commit. That push
-# is what actually triggers Webflow Cloud to rebuild and deploy.
+# branch: it has no deploy-hook / webhook-triggered rebuild. So this
+# workflow is the bridge -- it refreshes the content snapshot and pushes a
+# commit, and that push is what actually triggers the redeploy.
+#
+# `repository_dispatch` is the real trigger: a Storyblok webhook POSTs
+# straight to GitHub's dispatches endpoint on publish, so an edit goes live
+# in about a minute.
+#
+# The schedule is only a backstop for a missed or failed webhook. It is
+# deliberately NOT high-frequency: GitHub runs `schedule` on a shared
+# best-effort queue and drops most ticks under load. This was previously
+# set to '*/5' (every 5 minutes) and measured over 25 real runs it actually
+# fired every 112 minutes on average, with a worst case of 231 minutes --
+# which is why publishing appeared to do nothing for hours. Asking for a
+# tighter interval does not help; it just gets dropped. Hourly is honest
+# about what the platform will actually deliver.
 on:
+  repository_dispatch:
+    types: [storyblok-publish]
   schedule:
-    - cron: '*/5 * * * *'
+    - cron: '0 * * * *'
   workflow_dispatch: {}
+
+# A webhook and a scheduled backstop can otherwise land together and race
+# on the same push.
+concurrency:
+  group: storyblok-rebuild
+  cancel-in-progress: false
 
 permissions:
   contents: write
@@ -46,4 +65,7 @@ jobs:
           git config user.email "actions@github.com"
           git add storyblok/.last-rebuild-check.json src/data/storyblok-snapshot.json
           git commit -m "chore: rebuild for Storyblok content published $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          # The scheduled backstop and a webhook run can both reach this
+          # point; rebase rather than fail if the other pushed first.
+          git pull --rebase --autostash
           git push
