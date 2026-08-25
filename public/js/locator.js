@@ -1,11 +1,11 @@
 // 151 Coffee store locator - Leaflet + OpenStreetMap, no API key required.
 // Store data comes from window.COFFEE151_STORES, populated on each page from
-// the editable Location content collection (see index.astro / locations.astro)
-// - so adding, removing, or correcting a location in the Visual Editor is
+// the editable Location content collection (see index.astro / locations.astro),
+// so adding, removing, or correcting a location in the Visual Editor is
 // reflected here automatically, with nothing to keep in sync by hand.
 (function () {
     const mapEl = document.getElementById("locator-map");
-    // The results list is optional -- the locations page drops it (the state-
+    // The results list is optional: the locations page drops it (the state-
     // grouped grid below already shows every location as a card), while the
     // homepage still renders one. Map + search still work either way.
     const listEl = document.getElementById("locator-list");
@@ -20,21 +20,11 @@
     const PHONE = (window.COFFEE151_LOCATOR && window.COFFEE151_LOCATOR.phone) || "(682) 325-2124";
     const PHONE_TEL = PHONE.replace(/\D/g, "");
 
-    const redIcon = L.divIcon({
-        className: "locator__marker",
-        html: '<span class="locator__marker-pin"></span>',
-        iconSize: [28, 28],
-        iconAnchor: [14, 28],
-        popupAnchor: [0, -28]
-    });
+    const redIcon = window.COFFEE151_LEAFLET.redIcon(L);
 
     const map = L.map(mapEl, { scrollWheelZoom: true, attributionControl: false }).setView([33.0, -97.0], 6);
 
-    L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
-        maxZoom: 19,
-        subdomains: "abcd",
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
-    }).addTo(map);
+    window.COFFEE151_LEAFLET.addTileLayer(L, map);
 
     const markers = STORES.map((store, i) => {
         const shortName = store.name.replace("151 Coffee ", "");
@@ -70,7 +60,7 @@
             const originalIndex = STORES.indexOf(store);
             const item = document.createElement("div");
             // store.image/slug only exist on the locations page's store data
-            // (the homepage locator doesn't pass them) -- their presence is
+            // (the homepage locator doesn't pass them). Their presence is
             // what turns this into a photo card with a "More Info" link.
             item.className = store.image ? "locator__item locator-photo-card" : "locator__item";
             item.dataset.index = String(originalIndex);
@@ -168,7 +158,7 @@
             s.state.toLowerCase().includes(q) ||
             s.zip.includes(q)
         );
-        // Never empty the list — if nothing matches, keep all locations on screen.
+        // Never empty the list: if nothing matches, keep all locations on screen.
         const list = filtered.length ? filtered : STORES;
         renderList(list);
         fitTo(list);

@@ -19,7 +19,7 @@
                 implied,
                 date: new Date().toISOString()
             }));
-        } catch { /* storage unavailable (e.g. private mode) — ignore */ }
+        } catch { /* storage unavailable (e.g. private mode), ignore */ }
     }
 
     function dismiss(banner) {
@@ -61,7 +61,7 @@
 
         // If the visitor keeps browsing to another page without making an
         // explicit choice, treat it as implied consent (necessary cookies only)
-        // and remember it — so the banner isn't shown again on every page.
+        // and remember it, so the banner isn't shown again on every page.
         window.addEventListener('pagehide', () => {
             if (!answered && !getConsent()) setConsent(false, true);
         }, { once: true });

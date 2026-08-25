@@ -11,7 +11,7 @@
         loaded = true;
 
         // media="print" + swap-to-"all" on load keeps this stylesheet from
-        // blocking render even though it's injected into <head> -- without
+        // blocking render even though it's injected into <head>. Without
         // this, the browser holds first paint until it downloads (a slow
         // external unpkg.com round trip), no matter how "lazy" the loader is.
         var css = document.createElement('link');
@@ -25,9 +25,14 @@
         var script = document.createElement('script');
         script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
         script.onload = function () {
-            var locatorScript = document.createElement('script');
-            locatorScript.src = '/js/locator.js';
-            document.body.appendChild(locatorScript);
+            var helpersScript = document.createElement('script');
+            helpersScript.src = '/js/leaflet-map-helpers.js';
+            helpersScript.onload = function () {
+                var locatorScript = document.createElement('script');
+                locatorScript.src = '/js/locator.js';
+                document.body.appendChild(locatorScript);
+            };
+            document.body.appendChild(helpersScript);
         };
         document.body.appendChild(script);
     }

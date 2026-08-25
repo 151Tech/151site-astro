@@ -19,26 +19,21 @@
 
         var script = document.createElement('script');
         script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
-        script.onload = initMap;
+        script.onload = function () {
+            var helpersScript = document.createElement('script');
+            helpersScript.src = '/js/leaflet-map-helpers.js';
+            helpersScript.onload = initMap;
+            document.body.appendChild(helpersScript);
+        };
         document.body.appendChild(script);
     }
 
     function initMap() {
-        var redIcon = L.divIcon({
-            className: 'locator__marker',
-            html: '<span class="locator__marker-pin"></span>',
-            iconSize: [28, 28],
-            iconAnchor: [14, 28],
-            popupAnchor: [0, -28]
-        });
+        var redIcon = window.COFFEE151_LEAFLET.redIcon(L);
 
         var map = L.map(mapEl, { scrollWheelZoom: false, attributionControl: false }).setView([store.lat, store.lng], 15);
 
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-            maxZoom: 19,
-            subdomains: 'abcd',
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
-        }).addTo(map);
+        window.COFFEE151_LEAFLET.addTileLayer(L, map);
 
         L.marker([store.lat, store.lng], { icon: redIcon })
             .addTo(map)

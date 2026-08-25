@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-25T14:30:50.492Z",
+  "generatedAt": "2026-08-25T16:13:29.710Z",
   "stories": {
     "settings/global": {
       "nav": [
@@ -294,7 +294,24 @@
           "ctahref": "/menu",
           "heading": "151 Coffee",
           "ctalabel": "See Our Menu",
-          "videourl": "https://www.youtube.com/watch?v=KF06kokt9xI",
+          "videourl": {
+            "id": 212914180829565,
+            "alt": "A cinematic showcase of some of 151 Coffee's options.",
+            "name": "",
+            "focus": "",
+            "title": "151 Coffee Drinks",
+            "source": "151 Coffee",
+            "filename": "https://a.storyblok.com/f/294671107081428/x/1bd9df486a/drinks_bg.mp4",
+            "copyright": "151 Coffee 2026",
+            "fieldtype": "asset",
+            "meta_data": {
+              "alt": "A cinematic showcase of some of 151 Coffee's options.",
+              "title": "151 Coffee Drinks",
+              "source": "151 Coffee",
+              "copyright": "151 Coffee 2026"
+            },
+            "is_external_url": false
+          },
           "component": "page_home_hero",
           "subheadingline1": "It's a Good Day",
           "subheadingline2": "to have a good day"
@@ -733,7 +750,9 @@
         }
       ],
       "component": "page_careers",
-      "herovideo": "/videos/careers_bg.mp4",
+      "herovideo": {
+        "filename": "/videos/careers_bg.mp4"
+      },
       "workstreamhref": "https://www.workstream.us/j/224b40b5/151-coffee"
     },
     "pages/locations": {
@@ -1165,7 +1184,9 @@
           "sugarfreeheading": "Sugar Free"
         }
       ],
-      "herovideo": "/videos/menu_bg.mp4",
+      "herovideo": {
+        "filename": "/videos/menu_bg.mp4"
+      },
       "visibility": [
         {
           "_uid": "51bea26e-1633-4460-bc55-8893ca88a74d",
@@ -1187,158 +1208,6 @@
       "heromobileimage": {
         "filename": "/images/menu-hero-mobile-drinks.jpg"
       }
-    },
-    "pages/merch": {
-      "seo": [
-        {
-          "_uid": "4aaa7271-6bc1-4b1f-a82b-69be9b4bbd30",
-          "title": "151 Coffee Merch | Rep Your Favorite Coffee",
-          "ogimage": {
-            "filename": "https://www.151coffee.com/images/splash1.jpg"
-          },
-          "component": "page_merch_seo",
-          "description": "Shop 151 Coffee merch - apparel, drinkware, accessories, and coffee beans. Rep your favorite drive-thru coffee."
-        }
-      ],
-      "_uid": "4632a825-747f-419f-971e-895e39e492b8",
-      "hero": [
-        {
-          "_uid": "6102d740-c706-45df-868a-6b127c7fad1d",
-          "heading": "Merch",
-          "component": "page_merch_hero",
-          "subheading": "Rep your favorite coffee. Wear it, sip from it, carry it."
-        }
-      ],
-      "items": [
-        {
-          "_uid": "382395ab-4a46-4655-86ca-9dea43248e27",
-          "name": "Classic Tee",
-          "image": {},
-          "price": "$24",
-          "category": "Apparel",
-          "component": "page_merch_items_item"
-        },
-        {
-          "_uid": "06759248-0c08-4c0c-a059-6c2a50b54096",
-          "name": "Pullover Hoodie",
-          "image": {},
-          "price": "$48",
-          "category": "Apparel",
-          "component": "page_merch_items_item"
-        },
-        {
-          "_uid": "61b68780-cd1d-4944-9d58-f757617dff65",
-          "name": "Dad Hat",
-          "image": {},
-          "price": "$26",
-          "category": "Apparel",
-          "component": "page_merch_items_item"
-        },
-        {
-          "_uid": "e9140756-0fce-44b0-a829-5398a1799fa8",
-          "name": "Beanie",
-          "image": {},
-          "price": "$22",
-          "category": "Apparel",
-          "component": "page_merch_items_item"
-        },
-        {
-          "_uid": "3a4bc633-3eee-41eb-b835-ef51e4074fcf",
-          "name": "Crew Socks",
-          "image": {},
-          "price": "$12",
-          "category": "Apparel",
-          "component": "page_merch_items_item"
-        },
-        {
-          "_uid": "c1738cf0-87a4-472d-ad89-f83b48584dfb",
-          "name": "Long Sleeve",
-          "image": {},
-          "price": "$30",
-          "category": "Apparel",
-          "component": "page_merch_items_item"
-        },
-        {
-          "_uid": "91025f03-d709-4c9f-a929-1cfc0a091119",
-          "name": "Ceramic Mug",
-          "image": {},
-          "price": "$18",
-          "category": "Drinkware",
-          "component": "page_merch_items_item"
-        },
-        {
-          "_uid": "ea0f69ad-2efb-4f0a-b178-772f23642e46",
-          "name": "Cold Cup - 24oz",
-          "image": {},
-          "price": "$20",
-          "category": "Drinkware",
-          "component": "page_merch_items_item"
-        },
-        {
-          "_uid": "6532542a-d8d6-42dc-92ab-c20bda1f8999",
-          "name": "Tumbler",
-          "image": {},
-          "price": "$32",
-          "category": "Drinkware",
-          "component": "page_merch_items_item"
-        },
-        {
-          "_uid": "4c683852-60d0-4c47-99ba-35f45ba1b832",
-          "name": "Water Bottle",
-          "image": {},
-          "price": "$28",
-          "category": "Drinkware",
-          "component": "page_merch_items_item"
-        },
-        {
-          "_uid": "269b5701-260c-48a0-8cf0-1eebcf0d81ae",
-          "name": "Tote Bag",
-          "image": {},
-          "price": "$16",
-          "category": "Accessories",
-          "component": "page_merch_items_item"
-        },
-        {
-          "_uid": "77c03c66-a96b-4794-bf55-8f95c6b42643",
-          "name": "Keychain",
-          "image": {},
-          "price": "$8",
-          "category": "Accessories",
-          "component": "page_merch_items_item"
-        },
-        {
-          "_uid": "60984870-3149-4f14-8ce3-246db78e28eb",
-          "name": "Sticker Pack",
-          "image": {},
-          "price": "$6",
-          "category": "Accessories",
-          "component": "page_merch_items_item"
-        },
-        {
-          "_uid": "edafa916-4666-44ed-8426-dccd3a1aae2f",
-          "name": "Bag of Beans - 12oz",
-          "image": {},
-          "price": "$16",
-          "category": "Coffee & Treats",
-          "component": "page_merch_items_item"
-        },
-        {
-          "_uid": "d65775ae-4a91-410f-94ba-8b2f2f65d265",
-          "name": "Cookie Tin",
-          "image": {},
-          "price": "$14",
-          "category": "Coffee & Treats",
-          "component": "page_merch_items_item"
-        }
-      ],
-      "component": "page_merch",
-      "visibility": [
-        {
-          "_uid": "f40aeed5-c62a-4b6c-a41e-7ff4f121c99d",
-          "products": true,
-          "component": "page_merch_visibility"
-        }
-      ]
     },
     "pages/ourfuture": {
       "seo": [

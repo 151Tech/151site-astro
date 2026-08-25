@@ -16,7 +16,6 @@
     '.cta-content',
     '.spaces .section-header',
     '.pricing .section-header', '.pricing-card',
-    '.amenities .section-header', '.special-pricing',
     '.faq .section-header', '.faq .faq-list details',
     '.contact .section-header', '.contact-form-wrapper',
     // about
@@ -27,10 +26,8 @@
     '.about-cta h2', '.about-cta p', '.about-cta-buttons',
     // careers
     '.careers-hero-content',
-    // menu + merch (shared hero) and menu customize
+    // menu (hero) and menu customize
     '.menu-hero-content', '.cz-heading', '.cz-block',
-    // merch
-    '.filter-pill', '.merch-card',
     // real estate
     '.re-hero-content', '.re-overview-text', '.re-map-img', '.re-stat',
     '.re-criteria .section-header', '.criteria-card',
@@ -39,7 +36,7 @@
     '.re-contact .section-header',
     // locations
     '.loc-hero-content', '.loc-state-label',
-    // merch + privacy policy (shared page hero) and privacy content
+    // privacy policy (page hero) and privacy content
     '.page-hero-content', '.legal-content'
   ].join(',');
 
@@ -72,7 +69,7 @@
 
     // A direct link to an in-page anchor (e.g. a footer link to "/#contact")
     // lands the browser on that section immediately, racing this script's
-    // observer setup -- the section can end up already in view before it's
+    // observer setup, so the section can end up already in view before it's
     // ever observed, so it never crosses the "entering the viewport"
     // threshold the observer watches for and stays invisible forever.
     // Reveal anything already on-screen at setup time instead of relying
@@ -106,7 +103,7 @@
   });
 
   // ── Count-up for stat numbers (e.g. "$15 Million", "500 Stores", "16+") ──
-  const counters = document.querySelectorAll('.special-feature-number, .stat-number');
+  const counters = document.querySelectorAll('.stat-number');
 
   function animateCount(el) {
     const raw = el.textContent.trim();
@@ -114,7 +111,7 @@
     if (!m) return;                              // nothing numeric to animate
     const prefix = m[1], numStr = m[2], suffix = m[3];
     const target = parseInt(numStr.replace(/,/g, ''), 10);
-    // Skip bare years (e.g. "2017") — counting up from 0 looks wrong.
+    // Skip bare years (e.g. "2017"): counting up from 0 looks wrong.
     if (prefix === '' && suffix === '' && /^\d{4}$/.test(numStr) && target >= 1900 && target <= 2099) return;
 
     const DURATION = 1400;

@@ -532,176 +532,6 @@
 
 .cz-pills--flavors { gap: 0.4rem; }
 
-.cpill-dot {
-    color: var(--red);
-    font-size: 0.65rem;
-    margin: 0 0.28rem;
-    vertical-align: middle;
-}
-
-.cpill-sf {
-    color: #fff;
-    font-weight: 800;
-    font-size: 0.7rem;
-}
-
-/* ─── Merch Page ─── */
-.merch-section {
-    padding: 3rem 0 5rem;
-    background-color: var(--red);
-    background-image: radial-gradient(rgba(255,255,255,0.18) 2px, transparent 2.5px);
-    background-size: 26px 26px;
-    position: relative;
-}
-
-.merch-section::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background:
-        radial-gradient(120% 60% at 50% 0%,   rgba(255,255,255,0.22) 0%, transparent 55%),
-        radial-gradient(120% 60% at 50% 100%, rgba(255,255,255,0.14) 0%, transparent 55%),
-        radial-gradient(60%  100% at 0%   50%, rgba(255,255,255,0.10) 0%, transparent 55%),
-        radial-gradient(60%  100% at 100% 50%, rgba(255,255,255,0.10) 0%, transparent 55%);
-    pointer-events: none;
-}
-
-.merch-section .container {
-    position: relative;
-    z-index: 1;
-}
-
-.merch-filter {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 0.6rem;
-    padding: 2.75rem 0 0;
-}
-
-.merch-pill {
-    font-family: var(--font-inter), sans-serif;
-    font-size: 0.78rem;
-    font-weight: 600;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.92);
-    background: rgba(20, 15, 16, 0.42);
-    border: 1.5px solid rgba(255, 255, 255, 0.3);
-    border-radius: 999px;
-    padding: 0.55rem 1.3rem;
-    cursor: pointer;
-    transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
-}
-
-.merch-pill:hover {
-    color: #fff;
-    background: rgba(20, 15, 16, 0.6);
-    border-color: #fff;
-}
-
-.merch-pill.active {
-    color: var(--red);
-    background: #fff;
-    border-color: #fff;
-}
-
-.merch-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(215px, 1fr));
-    gap: 1.75rem;
-    padding: 2.75rem 0 0;
-}
-
-.merch-card {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    background: linear-gradient(165deg, rgba(28,22,23,0.62) 0%, rgba(18,14,15,0.48) 100%);
-    backdrop-filter: blur(16px) saturate(160%);
-    -webkit-backdrop-filter: blur(16px) saturate(160%);
-    border: 1px solid rgba(255, 255, 255, 0.14);
-    border-radius: var(--radius);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.32);
-    cursor: pointer;
-    overflow: visible;
-    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-}
-
-.merch-card:hover {
-    transform: translateY(-6px);
-    border-color: rgba(230, 57, 70, 0.5);
-    box-shadow: 0 18px 44px rgba(0, 0, 0, 0.45);
-    z-index: 3;
-}
-
-.merch-icon-wrap {
-    height: 150px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    overflow: visible;
-    border-radius: var(--radius) var(--radius) 0 0;
-}
-
-.merch-icon-wrap::before {
-    content: '';
-    position: absolute;
-    width: 130px;
-    height: 130px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(230,57,70,0.45) 0%, rgba(230,57,70,0.12) 45%, transparent 72%);
-    z-index: 0;
-}
-
-.merch-icon {
-    font-size: 3.4rem;
-    line-height: 1;
-    position: relative;
-    z-index: 1;
-    transform-origin: center bottom;
-    filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.4));
-    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), rotate 0.3s ease;
-}
-
-.merch-card:hover .merch-icon {
-    transform: scale(1.18) translateY(-6%);
-    animation: drink-shake 0.7s cubic-bezier(0.36, 0.07, 0.19, 0.97) 0.15s 1 forwards;
-}
-
-.merch-body {
-    padding: 0.4rem 1.1rem 1.35rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: 0.25rem;
-}
-
-.merch-cat {
-    font-family: var(--font-inter), sans-serif;
-    font-size: 0.6rem;
-    font-weight: 700;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.4);
-}
-
-.merch-body h3 {
-    color: #fff;
-    font-size: 1rem;
-    line-height: 1.2;
-    margin: 0;
-}
-
-.merch-price {
-    color: var(--red);
-    font-family: var(--font-bebas-neue), sans-serif;
-    font-size: 1.35rem;
-    letter-spacing: 0.04em;
-}
-
 /* ─── Flavor filter ─── */
 .cpill--filter {
     cursor: pointer;
@@ -779,20 +609,6 @@
     color: rgba(255,255,255,0.45);
     font-weight: 400;
     letter-spacing: 0.04em;
-}
-
-.timeline-scroll.has-filter .drink-card.filter-match {
-    border-color: rgba(255,255,255,0.55);
-    box-shadow: 0 0 0 1px rgba(255,255,255,0.2), 0 16px 42px rgba(0,0,0,0.4);
-}
-
-.cz-filter-tip {
-    font-size: 0.72rem;
-    font-weight: 400;
-    opacity: 0.45;
-    letter-spacing: 0;
-    text-transform: none;
-    font-family: inherit;
 }
 
 .cz-filter-hint {
@@ -888,7 +704,6 @@
         padding: 0.5rem 1.25rem 1.4rem;
         justify-content: flex-start;
     }
-    .cat-title-inner .cat-num { position: static; margin-bottom: 0.25rem; }
     .cat-title-inner .cat-arrow { display: none; }
     .cat-title-text { font-size: clamp(2rem, 8vw, 3rem); }
     .cat-title-desc { max-width: none; }

@@ -1,8 +1,8 @@
 // Gentle background parallax for sections using background1.jpg
 (function () {
-  const els = document.querySelectorAll('.features, .pricing, .contact, .cta, .amenities');
+  const els = document.querySelectorAll('.features, .pricing, .contact, .cta');
   if (!els.length) return;
-  const SPEED = 0.05;   // very gentle — bg drifts at 5% of scroll
+  const SPEED = 0.05;   // very gentle, bg drifts at 5% of scroll
   const MAX = 40;       // px cap so the layer never runs out of slack
   let ticking = false;
 
@@ -285,7 +285,7 @@ document.querySelectorAll('form[data-netlify]').forEach(function (form) {
 // browser/webview the visitor is already in. On a phone with the Instagram
 // app installed, jumping to its app:// URI scheme instead opens the app
 // directly. If the app isn't installed, the scheme silently fails and
-// nothing happens -- so fall back to the normal web link if the page hasn't
+// nothing happens, so fall back to the normal web link if the page hasn't
 // been backgrounded (i.e. the app didn't open) after a short delay.
 (function () {
     const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
