@@ -31,14 +31,20 @@ const client = new StoryblokClient({
   accessToken: import.meta.env.STORYBLOK_TOKEN,
 });
 
-// Draft by default in dev (nothing may be published yet), published by
-// default in prod builds. Override either way with STORYBLOK_DRAFT.
-const version =
-  import.meta.env.STORYBLOK_DRAFT != null
+// Draft by default in dev (nothing may be published yet) and on the draft
+// preview deployment, published by default in prod builds. STORYBLOK_DRAFT
+// still overrides for one-off local runs, but deliberately CANNOT override
+// DRAFT_MODE: the two names are close enough to copy across by mistake, and
+// a stray STORYBLOK_DRAFT=false on the preview app would otherwise serve
+// published content from a deployment whose entire purpose is showing
+// unpublished edits -- a failure that looks like nothing being wrong at all.
+const version = DRAFT_MODE
+  ? 'draft'
+  : import.meta.env.STORYBLOK_DRAFT != null
     ? import.meta.env.STORYBLOK_DRAFT === 'true'
       ? 'draft'
       : 'published'
-    : import.meta.env.DEV || DRAFT_MODE
+    : import.meta.env.DEV
       ? 'draft'
       : 'published';
 
