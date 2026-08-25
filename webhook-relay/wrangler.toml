@@ -1,0 +1,10 @@
+name = "storyblok-rebuild-relay"
+main = "worker.js"
+compatibility_date = "2026-08-25"
+
+[vars]
+GITHUB_REPO = "151Tech/151coffee-storyblok"
+
+# Secrets are NOT set here -- they'd be committed. Set them once with:
+#   npx wrangler secret put GITHUB_TOKEN
+#   npx wrangler secret put STORYBLOK_SECRET
