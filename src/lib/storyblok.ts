@@ -9,7 +9,13 @@ import snapshot from '../data/storyblok-snapshot.json';
 // instead of ever calling the live API. Local `astro dev` still hits the
 // live API directly below, since that's what the Storyblok Visual Editor's
 // draft preview needs.
-const USE_SNAPSHOT = !import.meta.env.DEV;
+// The draft-preview deployment (the `preview` branch, on its own Webflow
+// Cloud app) sets STORYBLOK_DRAFT_MODE=true and renders live draft content
+// per request instead. That's what the Visual Editor's preview pane needs:
+// its bridge reloads the iframe on save, and reloading a prebuilt static
+// page just re-serves the same HTML.
+const DRAFT_MODE = import.meta.env.STORYBLOK_DRAFT_MODE === 'true';
+const USE_SNAPSHOT = !import.meta.env.DEV && !DRAFT_MODE;
 
 // Storyblok lowercases every schema field name server-side, regardless of
 // the case it's created with, so all our camelCase YAML field names
@@ -32,7 +38,7 @@ const version =
     ? import.meta.env.STORYBLOK_DRAFT === 'true'
       ? 'draft'
       : 'published'
-    : import.meta.env.DEV
+    : import.meta.env.DEV || DRAFT_MODE
       ? 'draft'
       : 'published';
 

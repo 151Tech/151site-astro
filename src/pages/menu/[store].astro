@@ -1,5 +1,5 @@
 ---
-export const prerender = true;
+export const prerender = import.meta.env.STORYBLOK_DRAFT_MODE !== 'true';
 import { getLocations } from '../../lib/storyblok';
 
 export async function getStaticPaths() {
