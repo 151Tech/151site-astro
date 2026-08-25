@@ -117,133 +117,10 @@ function denormalizeObject(obj: Record<string, any>) {
   return out;
 }
 
-// Nav and Footer both call getSettings() independently, and several pages
-// fetch it again themselves. Without caching, a single page load could
-// fire the identical Storyblok request 2-3 times, multiplying the chance
-// that a slow request pushes total render time past Cloudflare Workers'
-// execution limit (the "Worker exceeded resource limits" hang). This caches
-// the *raw* API response (pre-denormalize) for a short window, keyed by
-// request path + version, and de-dupes concurrent in-flight requests for
-// the same key. Callers still get a fresh `denormalize()` output each call,
-// never a shared object, since `unwrapSingletons` mutates its input
-// and different call sites unwrap different keys on the same story
-// (e.g. Footer unwraps 'social'/'footer' out of the same settings object
-// Nav reads 'logo'/'siteName' from).
-// This site's content (hours, menu copy, careers copy...) changes on the
-// order of days/weeks, not seconds, so 30s was overly cautious and meant
-// nearly every request re-hit Storyblok. 10 minutes still feels live to an
-// editor publishing a change, but cuts live Storyblok traffic drastically.
-const CACHE_TTL_MS = 10 * 60_000;
-// Cloudflare kills a request that stalls rather than erroring it out, so a
-// slow Storyblok fetch has to be preempted client-side well before that
-// point. 5s is generous for a CDN API call but far under where the
-// Workers runtime gives up on the whole request as "hung".
-const REQUEST_TIMEOUT_MS = 5_000;
-const inFlight = new Map<string, Promise<any>>();
-
-// Per-isolate fallback used whenever the Cache API isn't available (local
-// `astro dev`, or a runtime without it). Functionally identical to the
-// edge cache below, just scoped to one warm isolate instead of Cloudflare's
-// whole edge network.
-const memoryCache = new Map<string, { data: any; expires: number }>();
-
-// On Cloudflare Workers, `caches.default` is a real edge cache shared across
-// every isolate/PoP, unlike a plain in-memory Map, which resets every time
-// Workers spins up a fresh isolate (frequent, and effectively made our old
-// cache far leakier than its 30s TTL suggested). Caching there means most
-// requests, even ones landing on an isolate that's never run before,
-// can be served without ever calling Storyblok. Falls back to `memoryCache`
-// wherever it's unavailable or errors (local dev, or a sandboxed Workers
-// environment that restricts it), resolved lazily inside each call rather
-// than once at module load, since Workers can throw on touching `caches`
-// outside an actual request context, which would otherwise break every
-// export in this file the moment the module loads, not just caching.
-function getEdgeCache(): Cache | undefined {
-  try {
-    return typeof caches !== 'undefined' ? (caches as any).default : undefined;
-  } catch {
-    return undefined;
-  }
-}
-
-function cacheKeyRequest(key: string): Request {
-  // The Cache API only keys off a Request/URL, not an arbitrary string.
-  // This synthetic same-origin URL is never actually fetched, just used as
-  // a cache key.
-  return new Request(`https://storyblok-cache.internal/${encodeURIComponent(key)}`);
-}
-
-async function readCache(key: string): Promise<{ data: any; expires: number } | undefined> {
-  const mem = memoryCache.get(key);
-  if (mem) return mem;
-  const edgeCache = getEdgeCache();
-  if (!edgeCache) return undefined;
-  try {
-    const res = await edgeCache.match(cacheKeyRequest(key));
-    if (!res) return undefined;
-    const entry = await res.json();
-    memoryCache.set(key, entry);
-    return entry;
-  } catch {
-    return undefined;
-  }
-}
-
-async function writeCache(key: string, entry: { data: any; expires: number }) {
-  memoryCache.set(key, entry);
-  const edgeCache = getEdgeCache();
-  if (!edgeCache) return;
-  try {
-    const res = new Response(JSON.stringify(entry), {
-      headers: { 'Cache-Control': `max-age=${Math.ceil(CACHE_TTL_MS / 1000)}` },
-    });
-    await edgeCache.put(cacheKeyRequest(key), res);
-  } catch {
-    // Edge cache write failures are non-fatal since memoryCache already has it.
-  }
-}
-
-function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
-  return new Promise((resolve, reject) => {
-    const timer = setTimeout(() => reject(new Error(`Storyblok request timed out after ${ms}ms`)), ms);
-    promise.then(
-      (value) => { clearTimeout(timer); resolve(value); },
-      (err) => { clearTimeout(timer); reject(err); },
-    );
-  });
-}
-
-async function cachedGet(path: string, params: Record<string, any>) {
-  const key = `${path}?${JSON.stringify(params)}`;
-  const cached = await readCache(key);
-  if (cached && cached.expires > Date.now()) return cached.data;
-
-  const pending = inFlight.get(key);
-  if (pending) return pending;
-
-  const promise = withTimeout(client.get(path, params), REQUEST_TIMEOUT_MS).then(async ({ data }) => {
-    await writeCache(key, { data, expires: Date.now() + CACHE_TTL_MS });
-    inFlight.delete(key);
-    return data;
-  }, (err) => {
-    inFlight.delete(key);
-    // A timed-out or failed fetch falls back to the last good response for
-    // this key, however stale, rather than hanging or failing the whole
-    // page: an outdated page beats a dead one.
-    if (cached) return cached.data;
-    throw err;
-  });
-  inFlight.set(key, promise);
-  return promise;
-}
-
 // A single story by full slug, e.g. "pages/home" or "locations/151-coffee-keller".
-// On a cold cache with no fallback to serve, cachedGet's timeout still
-// rejects. Letting that escape here would crash the whole page render
-// with a bare 500 (as happened on Webflow Cloud when Storyblok itself was
-// briefly unreachable). A page rendered with empty content and every
-// template's existing `?? default` fallback text is far better than no
-// page at all.
+// In production this always reads USE_SNAPSHOT's committed JSON (see above),
+// so the plain client.get() below only ever runs in local `astro dev`
+// against the live API, for Visual Editor draft preview.
 export async function getStory(slug: string) {
   if (USE_SNAPSHOT) {
     const content = (snapshot.stories as Record<string, any>)[slug];
@@ -254,7 +131,7 @@ export async function getStory(slug: string) {
     return denormalize(content);
   }
   try {
-    const data = await cachedGet(`cdn/stories/${slug}`, { version });
+    const { data } = await client.get(`cdn/stories/${slug}`, { version });
     return denormalize(data.story.content);
   } catch (err) {
     console.error(`[storyblok] getStory(${slug}) failed, rendering with empty content:`, err);
@@ -276,7 +153,7 @@ export async function getStories(startsWith: string) {
     return entries.map((story: any) => ({ slug: story.slug, ...denormalize(story.content) }));
   }
   try {
-    const data = await cachedGet('cdn/stories', {
+    const { data } = await client.get('cdn/stories', {
       starts_with: `${startsWith}/`,
       version,
       per_page: 100,
