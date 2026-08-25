@@ -1,6 +1,10 @@
 {
   "name": "151coffee-storyblok",
   "compatibility_date": "2025-01-01",
+  "assets": {
+    "directory": "./dist",
+    "html_handling": "none"
+  },
   "kv_namespaces": [
     {
       "binding": "SESSION",
