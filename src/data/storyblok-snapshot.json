@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-25T13:59:17.828Z",
+  "generatedAt": "2026-08-25T14:30:50.492Z",
   "stories": {
     "settings/global": {
       "nav": [
@@ -42,7 +42,22 @@
       ],
       "_uid": "e0d9cb14-21ac-4740-9b81-17f5b1930aa3",
       "logo": {
-        "filename": "/images/logo.png"
+        "id": 212897340066507,
+        "alt": "151 Coffee - Drive Thru Coffee",
+        "name": "151 Coffee",
+        "focus": "",
+        "title": "151 Coffee Logo",
+        "source": "151 Coffee",
+        "filename": "https://a.storyblok.com/f/294671107081428/512x512/f216729c1e/logo.png",
+        "copyright": "151 Coffee 2026",
+        "fieldtype": "asset",
+        "meta_data": {
+          "alt": "151 Coffee - Drive Thru Coffee",
+          "title": "151 Coffee Logo",
+          "source": "151 Coffee",
+          "copyright": "151 Coffee 2026"
+        },
+        "is_external_url": false
       },
       "email": "Contact@151Coffee.com",
       "hours": "Open daily 6 AM - 8 PM",
