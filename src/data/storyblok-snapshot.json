@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-26T14:14:15.895Z",
+  "generatedAt": "2026-08-26T16:37:16.536Z",
   "stories": {
     "settings/global": {
       "nav": [
@@ -790,7 +790,22 @@
       ],
       "component": "page_careers",
       "herovideo": {
-        "filename": "/videos/careers_bg.mp4"
+        "id": 213247771462107,
+        "alt": "A showcase of our baristas in their natural environment.",
+        "name": "",
+        "focus": "",
+        "title": "Careers",
+        "source": "151 Coffee",
+        "filename": "https://a.storyblok.com/f/294671107081428/x/3f9227b388/careers_bg.mp4",
+        "copyright": "151 Coffee 2026",
+        "fieldtype": "asset",
+        "meta_data": {
+          "alt": "A showcase of our baristas in their natural environment.",
+          "title": "Careers",
+          "source": "151 Coffee",
+          "copyright": "151 Coffee 2026"
+        },
+        "is_external_url": false
       },
       "workstreamhref": "https://www.workstream.us/j/224b40b5/151-coffee"
     },
@@ -817,7 +832,18 @@
         }
       ],
       "component": "page_locations",
-      "herovideo": "",
+      "herovideo": {
+        "id": null,
+        "alt": null,
+        "name": "",
+        "focus": null,
+        "title": null,
+        "source": null,
+        "filename": "",
+        "copyright": null,
+        "fieldtype": "asset",
+        "meta_data": {}
+      },
       "statenames": [
         {
           "_uid": "4ab30415-eb85-435f-9115-31e969d3bb4d",
@@ -1224,7 +1250,22 @@
         }
       ],
       "herovideo": {
-        "filename": "/videos/menu_bg.mp4"
+        "id": 212914180829565,
+        "alt": "A cinematic showcase of some of 151 Coffee's options.",
+        "name": "",
+        "focus": "",
+        "title": "151 Coffee Drinks",
+        "source": "151 Coffee",
+        "filename": "https://a.storyblok.com/f/294671107081428/x/1bd9df486a/drinks_bg.mp4",
+        "copyright": "151 Coffee 2026",
+        "fieldtype": "asset",
+        "meta_data": {
+          "alt": "A cinematic showcase of some of 151 Coffee's options.",
+          "title": "151 Coffee Drinks",
+          "source": "151 Coffee",
+          "copyright": "151 Coffee 2026"
+        },
+        "is_external_url": false
       },
       "visibility": [
         {
@@ -1245,7 +1286,16 @@
         }
       ],
       "heromobileimage": {
-        "filename": "/images/menu-hero-mobile-drinks.jpg"
+        "id": null,
+        "alt": null,
+        "name": "",
+        "focus": null,
+        "title": null,
+        "source": null,
+        "filename": "",
+        "copyright": null,
+        "fieldtype": "asset",
+        "meta_data": {}
       }
     },
     "pages/ourfuture": {
@@ -1447,7 +1497,16 @@
             }
           ],
           "image": {
-            "filename": "/images/locations/151-coffee-burleson.webp"
+            "id": null,
+            "alt": null,
+            "name": "",
+            "focus": null,
+            "title": null,
+            "filename": null,
+            "copyright": null,
+            "fieldtype": "asset",
+            "meta_data": {},
+            "is_external_url": false
           },
           "stats": [
             {
@@ -1479,7 +1538,19 @@
             {
               "_uid": "9819fbae-2a8d-4296-bbdf-8b325f9c1b83",
               "image": {
-                "filename": "/images/locations/151-coffee-burleson.webp"
+                "id": 213246706968926,
+                "alt": "",
+                "name": "",
+                "focus": "",
+                "title": "",
+                "source": "",
+                "filename": "https://a.storyblok.com/f/294671107081428/1348x1348/b2b6ee5749/151-coffee-burleson.jpg",
+                "copyright": "",
+                "fieldtype": "asset",
+                "meta_data": {
+                  "size": "1348x1348"
+                },
+                "is_external_url": false
               },
               "imagealt": "151 Coffee Burleson drive-thru",
               "component": "page_ourfuture_overview_images_item"
@@ -1487,7 +1558,19 @@
             {
               "_uid": "975b8bb0-33b8-4a0c-b77a-6db4e32b69f5",
               "image": {
-                "filename": "/images/locations/151-coffee-keller.webp"
+                "id": 213246706952540,
+                "alt": "",
+                "name": "",
+                "focus": "",
+                "title": "",
+                "source": "",
+                "filename": "https://a.storyblok.com/f/294671107081428/893x893/d33ee0401d/151-coffee-keller.png",
+                "copyright": "",
+                "fieldtype": "asset",
+                "meta_data": {
+                  "size": "893x893"
+                },
+                "is_external_url": false
               },
               "imagealt": "151 Coffee Keller drive-thru",
               "component": "page_ourfuture_overview_images_item"
@@ -1495,7 +1578,19 @@
             {
               "_uid": "48387869-4528-47a4-8dd1-285279057b5d",
               "image": {
-                "filename": "/images/locations/151-coffee-coppell.webp"
+                "id": 213246706948442,
+                "alt": "",
+                "name": "",
+                "focus": "",
+                "title": "",
+                "source": "",
+                "filename": "https://a.storyblok.com/f/294671107081428/894x894/873a0b0139/151-coffee-coppell.png",
+                "copyright": "",
+                "fieldtype": "asset",
+                "meta_data": {
+                  "size": "894x894"
+                },
+                "is_external_url": false
               },
               "imagealt": "151 Coffee Coppell drive-thru",
               "component": "page_ourfuture_overview_images_item"
@@ -1503,7 +1598,19 @@
             {
               "_uid": "b97ec4f5-f968-40b5-a6db-782711606762",
               "image": {
-                "filename": "/images/locations/151-coffee-flower-mound.webp"
+                "id": 213246706927954,
+                "alt": "",
+                "name": "",
+                "focus": "",
+                "title": "",
+                "source": "",
+                "filename": "https://a.storyblok.com/f/294671107081428/892x892/05d90d978d/151-coffee-flower-mound.png",
+                "copyright": "",
+                "fieldtype": "asset",
+                "meta_data": {
+                  "size": "892x892"
+                },
+                "is_external_url": false
               },
               "imagealt": "151 Coffee Flower Mound drive-thru",
               "component": "page_ourfuture_overview_images_item"
@@ -3575,8 +3682,22 @@
           "_uid": "0d07a76c-8453-4abc-960d-28b4745246e5",
           "city": "Westworth Village",
           "name": "151 Coffee Westworth Village",
-          "hours": "",
-          "image": {},
+          "hours": "6am-8pm",
+          "image": {
+            "id": 213246706948443,
+            "alt": "",
+            "name": "",
+            "focus": "",
+            "title": "",
+            "source": "",
+            "filename": "https://a.storyblok.com/f/294671107081428/3990x3986/3de216850d/151-coffee-westworth.JPG",
+            "copyright": "",
+            "fieldtype": "asset",
+            "meta_data": {
+              "size": "3990x3986"
+            },
+            "is_external_url": false
+          },
           "state": "TX",
           "address": "6720 Westworth Blvd",
           "component": "location",
@@ -3592,9 +3713,21 @@
           "_uid": "9dcd4f0c-06b8-4646-a11d-ef2ecc70efd7",
           "city": "The Colony",
           "name": "151 Coffee The Colony",
-          "hours": "",
+          "hours": "6am-8pm",
           "image": {
-            "filename": "/images/locations/151-coffee-the-colony.webp"
+            "id": 213246706927955,
+            "alt": "",
+            "name": "",
+            "focus": "",
+            "title": "",
+            "source": "",
+            "filename": "https://a.storyblok.com/f/294671107081428/898x898/1bb21a4288/151-coffee-the-colony.png",
+            "copyright": "",
+            "fieldtype": "asset",
+            "meta_data": {
+              "size": "898x898"
+            },
+            "is_external_url": false
           },
           "state": "TX",
           "address": "4580 Destination Dr",
@@ -3611,9 +3744,21 @@
           "_uid": "b82e6834-641f-466c-be6c-60a62ada686a",
           "city": "Rowlett",
           "name": "151 Coffee Rowlett",
-          "hours": "",
+          "hours": "6am-8pm",
           "image": {
-            "filename": "/images/locations/151-coffee-rowlett.webp"
+            "id": 213246706940247,
+            "alt": "",
+            "name": "",
+            "focus": "",
+            "title": "",
+            "source": "",
+            "filename": "https://a.storyblok.com/f/294671107081428/897x897/c07db5dc9b/151-coffee-rowlett.png",
+            "copyright": "",
+            "fieldtype": "asset",
+            "meta_data": {
+              "size": "897x897"
+            },
+            "is_external_url": false
           },
           "state": "TX",
           "address": "3525 Lakeview Pkwy",
@@ -3630,9 +3775,21 @@
           "_uid": "fae3819d-d34f-419e-80b1-d7478f8be22e",
           "city": "Roanoke",
           "name": "151 Coffee Roanoke",
-          "hours": "",
+          "hours": "6am-8pm",
           "image": {
-            "filename": "/images/locations/151-coffee-roanoke.webp"
+            "id": 213246706948441,
+            "alt": "",
+            "name": "",
+            "focus": "",
+            "title": "",
+            "source": "",
+            "filename": "https://a.storyblok.com/f/294671107081428/896x896/03a9762135/151-coffee-roanoke.png",
+            "copyright": "",
+            "fieldtype": "asset",
+            "meta_data": {
+              "size": "896x896"
+            },
+            "is_external_url": false
           },
           "state": "TX",
           "address": "1200 US-377",
@@ -3649,9 +3806,21 @@
           "_uid": "824bbd16-3a15-4fee-991e-159d547b401b",
           "city": "Plano",
           "name": "151 Coffee Plano",
-          "hours": "",
+          "hours": "6am-8pm",
           "image": {
-            "filename": "/images/locations/151-coffee-plano.webp"
+            "id": 213246706932052,
+            "alt": "",
+            "name": "",
+            "focus": "",
+            "title": "",
+            "source": "",
+            "filename": "https://a.storyblok.com/f/294671107081428/899x899/8f0d82df64/151-coffee-plano.png",
+            "copyright": "",
+            "fieldtype": "asset",
+            "meta_data": {
+              "size": "899x899"
+            },
+            "is_external_url": false
           },
           "state": "TX",
           "address": "1151 Preston Rd",
@@ -3668,8 +3837,22 @@
           "_uid": "b56d8a25-94ed-4611-b193-6eddc2f79dc7",
           "city": "Overland Park",
           "name": "151 Coffee Overland Park",
-          "hours": "",
-          "image": {},
+          "hours": "6am-8pm",
+          "image": {
+            "id": 213246706932053,
+            "alt": "",
+            "name": "",
+            "focus": "",
+            "title": "",
+            "source": "",
+            "filename": "https://a.storyblok.com/f/294671107081428/670x670/774680df4b/overland-park.jpg",
+            "copyright": "",
+            "fieldtype": "asset",
+            "meta_data": {
+              "size": "670x670"
+            },
+            "is_external_url": false
+          },
           "state": "KS",
           "address": "9180 Metcalf Ave",
           "component": "location",
@@ -3685,9 +3868,21 @@
           "_uid": "31ef62cc-2942-4895-9e10-6cbb7136b35c",
           "city": "North Richland Hills",
           "name": "151 Coffee North Richland Hills",
-          "hours": "",
+          "hours": "6am-8pm",
           "image": {
-            "filename": "/images/locations/151-coffee-north-richland-hills.webp"
+            "id": 213246706956637,
+            "alt": "",
+            "name": "",
+            "focus": "",
+            "title": "",
+            "source": "",
+            "filename": "https://a.storyblok.com/f/294671107081428/899x899/4feb552f63/151-coffee-north-richland-hills.png",
+            "copyright": "",
+            "fieldtype": "asset",
+            "meta_data": {
+              "size": "899x899"
+            },
+            "is_external_url": false
           },
           "state": "TX",
           "address": "6244 Rufe Snow Dr",
@@ -3704,9 +3899,21 @@
           "_uid": "78fcd813-ba01-494e-bfb5-0f972e6adc8c",
           "city": "Manhattan",
           "name": "151 Coffee Manhattan",
-          "hours": "",
+          "hours": "6am-8pm",
           "image": {
-            "filename": "/images/locations/151-coffee-manhattan.webp"
+            "id": 213246706940248,
+            "alt": "",
+            "name": "",
+            "focus": "",
+            "title": "",
+            "source": "",
+            "filename": "https://a.storyblok.com/f/294671107081428/797x797/7e6f478781/manhattan.png",
+            "copyright": "",
+            "fieldtype": "asset",
+            "meta_data": {
+              "size": "797x797"
+            },
+            "is_external_url": false
           },
           "state": "KS",
           "address": "900 N 3rd St",
@@ -3723,9 +3930,21 @@
           "_uid": "73ce46e6-0d2a-4a54-9d36-8e3247fb3d86",
           "city": "Lewisville",
           "name": "151 Coffee Lewisville",
-          "hours": "",
+          "hours": "6am-8pm",
           "image": {
-            "filename": "/images/locations/151-coffee-lewisville.webp"
+            "id": 213246706932054,
+            "alt": "",
+            "name": "",
+            "focus": "",
+            "title": "",
+            "source": "",
+            "filename": "https://a.storyblok.com/f/294671107081428/896x896/147b2aeebb/151-coffee-lewisville.png",
+            "copyright": "",
+            "fieldtype": "asset",
+            "meta_data": {
+              "size": "896x896"
+            },
+            "is_external_url": false
           },
           "state": "TX",
           "address": "720 W Main St",
@@ -3742,8 +3961,19 @@
           "_uid": "89aa711b-758c-45d9-bc35-f4fb3cd31a63",
           "city": "Lawrence",
           "name": "151 Coffee Lawrence",
-          "hours": "",
-          "image": {},
+          "hours": "6am-8pm",
+          "image": {
+            "id": null,
+            "alt": null,
+            "name": "",
+            "focus": null,
+            "title": null,
+            "source": null,
+            "filename": "",
+            "copyright": null,
+            "fieldtype": "asset",
+            "meta_data": {}
+          },
           "state": "KS",
           "address": "1533 W 23rd St",
           "component": "location",
@@ -3759,9 +3989,21 @@
           "_uid": "2e80e781-9345-4de4-bc37-befbef2972cd",
           "city": "Keller",
           "name": "151 Coffee Keller",
-          "hours": "",
+          "hours": "6am-8pm",
           "image": {
-            "filename": "/images/locations/151-coffee-keller.webp"
+            "id": 213246706952540,
+            "alt": "",
+            "name": "",
+            "focus": "",
+            "title": "",
+            "source": "",
+            "filename": "https://a.storyblok.com/f/294671107081428/893x893/d33ee0401d/151-coffee-keller.png",
+            "copyright": "",
+            "fieldtype": "asset",
+            "meta_data": {
+              "size": "893x893"
+            },
+            "is_external_url": false
           },
           "state": "TX",
           "address": "1510 Keller Pkwy",
@@ -3778,9 +4020,21 @@
           "_uid": "235dec5b-c41c-499c-8f3e-d2c90b64eb98",
           "city": "Flower Mound",
           "name": "151 Coffee Flower Mound",
-          "hours": "",
+          "hours": "6am-8pm",
           "image": {
-            "filename": "/images/locations/151-coffee-flower-mound.webp"
+            "id": 213246706927954,
+            "alt": "",
+            "name": "",
+            "focus": "",
+            "title": "",
+            "source": "",
+            "filename": "https://a.storyblok.com/f/294671107081428/892x892/05d90d978d/151-coffee-flower-mound.png",
+            "copyright": "",
+            "fieldtype": "asset",
+            "meta_data": {
+              "size": "892x892"
+            },
+            "is_external_url": false
           },
           "state": "TX",
           "address": "3343 Long Prairie Rd",
@@ -3797,9 +4051,21 @@
           "_uid": "82c31c61-f53c-43a6-8120-dc86aad5d335",
           "city": "Coppell",
           "name": "151 Coffee Coppell",
-          "hours": "",
+          "hours": "6am-8pm",
           "image": {
-            "filename": "/images/locations/151-coffee-coppell.webp"
+            "id": 213246706948442,
+            "alt": "",
+            "name": "",
+            "focus": "",
+            "title": "",
+            "source": "",
+            "filename": "https://a.storyblok.com/f/294671107081428/894x894/873a0b0139/151-coffee-coppell.png",
+            "copyright": "",
+            "fieldtype": "asset",
+            "meta_data": {
+              "size": "894x894"
+            },
+            "is_external_url": false
           },
           "state": "TX",
           "address": "131 S Denton Tap Rd",
@@ -3816,9 +4082,21 @@
           "_uid": "37748769-8676-4612-8166-c3a0220541aa",
           "city": "Burleson",
           "name": "151 Coffee Burleson",
-          "hours": "",
+          "hours": "6am-8pm",
           "image": {
-            "filename": "/images/locations/151-coffee-burleson.webp"
+            "id": 213246706968926,
+            "alt": "",
+            "name": "",
+            "focus": "",
+            "title": "",
+            "source": "",
+            "filename": "https://a.storyblok.com/f/294671107081428/1348x1348/b2b6ee5749/151-coffee-burleson.jpg",
+            "copyright": "",
+            "fieldtype": "asset",
+            "meta_data": {
+              "size": "1348x1348"
+            },
+            "is_external_url": false
           },
           "state": "TX",
           "address": "1484 SW Wilshire Blvd",
@@ -3835,9 +4113,21 @@
           "_uid": "7bc8d89d-52c3-4a57-8b65-33832a4ae1d7",
           "city": "Fort Worth",
           "name": "151 Coffee Alliance",
-          "hours": "",
+          "hours": "6am-8pm",
           "image": {
-            "filename": "/images/locations/151-coffee-alliance.webp"
+            "id": 213246706862417,
+            "alt": "",
+            "name": "",
+            "focus": "",
+            "title": "",
+            "source": "",
+            "filename": "https://a.storyblok.com/f/294671107081428/899x899/271d8abaed/151-coffee-alliance.png",
+            "copyright": "",
+            "fieldtype": "asset",
+            "meta_data": {
+              "size": "899x899"
+            },
+            "is_external_url": false
           },
           "state": "TX",
           "address": "9301 N Fwy",
