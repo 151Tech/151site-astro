@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-25T16:20:20.808Z",
+  "generatedAt": "2026-08-26T14:14:15.895Z",
   "stories": {
     "settings/global": {
       "nav": [
@@ -550,13 +550,40 @@
           "_uid": "c7a88638-6dcd-4690-89ba-cad8bbf46c85",
           "heading": "About 151 Coffee",
           "component": "page_about_hero",
-          "subheading": "It's a Good Day to Have a Good Day."
+          "subheading": "It's a Good Day to Have a Good Day.",
+          "backgroundimage": {
+            "id": 213246706968926,
+            "alt": "",
+            "name": "",
+            "focus": "",
+            "title": "",
+            "source": "",
+            "filename": "https://a.storyblok.com/f/294671107081428/1348x1348/b2b6ee5749/151-coffee-burleson.jpg",
+            "copyright": "",
+            "fieldtype": "asset",
+            "meta_data": {
+              "size": "1348x1348"
+            },
+            "is_external_url": false
+          }
         }
       ],
       "intro": [
         {
           "_uid": "fa40690e-9e58-4059-9886-29002efb3d35",
-          "image": {},
+          "image": {
+            "id": 213249761295102,
+            "alt": "",
+            "name": "",
+            "focus": "",
+            "title": "",
+            "source": "",
+            "filename": "https://a.storyblok.com/f/294671107081428/900x700/99eb1a8fb2/about-intro-wix.jpg",
+            "copyright": "",
+            "fieldtype": "asset",
+            "meta_data": {},
+            "is_external_url": false
+          },
           "heading": "Not Your Typical",
           "tagline": "It's a Good Day to have a Good Day.",
           "imagealt": "151 Coffee store",
@@ -619,7 +646,19 @@
           "_uid": "f418ce11-063c-49df-bddb-ad15cc17b894",
           "name": "Mark Wattles",
           "image": {
-            "filename": "/images/255396.jpg"
+            "id": 213249924270860,
+            "alt": "",
+            "name": "",
+            "focus": "",
+            "title": "",
+            "source": "",
+            "filename": "https://a.storyblok.com/f/294671107081428/1000x611/c987d5acd2/founder-mark-wattles.jpg",
+            "copyright": "",
+            "fieldtype": "asset",
+            "meta_data": {
+              "size": "1000x611"
+            },
+            "is_external_url": false
           },
           "title": "Founder",
           "heading": "Meet the Founder",
