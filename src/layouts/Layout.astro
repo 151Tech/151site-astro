@@ -18,11 +18,26 @@ const {
   bodyClass = '',
 } = Astro.props;
 
+// Points at the real domain even when this response is coming from the
+// preview deployment's own *.webflow.io host, so a crawler that ignores
+// noindex (some do, for canonical/duplicate-detection purposes) is still
+// pointed at the real page rather than credited to a draft one. Explicit
+// `canonical` prop callers are unaffected.
 const canonicalUrl = canonical ?? new URL(Astro.url.pathname, 'https://www.151coffee.com').href;
 // Falls back to the static /favicon.ico in public/ until an editor picks one
 // in Storyblok (settings/global -> Favicon).
 const settingsData = (await getSettings()) as any;
 const favicon = imageUrl(settingsData?.favicon) ?? '/favicon.ico';
+
+// The draft-preview deployment (STORYBLOK_DRAFT_MODE=true, see
+// src/lib/storyblok.ts) renders live unpublished content and shares this
+// same codebase with production, on its own *.webflow.io domain. Nothing
+// there should ever be indexed or credited as canonical -- it would put
+// draft copy in search results and risk being read as duplicate content
+// against the real site. See also src/pages/robots.txt.ts, which disallows
+// the whole preview domain outright, and astro.config.mjs, which skips
+// generating a sitemap for it.
+const isDraftPreview = import.meta.env.STORYBLOK_DRAFT_MODE === 'true';
 ---
 <!DOCTYPE html>
 <html lang="en">
@@ -37,7 +52,7 @@ const favicon = imageUrl(settingsData?.favicon) ?? '/favicon.ico';
   <title>{title}</title>
   <meta name="description" content={description} />
   <link rel="canonical" href={canonicalUrl} />
-  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+  <meta name="robots" content={isDraftPreview ? 'noindex, nofollow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'} />
   <meta name="author" content="151 Coffee" />
   <meta name="theme-color" content="#e63946" />
 

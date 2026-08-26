@@ -89,17 +89,30 @@ export default defineConfig({
       weights: [600],
     },
   ],
+  // This file runs under Node at build time (not the Vite-transformed app
+  // code), so the draft-preview switch reads process.env here rather than
+  // import.meta.env -- same variable, same value, different runtime.
   integrations: [
-    sitemap({
-      // flattenRoutes rewrites every page to a flat .html, making the
-      // canonical URL slash-less, but sitemap runs before that hook and would
-      // otherwise advertise /menu/ for every page: URLs that all redirect.
-      serialize: (item) => {
-        const url = new URL(item.url);
-        if (url.pathname !== '/') url.pathname = url.pathname.replace(/\/$/, '');
-        return { ...item, url: url.href };
-      },
-    }),
+    // A sitemap advertising draft/unpublished URLs is exactly the kind of
+    // leak the noindex + disallowed robots.txt on this deployment (see
+    // Layout.astro, src/pages/robots.txt.ts) are meant to prevent, and
+    // it's also just meaningless there: the preview site is one Webflow
+    // app whose only visitor is the Storyblok Visual Editor.
+    ...(process.env.STORYBLOK_DRAFT_MODE === 'true'
+      ? []
+      : [
+          sitemap({
+            // flattenRoutes rewrites every page to a flat .html, making the
+            // canonical URL slash-less, but sitemap runs before that hook and
+            // would otherwise advertise /menu/ for every page: URLs that all
+            // redirect.
+            serialize: (item) => {
+              const url = new URL(item.url);
+              if (url.pathname !== '/') url.pathname = url.pathname.replace(/\/$/, '');
+              return { ...item, url: url.href };
+            },
+          }),
+        ]),
     flattenRoutes(),
   ],
   server: {
