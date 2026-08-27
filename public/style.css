@@ -1184,21 +1184,43 @@ nav.nav-scrolled .nav-container {
     padding: 0 2rem;
 }
 
-/* Search panel + map are visually one card here, the card look (bg,
-   border, shadow, radius) lives on .locator__clip instead of on each piece
-   individually, so there's no seam between them. .locator__card itself
-   stays un-clipped so the count badge below can hang off its corner. */
+/* The map sits in a dark "mat", like a photo in a frame, instead of
+   floating as a bare light rectangle on the section background. The mat
+   plus the white ring on .locator__clip echo the 3px white borders
+   already used on the search bar and count badge, so all three floating
+   pieces read as one consistent system. .locator__card itself stays
+   un-clipped (overflow visible) so the count badge below can hang off
+   its corner. */
 .locator--stacked .locator__card {
     position: relative;
     z-index: 0;
+    background: #1b1b1b;
+    padding: 0.85rem;
+    border-radius: calc(var(--radius) + 10px);
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow:
+        0 0 60px rgba(230,57,70,0.18),
+        0 30px 70px rgba(0,0,0,0.6);
 }
 
 .locator--stacked .locator__clip {
     position: relative;
     border-radius: var(--radius);
-    box-shadow: 0 4px 24px rgba(0,0,0,0.10), 0 1px 4px rgba(0,0,0,0.06);
-    border: 1px solid rgba(0,0,0,0.07);
+    border: 3px solid #fff;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.35);
     overflow: hidden;
+}
+
+/* Soft dark vignette hugging the map's inner edge so the light tiles feel
+   inset into the frame rather than a flat cutout. Sits above the tiles,
+   below the search bar / zoom controls / badge. */
+.locator--stacked .locator__clip::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 600;
+    pointer-events: none;
+    box-shadow: inset 0 0 60px rgba(0,0,0,0.30), inset 0 0 18px rgba(0,0,0,0.22);
 }
 
 /* Count "badge", taped onto the map's bottom-left corner, hanging
