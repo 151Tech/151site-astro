@@ -17,7 +17,7 @@ const p = unwrapSingletons((await getPage('about')) as any, [
   ogImage={imageUrl(p.seo?.ogImage, { width: 1200, height: 630 })}
 >
   <style is:global slot="head">
-    .about-hero { margin-top: 58px; background-color: var(--black); background-size: cover; background-position: center 30%; position: relative; padding: 8rem 0 7rem; text-align: center; }
+    .about-hero { margin-top: 58px; background-color: var(--black); background-size: cover; background-position: center center; position: relative; padding: 8rem 0 7rem; text-align: center; }
     .about-hero::before { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.50) 0%, rgba(0,0,0,0.32) 50%, rgba(0,0,0,0.60) 100%); pointer-events: none; }
     .about-hero-content { position: relative; z-index: 1; }
     .about-hero h1 { font-size: clamp(2.8rem, 6vw, 5rem); color: #fff; line-height: 1; margin-bottom: 0.75rem; }
@@ -80,6 +80,14 @@ const p = unwrapSingletons((await getPage('about')) as any, [
     .about-cta .btn-white:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,0,0,0.25); }
     .about-cta .btn-outline-white { background: transparent; color: #fff; padding: 0.85rem 2rem; border-radius: var(--radius-pill); border: 2px solid rgba(255,255,255,0.7); font-family: var(--font-inter), sans-serif; font-size: 0.88rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; text-decoration: none; transition: border-color 0.2s, background 0.2s; }
     .about-cta .btn-outline-white:hover { border-color: #fff; background: rgba(255,255,255,0.1); }
+    @media (max-width: 1200px) and (min-width: 901px) {
+      .founder-hero-img { left: 40%; width: 60%; }
+      .founder-hero-img img {
+        object-position: 30% top;
+        -webkit-mask-image: linear-gradient(90deg, transparent 0%, transparent 10%, rgba(0,0,0,0.35) 18%, rgba(0,0,0,0.7) 28%, #000 42%);
+        mask-image: linear-gradient(90deg, transparent 0%, transparent 10%, rgba(0,0,0,0.35) 18%, rgba(0,0,0,0.7) 28%, #000 42%);
+      }
+    }
     @media (max-width: 900px) {
       .about-intro-inner { grid-template-columns: 1fr; gap: 2.5rem; }
       .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 2rem; }
@@ -92,6 +100,9 @@ const p = unwrapSingletons((await getPage('about')) as any, [
       .founder-left { width: 100%; padding: 2.5rem 1.5rem 0; }
       .founder-inner { max-width: 100%; }
       .founder-text { max-width: 100%; }
+    }
+    @media (max-width: 900px) and (min-width: 701px) {
+      .founder-hero-img { height: 340px; }
     }
     @media (max-width: 600px) {
       .stats-grid { grid-template-columns: repeat(2, 1fr); }
