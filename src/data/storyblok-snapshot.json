@@ -2132,7 +2132,7 @@
           ],
           "badge": "",
           "image": {
-            "filename": "/images/v5/smoothies.jpg"
+            "filename": ""
           },
           "category": "categories/smoothies",
           "subtitle": "Fresh & Tangy",
@@ -2161,7 +2161,7 @@
           ],
           "badge": "",
           "image": {
-            "filename": "/images/v5/smoothies.jpg"
+            "filename": ""
           },
           "category": "categories/smoothies",
           "subtitle": "Coconut & Pineapple",
@@ -2190,7 +2190,7 @@
           ],
           "badge": "",
           "image": {
-            "filename": "/images/v5/smoothies.jpg"
+            "filename": ""
           },
           "category": "categories/smoothies",
           "subtitle": "Strawberry & Peach",
@@ -2224,7 +2224,7 @@
           ],
           "badge": "",
           "image": {
-            "filename": "/images/v5/smoothies.jpg"
+            "filename": ""
           },
           "category": "categories/smoothies",
           "subtitle": "Strawberry, Mango & Pineapple",
@@ -2258,7 +2258,7 @@
           ],
           "badge": "",
           "image": {
-            "filename": "/images/v5/refreshers.jpg"
+            "filename": ""
           },
           "category": "categories/refreshers",
           "subtitle": "Lavender, Mango, Diced Dragon Fruit, Coconut Cream",
@@ -2292,7 +2292,7 @@
           ],
           "badge": "",
           "image": {
-            "filename": "/images/v5/refreshers.jpg"
+            "filename": ""
           },
           "category": "categories/refreshers",
           "subtitle": "Strawberry, Passion Fruit, Coconut Milk",
@@ -2321,7 +2321,7 @@
           ],
           "badge": "",
           "image": {
-            "filename": "/images/v5/refreshers.jpg"
+            "filename": ""
           },
           "category": "categories/refreshers",
           "subtitle": "Peach Puree & Vanilla Cream",
@@ -2355,7 +2355,7 @@
           ],
           "badge": "",
           "image": {
-            "filename": "/images/v5/refreshers.jpg"
+            "filename": ""
           },
           "category": "categories/refreshers",
           "subtitle": "Mango Puree, SF Vanilla, Diced Mango, Coconut Cream",
@@ -2612,7 +2612,7 @@
           ],
           "badge": "",
           "image": {
-            "filename": "/images/v5/energy.jpg"
+            "filename": ""
           },
           "category": "categories/energy",
           "subtitle": "Strawberry & Coconut",
@@ -2641,7 +2641,7 @@
           ],
           "badge": "",
           "image": {
-            "filename": "/images/v5/energy.jpg"
+            "filename": ""
           },
           "category": "categories/energy",
           "subtitle": "Red Raspberry & Blue Raspberry",
@@ -2675,7 +2675,7 @@
           ],
           "badge": "",
           "image": {
-            "filename": "/images/v5/energy.jpg"
+            "filename": ""
           },
           "category": "categories/energy",
           "subtitle": "Blue Raspberry, Lime & Coconut",
@@ -2704,7 +2704,7 @@
           ],
           "badge": "",
           "image": {
-            "filename": "/images/v5/energy.jpg"
+            "filename": ""
           },
           "category": "categories/energy",
           "subtitle": "Blue Raspberry & Green Apple",
@@ -2946,7 +2946,7 @@
           ],
           "badge": "",
           "image": {
-            "filename": "/images/v5/coldbrew.jpg"
+            "filename": ""
           },
           "category": "categories/coldbrew",
           "subtitle": "Hazelnut & Caramel, Chocolate Milk",
@@ -2993,7 +2993,7 @@
           ],
           "badge": "",
           "image": {
-            "filename": "/images/v5/coldbrew.jpg"
+            "filename": ""
           },
           "category": "categories/coldbrew",
           "subtitle": "White Chocolate & Brown Sugar Cinnamon",
@@ -3011,7 +3011,7 @@
           "tags": [],
           "badge": "",
           "image": {
-            "filename": "/images/v5/coldbrew.jpg"
+            "filename": ""
           },
           "category": "categories/coldbrew",
           "subtitle": "Smooth & Bold",
@@ -3029,7 +3029,7 @@
           "tags": [],
           "badge": "",
           "image": {
-            "filename": "/images/v5/coldbrew.jpg"
+            "filename": ""
           },
           "category": "categories/coldbrew",
           "subtitle": "Silky, Smooth Cream on Top",
@@ -3058,7 +3058,7 @@
           ],
           "badge": "",
           "image": {
-            "filename": "/images/v5/coldbrew.jpg"
+            "filename": ""
           },
           "category": "categories/coldbrew",
           "subtitle": "Caramel & Vanilla",
@@ -3082,7 +3082,7 @@
           ],
           "badge": "",
           "image": {
-            "filename": "/images/v5/coldbrew.jpg"
+            "filename": ""
           },
           "category": "categories/coldbrew",
           "subtitle": "Dark Chocolate & Milk",
@@ -3111,7 +3111,7 @@
           ],
           "badge": "",
           "image": {
-            "filename": "/images/v5/coffee.jpg"
+            "filename": ""
           },
           "category": "categories/coffee",
           "subtitle": "White Chocolate & Macadamia Nut",
@@ -3145,7 +3145,7 @@
           ],
           "badge": "",
           "image": {
-            "filename": "/images/v5/coffee.jpg"
+            "filename": ""
           },
           "category": "categories/coffee",
           "subtitle": "Hazelnut & Caramel, Chocolate Milk",
@@ -3163,7 +3163,7 @@
           "tags": [],
           "badge": "",
           "image": {
-            "filename": "/images/v5/latte.jpg"
+            "filename": ""
           },
           "category": "categories/coffee",
           "subtitle": "Smooth Espresso & Milk",
@@ -3187,7 +3187,7 @@
           ],
           "badge": "",
           "image": {
-            "filename": "/images/v5/coffee.jpg"
+            "filename": ""
           },
           "category": "categories/coffee",
           "subtitle": "Irish Cream",
@@ -3211,7 +3211,7 @@
           ],
           "badge": "",
           "image": {
-            "filename": "/images/v5/misc.jpg"
+            "filename": ""
           },
           "category": "categories/misc",
           "subtitle": "Rich Creamy Chocolate",
@@ -3245,7 +3245,7 @@
           ],
           "badge": "",
           "image": {
-            "filename": "/images/v5/coffee.jpg"
+            "filename": ""
           },
           "category": "categories/coffee",
           "subtitle": "Coconut & Caramel, Chocolate Milk",
@@ -3274,7 +3274,7 @@
           ],
           "badge": "",
           "image": {
-            "filename": "/images/v5/coffee.jpg"
+            "filename": ""
           },
           "category": "categories/coffee",
           "subtitle": "Brown Sugar Cinnamon & Caramel",
@@ -3321,7 +3321,7 @@
           ],
           "badge": "",
           "image": {
-            "filename": "/images/v5/coffee.jpg"
+            "filename": ""
           },
           "category": "categories/coffee",
           "subtitle": "Caramel & Vanilla",
@@ -3339,7 +3339,7 @@
           "tags": [],
           "badge": "",
           "image": {
-            "filename": "/images/v5/coffee.jpg"
+            "filename": ""
           },
           "category": "categories/coffee",
           "subtitle": "Classic Bold Espresso",
@@ -3368,7 +3368,7 @@
           ],
           "badge": "",
           "image": {
-            "filename": "/images/v5/coffee.jpg"
+            "filename": ""
           },
           "category": "categories/coffee",
           "subtitle": "Caramel, Chocolate Milk",
