@@ -1502,7 +1502,14 @@ nav.nav-scrolled .nav-container {
 @media (max-width: 900px) {
     .locator--stacked .locator__map { height: 40vh; min-height: 280px; }
     .locator--stacked .locator__list { grid-template-columns: repeat(2, 1fr); padding: 0.5rem 1.25rem 1rem; }
-    .locator--stacked .locator__search { padding-left: 1.25rem; padding-right: 1.25rem; }
+}
+
+@media (max-width: 480px) {
+    /* Toolbar overlay gets tight on phone widths; shrink the zoom buttons
+       and gap slightly so the search input keeps enough room to be usable. */
+    .locator--stacked .locator__toolbar { top: 0.75rem; left: 0.75rem; right: 0.75rem; gap: 0.5rem; }
+    .locator--stacked .locator__zoom button { width: 40px; height: 40px; font-size: 1.1rem; }
+    .locator--stacked .locator__search input { padding: 0.7rem 1rem; font-size: 0.85rem; }
 }
 
 @media (max-width: 560px) {
