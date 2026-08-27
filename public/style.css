@@ -1288,72 +1288,66 @@ nav.nav-scrolled .nav-container {
     border: none;
 }
 
-/* Search floats directly on top of the map instead of living in its own
-   panel, a red "liquid glass" bar: blurred + translucent so the map
-   shows through, but opaque enough to stay legible over any tile color. */
-.locator__search--floating {
-    position: absolute;
-    top: 1rem;
-    left: 4.25rem;
-    right: 1rem;
-    z-index: 650;
+/* Toolbar sits above the map instead of floating on top of it: search
+   bar + zoom buttons, plain and clean, styled to match the site's red
+   pill language without competing with the map itself. */
+.locator--stacked .locator__toolbar {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.locator--stacked .locator__search {
+    flex: 1;
     padding: 0;
 }
 
-.locator__search--floating input {
-    background:
-        linear-gradient(135deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0) 35%),
-        linear-gradient(135deg, var(--red) 0%, var(--red-soft) 100%);
-    border: 3px solid #fff;
+.locator--stacked .locator__search input {
+    width: 100%;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.16);
     color: #fff;
-    box-shadow: 0 4px 10px rgba(230,57,70,0.25);
-    backdrop-filter: blur(10px) saturate(160%);
-    -webkit-backdrop-filter: blur(10px) saturate(160%);
+    padding: 0.85rem 1.3rem;
 }
 
-.locator__search--floating input::placeholder {
-    color: rgba(255,255,255,0.85);
+.locator--stacked .locator__search input::placeholder {
+    color: rgba(255,255,255,0.55);
 }
 
-.locator__search--floating input:focus {
-    border-color: #fff;
-    background:
-        linear-gradient(135deg, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0) 35%),
-        linear-gradient(135deg, var(--red) 0%, var(--red-soft) 100%);
-    box-shadow:
-        0 4px 10px rgba(230,57,70,0.25),
-        0 0 0 3px rgba(255,255,255,0.25);
+.locator--stacked .locator__search input:focus {
+    border-color: var(--red);
+    background: rgba(255,255,255,0.09);
+    box-shadow: 0 0 0 3px rgba(230,57,70,0.20);
 }
 
-/* Zoom +/- controls, restyled to match the badge / search bar look. */
-.locator--stacked .leaflet-control-zoom {
-    border: 3px solid #fff;
+.locator--stacked .locator__zoom {
+    display: flex;
+    gap: 0.5rem;
+    flex-shrink: 0;
+}
+
+.locator--stacked .locator__zoom button {
+    width: 46px;
+    height: 46px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--red) 0%, var(--red-soft) 100%);
+    color: #fff;
+    border: none;
     border-radius: var(--radius-sm);
-    overflow: hidden;
+    font-size: 1.3rem;
+    font-weight: 700;
+    line-height: 1;
+    cursor: pointer;
     box-shadow: 0 4px 10px rgba(230,57,70,0.25);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.locator--stacked .leaflet-control-zoom a {
-    width: 32px;
-    height: 32px;
-    line-height: 32px;
-    background:
-        linear-gradient(135deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0) 35%),
-        linear-gradient(135deg, var(--red) 0%, var(--red-soft) 100%);
-    backdrop-filter: blur(10px) saturate(160%);
-    -webkit-backdrop-filter: blur(10px) saturate(160%);
-    color: #fff;
-    font-weight: 600;
-    border-bottom: 1px solid rgba(255,255,255,0.5);
-}
-
-.locator--stacked .leaflet-control-zoom a:last-child { border-bottom: none; }
-
-.locator--stacked .leaflet-control-zoom a:hover {
-    background:
-        linear-gradient(135deg, rgba(255,255,255,0.24) 0%, rgba(255,255,255,0) 35%),
-        linear-gradient(135deg, var(--red) 0%, var(--red-soft) 100%);
-    color: #fff;
+.locator--stacked .locator__zoom button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(230,57,70,0.38);
 }
 
 .locator--stacked .locator__list {

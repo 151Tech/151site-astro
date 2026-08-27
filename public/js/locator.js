@@ -22,7 +22,19 @@
 
     const redIcon = window.COFFEE151_LEAFLET.redIcon(L);
 
-    const map = L.map(mapEl, { scrollWheelZoom: true, attributionControl: false }).setView([33.0, -97.0], 6);
+    // The locations page supplies its own zoom buttons in a toolbar above
+    // the map (a cleaner look than Leaflet's default on-map control); the
+    // homepage locator has no such toolbar, so it keeps Leaflet's default.
+    const zoomInEl = document.getElementById("locator-zoom-in");
+    const zoomOutEl = document.getElementById("locator-zoom-out");
+    const hasCustomZoom = !!(zoomInEl && zoomOutEl);
+
+    const map = L.map(mapEl, { scrollWheelZoom: true, attributionControl: false, zoomControl: !hasCustomZoom }).setView([33.0, -97.0], 6);
+
+    if (hasCustomZoom) {
+        zoomInEl.addEventListener("click", () => map.zoomIn());
+        zoomOutEl.addEventListener("click", () => map.zoomOut());
+    }
 
     window.COFFEE151_LEAFLET.addTileLayer(L, map);
 
