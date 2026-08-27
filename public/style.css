@@ -1195,9 +1195,7 @@ nav.nav-scrolled .nav-container {
 
 .locator--stacked .locator__clip {
     position: relative;
-    border-radius: 0 0 var(--radius) var(--radius);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-top: none;
+    border-radius: var(--radius);
     overflow: hidden;
 }
 
@@ -1288,19 +1286,19 @@ nav.nav-scrolled .nav-container {
     border: none;
 }
 
-/* Toolbar sits directly on top of the map as one connected piece (its
-   own background, rounded only on top, no gap before the map's rounded-
-   bottom corners) instead of floating over the map or sitting separate
-   from it. Zoom buttons come first (left), search fills the rest. */
+/* Toolbar floats directly on the map itself (no separate bar/background
+   of its own) — the map shows through underneath it. Each control gets
+   just enough of a translucent dark tint to stay legible over the light
+   map tiles, without boxing the whole row off from the map. */
 .locator--stacked .locator__toolbar {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    right: 1rem;
+    z-index: 650;
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    background: #201c1c;
-    border: 1px solid rgba(255,255,255,0.08);
-    border-bottom: none;
-    border-radius: var(--radius) var(--radius) 0 0;
-    padding: 0.85rem;
 }
 
 .locator--stacked .locator__search {
@@ -1310,19 +1308,21 @@ nav.nav-scrolled .nav-container {
 
 .locator--stacked .locator__search input {
     width: 100%;
-    background: rgba(255,255,255,0.07);
-    border: 1px solid rgba(255,255,255,0.16);
+    background: rgba(20,18,18,0.55);
+    border: 1px solid rgba(255,255,255,0.22);
     color: #fff;
     padding: 0.85rem 1.3rem;
+    backdrop-filter: blur(8px) saturate(140%);
+    -webkit-backdrop-filter: blur(8px) saturate(140%);
 }
 
 .locator--stacked .locator__search input::placeholder {
-    color: rgba(255,255,255,0.55);
+    color: rgba(255,255,255,0.65);
 }
 
 .locator--stacked .locator__search input:focus {
     border-color: var(--red);
-    background: rgba(255,255,255,0.09);
+    background: rgba(20,18,18,0.65);
     box-shadow: 0 0 0 3px rgba(230,57,70,0.20);
 }
 
@@ -1338,21 +1338,22 @@ nav.nav-scrolled .nav-container {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, var(--red) 0%, var(--red-soft) 100%);
+    background: rgba(20,18,18,0.55);
     color: #fff;
-    border: none;
+    border: 1px solid rgba(255,255,255,0.22);
     border-radius: var(--radius-sm);
     font-size: 1.3rem;
     font-weight: 700;
     line-height: 1;
     cursor: pointer;
-    box-shadow: 0 4px 10px rgba(230,57,70,0.25);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    backdrop-filter: blur(8px) saturate(140%);
+    -webkit-backdrop-filter: blur(8px) saturate(140%);
+    transition: background 0.2s ease, border-color 0.2s ease;
 }
 
 .locator--stacked .locator__zoom button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(230,57,70,0.38);
+    background: rgba(20,18,18,0.72);
+    border-color: rgba(255,255,255,0.35);
 }
 
 .locator--stacked .locator__list {
