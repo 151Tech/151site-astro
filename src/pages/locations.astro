@@ -68,12 +68,12 @@ const STATE_NAMES: Record<string, string> = Object.fromEntries(
       </div>
       <div class="locator locator--stacked">
         <div class="locator__toolbar">
-          <div class="locator__search">
-            <input type="text" id="locator-search" aria-label="Search locations" placeholder={p.searchPlaceholder ?? 'Search by city, state, or zip...'} />
-          </div>
           <div class="locator__zoom">
             <button type="button" id="locator-zoom-out" aria-label="Zoom out">&#8722;</button>
             <button type="button" id="locator-zoom-in" aria-label="Zoom in">&#43;</button>
+          </div>
+          <div class="locator__search">
+            <input type="text" id="locator-search" aria-label="Search locations" placeholder={p.searchPlaceholder ?? 'Search by city, state, or zip...'} />
           </div>
         </div>
         <div class="locator__card">
