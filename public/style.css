@@ -978,9 +978,6 @@ nav.nav-scrolled .nav-container {
 /* ─── Locations ─── */
 .spaces {
     padding: var(--section-pad);
-    background-color: var(--red);
-    background-image: radial-gradient(rgba(255,255,255,0.18) 2px, transparent 2.5px);
-    background-size: 26px 26px;
     position: relative;
 }
 
@@ -988,11 +985,7 @@ nav.nav-scrolled .nav-container {
     content: '';
     position: absolute;
     inset: 0;
-    background:
-        radial-gradient(120% 60% at 50% 0%,   rgba(255,255,255,0.22) 0%, transparent 55%),
-        radial-gradient(120% 60% at 50% 100%, rgba(255,255,255,0.14) 0%, transparent 55%),
-        radial-gradient(60%  100% at 0%   50%, rgba(255,255,255,0.10) 0%, transparent 55%),
-        radial-gradient(60%  100% at 100% 50%, rgba(255,255,255,0.10) 0%, transparent 55%);
+    background: none;
     pointer-events: none;
 }
 
@@ -2245,9 +2238,6 @@ footer {
    ────────────────────────────────────────────────────────────── */
 .faq {
     padding: var(--section-pad);
-    background-color: var(--red);
-    background-image: radial-gradient(rgba(255,255,255,0.18) 2px, transparent 2.5px);
-    background-size: 26px 26px;
     position: relative;
     overflow: hidden;
 }
@@ -2255,11 +2245,7 @@ footer {
     content: '';
     position: absolute;
     inset: 0;
-    background:
-        radial-gradient(120% 60% at 50% 0%,   rgba(255,255,255,0.22) 0%, transparent 55%),
-        radial-gradient(120% 60% at 50% 100%, rgba(255,255,255,0.14) 0%, transparent 55%),
-        radial-gradient(60%  100% at 0%   50%, rgba(255,255,255,0.10) 0%, transparent 55%),
-        radial-gradient(60%  100% at 100% 50%, rgba(255,255,255,0.10) 0%, transparent 55%);
+    background: none;
     pointer-events: none;
 }
 .faq .section-header h2 { color: var(--white); }
@@ -2571,4 +2557,48 @@ footer {
     border-radius: var(--radius-pill);
     white-space: nowrap;
     pointer-events: none;
+}
+
+/* ──────────────────────────────────────────────────────────────
+   Home page section grounds
+   ────────────────────────────────────────────────────────────── */
+
+/* The four light sections carry the celebrity-quote banner as a watermark.
+   The artwork is dense black line art, so a cream veil sits on top of it to
+   pull contrast back down far enough for body copy to stay readable. Tune the
+   whole home page from --quote-veil: higher = fainter artwork.
+
+   The artwork has no true seamless period, but it is dense and irregular
+   enough that a plain repeat at a fixed 1250px width hides its seams while
+   keeping the quotes legible at their intended scale. Sizing it to `cover`
+   instead blows the lettering up until it fights the copy. */
+:root {
+    --quote-veil: 0.9;
+}
+
+.featured-drink,
+.features,
+.pricing,
+.contact {
+    background-color: #f4efe9;
+    background-image:
+        linear-gradient(rgba(244, 239, 233, var(--quote-veil)), rgba(244, 239, 233, var(--quote-veil))),
+        url('/images/quote-banner.jpg');
+    background-size: 1250px auto;
+    background-position: top center;
+    background-repeat: repeat;
+}
+
+/* .spaces and .faq reuse the /locations hero ground (.loc-bg) so the dark
+   bands match across the site. Kept as its own rule rather than added to the
+   .loc-bg selector because that class also carries page-level layout
+   (margin-top) that must not leak into home page sections. */
+.spaces,
+.faq {
+    background-color: #161616;
+    background-image:
+        radial-gradient(120% 60% at 50% 0%,   rgba(230,57,70,0.28) 0%, transparent 60%),
+        radial-gradient(80% 60% at 100% 100%, rgba(230,57,70,0.16) 0%, transparent 60%),
+        radial-gradient(rgba(255,255,255,0.06) 2px, transparent 2.5px);
+    background-size: auto, auto, 26px 26px;
 }
