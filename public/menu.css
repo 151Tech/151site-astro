@@ -123,6 +123,10 @@
    of near-black. */
 .timeline-wrap {
     background-color: #f4efe9;
+    background-image: var(--bg-quote);
+    background-size: 1250px auto;
+    background-position: top center;
+    background-repeat: repeat;
     position: relative;
     z-index: 2;
     padding: 3.25rem 0 1.25rem;

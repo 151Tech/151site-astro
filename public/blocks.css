@@ -55,9 +55,9 @@
 /* ─── Promo Banner: full-width red announcement strip ─── */
 .blk-promo {
     padding: 3rem 0;
-    background-color: var(--red);
-    background-image: radial-gradient(rgba(255,255,255,0.18) 2px, transparent 2.5px);
-    background-size: 26px 26px;
+    background-color: #161616;
+    background-image: var(--bg-dark-grid);
+    background-size: auto, auto, 26px 26px;
     text-align: center;
     position: relative;
     overflow: hidden;
@@ -99,7 +99,14 @@
 .blk-promo .btn-white:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.25); }
 
 /* ─── Split Feature: image one side, text the other (alternating) ─── */
-.blk-split { padding: var(--section-pad); background: #f4efe9; }
+.blk-split {
+    padding: var(--section-pad);
+    background-color: #f4efe9;
+    background-image: var(--bg-quote);
+    background-size: 1250px auto;
+    background-position: top center;
+    background-repeat: repeat;
+}
 .blk-split.blk-split--dark { background: var(--black); }
 .blk-split-inner {
     max-width: 1200px; margin: 0 auto; padding: 0 2rem;
@@ -126,9 +133,9 @@
 /* ─── CTA Section: centered heading/body/buttons on red bg ─── */
 .blk-cta {
     padding: var(--section-pad);
-    background-color: var(--red);
-    background-image: radial-gradient(rgba(255,255,255,0.18) 2px, transparent 2.5px);
-    background-size: 26px 26px;
+    background-color: #161616;
+    background-image: var(--bg-dark-grid);
+    background-size: auto, auto, 26px 26px;
     text-align: center;
     position: relative;
     overflow: hidden;
@@ -162,7 +169,14 @@
 .blk-cta .btn-outline:hover { border-color: #fff; background: rgba(255,255,255,0.1); }
 
 /* ─── Testimonial Grid: quote cards on light bg ─── */
-.blk-testimonials { padding: var(--section-pad); background: #f4efe9; }
+.blk-testimonials {
+    padding: var(--section-pad);
+    background-color: #f4efe9;
+    background-image: var(--bg-quote);
+    background-size: 1250px auto;
+    background-position: top center;
+    background-repeat: repeat;
+}
 .blk-testimonials .section-header { text-align: center; margin-bottom: 3rem; }
 .blk-testimonials .section-header h2 { color: var(--red); }
 .blk-testimonial-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(400px, 100%), 1fr)); gap: 1.5rem; max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
@@ -196,9 +210,9 @@
 /* ─── Stat Strip: red bg number/label grid ─── */
 .blk-stats {
     padding: 4rem 0;
-    background-color: var(--red);
-    background-image: radial-gradient(rgba(255,255,255,0.18) 2px, transparent 2.5px);
-    background-size: 26px 26px;
+    background-color: #161616;
+    background-image: var(--bg-dark-grid);
+    background-size: auto, auto, 26px 26px;
     position: relative;
     overflow: hidden;
 }
@@ -220,9 +234,9 @@
 /* ─── FAQ Accordion: red polka-dot bg with dark gradient detail items ─── */
 .blk-faq {
     padding: var(--section-pad);
-    background-color: var(--red);
-    background-image: radial-gradient(rgba(255,255,255,0.18) 2px, transparent 2.5px);
-    background-size: 26px 26px;
+    background-color: #161616;
+    background-image: var(--bg-dark-grid);
+    background-size: auto, auto, 26px 26px;
     position: relative;
     overflow: hidden;
 }
@@ -258,7 +272,14 @@
 .blk-faq-list p { font-family: var(--font-inter), sans-serif; font-size: 0.92rem; line-height: 1.65; color: rgba(255,255,255,0.7); margin: 0.85rem 0 0; }
 
 /* ─── Card Grid: image/title/subtitle/link cards ─── */
-.blk-cardgrid { padding: var(--section-pad); background: #f4efe9; }
+.blk-cardgrid {
+    padding: var(--section-pad);
+    background-color: #f4efe9;
+    background-image: var(--bg-quote);
+    background-size: 1250px auto;
+    background-position: top center;
+    background-repeat: repeat;
+}
 .blk-cardgrid.blk-cardgrid--dark { background: var(--black); }
 .blk-cardgrid .section-header { text-align: center; margin-bottom: 3rem; }
 .blk-cardgrid--dark .section-header h2 { color: var(--red); }

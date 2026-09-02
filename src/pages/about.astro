@@ -23,7 +23,7 @@ const p = unwrapSingletons((await getPage('about')) as any, [
     .about-hero h1 { font-size: clamp(2.8rem, 6vw, 5rem); color: #fff; line-height: 1; margin-bottom: 0.75rem; }
     .about-hero h1 span { color: var(--red); }
     .about-hero p { font-family: var(--font-inter), sans-serif; font-size: 1.1rem; color: rgba(255,255,255,0.80); max-width: 520px; margin: 0 auto; }
-    .about-intro { background: #f4efe9; padding: var(--section-pad); }
+    .about-intro { background-color: #f4efe9; background-image: var(--bg-quote); background-size: 1250px auto; background-position: top center; background-repeat: repeat; padding: var(--section-pad); }
     .about-intro-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
     .about-intro-text h2 { font-size: clamp(1.8rem, 3.5vw, 2.8rem); color: var(--black); line-height: 1.12; margin-bottom: 1.25rem; }
     .about-intro-text h2 span { color: var(--red); }
@@ -32,13 +32,13 @@ const p = unwrapSingletons((await getPage('about')) as any, [
     .about-intro-img { border-radius: var(--radius); overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.22); position: relative; aspect-ratio: 1 / 1; }
     .about-intro-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .about-intro-img::after { content: ''; position: absolute; inset: 0; border: 1px solid rgba(0,0,0,0.06); border-radius: var(--radius); pointer-events: none; }
-    .about-stats { background-color: var(--red); background-image: radial-gradient(rgba(255,255,255,0.18) 2px, transparent 2.5px); background-size: 26px 26px; position: relative; padding: 4rem 0; }
+    .about-stats { background-color: #161616; background-image: var(--bg-dark-grid); background-size: auto, auto, 26px 26px; position: relative; padding: 4rem 0; }
     .about-stats::before { content: ''; position: absolute; inset: 0; background: radial-gradient(120% 60% at 50% 0%, rgba(255,255,255,0.22) 0%, transparent 55%), radial-gradient(120% 60% at 50% 100%, rgba(255,255,255,0.14) 0%, transparent 55%); pointer-events: none; }
     .about-stats .container { position: relative; z-index: 1; }
     .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; text-align: center; }
     .stat-number { font-size: clamp(2rem, 4vw, 3rem); font-weight: 900; color: #fff; line-height: 1; margin-bottom: 0.4rem; }
     .stat-label { font-family: var(--font-inter), sans-serif; font-size: 0.82rem; font-weight: 600; color: rgba(255,255,255,0.80); text-transform: uppercase; letter-spacing: 0.1em; }
-    .about-history { background: #f4efe9; padding: var(--section-pad); }
+    .about-history { background-color: #f4efe9; background-image: var(--bg-quote); background-size: 1250px auto; background-position: top center; background-repeat: repeat; padding: var(--section-pad); }
     .about-history .section-header h2 { color: var(--red); }
     .history-body { max-width: 780px; margin: 2rem auto 0; font-family: var(--font-inter), sans-serif; font-size: 1rem; line-height: 1.78; color: rgba(17,17,17,0.62); }
     .history-body p { margin-bottom: 1.25rem; }

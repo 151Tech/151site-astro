@@ -5,9 +5,9 @@
     display: flex;
     align-items: flex-end;
     overflow: hidden;
-    background-color: var(--red);
-    background-image: radial-gradient(rgba(255,255,255,0.18) 2px, transparent 2.5px);
-    background-size: 26px 26px;
+    background-color: #161616;
+    background-image: var(--bg-dark-grid);
+    background-size: auto, auto, 26px 26px;
 }
 
 .ld-hero-bg {
@@ -78,7 +78,11 @@
 
 /* Body */
 .ld-body {
-    background: #f4efe9;
+    background-color: #f4efe9;
+    background-image: var(--bg-quote);
+    background-size: 1250px auto;
+    background-position: top center;
+    background-repeat: repeat;
     padding: 3.5rem 0 1rem;
 }
 

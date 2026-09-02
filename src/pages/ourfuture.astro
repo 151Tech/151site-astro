@@ -17,7 +17,7 @@ const p = unwrapSingletons((await getPage('ourfuture')) as any, [
   ogImage={imageUrl(p.seo?.ogImage, { width: 1200, height: 630 })}
 >
   <style is:global slot="head">
-    .re-hero { margin-top: 58px; background-color: var(--red); background-image: radial-gradient(rgba(255,255,255,0.18) 2px, transparent 2.5px); background-size: 26px 26px; position: relative; padding: 6rem 0 5rem; text-align: center; }
+    .re-hero { margin-top: 58px; background-color: #161616; background-image: var(--bg-dark-grid); background-size: auto, auto, 26px 26px; position: relative; padding: 6rem 0 5rem; text-align: center; }
     .re-hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(120% 60% at 50% 0%, rgba(255,255,255,0.22) 0%, transparent 55%), radial-gradient(120% 60% at 50% 100%, rgba(255,255,255,0.14) 0%, transparent 55%), radial-gradient(60% 100% at 0% 50%, rgba(255,255,255,0.10) 0%, transparent 55%), radial-gradient(60% 100% at 100% 50%, rgba(255,255,255,0.10) 0%, transparent 55%); pointer-events: none; }
     .re-hero-content { position: relative; z-index: 1; }
     .re-hero .eyebrow { display: inline-block; font-family: var(--font-inter), sans-serif; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.92); margin-bottom: 1rem; border: 1px solid rgba(255,255,255,0.30); padding: 0.3rem 0.9rem; border-radius: 999px; }
@@ -25,7 +25,7 @@ const p = unwrapSingletons((await getPage('ourfuture')) as any, [
     .re-hero p { font-family: var(--font-inter), sans-serif; font-size: 1.05rem; color: rgba(255,255,255,0.94); max-width: 540px; margin: 0 auto 2rem; line-height: 1.6; }
     .re-hero a.btn-white { display: inline-block; background: #fff; color: var(--red); padding: 0.85rem 2.2rem; border-radius: var(--radius-pill); font-family: var(--font-inter), sans-serif; font-size: 0.88rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; text-decoration: none; box-shadow: 0 4px 18px rgba(0,0,0,0.18); transition: transform 0.2s, box-shadow 0.2s; }
     .re-hero a.btn-white:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,0,0,0.25); }
-    .re-overview { background: #f4efe9; padding: var(--section-pad); }
+    .re-overview { background-color: #f4efe9; background-image: var(--bg-quote); background-size: 1250px auto; background-position: top center; background-repeat: repeat; padding: var(--section-pad); }
     .re-overview-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
     .re-overview-text h2 { font-size: clamp(1.8rem, 3.5vw, 2.8rem); color: var(--black); line-height: 1.1; margin-bottom: 1.25rem; }
     .re-overview-text h2 span { color: var(--red); }
@@ -68,7 +68,7 @@ const p = unwrapSingletons((await getPage('ourfuture')) as any, [
     .criteria-icon { font-size: 2rem; margin-bottom: 1.1rem; display: block; }
     .criteria-card h3 { font-family: var(--font-inter), sans-serif; font-size: 1rem; font-weight: 700; color: #fff; text-transform: none; letter-spacing: normal; margin-bottom: 0.6rem; }
     .criteria-card p { font-family: var(--font-inter), sans-serif; font-size: 0.85rem; line-height: 1.65; color: rgba(255,255,255,0.52); margin: 0; }
-    .re-ideal { background-color: var(--red); background-image: radial-gradient(rgba(255,255,255,0.18) 2px, transparent 2.5px); background-size: 26px 26px; position: relative; padding: var(--section-pad); }
+    .re-ideal { background-color: #161616; background-image: var(--bg-dark-grid); background-size: auto, auto, 26px 26px; position: relative; padding: var(--section-pad); }
     .re-ideal::before { content: ''; position: absolute; inset: 0; background: radial-gradient(120% 60% at 50% 0%, rgba(255,255,255,0.22) 0%, transparent 55%), radial-gradient(120% 60% at 50% 100%, rgba(255,255,255,0.14) 0%, transparent 55%), radial-gradient(60% 100% at 0% 50%, rgba(255,255,255,0.10) 0%, transparent 55%), radial-gradient(60% 100% at 100% 50%, rgba(255,255,255,0.10) 0%, transparent 55%); pointer-events: none; }
     .re-ideal .container { position: relative; z-index: 1; }
     .re-ideal .section-header h2 { color: #fff; }
@@ -85,7 +85,7 @@ const p = unwrapSingletons((await getPage('ourfuture')) as any, [
     .re-location-tag { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.10); border-radius: 999px; padding: 0.45rem 1.1rem; font-family: var(--font-inter), sans-serif; font-size: 0.82rem; font-weight: 600; color: rgba(255,255,255,0.70); transition: border-color 0.2s, color 0.2s; }
     .re-location-tag:hover { border-color: var(--red); color: #fff; }
     .re-location-tag.expanding { background: rgba(230,57,70,0.12); border-color: rgba(230,57,70,0.35); color: var(--red); }
-    .re-contact { background: #f4efe9; padding: var(--section-pad); }
+    .re-contact { background-color: #f4efe9; background-image: var(--bg-quote); background-size: 1250px auto; background-position: top center; background-repeat: repeat; padding: var(--section-pad); }
     .re-contact .section-header h2 { color: var(--red); }
     .re-contact-inner { max-width: 760px; margin: 3rem auto 0; }
     .re-contact-or { text-align: center; font-family: var(--font-inter), sans-serif; font-size: 0.82rem; color: rgba(17,17,17,0.55); margin: 1.5rem 0 0.5rem; }
