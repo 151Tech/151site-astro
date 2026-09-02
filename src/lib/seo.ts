@@ -161,8 +161,10 @@ export function locationSchema(loc: any, s: any, opts: { menuUrl?: string } = {}
     url,
     image: imageUrl(loc.image, { width: 1200, height: 900 }),
     // Per-store number when Storyblok has one, else the brand line. All 15
-    // pages currently show the same global number, which is a real NAP
-    // consistency weakness rather than something markup can paper over.
+    // stores share the corporate number, which is correct and expected for a
+    // chain -- NAP consistency is about one location's details conflicting
+    // between sources, not about locations sharing a central line. The
+    // per-store override exists only for stores that ever get their own.
     telephone: loc.phone ?? s?.phone,
     priceRange: s?.priceRange,
     currenciesAccepted: 'USD',
