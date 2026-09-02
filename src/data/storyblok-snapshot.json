@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-28T01:30:27.323Z",
+  "generatedAt": "2026-09-02T15:07:03.754Z",
   "stories": {
     "settings/global": {
       "nav": [
@@ -422,21 +422,17 @@
               "_uid": "3f48d2eb-c59a-4d21-aa76-f2d461d808c3",
               "href": "/menu",
               "image": {
-                "id": 212893930822068,
-                "alt": "An iced Blondie and iced Snickers coffee.",
+                "id": 215738597202535,
+                "alt": "",
                 "name": "",
                 "focus": "",
-                "title": "Drink Menu",
-                "source": "151 Coffee",
-                "filename": "https://a.storyblok.com/f/294671107081428/3711x3722/33161d12f5/drinkmenu.jpg",
-                "copyright": "151 Coffee 2026",
+                "title": "",
+                "source": "",
+                "filename": "https://a.storyblok.com/f/294671107081428/1534x1534/3f7498c09b/test2.png",
+                "copyright": "",
                 "fieldtype": "asset",
                 "meta_data": {
-                  "alt": "An iced Blondie and iced Snickers coffee.",
-                  "size": "3711x3722",
-                  "title": "Drink Menu",
-                  "source": "151 Coffee",
-                  "copyright": "151 Coffee 2026"
+                  "size": "1534x1534"
                 },
                 "is_external_url": false
               },
@@ -3111,7 +3107,19 @@
           ],
           "badge": "",
           "image": {
-            "filename": "/images/v5/coffee.jpg"
+            "id": 215738839210608,
+            "alt": "",
+            "name": "",
+            "focus": "",
+            "title": "",
+            "source": "",
+            "filename": "https://a.storyblok.com/f/294671107081428/1524x1524/ace4b2cef6/test1.png",
+            "copyright": "",
+            "fieldtype": "asset",
+            "meta_data": {
+              "size": "1524x1524"
+            },
+            "is_external_url": false
           },
           "category": "categories/coffee",
           "subtitle": "White Chocolate & Macadamia Nut",
