@@ -633,7 +633,13 @@ nav.nav-scrolled .nav-container {
         font-size: clamp(0.9rem, 1.6vh, 1.08rem);
         margin-bottom: clamp(0.5rem, 1.5vh, 1rem);
     }
+    /* Square, matching the image card beside it: the height pin above
+       already equals the image's side, so fixing the width to the same
+       --fd-img-h is what squares it off. .featured-inner's columns are
+       sized to match (see the grid override below) so the plate fills its
+       cell rather than sitting left-aligned in a wider one. */
     .featured-text {
+        width: var(--fd-img-h);
         height: var(--fd-img-h);
         min-height: 0;
         display: flex;
@@ -641,6 +647,13 @@ nav.nav-scrolled .nav-container {
         align-items: flex-start;
         justify-content: center;
         overflow: visible;
+    }
+
+    /* Both cells are now exactly one square wide, so the pair is centred
+       as a unit instead of being stretched apart by fr units. */
+    .featured-inner {
+        grid-template-columns: repeat(2, var(--fd-img-h));
+        justify-content: center;
     }
 }
 
@@ -2647,6 +2660,18 @@ footer {
     border-radius: var(--radius);
     box-shadow: var(--plate-shadow);
     padding: 1.75rem 2rem;
+}
+
+/* The featured-drink plate is the one plate with a fixed size (it's squared
+   to match the drink image), so on a short viewport its padding is competing
+   with the copy for a shrinking box. Fold vh into it the same way the
+   section's type scale already does, so the padding gives way first. Placed
+   after the shared rule above rather than beside the section's other desktop
+   rules because it has to win on source order. */
+@media (min-width: 769px) {
+    .featured-drink .featured-text {
+        padding: clamp(0.75rem, 2.2vh, 1.75rem) clamp(1rem, 2.5vh, 2rem);
+    }
 }
 
 /* Centred headings: plate the heading itself rather than its wrapper, so the
