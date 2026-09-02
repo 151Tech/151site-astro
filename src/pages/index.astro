@@ -22,6 +22,27 @@ const s = (settingsData as any) ?? {};
 const locations = locationsEntries
   .sort((a: any, b: any) => (Number(a.displayOrder) || 99) - (Number(b.displayOrder) || 99));
 
+// The FAQ section below renders as plain <details> markup, which leaves a
+// machine to infer which text is the question and which is the answer from
+// the HTML alone. FAQPage makes each pairing explicit instead, which is what
+// answer engines read when deciding what this brand's own site says about a
+// question. Google stopped showing FAQ rich results for most sites in 2023,
+// so this is for machine-readability rather than for a SERP treatment.
+// Built from the same Storyblok items the section renders, so an editor
+// adding a Q&A gets the structured data for free and the two can't drift.
+const faqItems: any[] = (p.faqs?.items ?? []).filter((f: any) => f.question && f.answer);
+const faqSchema = faqItems.length
+  ? {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": faqItems.map((f: any) => ({
+        "@type": "Question",
+        "name": f.question,
+        "acceptedAnswer": { "@type": "Answer", "text": f.answer },
+      })),
+    }
+  : null;
+
 const storesJson = JSON.stringify(locations.map((l: any) => ({
   name: l.name, address: l.address, city: l.city, state: l.state, zip: l.zip, lat: Number(l.lat), lng: Number(l.lng),
 })));
@@ -40,6 +61,7 @@ const storesJson = JSON.stringify(locations.map((l: any) => ({
       "email": s.email ?? "Contact@151Coffee.com",
       "slogan": s.slogan ?? "It's a Good Day to Have a Good Day.",
     })} />
+    {faqSchema && <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />}
   </fragment>
 
   <Nav />
