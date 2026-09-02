@@ -2612,3 +2612,64 @@ footer {
     background-image: var(--bg-dark-grid);
     background-size: auto, auto, 26px 26px;
 }
+
+/* ──────────────────────────────────────────────────────────────
+   Text plates on the quote ground
+   ────────────────────────────────────────────────────────────── */
+
+/* The quote artwork is line art, so glyph edges land right behind body copy
+   and cost it contrast even under the veil. Anything that sits directly on
+   the ground -- as opposed to inside a card, which already has its own fill
+   -- gets a translucent cream plate so the type reads against a settled
+   surface. The plate stays semi-transparent and blurred rather than opaque
+   so the artwork still shows through and the sections keep reading as one
+   textured band instead of a stack of boxes. */
+:root {
+    --plate-bg: rgba(244, 239, 233, 0.86);
+    --plate-ring: 1px solid rgba(17, 17, 17, 0.06);
+    --plate-shadow: 0 2px 14px rgba(0, 0, 0, 0.04);
+}
+
+/* Prose blocks: full-width plates, since the text already fills the column. */
+.featured-drink .featured-text,
+.about-intro-text,
+.about-history .history-body,
+.re-overview-text,
+.about-history .history-timeline,
+.blk-split:not(.blk-split--dark) .blk-split-text {
+    background: var(--plate-bg);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    border: var(--plate-ring);
+    border-radius: var(--radius);
+    box-shadow: var(--plate-shadow);
+    padding: 1.75rem 2rem;
+}
+
+/* Centred headings: plate the heading itself rather than its wrapper, so the
+   fill hugs the words instead of drawing a full-width band across the page. */
+.features .section-header h2,
+.pricing .section-header h2,
+.contact .section-header h2,
+.about-history .section-header h2,
+.re-ideal .section-header h2,
+.re-contact .section-header h2,
+.blk-testimonials .section-header h2,
+.blk-cardgrid .section-header h2,
+.loc-grid-section .loc-state-label,
+.page-hero .page-hero-content h1,
+.page-hero .page-hero-content p {
+    display: inline-block;
+    background: var(--plate-bg);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    border: var(--plate-ring);
+    border-radius: var(--radius);
+    box-shadow: var(--plate-shadow);
+    padding: 0.5rem 1.25rem;
+}
+
+/* The subpage hero stacks two plates, so they need to clear each other. */
+.page-hero .page-hero-content p {
+    margin-top: 0.6rem;
+}
