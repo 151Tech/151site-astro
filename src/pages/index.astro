@@ -6,7 +6,7 @@ import Footer from '../components/Footer.astro';
 import HeroVideo from '../components/HeroVideo.astro';
 import BlockRenderer from '../components/blocks/BlockRenderer.astro';
 import Editable from '../components/Editable.astro';
-import { getPage, getSettings, getLocations, unwrapSingletons, imageUrl } from '../lib/storyblok';
+import { getPage, getSettings, getLocations, unwrapSingletons, imageUrl, mediaUrl } from '../lib/storyblok';
 
 const [homeData, settingsData, locationsEntries] = await Promise.all([
   getPage('home'),
@@ -47,7 +47,7 @@ const storesJson = JSON.stringify(locations.map((l: any) => ({
   <!-- Hero -->
   <section class="hero">
     <div>
-      <HeroVideo src={imageUrl(p.hero?.videoUrl)} videoClass="hero-video" />
+      <HeroVideo src={mediaUrl(p.hero?.videoUrl)} videoClass="hero-video" />
     </div>
     <div class="container">
       <div class="hero-content">
@@ -116,7 +116,12 @@ const storesJson = JSON.stringify(locations.map((l: any) => ({
         {(p.menuSection?.cards ?? []).map((card: any, i: number) => (
           <a href={card.href} class="feature-card">
             <Editable blok={card} />
-            <div class="feature-card-img" style={`background-image:url('${imageUrl(card.image, { width: 700 })}')`}></div>
+            <div
+              class="feature-card-img"
+              style={imageUrl(card.image, { width: 700 })
+                ? `background-image:url('${imageUrl(card.image, { width: 700 })}')`
+                : undefined}
+            ></div>
             <div class="card-content">
               <h3>
                 {card.title}
@@ -148,7 +153,9 @@ const storesJson = JSON.stringify(locations.map((l: any) => ({
           {(p.cta?.photos ?? []).map((photo: any, i: number) => (
             <div class={`cta-photo cta-photo--c${i}`}>
               <Editable blok={photo} />
-              <img loading="lazy" decoding="async" src={imageUrl(photo.image, { width: 600 })} alt={photo.alt ?? ''} />
+              {imageUrl(photo.image, { width: 600 }) && (
+                <img loading="lazy" decoding="async" src={imageUrl(photo.image, { width: 600 })} alt={photo.alt ?? ''} />
+              )}
               <div class="cta-signature">{photo.signature}</div>
             </div>
           ))}

@@ -5,7 +5,7 @@ import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import HeroVideo from '../components/HeroVideo.astro';
 import BlockRenderer from '../components/blocks/BlockRenderer.astro';
-import { getPage, getDrinks, getCategories, getLocations, unwrapSingletons, imageUrl } from '../lib/storyblok';
+import { getPage, getDrinks, getCategories, getLocations, unwrapSingletons, imageUrl, mediaUrl } from '../lib/storyblok';
 import Editable from '../components/Editable.astro';
 
 const [menuData, drinksEntries, categoryEntries, locationEntries] = await Promise.all([
@@ -18,7 +18,7 @@ const [menuData, drinksEntries, categoryEntries, locationEntries] = await Promis
 const p = unwrapSingletons(menuData as any, [
   'seo', 'visibility', 'hero', 'labels', 'locationPicker', 'drinkPage', 'customize',
 ]);
-const heroVideoSrc = imageUrl(p.heroVideo);
+const heroVideoSrc = mediaUrl(p.heroVideo);
 const allDrinks = drinksEntries
   .sort((a: any, b: any) => (Number(a.menuOrder) || 99) - (Number(b.menuOrder) || 99));
 

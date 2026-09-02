@@ -127,30 +127,52 @@ function denormalize(node: any): any {
 // them back to plain objects; real lists are left untouched.
 // Storyblok "asset" fields come back as an object like
 // `{ filename: "https://a.storyblok.com/...", alt, id, ... }`, or `{}`/null
-// when nothing has been picked yet. Older content migrated before the
-// asset-field switchover may still hold a plain string (a local
-// `/images/...` path); pass those through unchanged so nothing breaks
-// until an editor re-picks the image in Storyblok. Returns undefined when
-// there's no image at all, so callers can fall back to a placeholder.
+// when nothing has been picked yet.
+//
+// Every image on the site comes from Storyblok, by policy: no media is
+// hardcoded in the templates or CSS any more. So this deliberately only
+// honours real Storyblok assets and returns undefined for anything else.
+// Pre-migration content still holds a lot of legacy strings -- local
+// `/images/foo.webp` paths and absolute `https://www.151coffee.com/images/...`
+// URLs -- and none of those files exist in this repo, so passing them
+// through only ever produced a broken <img>. Dropping them instead means a
+// drink with no Storyblok photo renders no image element at all, and it
+// stays that way through the content rebuilds that regenerate
+// src/data/storyblok-snapshot.json (a fix applied to the snapshot itself
+// gets overwritten by the next publish; a rule here does not).
+//
 // Resizes/re-encodes via Storyblok's built-in Image Service (free, CDN-cached,
 // just a URL suffix, no re-upload or separate service needed). `width` is
 // required and should be the largest real render size for that call site
 // (e.g. the desktop width of a product's own detail page, even if smaller
 // crops of the same image are used elsewhere in cards/thumbnails); `height`
-// defaults to `width` since editors are asked to upload 1:1 photos. Only
-// applies to actual Storyblok assets (a.storyblok.com); legacy string
-// paths (local /images/... or old Wix URLs from pre-migration content)
-// pass through untouched since they can't be transformed this way.
+// defaults to `width` since editors are asked to upload 1:1 photos.
 export function imageUrl(
   field: any,
   opts?: { width: number; height?: number; quality?: number },
 ): string | undefined {
   if (!field) return undefined;
   const raw = typeof field === 'string' ? field : field.filename;
-  if (!raw) return undefined;
-  if (!opts || !raw.includes('a.storyblok.com')) return raw || undefined;
+  if (!raw || !raw.includes('a.storyblok.com')) return undefined;
+  if (!opts) return raw;
   const { width, height = width, quality = 80 } = opts;
   return `${raw}/m/${width}x${height}/filters:quality(${quality}):format(webp)`;
+}
+
+// Hero backgrounds are the one media field that legitimately points off-site:
+// the editor pastes a YouTube or Vimeo link (see HeroVideo.astro) as often as
+// they pick an uploaded file. Those can't go through imageUrl's
+// Storyblok-only rule, and they can't be transformed by the Image Service
+// either, so they get their own passthrough. Still no hardcoded paths: the
+// value always comes from a Storyblok field, this just doesn't insist the
+// asset be hosted there.
+export function mediaUrl(field: any): string | undefined {
+  if (!field) return undefined;
+  const raw = typeof field === 'string' ? field : field.filename;
+  if (!raw) return undefined;
+  // A bare local path is always pre-migration debris; only real URLs and
+  // Storyblok assets are usable.
+  return /^https?:\/\//.test(raw) ? raw : undefined;
 }
 
 export function unwrapSingletons<T extends Record<string, any>>(obj: T, keys: string[]): T {

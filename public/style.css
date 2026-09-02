@@ -1618,11 +1618,14 @@ nav.nav-scrolled .nav-container {
 }
 
 /* ─── Amenities / Invest ─── */
+/* No background-image: splash1.jpg was never carried into this repo, so the
+   rule only ever resolved to a 404 and the section has always rendered as the
+   flat --black below its own 82% scrim. Media is Storyblok-only now, so
+   there's nothing to re-point it at -- if this band should carry a photo
+   again it needs to come from a Storyblok field on the page. */
 .amenities {
     padding: var(--section-pad);
     background-color: var(--black);
-    background-image: url("images/splash1.jpg");
-    background-size: cover;
     background-position: center calc(50% + var(--parallax, 0px));
     position: relative;
 }

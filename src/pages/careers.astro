@@ -5,11 +5,11 @@ import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import HeroVideo from '../components/HeroVideo.astro';
 import BlockRenderer from '../components/blocks/BlockRenderer.astro';
-import { getPage, unwrapSingletons, imageUrl } from '../lib/storyblok';
+import { getPage, unwrapSingletons, imageUrl, mediaUrl } from '../lib/storyblok';
 import Editable from '../components/Editable.astro';
 
 const p = unwrapSingletons((await getPage('careers')) as any, ['seo', 'agegate', 'under18']);
-const heroVideoSrc = imageUrl(p.heroVideo);
+const heroVideoSrc = mediaUrl(p.heroVideo);
 ---
 <Layout title={p.seo?.title ?? 'Careers at 151 Coffee | Join Our Team'} description={p.seo?.description} ogImage={imageUrl(p.seo?.ogImage, { width: 1200, height: 630 })}>
   <Fragment slot="head">
