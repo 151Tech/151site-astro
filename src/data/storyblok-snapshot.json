@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-02T15:07:03.754Z",
+  "generatedAt": "2026-09-02T17:02:05.427Z",
   "stories": {
     "settings/global": {
       "nav": [
@@ -479,17 +479,17 @@
           "name": "Texas",
           "badge": "",
           "image": {
-            "id": 213629100233227,
+            "id": 215738839210608,
             "alt": "",
             "name": "",
             "focus": "",
             "title": "",
             "source": "",
-            "filename": "https://a.storyblok.com/f/294671107081428/1350x1350/88d8775bda/tx-special.png",
+            "filename": "https://a.storyblok.com/f/294671107081428/1524x1524/ace4b2cef6/test1.png",
             "copyright": "",
             "fieldtype": "asset",
             "meta_data": {
-              "size": "1350x1350"
+              "size": "1524x1524"
             },
             "is_external_url": false
           },
