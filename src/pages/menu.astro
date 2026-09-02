@@ -7,6 +7,8 @@ import HeroVideo from '../components/HeroVideo.astro';
 import BlockRenderer from '../components/blocks/BlockRenderer.astro';
 import { getPage, getDrinks, getCategories, getLocations, unwrapSingletons, imageUrl, mediaUrl } from '../lib/storyblok';
 import Editable from '../components/Editable.astro';
+import JsonLd from '../components/JsonLd.astro';
+import { graph, menuSchema, breadcrumbSchema } from '../lib/seo';
 
 const [menuData, drinksEntries, categoryEntries, locationEntries] = await Promise.all([
   getPage('menu'),
@@ -21,6 +23,14 @@ const p = unwrapSingletons(menuData as any, [
 const heroVideoSrc = mediaUrl(p.heroVideo);
 const allDrinks = drinksEntries
   .sort((a: any, b: any) => (Number(a.menuOrder) || 99) - (Number(b.menuOrder) || 99));
+
+// The full menu as one Menu > MenuSection > MenuItem tree. This is the page
+// that should be answering "what does 151 Coffee serve" for an answer engine,
+// and it previously shipped 64 drinks as unannotated card markup.
+const menuJsonLd = graph(
+  menuSchema(allDrinks, categoryEntries as any[]),
+  breadcrumbSchema([{ name: 'Home', url: '/' }, { name: 'Menu' }]),
+);
 
 // Locations are their own content collection too; drinks/categories reference
 // them by Storyblok slug (same pattern as the category reference below).
@@ -119,6 +129,7 @@ const flavors: { value: string; index: number }[] = allFlavors
 <Layout title={p.seo?.title ?? 'Menu | 151 Coffee - Coffee, Cold Brew, Energy & Dirty Pop'} description={p.seo?.description ?? 'Explore the full 151 Coffee menu. Signature espresso drinks, cold brew, blended energy, Dirty Pop sodas, refreshers, smoothies, teas, and more.'} ogImage={imageUrl(p.seo?.ogImage, { width: 1200, height: 630 })}>
   <Fragment slot="head">
     <link rel="stylesheet" href="/menu.css" />
+    <JsonLd schema={menuJsonLd} />
   </Fragment>
 
   <Nav active="menu" />

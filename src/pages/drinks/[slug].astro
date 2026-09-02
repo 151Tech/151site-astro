@@ -5,6 +5,8 @@ import Nav from '../../components/Nav.astro';
 import Footer from '../../components/Footer.astro';
 import { getDrinks, getPage, getCategories, unwrapSingletons, imageUrl } from '../../lib/storyblok';
 import Editable from '../../components/Editable.astro';
+import JsonLd from '../../components/JsonLd.astro';
+import { graph, menuItemSchema, breadcrumbSchema } from '../../lib/seo';
 
 export async function getStaticPaths() {
   const drinks = await getDrinks();
@@ -34,6 +36,22 @@ const ogImage = drinkImage
     ? drinkImage
     : `https://www.151coffee.com${encodeURI(drinkImage.startsWith('/') ? drinkImage : '/' + drinkImage)}`
   : undefined;
+
+// Marks the drink up as the MenuItem it is, so a question like "does 151
+// Coffee have nitro cold brew" can be answered from our own page rather than
+// from a third party. The breadcrumb supplies the Menu > Category > Drink
+// trail these pages have never expressed -- they only ever had a Back link.
+const drinkSchema = graph(
+  menuItemSchema({ ...drink, slug }),
+  breadcrumbSchema([
+    { name: 'Home', url: '/' },
+    { name: 'Menu', url: '/menu' },
+    ...(categoryTitle && categoryEntry
+      ? [{ name: categoryTitle, url: `/menu#${categoryEntry.slug}` }]
+      : []),
+    { name: drink.name },
+  ]),
+);
 ---
 <Layout
   title={`${drink.name} | 151 Coffee Menu`}
@@ -42,6 +60,7 @@ const ogImage = drinkImage
 >
   <Fragment slot="head">
     <link rel="stylesheet" href="/drink.css" />
+    <JsonLd schema={drinkSchema} />
   </Fragment>
 
   <Nav active="menu" />

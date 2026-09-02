@@ -6,6 +6,8 @@ import Footer from '../components/Footer.astro';
 import BlockRenderer from '../components/blocks/BlockRenderer.astro';
 import { getLocations, getSettings, getPage, unwrapSingletons, imageUrl } from '../lib/storyblok';
 import Editable from '../components/Editable.astro';
+import JsonLd from '../components/JsonLd.astro';
+import { graph, locationSchema, breadcrumbSchema } from '../lib/seo';
 
 const toImageSrc = (field: any) => {
   const url = imageUrl(field, { width: 300 });
@@ -43,14 +45,34 @@ const STATE_NAMES: Record<string, string> = Object.fromEntries(
     .filter((s: any) => s?.code)
     .map((s: any) => [s.code, s.name])
 );
+
+// The store index is the natural ItemList of every location, in the same
+// display order the page renders. Each entry is a full CafeOrCoffeeShop node
+// keyed by @id, so it reinforces rather than duplicates the individual store
+// pages' own markup.
+const locationsJsonLd = graph(
+  {
+    '@type': 'ItemList',
+    name: p.seo?.title ?? '151 Coffee Locations',
+    numberOfItems: locations.length,
+    itemListElement: locations.map((loc: any, i: number) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      item: locationSchema(loc, s),
+    })),
+  },
+  breadcrumbSchema([{ name: 'Home', url: '/' }, { name: 'Locations' }]),
+);
 ---
 <Layout
   title={p.seo?.title ?? '151 Coffee Locations | Find a Drive-Thru Near You'}
   description={p.seo?.description ?? 'Find your nearest 151 Coffee drive-thru. 15+ locations across Texas and Kansas with more opening soon.'}
   ogImage={imageUrl(p.seo?.ogImage, { width: 1200, height: 630 })}
+
 >
   <fragment slot="head">
     <link rel="preconnect" href="https://unpkg.com" crossorigin />
+    <JsonLd schema={locationsJsonLd} />
   </fragment>
 
   <Nav active="locations" />

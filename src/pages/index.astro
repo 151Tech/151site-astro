@@ -7,6 +7,8 @@ import HeroVideo from '../components/HeroVideo.astro';
 import BlockRenderer from '../components/blocks/BlockRenderer.astro';
 import Editable from '../components/Editable.astro';
 import { getPage, getSettings, getLocations, unwrapSingletons, imageUrl, mediaUrl } from '../lib/storyblok';
+import JsonLd from '../components/JsonLd.astro';
+import { graph, organizationSchema, locationSchema } from '../lib/seo';
 
 const [homeData, settingsData, locationsEntries] = await Promise.all([
   getPage('home'),
@@ -33,7 +35,6 @@ const locations = locationsEntries
 const faqItems: any[] = (p.faqs?.items ?? []).filter((f: any) => f.question && f.answer);
 const faqSchema = faqItems.length
   ? {
-      "@context": "https://schema.org",
       "@type": "FAQPage",
       "mainEntity": faqItems.map((f: any) => ({
         "@type": "Question",
@@ -41,7 +42,31 @@ const faqSchema = faqItems.length
         "acceptedAnswer": { "@type": "Answer", "text": f.answer },
       })),
     }
-  : null;
+  : undefined;
+
+// One graph rather than separate blocks, so the Organization, the FAQ and
+// every store resolve against each other by @id. The Organization node moved
+// out of the inline literal it used to be and into organizationSchema(),
+// which adds sameAs (the four social URLs already in settings), founder,
+// foundingDate, priceRange and the postal address.
+//
+// Each store is emitted here too: the homepage carries the store locator, so
+// this is the page that legitimately lists all 15 as an ItemList, and it
+// gives the brand's strongest page a complete local footprint instead of
+// leaving the stores stranded on their own detail pages.
+const homeSchema = graph(
+  organizationSchema(s),
+  faqSchema,
+  {
+    '@type': 'ItemList',
+    name: '151 Coffee Locations',
+    itemListElement: locations.map((loc: any, i: number) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      item: locationSchema(loc, s),
+    })),
+  },
+);
 
 const storesJson = JSON.stringify(locations.map((l: any) => ({
   name: l.name, address: l.address, city: l.city, state: l.state, zip: l.zip, lat: Number(l.lat), lng: Number(l.lng),
@@ -51,17 +76,7 @@ const storesJson = JSON.stringify(locations.map((l: any) => ({
 <Layout title={p.seo?.title ?? '151 Coffee | Drive-Thru Coffee, Cold Brew & Energy Drinks'} description={p.seo?.description} ogImage={imageUrl(p.seo?.ogImage, { width: 1200, height: 630 })}>
   <fragment slot="head">
     <link rel="preconnect" href="https://unpkg.com" crossorigin />
-    <script type="application/ld+json" set:html={JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "Organization",
-      "name": s.siteName ?? "151 Coffee",
-      "url": "https://www.151coffee.com/",
-      "logo": imageUrl(s.logo, { width: 512 }),
-      "telephone": s.phone ?? "+1-682-325-2124",
-      "email": s.email ?? "Contact@151Coffee.com",
-      "slogan": s.slogan ?? "It's a Good Day to Have a Good Day.",
-    })} />
-    {faqSchema && <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />}
+    <JsonLd schema={homeSchema} />
   </fragment>
 
   <Nav />

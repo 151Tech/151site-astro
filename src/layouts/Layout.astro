@@ -1,6 +1,7 @@
 ---
 import Font from 'astro/components/Font.astro';
 import { getSettings, imageUrl } from '../lib/storyblok';
+import { ogImageUrl } from '../lib/seo';
 
 interface Props {
   title: string;
@@ -28,6 +29,16 @@ const canonicalUrl = canonical ?? new URL(Astro.url.pathname, 'https://www.151co
 // in Storyblok (settings/global -> Favicon).
 const settingsData = (await getSettings()) as any;
 const favicon = imageUrl(settingsData?.favicon) ?? '/favicon.ico';
+
+// 74 of 88 indexable pages were shipping no og:image at all. The per-page
+// seo.ogImage fields are populated in Storyblok, but every one of them points
+// at a pre-migration /images/splash1.jpg path that no longer exists and is
+// (correctly) rejected by imageUrl's Storyblok-only rule -- so the tag simply
+// vanished. Rather than leave social and AI preview cards blank, fall back
+// site-wide: settings_global > ogImage when an editor uploads a proper
+// 1200x630 card, else the logo, which is square and not ideal but is a real
+// asset. An explicit per-page ogImage prop still wins.
+const socialImage = ogImage ?? ogImageUrl(settingsData);
 
 // The draft-preview deployment (STORYBLOK_DRAFT_MODE=true, see
 // src/lib/storyblok.ts) renders live unpublished content and shares this
@@ -61,13 +72,14 @@ const isDraftPreview = import.meta.env.STORYBLOK_DRAFT_MODE === 'true';
   <meta property="og:title" content={title} />
   <meta property="og:description" content={description} />
   <meta property="og:url" content={canonicalUrl} />
-  {ogImage && <meta property="og:image" content={ogImage} />}
+  {socialImage && <meta property="og:image" content={socialImage} />}
+  {socialImage && <meta property="og:image:alt" content={title} />}
   <meta property="og:locale" content="en_US" />
 
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content={title} />
   <meta name="twitter:description" content={description} />
-  {ogImage && <meta name="twitter:image" content={ogImage} />}
+  {socialImage && <meta name="twitter:image" content={socialImage} />}
 
   <link rel="icon" href={favicon} />
   <link rel="stylesheet" href="/style.css" />

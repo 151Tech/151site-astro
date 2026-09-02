@@ -5,6 +5,8 @@ import Nav from '../../components/Nav.astro';
 import Footer from '../../components/Footer.astro';
 import { getLocations, getSettings, getPage, unwrapSingletons, imageUrl } from '../../lib/storyblok';
 import Editable from '../../components/Editable.astro';
+import JsonLd from '../../components/JsonLd.astro';
+import { graph, locationSchema, organizationSchema, breadcrumbSchema, SITE } from '../../lib/seo';
 
 export async function getStaticPaths() {
   const locations = await getLocations();
@@ -37,6 +39,21 @@ const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${loc.
 const shortName = (loc.name as string).replace(/^151 Coffee\s*/i, '') || loc.name;
 
 const ogImage = image ? (image.startsWith('http') ? image : `https://www.151coffee.com${encodeURI(image)}`) : undefined;
+
+// A store page is the highest-value page on the site for local and AI search
+// ("coffee near me", "151 coffee keller hours") and until now carried no
+// structured data at all, despite already having every field it needs.
+// The Organization is repeated here so each store resolves its
+// parentOrganization reference within its own page's graph.
+const storeSchema = graph(
+  locationSchema({ ...loc, slug }, s, { menuUrl: `${SITE}/menu?store=${slug}` }),
+  organizationSchema(s),
+  breadcrumbSchema([
+    { name: 'Home', url: '/' },
+    { name: 'Locations', url: '/locations' },
+    { name: loc.name },
+  ]),
+);
 ---
 <Layout
   title={`151 Coffee ${shortName} | Store Info & Hours`}
@@ -46,6 +63,7 @@ const ogImage = image ? (image.startsWith('http') ? image : `https://www.151coff
   <Fragment slot="head">
     <link rel="stylesheet" href="/location-detail.css" />
     <link rel="preconnect" href="https://unpkg.com" crossorigin />
+    <JsonLd schema={storeSchema} />
   </Fragment>
 
   <Nav active="locations" />

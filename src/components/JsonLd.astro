@@ -1,0 +1,10 @@
+---
+// Renders one JSON-LD block, or nothing at all when the builders produced no
+// entities (see prune/graph in src/lib/seo.ts). Kept as a component so no page
+// has to repeat the script tag + set:html + null-guard dance.
+interface Props {
+  schema: unknown;
+}
+const { schema } = Astro.props;
+---
+{schema && <script type="application/ld+json" set:html={JSON.stringify(schema)} />}

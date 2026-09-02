@@ -102,6 +102,14 @@ export default defineConfig({
       ? []
       : [
           sitemap({
+            // /menu/<store> and /menu/<1-15> are QR-code redirect stubs: they
+            // carry meta refresh + noindex + a canonical to /menu?store=...
+            // (see src/pages/menu/[store].astro). Advertising a noindex URL in
+            // the sitemap is a contradiction Search Console reports as
+            // "Submitted URL marked 'noindex'" -- 30 of 117 URLs were doing
+            // exactly that. The stubs still work for the printed QR codes;
+            // they just aren't offered to crawlers as content.
+            filter: (page) => !/\/menu\/[^/]+\/?$/.test(new URL(page).pathname),
             // flattenRoutes rewrites every page to a flat .html, making the
             // canonical URL slash-less, but sitemap runs before that hook and
             // would otherwise advertise /menu/ for every page: URLs that all
@@ -109,7 +117,11 @@ export default defineConfig({
             serialize: (item) => {
               const url = new URL(item.url);
               if (url.pathname !== '/') url.pathname = url.pathname.replace(/\/$/, '');
-              return { ...item, url: url.href };
+              // The content-sync workflow rebuilds whenever an editor
+              // publishes, so build time is an honest proxy for "last
+              // changed" and tells crawlers which pages to revisit. Without
+              // it every URL looks equally stale forever.
+              return { ...item, url: url.href, lastmod: new Date().toISOString() };
             },
           }),
         ]),
