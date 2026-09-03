@@ -29,3 +29,6 @@ pnpm-debug.log*
 
 # local Claude Code config (dev-server launch config, etc.)
 .claude/
+
+# wrangler local state, created when testing with the Cloudflare adapter
+.wrangler/

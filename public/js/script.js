@@ -1,4 +1,6 @@
-// Gentle background parallax for sections using background1.jpg
+// Gentle background parallax for the light bands, which now carry the shared
+// --bg-quote ground (background1.jpg, named in an earlier version of this
+// comment, is long gone).
 (function () {
   const els = document.querySelectorAll('.features, .pricing, .contact, .cta');
   if (!els.length) return;
@@ -218,10 +220,14 @@ if (giftCardModal) {
     });
 }
 
-// ── Netlify Forms (AJAX submit, no page reload) ──
+// ── Contact forms (AJAX submit, no page reload) ──
 // Shared by every form marked data-netlify="true" (home contact + real
-// estate inquiry) so a submission actually reaches Netlify's dashboard
-// instead of silently going nowhere.
+// estate inquiry). The data-netlify/form-name/bot-field attributes are
+// leftover from an earlier Netlify-hosted version of this site; they aren't
+// used by any Netlify backend anymore (this deployment is Webflow Cloud /
+// Cloudflare Workers, not Netlify) -- form-name still tells our own
+// /api/contact endpoint which form fired and doubles as the honeypot field
+// name, so the markup stayed as-is.
 document.querySelectorAll('form[data-netlify]').forEach(function (form) {
     form.addEventListener('submit', function (e) {
         e.preventDefault();
@@ -230,7 +236,7 @@ document.querySelectorAll('form[data-netlify]').forEach(function (form) {
         const originalText = label ? label.textContent : '';
         const formData = new FormData(form);
 
-        fetch('/', {
+        fetch('/api/contact', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: new URLSearchParams(formData).toString(),

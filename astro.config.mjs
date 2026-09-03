@@ -60,6 +60,14 @@ function flattenRoutes() {
 export default defineConfig({
   output: 'static',
   site: 'https://www.151coffee.com',
+  // Astro's cross-site-forgery guard compares the Origin header against the
+  // request's own host, and behind Webflow Cloud's proxy that host is not
+  // reliably ours, so a legitimate form POST gets a 403. Webflow's own docs
+  // say to turn this off for form submissions. The check is not simply
+  // dropped: src/pages/api/contact.ts does its own Origin allowlist, which
+  // does not depend on the proxied host and so is the more reliable of the
+  // two. This is the only route in the app that accepts a POST.
+  security: { checkOrigin: false },
   // Prefetches a linked page's HTML on hover/touchstart, so most in-site
   // navigation feels instant -- pairs well with the edge-cache headers set
   // in src/middleware.ts, since a prefetch often just warms (or hits) that
