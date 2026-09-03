@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-02T17:02:05.427Z",
+  "generatedAt": "2026-09-03T14:01:58.903Z",
   "stories": {
     "settings/global": {
       "nav": [
@@ -292,7 +292,7 @@
         {
           "_uid": "a7201665-0863-43b9-b446-1a7ca24f108c",
           "ctahref": "/menu",
-          "heading": "151 Coffee",
+          "heading": "It's a Good Day",
           "ctalabel": "See Our Menu",
           "videourl": {
             "id": 212914180829565,
@@ -313,8 +313,8 @@
             "is_external_url": false
           },
           "component": "page_home_hero",
-          "subheadingline1": "It's a Good Day",
-          "subheadingline2": "to have a good day"
+          "subheadingline1": "to have a good day",
+          "subheadingline2": ""
         }
       ],
       "contact": [
@@ -2886,35 +2886,6 @@
           "component": "drink",
           "menuOrder": "99",
           "description": "Root beer floats aside, this one levels up with butterscotch syrup and vanilla cream. Rich, nostalgic, and dangerously smooth.",
-          "unavailableAt": []
-        }
-      },
-      {
-        "slug": "desserts-boston",
-        "content": {
-          "_uid": "14bb1a02-3a6b-4209-b9bc-2ffd22aea97f",
-          "name": "Boston",
-          "tags": [
-            {
-              "_uid": "12bc430c-da57-4a8f-9b8c-911f96fc1b42",
-              "value": "Caramel",
-              "component": "text_item"
-            },
-            {
-              "_uid": "a8bcd8ff-1e7f-4263-96bc-a6082a46ba2c",
-              "value": "",
-              "component": "text_item"
-            }
-          ],
-          "badge": "",
-          "image": {
-            "filename": "/images/drinks/energy/151 Blue Energy Hand (1).png"
-          },
-          "category": "categories/desserts",
-          "subtitle": "",
-          "component": "drink",
-          "menuOrder": "99",
-          "description": "",
           "unavailableAt": []
         }
       },
