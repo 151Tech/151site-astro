@@ -64,6 +64,26 @@
     padding: 0.3rem 0.8rem;
 }
 
+/* Live Yelp aggregate rating (src/lib/yelp.ts) -- sits next to the state
+   pill, only renders when the lookup succeeds. */
+.ld-yelp-pill {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.3rem;
+    background: rgba(255,255,255,0.18);
+    color: var(--white);
+    border-radius: 100px;
+    font-family: var(--font-inter), sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 0.3rem 0.8rem;
+    margin-left: 0.5rem;
+    text-decoration: none;
+    transition: background 0.2s ease;
+}
+.ld-yelp-pill span { font-weight: 500; opacity: 0.75; }
+.ld-yelp-pill:hover { background: rgba(255,255,255,0.3); }
+
 .ld-title {
     color: var(--white);
     font-size: clamp(2.4rem, 5vw, 3.6rem);

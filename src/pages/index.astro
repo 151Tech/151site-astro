@@ -9,6 +9,59 @@ import Editable from '../components/Editable.astro';
 import { getPage, getSettings, getLocations, unwrapSingletons, imageUrl, mediaUrl } from '../lib/storyblok';
 import JsonLd from '../components/JsonLd.astro';
 import { graph, organizationSchema, locationSchema } from '../lib/seo';
+import TikTokCarousel from '../components/TikTokCarousel.astro';
+import type { TikTokVideo } from '../lib/tiktok';
+
+// The TikTok Display API needs a KV binding (TIKTOK_CACHE) that only exists
+// under the Cloudflare adapter Webflow Cloud injects in production -- it
+// isn't there in plain `astro dev`, and `cloudflare:workers` doesn't even
+// exist as a module outside a Workers runtime. This dynamic import, gated on
+// DEV, is what keeps local dev working: Vite only resolves it if the line
+// actually runs, so a bare `astro dev` never touches it. See
+// storyblok/tiktok-setup.md for what has to happen (a one-time, human-only
+// OAuth authorization) before this ever returns real videos.
+let tiktokVideos: TikTokVideo[] | null = null;
+if (import.meta.env.DEV) {
+  // Local-preview-only stand-in so the section is visible while building it,
+  // without needing live TikTok credentials. Never shown in production --
+  // real deployments always take the branch below instead. These are real,
+  // currently-live @151coffee video IDs (pulled by hand 2026-09-03) purely so
+  // the section has real embeds to design against -- swap/refresh as needed,
+  // this has nothing to do with the live API integration below.
+  tiktokVideos = [
+    {
+      id: '7681030997080575246',
+      embedLink: 'https://www.tiktok.com/@151coffee/video/7681030997080575246',
+      coverImageUrl: 'https://p16-common-sign.tiktokcdn-us.com/tos-useast5-p-0068-tx/owZSYAaRISQEgEQqemFfDBgSXggYDmQIRuD5Et~tplv-tiktokx-origin.image?dr=9636&x-expires=1788620400&x-signature=bMnW7FoCVmsc4F8fN1j%2B0cHgoG4%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=43f4a2f9&idc=useast8',
+      title: 'Yup, sounds like its time for 151 Coffee. See you soon',
+      createTime: 0,
+    },
+    {
+      id: '7679924636250836238',
+      embedLink: 'https://www.tiktok.com/@151coffee/video/7679924636250836238',
+      coverImageUrl: 'https://p19-common-sign.tiktokcdn-us.com/tos-useast5-p-85c255-tx/o8BfBtDJl8JfLcqXpCHwS6UECK5FIwqxDQgEaj~tplv-tiktokx-origin.image?dr=9636&x-expires=1788620400&x-signature=j1zhlwVMHGT4XOrJStV5%2BZxupbI%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=43f4a2f9&idc=useast8',
+      title: 'Fall featured drinks: Pumpkin Spice Latte, Pumpkin Caramel Brulee Latte, Pumpkin Spice Chai',
+      createTime: 0,
+    },
+    {
+      id: '7678065491113446669',
+      embedLink: 'https://www.tiktok.com/@151coffee/video/7678065491113446669',
+      coverImageUrl: 'https://p16-common-sign.tiktokcdn-us.com/tos-useast5-p-85c255-tx/o8aAk8LNuIGGnfBTfosAeyIzqbQTGT3OIwf97F~tplv-tiktokx-origin.image?dr=9636&x-expires=1788620400&x-signature=K2EcFuarkE09ruGPQbZdFn3d2AM%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=43f4a2f9&idc=useast8',
+      title: 'Powered up. Locked in. See you in the drive-thru.',
+      createTime: 0,
+    },
+  ];
+} else {
+  try {
+    const [{ env }, { getLatestTikToks }] = await Promise.all([
+      import('cloudflare:workers'),
+      import('../lib/tiktok'),
+    ]);
+    tiktokVideos = await getLatestTikToks(env as any);
+  } catch (err) {
+    console.error('[tiktok] unavailable on this request', err);
+  }
+}
 
 const [homeData, settingsData, locationsEntries] = await Promise.all([
   getPage('home'),
@@ -124,24 +177,11 @@ const storesJson = JSON.stringify(locations.map((l: any) => ({
     </section>
   )}
 
-  <!-- Locations -->
-  {(p.visibility?.locations ?? true) && (
-  <section class="spaces" id="spaces">
-    <div class="container">
-      <Editable blok={p.locationsSection} />
-      <div class="section-header"><h2>{p.locationsSection?.heading ?? 'Find Your Location'}</h2></div>
-      <div class="locator">
-        <div class="locator__panel">
-          <div class="locator__search">
-            <input type="text" id="locator-search" aria-label="Search locations" placeholder={p.locatorPlaceholder ?? 'Search by city, state, or zip...'} />
-          </div>
-          <div class="locator__list" id="locator-list"></div>
-        </div>
-        <div class="locator__map" id="locator-map"></div>
-      </div>
-    </div>
-  </section>
-  )}
+  <!-- TikTok feed takes the Locations section's old slot and dark-grid
+       background on the homepage; the full locator (search + map) still
+       lives on its own page at /locations, linked from the nav and footer,
+       so nothing here was the only way to find a store. -->
+  <TikTokCarousel videos={tiktokVideos} social={s.social} />
 
   <!-- Menu Section -->
   {(p.visibility?.menuGrid ?? true) && (

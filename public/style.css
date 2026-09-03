@@ -1046,13 +1046,21 @@ nav.nav-scrolled .nav-container {
     box-shadow: 0 0 0 3px rgba(230,57,70,0.12);
 }
 
-.locator__list { flex: 1; overflow-y: auto; padding: 0.5rem 1.25rem 1.25rem; }
+.locator__list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0.5rem 1.25rem 1.25rem;
+    scrollbar-width: thin;
+    scrollbar-color: var(--red) transparent;
+}
+.locator__list::-webkit-scrollbar { width: 5px; }
+.locator__list::-webkit-scrollbar-track { background: transparent; }
+.locator__list::-webkit-scrollbar-thumb { background: var(--red); border-radius: var(--radius-pill); }
+.locator__list::-webkit-scrollbar-button { display: none; width: 0; height: 0; }
 
 .locator__item {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.75rem;
+    flex-direction: column;
     padding: 1rem;
     margin-bottom: 0.65rem;
     border-radius: var(--radius-sm);
@@ -1065,17 +1073,60 @@ nav.nav-scrolled .nav-container {
 .locator__item:hover { border-color: var(--red); box-shadow: 0 4px 14px rgba(0,0,0,0.08); }
 .locator__item.active { border-color: var(--red); background: rgba(230,57,70,0.04); }
 
-.locator__item-info h3 {
+.locator__item-top {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.85rem;
+}
+
+.locator__item-name {
+    display: block;
+    text-align: left;
     font-family: var(--font-inter), sans-serif;
     font-size: 0.95rem;
     font-weight: 700;
     text-transform: none;
     letter-spacing: normal;
     color: var(--black);
-    margin-bottom: 0.2rem;
+    margin: 0 0 0.5rem;
 }
 
 .locator__item-info p { font-size: 0.82rem; line-height: 1.4; color: #6B6B6B; }
+
+/* Live Yelp aggregate rating (src/lib/yelp.ts) -- only renders when a store
+   has a confirmed Yelp mapping and the lookup succeeded, same as the photo
+   above just being absent when there's no image. */
+.locator__yelp {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.3rem;
+    margin-top: 0.4rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #C9820A;
+    text-decoration: none;
+}
+.locator__yelp span { font-weight: 500; color: #6B6B6B; }
+.locator__yelp:hover { text-decoration: underline; }
+
+/* Bottom half: hours, phone, and the two action links/buttons, each its own
+   left-aligned line rather than sharing a row. */
+.locator__item-bottom {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.15rem;
+    margin-top: 0.65rem;
+    padding-top: 0.6rem;
+    border-top: 1px solid rgba(0,0,0,0.07);
+}
+.locator__item-bottom .locator__hours,
+.locator__item-bottom .locator__phone {
+    margin-top: 0;
+}
+.locator__item-bottom .locator__item-actions {
+    margin-top: 0.45rem;
+}
 .locator__phone {
     display: inline-block;
     margin-top: 0.35rem;
@@ -1099,10 +1150,13 @@ nav.nav-scrolled .nav-container {
     margin-top: 0.2rem;
 }
 
+.locator__item-info { min-width: 0; }
+
 .locator__item-actions {
     display: flex;
+    flex-direction: column;
+    align-items: flex-start;
     gap: 0.5rem;
-    flex-shrink: 0;
 }
 
 .locator__directions {
@@ -1110,6 +1164,7 @@ nav.nav-scrolled .nav-container {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    white-space: nowrap;
     background: linear-gradient(135deg, var(--red) 0%, var(--red-soft) 100%);
     color: var(--white);
     text-decoration: none;
@@ -1128,6 +1183,28 @@ nav.nav-scrolled .nav-container {
     transform: translateY(-2px) scale(1.04);
     box-shadow: 0 6px 18px rgba(230,57,70,0.42);
 }
+
+/* Base "More Info" link -- covers a location with no photo, which falls
+   back to the plain (non-.locator-photo-card) item markup but still gets a
+   real store page to link to. The photo-card variant further down overrides
+   this to sit compactly next to Directions in its tighter grid layout. */
+.locator__more-info {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    white-space: nowrap;
+    color: var(--red);
+    text-decoration: none;
+    font-family: var(--font-inter), sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    transition: gap 0.2s ease;
+}
+.locator__more-info svg { width: 12px; height: 12px; flex-shrink: 0; }
+.locator__more-info:hover { gap: 0.5rem; }
 
 .locator__map {
     flex: 1;
@@ -1171,359 +1248,348 @@ nav.nav-scrolled .nav-container {
 .leaflet-popup-content a strong { color: var(--red); }
 
 @media (max-width: 900px) {
-    .locator { flex-direction: column; height: auto; }
-    .locator__panel { width: 100%; max-height: 400px; }
-    .locator__map { flex: none; height: 320px; }
+    .locator:not(.locator--full) { flex-direction: column; height: auto; }
+    .locator:not(.locator--full) .locator__panel { width: 100%; max-height: 400px; }
+    .locator:not(.locator--full) .locator__map { flex: none; height: 320px; }
 }
 
-/* Locator, locations page only: map on top, full-width list of photo
-   cards below (instead of the homepage's narrow sidebar). Both match the
-   page's normal max-width, no full-bleed breakout. */
-.locator--stacked {
-    display: block;
-    height: auto;
-    margin-top: 0.75rem;
-    gap: 0;
-    max-width: 1300px;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 0 2rem;
-}
+/* Two-half card: top half is the square thumbnail (left) next to the store
+   name/address (right); bottom half is every other detail -- hours, phone,
+   Directions, More Info -- stacked as separate left-aligned lines. */
+.locator-photo-card { padding: 0.85rem; }
 
-/* Search panel + map are visually one card here, the card look (bg,
-   border, shadow, radius) lives on .locator__clip instead of on each piece
-   individually, so there's no seam between them. .locator__card itself
-   stays un-clipped so the count badge below can hang off its corner. */
-.locator--stacked .locator__card {
-    position: relative;
-    z-index: 0;
-}
-
-.locator--stacked .locator__clip {
-    position: relative;
-    border-radius: var(--radius);
-    overflow: hidden;
-}
-
-/* Count "badge", taped onto the map's bottom-left corner, hanging
-   partially off both the map and the card so it reads like a sticker
-   rather than a section pill. The big number is a true sibling behind
-   the pill (not nested inside it) so the pill's own background fully
-   covers the number where they overlap, instead of just its label. */
-.loc-count-wrap {
-    position: absolute;
-    left: 1.5rem;
-    bottom: -0.85rem;
-    z-index: 1000;
-    display: inline-flex;
-    align-items: flex-end;
-}
-
-.loc-count.loc-count--badge {
-    position: relative;
-    z-index: 2;
-    margin-top: 0;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(135deg, var(--red) 0%, var(--red-soft) 100%);
-    border: 3px solid #fff;
-    border-radius: var(--radius-pill);
-    padding: 0.65rem 1.7rem;
-    box-shadow: 0 4px 10px rgba(230,57,70,0.25);
-    overflow: visible;
-}
-
-/* Floats behind the pill, mostly independent of it, so it needs its
-   own red identity (rather than relying on the pill's background for
-   contrast) plus a white stroke so it still pops over the map/card
-   behind it. */
-.loc-count-number {
-    position: absolute;
-    left: 50%;
-    bottom: -0.55rem;
-    transform: translate(-57.5%, 0);
-    font-family: var(--font-bebas-neue), sans-serif;
-    font-size: 12rem;
-    line-height: 1;
-    background: linear-gradient(135deg, var(--red) 0%, var(--red-soft) 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    -webkit-text-fill-color: transparent;
-    -webkit-text-stroke: 3.5px #fff;
-    paint-order: stroke fill;
-    text-shadow: 0 4px 10px rgba(230,57,70,0.25);
-    z-index: 1;
-    white-space: nowrap;
-    animation: locCountGlow 5s ease-in-out infinite;
-}
-
-@keyframes locCountGlow {
-    0%, 55% {
-        filter: drop-shadow(0 0 0 rgba(255,255,255,0));
-    }
-    75% {
-        filter: drop-shadow(0 0 18px rgba(255,255,255,0.85));
-    }
-    100% {
-        filter: drop-shadow(0 0 0 rgba(255,255,255,0));
-    }
-}
-
-.loc-count-label {
-    position: relative;
-    z-index: 2;
-    font-family: var(--font-inter), sans-serif;
-    font-size: 0.68rem;
-    font-weight: 800;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: #fff;
-}
-
-.locator--stacked .locator__map {
-    width: 100%;
-    height: 55vh;
-    min-height: 380px;
-    max-height: 620px;
-    border-radius: 0;
-    box-shadow: none;
-    border: none;
-}
-
-/* Toolbar floats directly on the map itself (no separate bar/background
-   of its own) — the map shows through underneath it. Each control gets
-   just enough of a translucent dark tint to stay legible over the light
-   map tiles, without boxing the whole row off from the map. */
-.locator--stacked .locator__toolbar {
-    position: absolute;
-    top: 1rem;
-    left: 1rem;
-    right: 1rem;
-    z-index: 650;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-}
-
-.locator--stacked .locator__search {
-    flex: 1;
-    padding: 0;
-}
-
-.locator--stacked .locator__search input {
-    width: 100%;
-    background: rgba(20,18,18,0.55);
-    border: 1px solid rgba(255,255,255,0.22);
-    color: #fff;
-    padding: 0.85rem 1.3rem;
-    backdrop-filter: blur(8px) saturate(140%);
-    -webkit-backdrop-filter: blur(8px) saturate(140%);
-}
-
-.locator--stacked .locator__search input::placeholder {
-    color: rgba(255,255,255,0.65);
-}
-
-.locator--stacked .locator__search input:focus {
-    border-color: var(--red);
-    background: rgba(20,18,18,0.65);
-    box-shadow: 0 0 0 3px rgba(230,57,70,0.20);
-}
-
-.locator--stacked .locator__zoom {
-    display: flex;
-    gap: 0.5rem;
-    flex-shrink: 0;
-}
-
-.locator--stacked .locator__zoom button {
-    width: 46px;
-    height: 46px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(20,18,18,0.55);
-    color: #fff;
-    border: 1px solid rgba(255,255,255,0.22);
-    border-radius: var(--radius-sm);
-    font-size: 1.3rem;
-    font-weight: 700;
-    line-height: 1;
-    cursor: pointer;
-    backdrop-filter: blur(8px) saturate(140%);
-    -webkit-backdrop-filter: blur(8px) saturate(140%);
-    transition: background 0.2s ease, border-color 0.2s ease;
-}
-
-.locator--stacked .locator__zoom button:hover {
-    background: rgba(20,18,18,0.72);
-    border-color: rgba(255,255,255,0.35);
-}
-
-.locator--stacked .locator__list {
-    flex: none;
-    overflow: visible;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 1.25rem;
-    padding: 0.5rem 0 1rem;
-}
-
-/* Photo-background card design, shared by the live searchable list above
-   AND the static state-grouped grid below, one consistent card style
-   for every location card on this page (locations page only; the
-   homepage's plain .locator__item list doesn't carry this class). */
-.locator-photo-card {
-    position: relative;
-    flex-direction: column;
+/* The photo and address sit side by side inside the "top" row -- the photo
+   is a fixed-width column, the address takes the rest and never grows past
+   it (min-width: 0 lets the flex item actually shrink instead of forcing
+   the row to overflow). */
+.locator-photo-card .locator__item-top {
     align-items: stretch;
-    justify-content: flex-start;
-    gap: 0;
-    padding: 0;
-    margin-bottom: 0;
-    aspect-ratio: 1 / 1;
-    min-height: 0;
-    background: var(--black);
-    border: 1px solid rgba(255,255,255,0.10);
-    border-radius: 14px;
-    overflow: hidden;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.25);
-    cursor: pointer;
-    transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
-}
-
-.locator-photo-card:hover,
-.locator-photo-card.active {
-    border-color: rgba(230,57,70,0.55);
-    box-shadow: 0 14px 34px rgba(0,0,0,0.4), 0 0 0 1px rgba(230,57,70,0.15);
-    transform: translateY(-4px);
-    background: var(--black);
+    gap: 1rem;
 }
 
 .locator-photo-card .locator__item-photo {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
+    flex: none;
+    width: 88px;
+    height: auto;
+    border-radius: var(--radius-sm);
     object-fit: cover;
-    transition: transform 0.5s ease;
-}
-
-.locator-photo-card:hover .locator__item-photo,
-.locator-photo-card.active .locator__item-photo {
-    transform: scale(1.08);
-}
-
-/* Dark gradient overlay for text legibility over the photo, layered
-   above it and below the info/actions content. */
-.locator-photo-card::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(180deg, rgba(18,13,14,0.25) 0%, rgba(15,11,12,0.68) 55%, rgba(12,9,10,0.94) 100%);
-    pointer-events: none;
-    z-index: 1;
 }
 
 .locator-photo-card .locator__item-info {
-    position: relative;
-    z-index: 2;
-    margin-top: auto;
-    padding: 1.5rem 1.4rem 0.25rem;
-}
-
-.locator-photo-card .locator__item-info h3 {
-    font-family: var(--font-inter), sans-serif;
-    font-size: 1rem;
-    font-weight: 700;
-    text-transform: none;
-    letter-spacing: normal;
-    color: #fff;
-    margin-bottom: 0.3rem;
-}
-
-.locator-photo-card .locator__item-info p {
-    color: rgba(255,255,255,0.72);
-}
-
-.locator-photo-card .locator__hours {
-    color: #7bdb9a !important;
-}
-
-.locator-photo-card .locator__phone {
-    color: var(--red-soft);
-}
-
-.locator-photo-card .locator__dist {
-    color: var(--red-soft);
-}
-
-.locator-photo-card .locator__item-actions {
-    position: relative;
-    z-index: 2;
-    margin-top: 0.65rem;
-    padding: 0 1.4rem 1.4rem;
+    flex: 1;
+    min-width: 0;
     display: flex;
-    flex-wrap: wrap;
-    gap: 0.6rem 1.3rem;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .locator-photo-card .locator__directions,
 .locator-photo-card .locator__more-info {
-    flex: none;
     display: inline-flex;
     align-items: center;
-    gap: 0.35rem;
-    background: none;
-    box-shadow: none;
-    border: none;
-    padding: 0;
-    border-radius: 0;
+    gap: 0.3rem;
     font-family: var(--font-inter), sans-serif;
-    font-size: 0.72rem;
+    font-size: 0.68rem;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.09em;
+    letter-spacing: 0.07em;
     text-decoration: none;
-    text-align: left;
     width: fit-content;
     transition: gap 0.2s ease, color 0.2s ease;
 }
 
 .locator-photo-card .locator__directions svg,
 .locator-photo-card .locator__more-info svg {
-    width: 13px;
-    height: 13px;
+    width: 11px;
+    height: 11px;
     flex-shrink: 0;
 }
 
-.locator-photo-card .locator__directions { color: rgba(255,255,255,0.85); }
-.locator-photo-card .locator__directions:hover { gap: 0.6rem; color: #fff; }
+.locator-photo-card .locator__directions:hover { gap: 0.55rem; }
 
-.locator-photo-card .locator__more-info { color: var(--red-soft); }
-.locator-photo-card .locator__more-info:hover { gap: 0.6rem; color: #fff; }
+.locator-photo-card .locator__more-info { color: var(--red); }
+.locator-photo-card .locator__more-info:hover { gap: 0.55rem; }
 
-@media (max-width: 900px) {
-    .locator--stacked .locator__map { height: 40vh; min-height: 280px; }
-    .locator--stacked .locator__list { grid-template-columns: repeat(2, 1fr); padding: 0.5rem 1.25rem 1rem; }
+
+/* ─── TikTok Feed ─── */
+.tiktok-feed {
+    /* Tighter than var(--section-pad) -- this section is already visually
+       dense (dark background, edge-to-edge cards) so it doesn't need as
+       much breathing room above/below as a typical section. */
+    padding: 3.5rem 0;
+    position: relative;
+    background-color: var(--black);
+    overflow: hidden;
 }
 
+.tiktok-feed .section-header { margin-bottom: 1.75rem; }
+
+/* A soft, low-key spotlight behind the stage -- flat black everywhere else,
+   as requested, but this keeps the center card from reading as a plain box
+   floating on pure black. Purely decorative, sits behind everything. */
+.tiktok-feed::before {
+    content: '';
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    width: 900px;
+    height: 900px;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, rgba(230, 57, 70, 0.16) 0%, transparent 65%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.tiktok-feed .container { position: relative; z-index: 1; text-align: center; }
+
+.tiktok-feed .section-header h2 { color: var(--white); }
+
+.tiktok-social-links {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.1rem;
+    margin-bottom: 1rem;
+}
+.tiktok-social-links a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.1rem;
+    height: 2.1rem;
+    color: var(--white);
+    opacity: 0.85;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.tiktok-social-links a:hover { opacity: 1; transform: translateY(-2px); }
+.tiktok-social-links svg { width: 100%; height: 100%; }
+
+/* Coverflow stage: a fixed-height stack where the 3 slides are positioned
+   absolutely, centered, and then pushed apart by each .slot-* class. Using
+   transform (not layout width/position) to size and place them means a
+   TikTok embed's iframe, once TikTok's embed.js has hydrated it, never gets
+   resized or reflowed by the rotation -- only visually scaled/moved, so
+   nothing reloads or loses its state as slides swap slots.
+   --slide-w scales continuously with the viewport via clamp(), rather than
+   jumping between a few hardcoded breakpoint widths, so there's no
+   in-between viewport size where spacing looks off. --slide-gap (how far the
+   side cards sit from center, in % of --slide-w) is a separate variable
+   because it can't just inherit that same fluid curve: at phone widths the
+   viewport itself becomes the binding constraint, not the card's own size,
+   so it's tightened up in the narrow-screen override further down instead
+   of scaling with --slide-w. */
+.tiktok-stage {
+    --slide-w: clamp(170px, 30vw, 380px);
+    --slide-gap: 108%;
+    position: relative;
+    /* Every slide is now a static 9:16 cover-image card (no live TikTok
+       embed chrome to leave headroom for). */
+    height: calc(var(--slide-w) * 16 / 9);
+    max-width: 1150px;
+    margin: 0 auto;
+}
+
+.tiktok-slide {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: var(--slide-w);
+    /* Centered via transform's own -50%/-50%, not a hardcoded negative
+       margin -- that works out to the correct offset no matter how tall the
+       content actually renders (a placeholder's fixed aspect-ratio box vs.
+       TikTok's real, taller embed chrome), instead of assuming one height. */
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--concrete);
+    border: 1px solid var(--border);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+    transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.7s ease;
+}
+
+.tiktok-slide.slot-center {
+    transform: translate(-50%, -50%) translateX(0) scale(1);
+    opacity: 1;
+    z-index: 3;
+    box-shadow: 0 20px 60px rgba(230, 57, 70, 0.22), 0 14px 44px rgba(0, 0, 0, 0.5);
+    border-color: rgba(230, 57, 70, 0.35);
+}
+
+/* Resting state: all 3 slides visible, left/right dimmed either side of a
+   bright center -- same as before. Only during a rotation does the outgoing
+   left slide take the detour through .slot-exit / .slot-enter-prep below,
+   driven from the script at the bottom of this component. */
+.tiktok-slide.slot-left {
+    transform: translate(-50%, -50%) translateX(calc(var(--slide-gap) * -1)) scale(0.85);
+    opacity: 0.55;
+    z-index: 2;
+}
+
+.tiktok-slide.slot-right {
+    transform: translate(-50%, -50%) translateX(var(--slide-gap)) scale(0.85);
+    opacity: 0.55;
+    z-index: 2;
+}
+
+.tiktok-slide.slot-left:hover,
+.tiktok-slide.slot-right:hover {
+    opacity: 0.82;
+}
+
+/* Transient step 1 (on rotation): the slide leaving the left slot keeps
+   going -- further left than the resting position, fading all the way to
+   invisible -- instead of just staying parked as a dimmed thumbnail. */
+.tiktok-slide.slot-exit {
+    transform: translate(-50%, -50%) translateX(calc(var(--slide-gap) * -1.6)) scale(0.75);
+    opacity: 0;
+    z-index: 1;
+}
+
+/* Transient step 2: once fully exited, the same slide is snapped
+   (transition disabled) to the mirror-image invisible position off the
+   right, ready to animate into .slot-right immediately after. */
+.tiktok-slide.slot-enter-prep {
+    transition: none;
+    transform: translate(-50%, -50%) translateX(calc(var(--slide-gap) * 1.6)) scale(0.75);
+    opacity: 0;
+    z-index: 1;
+}
+
+/* "Now Playing" chip + rotation-timer bar, only ever visible on the center
+   card. Both are pointer-events: none so they never intercept a click meant
+   for the real TikTok embed or placeholder link underneath. */
+.tiktok-now-playing {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.7rem 0.9rem;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.7), transparent);
+    color: var(--white);
+    font-size: 0.66rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+}
+
+.tiktok-slide.is-active .tiktok-now-playing { opacity: 1; }
+
+.tiktok-now-dot {
+    width: 7px;
+    height: 7px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: var(--red);
+    animation: tiktok-pulse 1.4s ease-in-out infinite;
+}
+
+.tiktok-progress {
+    display: block;
+    margin-left: auto;
+    width: 40px;
+    height: 3px;
+    border-radius: var(--radius-pill);
+    background: rgba(255, 255, 255, 0.25);
+    overflow: hidden;
+}
+
+.tiktok-progress i {
+    display: block;
+    height: 100%;
+    width: 0%;
+    background: var(--red);
+    border-radius: inherit;
+}
+
+@keyframes tiktok-pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.5); opacity: 0.55; }
+}
+
+.tiktok-slide.slot-static {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+}
+
+/* TikTok's own embed.js renders inside this blockquote and overrides most
+   inline styles once it hydrates; these rules mainly control the loading
+   state before that script has run. */
+.tiktok-slide .tiktok-embed {
+    margin: 0 !important;
+    width: 100% !important;
+    min-width: 100% !important;
+}
+
+/* Below ~480px the viewport itself, not the card's own size, is what limits
+   how far the side cards can sit from center -- at that width --slide-gap's
+   108% would push them mostly off-screen, so it's tightened here instead of
+   trying to express it as one curve that covers every width. */
 @media (max-width: 480px) {
-    /* Toolbar overlay gets tight on phone widths; shrink the zoom buttons
-       and gap slightly so the search input keeps enough room to be usable. */
-    .locator--stacked .locator__toolbar { top: 0.75rem; left: 0.75rem; right: 0.75rem; gap: 0.5rem; }
-    .locator--stacked .locator__zoom button { width: 40px; height: 40px; font-size: 1.1rem; }
-    .locator--stacked .locator__search input { padding: 0.7rem 1rem; font-size: 0.85rem; }
+    .tiktok-stage { --slide-gap: 64%; }
 }
 
-@media (max-width: 560px) {
-    .locator--stacked .locator__list { grid-template-columns: 1fr; }
+.tiktok-card-placeholder {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    aspect-ratio: 9 / 16;
+    background: linear-gradient(160deg, var(--steel), var(--concrete));
+    color: var(--white);
+    text-decoration: none;
+    padding: 1.25rem;
+    overflow: hidden;
 }
 
-@media (max-width: 767px) {
-    .loc-count-wrap { display: none; }
+.tiktok-card-placeholder img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.85;
+}
+
+.tiktok-play {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 56px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(17, 17, 17, 0.55);
+    color: var(--white);
+    font-size: 1.1rem;
+}
+
+.tiktok-cta {
+    display: block;
+    max-width: 480px;
+    margin: 1.75rem auto 0;
+    color: var(--light-gray);
+    font-weight: 500;
+    font-size: 1.05rem;
+    line-height: 1.5;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.tiktok-cta:hover {
+    color: var(--red-soft);
+}
+
+@media (max-width: 768px) {
+    .tiktok-feed { padding: 2.75rem 0; }
 }
 
 /* ─── Reviews (Pricing) ─── */
@@ -2053,16 +2119,28 @@ footer {
 
     .main-menu-btn2 { max-width: 13rem; }
     .pricing-card { transform: none; }
-    .pricing-grid { grid-template-columns: 1fr; }
+    .pricing-grid { grid-template-columns: 1fr; gap: 0.85rem; }
     .special-pricing { padding: 2rem; }
+
+    /* Reviews stack one-per-row on mobile -- with several cards that adds
+       up fast, so each card is trimmed down to just the quote + byline
+       instead of the roomy desktop padding/quote-mark treatment. */
+    .pricing-card { padding: 1.15rem 1.25rem 1rem; }
+    .pricing-card::before { font-size: 2rem; margin-bottom: 0; }
+    .plan-price { font-size: 0.9rem; line-height: 1.5; margin-bottom: 0.85rem; }
+    .review-byline { gap: 0.6rem; padding-top: 0.75rem; }
+    .review-avatar { width: 2rem; height: 2rem; font-size: 0.8rem; }
     .footer-social-section { display: none; }
     .footer-bottom { flex-direction: column; text-align: center; }
     .cta-buttons { flex-direction: column; align-items: center; }
     .btn-primary, .btn-secondary { width: 100%; text-align: center; }
     .contact-form { padding: 2rem 1.5rem; }
 
-    /* Roomier footer nav on touch: bigger tap area, less cramped stacking */
-    .footer-content { gap: 2rem; padding: 2rem 1.5rem; }
+    /* Roomier footer nav on touch: bigger tap area, less cramped stacking.
+       Social is hidden above, leaving just Company + Support -- put them
+       side by side instead of stacked to save a whole row of vertical
+       space, since two short lists comfortably share a mobile-width row. */
+    .footer-content { grid-template-columns: 1fr 1fr; gap: 2rem 1.25rem; padding: 2rem 1.5rem; }
     .footer-section ul li { margin-bottom: 0.15rem; }
     .footer-section ul li a,
     .footer-section ul li button {
@@ -2179,74 +2257,264 @@ footer {
 /* ──────────────────────────────────────────────────────────────
    Locations page
    ────────────────────────────────────────────────────────────── */
-.loc-bg {
+/* Full-page locator, at every size: this section IS the viewport, with no
+   page scroll at all -- the sidebar list and the map each scroll/pan
+   independently inside their own box. There's nothing else on this page
+   worth showing alongside the map and the picker bar, so the sitemap/footer
+   tail never renders here (see .loc-page-tail below). */
+.loc-fullpage {
     background-color: #161616;
-    background-image:
-        radial-gradient(120% 60% at 50% 0%,  rgba(230,57,70,0.28) 0%, transparent 60%),
-        radial-gradient(80% 60% at 100% 100%, rgba(230,57,70,0.16) 0%, transparent 60%),
-        radial-gradient(rgba(255,255,255,0.06) 2px, transparent 2.5px);
-    background-size: auto, auto, 26px 26px;
-    position: relative;
-    margin-top: 58px;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    height: 100dvh;
+    overflow: hidden;
 }
-.loc-hero-content { position: relative; z-index: 1; text-align: center; margin-bottom: 1rem; }
-.loc-hero-content h1 { font-size: clamp(2.8rem, 6vw, 4.8rem); color: #fff; line-height: 1; margin-bottom: 0.6rem; }
-.loc-hero-content p { color: rgba(255,255,255,0.94); font-family: var(--font-inter), sans-serif; font-size: 1.05rem; font-weight: 400; }
-.loc-count {
-    display: inline-block;
-    margin-top: 0.5rem;
-    background: rgba(255,255,255,0.15);
-    border: 1px solid rgba(255,255,255,0.28);
-    border-radius: 999px;
-    padding: 0.38rem 1.1rem;
+.loc-page-tail { display: none; }
+html:has(.loc-fullpage), body:has(.loc-fullpage) { overflow: hidden; }
+.loc-count-inline {
     font-family: var(--font-inter), sans-serif;
     font-size: 0.82rem;
     font-weight: 700;
-    color: #fff;
-    letter-spacing: 0.06em;
+    color: rgba(255,255,255,0.75);
+    letter-spacing: 0.04em;
     text-transform: uppercase;
 }
-.loc-map-section { background: none; padding: 4rem 0; }
-.loc-map-section .section-header h1 { color: #fff; }
-.loc-grid-section {
-    padding: 4rem 0 5rem;
+.loc-count-inline strong { color: var(--red-soft); font-size: 0.95rem; }
+
+/* Full-bleed: no outer padding, no radius, no shadow -- the panel and map
+   run flush to the browser's edges (and to the nav above, and the bottom of
+   the screen), rather than floating as a card with a visible gutter. */
+.locator--full {
+    flex: 1;
+    min-height: 0;
+    gap: 0;
+}
+.locator--full .locator__panel {
+    background: #f4efe9;
+    border-radius: 0;
+    box-shadow: none;
+    border: none;
+    border-right: 1px solid rgba(0,0,0,0.08);
+}
+.locator--full .locator__list { padding: 0.35rem 1rem 1rem; }
+
+/* Sits at the top of the sidebar panel, which now itself runs up under the
+   fixed nav -- the top padding clears the nav's own height so the heading
+   isn't hidden behind it. */
+.locator__panel-header {
+    padding: 5.75rem 1.1rem 0.5rem;
+    text-align: center;
+}
+.locator__panel-header h1 {
+    font-family: var(--font-bebas-neue), sans-serif;
+    font-size: 1.9rem;
+    line-height: 1;
+    letter-spacing: 0.01em;
+    color: var(--black);
+    margin: 0 0 0.15rem;
+}
+.locator__panel-header .loc-count-inline {
+    color: rgba(0,0,0,0.55);
+}
+.locator__panel-header .loc-count-inline strong { color: var(--red); }
+
+@media (max-width: 640px) {
+    /* The badge on the map already shows the count -- no need to repeat
+       "Find Your 151" / "Locations Open" above the search bar too, and
+       dropping it gives the list more of the limited screen height. */
+    .locator__panel-header { display: none; }
+}
+
+.locator__map-wrap {
     position: relative;
+    flex: 1;
 }
-.loc-grid-section::before {
-    content: '';
+.locator__map-wrap .locator__map {
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+    box-shadow: none;
+    border: none;
+}
+.locator__map-wrap .locator__zoom {
     position: absolute;
-    inset: 0;
-    background:
-        radial-gradient(120% 60% at 50% 0%,   rgba(230,57,70,0.08) 0%, transparent 60%),
-        radial-gradient(120% 60% at 50% 100%, rgba(230,57,70,0.06) 0%, transparent 60%),
-        radial-gradient(60% 100% at 0% 50%,   rgba(230,57,70,0.06) 0%, transparent 55%),
-        radial-gradient(60% 100% at 100% 50%, rgba(230,57,70,0.06) 0%, transparent 55%);
-    pointer-events: none;
+    top: 5.5rem;
+    left: 1rem;
+    z-index: 500;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
 }
-.loc-grid-section .container { position: relative; z-index: 1; }
-.loc-state-group { margin-bottom: 3rem; }
-.loc-state-label {
+.locator__map-wrap .locator__zoom button {
+    width: 38px;
+    height: 38px;
+    border: none;
+    border-radius: 50%;
+    background: #fff;
+    color: var(--black);
+    font-size: 1.2rem;
+    line-height: 1;
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.22);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.locator__map-wrap .locator__zoom button:hover {
+    transform: scale(1.08);
+    box-shadow: 0 4px 14px rgba(0,0,0,0.3);
+}
+
+/* Narrows the sidebar list (and map framing) down to one state at a time. */
+.locator__state-filters {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0 1rem 0.6rem;
+}
+.locator__state-btn {
+    flex: 1;
+    padding: 0.45rem 0.75rem;
+    border-radius: var(--radius-pill);
+    border: 1px solid rgba(0,0,0,0.14);
+    background: #fbf8f4;
+    color: var(--black);
     font-family: var(--font-inter), sans-serif;
-    font-size: 0.95rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.locator__state-btn:hover { border-color: var(--red); }
+.locator__state-btn.active {
+    background: linear-gradient(135deg, var(--red) 0%, var(--red-soft) 100%);
+    border-color: transparent;
+    color: #fff;
+    box-shadow: 0 3px 10px rgba(230,57,70,0.3);
+}
+
+/* Count "badge", hanging off the map's bottom-right corner like a sticker --
+   the big number is a true sibling behind the pill (not nested inside it)
+   so the pill's own background fully covers the number where they overlap,
+   instead of just its label. Restored from the original stacked-layout
+   design (large glowing number + small pill), just re-anchored to the
+   right instead of the left. */
+.loc-count-wrap {
+    position: absolute;
+    right: 1.5rem;
+    bottom: 1.25rem;
+    z-index: 1000;
+    display: inline-flex;
+    align-items: flex-end;
+}
+
+.loc-count.loc-count--badge {
+    position: relative;
+    z-index: 2;
+    margin-top: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--red) 0%, var(--red-soft) 100%);
+    border: 3px solid #fff;
+    border-radius: var(--radius-pill);
+    padding: 0.65rem 1.7rem;
+    box-shadow: 0 4px 10px rgba(230,57,70,0.25);
+    overflow: visible;
+}
+
+/* Floats behind the pill, mostly independent of it, so it needs its own
+   red identity (rather than relying on the pill's background for
+   contrast) plus a white stroke so it still pops over the map behind it. */
+.loc-count-number {
+    position: absolute;
+    left: 50%;
+    bottom: 0.55rem;
+    transform: translate(-58%, 0);
+    font-family: var(--font-bebas-neue), sans-serif;
+    font-size: 12rem;
+    line-height: 1;
+    background: linear-gradient(135deg, var(--red) 0%, var(--red-soft) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    -webkit-text-stroke: 3.5px #fff;
+    paint-order: stroke fill;
+    text-shadow: 0 4px 10px rgba(230,57,70,0.25);
+    z-index: 1;
+    white-space: nowrap;
+    animation: locCountGlow 5s ease-in-out infinite;
+}
+
+@keyframes locCountGlow {
+    0%, 55% { filter: drop-shadow(0 0 0 rgba(255,255,255,0)); }
+    75% { filter: drop-shadow(0 0 18px rgba(255,255,255,0.85)); }
+    100% { filter: drop-shadow(0 0 0 rgba(255,255,255,0)); }
+}
+
+.loc-count-label {
+    position: relative;
+    z-index: 2;
+    font-family: var(--font-inter), sans-serif;
+    font-size: 0.68rem;
     font-weight: 800;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--red);
-    margin-bottom: 1.25rem;
-    padding-bottom: 0.75rem;
-    border-bottom: 2px solid rgba(230,57,70,0.6);
+    color: #fff;
 }
-.loc-cards {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1rem;
+
+@media (max-width: 640px) {
+    .locator__map-wrap .locator__zoom { display: none; }
+    .locator--full { display: flex; flex-direction: column; gap: 0; }
+    /* The panel fills whatever vertical space is left below the fixed-height
+       map, and only the list inside it scrolls -- the search bar, filter
+       pills, etc. all stay put rather than scrolling away with the list. */
+    .locator--full .locator__panel {
+        width: 100%;
+        flex: 1;
+        min-height: 0;
+        border-right: none;
+        border-bottom: 1px solid rgba(0,0,0,0.08);
+    }
+    .locator--full .locator__map-wrap { flex: none; height: 320px; order: -1; }
+    .locator--full .locator__list { flex: 1; min-height: 0; max-height: none; }
+    .loc-count-wrap { right: 0.85rem; bottom: 0.85rem; }
+    .loc-count.loc-count--badge { padding: 0.45rem 1.1rem; }
+    .loc-count-number { font-size: 6.5rem; bottom: 0.5rem; -webkit-text-stroke-width: 2.5px; }
 }
-@media (max-width: 768px) {
-    .loc-cards { grid-template-columns: repeat(2, 1fr); }
+
+/* Plain crawlable links to every location, grouped by state -- visually
+   minimal since the locator above is the real interface; this exists so
+   every store page has a real link on this page without depending on JS. */
+.loc-sitemap {
+    background-color: #161616;
+    padding: 0 0 3rem;
 }
-@media (max-width: 480px) {
-    .loc-cards { grid-template-columns: 1fr; }
+.loc-sitemap__group {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem 1rem;
+    padding: 0.75rem 0;
+    border-top: 1px solid rgba(255,255,255,0.08);
 }
+.loc-sitemap__state {
+    font-family: var(--font-inter), sans-serif;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--red-soft);
+    margin-right: 0.5rem;
+}
+.loc-sitemap a {
+    font-family: var(--font-inter), sans-serif;
+    font-size: 0.82rem;
+    color: rgba(255,255,255,0.55);
+    text-decoration: none;
+}
+.loc-sitemap a:hover { color: #fff; text-decoration: underline; }
 
 /* ──────────────────────────────────────────────────────────────
    FAQ section
@@ -2379,7 +2647,6 @@ footer {
     .re-ideal .section-header, .ideal-item,
     .re-locations .section-header, .re-location-tag, .re-contact .section-header,
     .re-contact .contact-form-wrapper,
-    .loc-hero-content, .loc-state-label,
     .page-hero-content, .legal-content
 ) {
     opacity: 0;
@@ -2398,7 +2665,6 @@ footer {
     .re-ideal .section-header, .ideal-item,
     .re-locations .section-header, .re-location-tag, .re-contact .section-header,
     .re-contact .contact-form-wrapper,
-    .loc-hero-content, .loc-state-label,
     .page-hero-content, .legal-content
 ).in {
     opacity: 1;
@@ -2610,7 +2876,6 @@ footer {
 .features,
 .pricing,
 .contact,
-.loc-grid-section,
 .page-hero {
     background-color: #f4efe9;
     background-image: var(--bg-quote);
@@ -2619,9 +2884,6 @@ footer {
     background-repeat: repeat;
 }
 
-/* Kept as its own rule rather than added to the .loc-bg selector because that
-   class also carries page-level layout (margin-top) that must not leak into
-   the sections below. */
 .spaces,
 .faq {
     background-color: #161616;
@@ -2684,7 +2946,6 @@ footer {
 .re-contact .section-header h2,
 .blk-testimonials .section-header h2,
 .blk-cardgrid .section-header h2,
-.loc-grid-section .loc-state-label,
 .page-hero .page-hero-content h1,
 .page-hero .page-hero-content p {
     display: inline-block;

@@ -8,6 +8,7 @@ import { getLocations, getSettings, getPage, unwrapSingletons, imageUrl } from '
 import Editable from '../components/Editable.astro';
 import JsonLd from '../components/JsonLd.astro';
 import { graph, locationSchema, breadcrumbSchema } from '../lib/seo';
+import { getYelpRatings } from '../lib/yelp';
 
 const toImageSrc = (field: any) => {
   const url = imageUrl(field, { width: 300 });
@@ -25,12 +26,28 @@ const p = unwrapSingletons((pageData as any) ?? {}, ['seo', 'visibility', 'hero'
 const locations = locationsEntries
   .sort((a: any, b: any) => (Number(a.displayOrder) || 99) - (Number(b.displayOrder) || 99));
 
+// Yelp ratings need the `cloudflare:workers` KV binding, which only exists
+// under the Workers runtime -- not plain `astro dev` (same constraint as the
+// TikTok integration in index.astro). Missing/failed lookups just come back
+// as null per store, so a broken or unconfigured Yelp integration never
+// takes this page down with it.
+let yelpRatings: Record<string, { rating: number; reviewCount: number; url: string } | null> = {};
+if (!import.meta.env.DEV) {
+  try {
+    const { env } = await import('cloudflare:workers');
+    yelpRatings = await getYelpRatings(env as any, locations.map((l: any) => l.slug));
+  } catch (err) {
+    console.error('[yelp] ratings unavailable on this request', err);
+  }
+}
+
 const storesJson = JSON.stringify(locations.map((l: any) => ({
   name: l.name, address: l.address, city: l.city, state: l.state, zip: l.zip, lat: Number(l.lat), lng: Number(l.lng),
   // Only this page's locator needs these. Their presence is what tells
   // locator.js to render a photo + "More Info" link on each list item.
   slug: l.slug,
   image: toImageSrc(l.image),
+  yelp: yelpRatings[l.slug] ?? null,
 })));
 
 // Group locations by state for the cards grid
@@ -80,116 +97,72 @@ const locationsJsonLd = graph(
   <BlockRenderer sections={p.sections} />
 
   {(p.visibility?.map ?? true) && (
-  <div class="loc-bg">
-    <section class="loc-map-section">
-      <div class="container">
-        <div class="loc-hero-content">
+  <section class="loc-fullpage" data-loc-fullpage>
+    <div class="locator locator--full">
+      <div class="locator__panel">
+        <div class="locator__panel-header">
           <Editable blok={p} />
           <h1>{p.hero?.heading ?? 'Find Your 151'}</h1>
-        </div>
-      </div>
-      <div class="locator locator--stacked">
-        <div class="locator__card">
-          <div class="locator__toolbar">
-            <div class="locator__zoom">
-              <button type="button" id="locator-zoom-out" aria-label="Zoom out">&#8722;</button>
-              <button type="button" id="locator-zoom-in" aria-label="Zoom in">&#43;</button>
-            </div>
-            <div class="locator__search">
-              <input type="text" id="locator-search" aria-label="Search locations" placeholder={p.searchPlaceholder ?? 'Search by city, state, or zip...'} />
-            </div>
-          </div>
-          <div class="locator__clip">
-            <div class="locator__map" id="locator-map"></div>
-          </div>
-          <span class="loc-count-wrap">
-            <span class="loc-count-number">{locations.length}</span>
-            <span class="loc-count loc-count--badge">
-              <span class="loc-count-label">{p.hero?.countSuffix ?? 'Locations Open'}</span>
-            </span>
+          <span class="loc-count-inline">
+            <strong>{locations.length}</strong> {p.hero?.countSuffix ?? 'Locations Open'}
           </span>
         </div>
+        <div class="locator__search">
+          <input type="text" id="locator-search" aria-label="Search locations" placeholder={p.searchPlaceholder ?? 'Search by city, state, or zip...'} />
+        </div>
+        <div class="locator__state-filters">
+          <button type="button" class="locator__state-btn active" data-state-filter="">All</button>
+          <button type="button" class="locator__state-btn" data-state-filter="TX">Texas</button>
+          <button type="button" class="locator__state-btn" data-state-filter="KS">Kansas</button>
+        </div>
+        <div class="locator__list" id="locator-list"></div>
       </div>
-    </section>
-  </div>
+      <div class="locator__map-wrap">
+        <div class="locator__zoom">
+          <button type="button" id="locator-zoom-out" aria-label="Zoom out">&#8722;</button>
+          <button type="button" id="locator-zoom-in" aria-label="Zoom in">&#43;</button>
+        </div>
+        <div class="locator__map" id="locator-map"></div>
+        <span class="loc-count-wrap">
+          <span class="loc-count-number">{locations.length}</span>
+          <span class="loc-count loc-count--badge">
+            <span class="loc-count-label">{p.hero?.countSuffix ?? 'Locations Open'}</span>
+          </span>
+        </span>
+      </div>
+    </div>
+  </section>
   )}
 
-  {(p.visibility?.grid ?? true) && (
-  <section class="loc-grid-section">
+  <!-- Every location as plain crawlable links, grouped by state -- the
+       sidebar list above is populated client-side by locator.js, so this is
+       what keeps every store page reachable without JS and gives crawlers a
+       real link per location (on top of the ItemList JSON-LD below). Visually
+       out of the way since the locator above is the real UI. -->
+  <!-- On desktop/tablet the locator above IS the whole page (no scroll at
+       all); this tail only ever appears in the narrow-screen fallback layout,
+       where the page scrolls normally anyway, so the sitemap links and
+       footer are hidden rather than removed above ~640px. -->
+  <div class="loc-page-tail">
+    <div class="loc-sitemap" role="navigation" aria-label="All locations">
       <div class="container">
         {Object.entries(byState).map(([stateCode, locs]) => (
-          <div class="loc-state-group">
-            <div class="loc-state-label">
-              {STATE_NAMES[stateCode] ?? stateCode} - {locs.length} Location{locs.length !== 1 ? 's' : ''}
-            </div>
-            <div class="loc-cards">
-              {locs.map((loc: any) => (
-                <div
-                  class="locator__item locator-photo-card"
-                  data-store-card
-                  data-href={`/locations/${loc.slug}`}
-
-                >
-                  <Editable blok={loc} />
-                  {toImageSrc(loc.image) && (
-                    <img
-                      class="locator__item-photo"
-                      src={toImageSrc(loc.image)}
-                      alt=""
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  )}
-                  <div class="locator__item-info">
-                    <h3>{loc.city}</h3>
-                    <p>{loc.address}<br />{loc.city}, {loc.state} {loc.zip}</p>
-                  </div>
-                  <div class="locator__item-actions">
-                    <a
-                      class="locator__directions"
-                      href={`https://www.google.com/maps/dir/?api=1&destination=${loc.lat},${loc.lng}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      {p.directionsLabel ?? 'Get Directions'}
-                      <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-                      </svg>
-                    </a>
-                    <a class="locator__more-info" href={`/locations/${loc.slug}`}>
-                      {p.storeInfoLabel ?? 'Store Info'}
-                      <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-                      </svg>
-                    </a>
-                  </div>
-                </div>
-              ))}
-            </div>
+          <div class="loc-sitemap__group">
+            <span class="loc-sitemap__state">{STATE_NAMES[stateCode] ?? stateCode}</span>
+            {locs.map((loc: any) => (
+              <a href={`/locations/${loc.slug}`}>{loc.city}, {loc.state}</a>
+            ))}
           </div>
         ))}
       </div>
-    </section>
-  )}
+    </div>
 
-  <Footer />
+    <Footer />
+  </div>
 
   <script define:vars={{ storesJson, hours: s.hours, phone: s.phone }} is:inline>
     window.COFFEE151_STORES = JSON.parse(storesJson);
     window.COFFEE151_LOCATOR = { hours, phone };
   </script>
   <script src="/js/locator-loader.js" is:inline></script>
-  <script is:inline>
-    // Whole card navigates to that store's info page, but clicks on either
-    // real link inside (Get Directions / Store Info) still behave normally:
-    // Get Directions opens Google Maps in a new tab instead of also
-    // navigating this page.
-    document.querySelectorAll('[data-store-card]').forEach(function (card) {
-      card.addEventListener('click', function (e) {
-        if (e.target.closest('a')) return;
-        var href = card.dataset.href;
-        if (href) window.location.href = href;
-      });
-    });
-  </script>
 </Layout>

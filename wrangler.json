@@ -9,6 +9,14 @@
     {
       "binding": "SESSION",
       "id": "123456789"
+    },
+    {
+      "binding": "TIKTOK_CACHE",
+      "id": "123456789"
+    },
+    {
+      "binding": "YELP_CACHE",
+      "id": "123456789"
     }
   ]
 }
