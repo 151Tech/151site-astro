@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-04T14:01:50.169Z",
+  "generatedAt": "2026-09-04T18:02:09.143Z",
   "stories": {
     "settings/global": {
       "nav": [
@@ -3253,24 +3253,6 @@
         }
       },
       {
-        "slug": "coldbrew-cold-brew-with-cream",
-        "content": {
-          "_uid": "b23eda0f-ae21-4031-bb4d-7e8d13b6acdb",
-          "name": "Cold Brew with Cream",
-          "tags": [],
-          "badge": "",
-          "image": {
-            "filename": "/images/v5/coldbrew.jpg"
-          },
-          "category": "categories/coldbrew",
-          "subtitle": "Silky, Smooth Cream on Top",
-          "component": "drink",
-          "menuOrder": "99",
-          "description": "Our smooth cold brew topped with a generous pour of cream that cascades down through the coffee. Sip it as-is or stir it in - either way, it's perfect.",
-          "unavailableAt": []
-        }
-      },
-      {
         "slug": "coldbrew-caramel-blondie",
         "content": {
           "_uid": "b3a998b2-c7a2-4d88-9cbf-51ba2c27fb9a",
@@ -3691,24 +3673,6 @@
           "component": "drink",
           "menuOrder": "99",
           "description": "A smooth, golden espresso drink layered with rich caramel syrup and a hint of vanilla. Sweet enough to feel like a treat, balanced enough to be your everyday go-to.",
-          "unavailableAt": []
-        }
-      },
-      {
-        "slug": "coffee-americano",
-        "content": {
-          "_uid": "68681c8d-e002-415b-b898-b42ea41aacfc",
-          "name": "Americano",
-          "tags": [],
-          "badge": "",
-          "image": {
-            "filename": "/images/v5/coffee.jpg"
-          },
-          "category": "categories/coffee",
-          "subtitle": "Classic Bold Espresso",
-          "component": "drink",
-          "menuOrder": "99",
-          "description": "Espresso shots pulled fresh and diluted with water for a clean, bold cup. No frills, all flavor. The purist's pick.",
           "unavailableAt": []
         }
       },
