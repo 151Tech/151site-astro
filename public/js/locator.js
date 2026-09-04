@@ -82,20 +82,12 @@
             const photo = store.image ? `<img class="locator__item-photo" src="${store.image}" alt="" loading="lazy" decoding="async">` : "";
             const arrow = '<svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
             const moreInfo = store.slug ? `<a class="locator__more-info" href="/locations/${store.slug}">More Info${arrow}</a>` : "";
-            // store.yelp is null when the integration isn't configured, the
-            // per-store lookup failed, or this store has no Yelp mapping yet
-            // -- any of those just means no badge renders, same as a store
-            // with no photo just skips the photo.
-            const yelp = store.yelp
-                ? `<a class="locator__yelp" href="${store.yelp.url}" target="_blank" rel="noopener noreferrer">&#9733; ${store.yelp.rating.toFixed(1)} <span>(${store.yelp.reviewCount})</span></a>`
-                : "";
             item.innerHTML = `
                 <h3 class="locator__item-name">${store.name.replace("151 Coffee ", "")}${dist}</h3>
                 <div class="locator__item-top">
                     ${photo}
                     <div class="locator__item-info">
                         <p>${store.address}<br>${store.city}, ${store.state} ${store.zip}</p>
-                        ${yelp}
                     </div>
                 </div>
                 <div class="locator__item-bottom">

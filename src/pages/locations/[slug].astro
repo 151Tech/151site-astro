@@ -7,7 +7,6 @@ import { getLocations, getSettings, getPage, unwrapSingletons, imageUrl } from '
 import Editable from '../../components/Editable.astro';
 import JsonLd from '../../components/JsonLd.astro';
 import { graph, locationSchema, organizationSchema, breadcrumbSchema, SITE } from '../../lib/seo';
-import { getYelpRating } from '../../lib/yelp';
 
 export async function getStaticPaths() {
   const locations = await getLocations();
@@ -40,19 +39,6 @@ const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${loc.
 const shortName = (loc.name as string).replace(/^151 Coffee\s*/i, '') || loc.name;
 
 const ogImage = image ? (image.startsWith('http') ? image : `https://www.151coffee.com${encodeURI(image)}`) : undefined;
-
-// See src/pages/locations.astro for why this is DEV-gated and null-safe --
-// same `cloudflare:workers` KV constraint, same "never take the page down"
-// guarantee.
-let yelp: { rating: number; reviewCount: number; url: string } | null = null;
-if (!import.meta.env.DEV) {
-  try {
-    const { env } = await import('cloudflare:workers');
-    yelp = await getYelpRating(env as any, slug as string);
-  } catch (err) {
-    console.error('[yelp] rating unavailable on this request', err);
-  }
-}
 
 // A store page is the highest-value page on the site for local and AI search
 // ("coffee near me", "151 coffee keller hours") and until now carried no
@@ -93,11 +79,6 @@ const storeSchema = graph(
         <span>{dl.backLabel ?? 'Back to Locations'}</span>
       </a>
       <span class="ld-state-pill">{loc.state}</span>
-      {yelp && (
-        <a class="ld-yelp-pill" href={yelp.url} target="_blank" rel="noopener noreferrer">
-          &#9733; {yelp.rating.toFixed(1)} <span>({yelp.reviewCount} on Yelp)</span>
-        </a>
-      )}
       <h1 class="ld-title">{loc.name}</h1>
       <p class="ld-addr">
         <span>{loc.address}</span>, <span>{loc.city}</span>, {loc.state} <span>{loc.zip}</span>

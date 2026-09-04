@@ -1093,22 +1093,6 @@ nav.nav-scrolled .nav-container {
 
 .locator__item-info p { font-size: 0.82rem; line-height: 1.4; color: #6B6B6B; }
 
-/* Live Yelp aggregate rating (src/lib/yelp.ts) -- only renders when a store
-   has a confirmed Yelp mapping and the lookup succeeded, same as the photo
-   above just being absent when there's no image. */
-.locator__yelp {
-    display: inline-flex;
-    align-items: baseline;
-    gap: 0.3rem;
-    margin-top: 0.4rem;
-    font-size: 0.78rem;
-    font-weight: 700;
-    color: #C9820A;
-    text-decoration: none;
-}
-.locator__yelp span { font-weight: 500; color: #6B6B6B; }
-.locator__yelp:hover { text-decoration: underline; }
-
 /* Bottom half: hours, phone, and the two action links/buttons, each its own
    left-aligned line rather than sharing a row. */
 .locator__item-bottom {

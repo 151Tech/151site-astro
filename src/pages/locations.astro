@@ -8,7 +8,6 @@ import { getLocations, getSettings, getPage, unwrapSingletons, imageUrl } from '
 import Editable from '../components/Editable.astro';
 import JsonLd from '../components/JsonLd.astro';
 import { graph, locationSchema, breadcrumbSchema } from '../lib/seo';
-import { getYelpRatings } from '../lib/yelp';
 
 const toImageSrc = (field: any) => {
   const url = imageUrl(field, { width: 300 });
@@ -26,28 +25,12 @@ const p = unwrapSingletons((pageData as any) ?? {}, ['seo', 'visibility', 'hero'
 const locations = locationsEntries
   .sort((a: any, b: any) => (Number(a.displayOrder) || 99) - (Number(b.displayOrder) || 99));
 
-// Yelp ratings need the `cloudflare:workers` KV binding, which only exists
-// under the Workers runtime -- not plain `astro dev` (same constraint as the
-// TikTok integration in index.astro). Missing/failed lookups just come back
-// as null per store, so a broken or unconfigured Yelp integration never
-// takes this page down with it.
-let yelpRatings: Record<string, { rating: number; reviewCount: number; url: string } | null> = {};
-if (!import.meta.env.DEV) {
-  try {
-    const { env } = await import('cloudflare:workers');
-    yelpRatings = await getYelpRatings(env as any, locations.map((l: any) => l.slug));
-  } catch (err) {
-    console.error('[yelp] ratings unavailable on this request', err);
-  }
-}
-
 const storesJson = JSON.stringify(locations.map((l: any) => ({
   name: l.name, address: l.address, city: l.city, state: l.state, zip: l.zip, lat: Number(l.lat), lng: Number(l.lng),
   // Only this page's locator needs these. Their presence is what tells
   // locator.js to render a photo + "More Info" link on each list item.
   slug: l.slug,
   image: toImageSrc(l.image),
-  yelp: yelpRatings[l.slug] ?? null,
 })));
 
 // Group locations by state for the cards grid
