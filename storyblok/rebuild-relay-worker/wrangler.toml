@@ -1,0 +1,12 @@
+name = "storyblok-rebuild-relay"
+main = "index.js"
+compatibility_date = "2026-09-04"
+
+# Secrets (set with `wrangler secret put <NAME>`, not stored here):
+#   RELAY_TOKEN   - shared secret Storyblok must pass as ?token=... (Storyblok's
+#                   webhook-signature header needs a paid plan; this space is on
+#                   starter_2025, so an unguessable token in the URL is the
+#                   practical equivalent)
+#   GITHUB_TOKEN  - PAT (or fine-grained token) with "Contents: read and write"
+#                   (or classic "repo") on 151Tech/151coffee-storyblok, used to
+#                   call the repository_dispatch API
