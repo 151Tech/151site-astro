@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-04T13:38:41.835Z",
+  "generatedAt": "2026-09-04T14:01:50.169Z",
   "stories": {
     "settings/global": {
       "nav": [
@@ -476,30 +476,30 @@
       "featureddrink": [
         {
           "_uid": "3bb4afb8-f837-40f9-88d2-19b1667eaf5d",
-          "name": "Texas",
+          "name": "Pumpkin",
           "badge": "",
           "image": {
-            "id": 215738839210608,
+            "id": 216423342723539,
             "alt": "",
             "name": "",
             "focus": "",
             "title": "",
             "source": "",
-            "filename": "https://a.storyblok.com/f/294671107081428/1524x1524/ace4b2cef6/test1.png",
+            "filename": "https://a.storyblok.com/f/294671107081428/1350x1350/b0fbd8a84f/pumpkin-caramel-brulee-latte.jpg",
             "copyright": "",
             "fieldtype": "asset",
             "meta_data": {
-              "size": "1524x1524"
+              "size": "1350x1350"
             },
             "is_external_url": false
           },
           "ctahref": "/menu",
           "visible": true,
           "ctalabel": "Explore the Menu",
-          "imagealt": "Tigers Blood",
-          "namebold": "Special",
+          "imagealt": "Pumpkin Caramel Brûlée",
+          "namebold": "Caramel Brûlée",
           "component": "page_home_featureddrink",
-          "description": "Take a break and enjoy a crisp, refreshing Dr. Pepper with Vanilla and rich coconut cream. "
+          "description": "Fall's here, and it's pouring cold. Our bold cold brew meets real pumpkin, warm brûléed caramel, and a hit of cinnamon spice, poured over ice for a crisp, cozy sip. Limited time only, so get it while the season lasts."
         }
       ],
       "locationssection": [
