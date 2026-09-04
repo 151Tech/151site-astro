@@ -1108,8 +1108,22 @@ nav.nav-scrolled .nav-container {
 .locator__item-bottom .locator__phone {
     margin-top: 0;
 }
-.locator__item-bottom .locator__item-actions {
+.locator__item-actions {
     margin-top: 0.45rem;
+}
+
+/* Mobile-only condensed single-line summary (name, address, hours, phone) --
+   hidden on desktop, where the stacked layout above already reads fine.
+   See the max-width: 900px rules below for the flip: this line shows and
+   the stacked elements hide instead. */
+.locator__item-line {
+    display: none;
+    font-size: 0.8rem;
+    color: #6B6B6B;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0.5rem 0 0;
 }
 .locator__phone {
     display: inline-block;
@@ -1235,6 +1249,22 @@ nav.nav-scrolled .nav-container {
     .locator:not(.locator--full) { flex-direction: column; height: auto; }
     .locator:not(.locator--full) .locator__panel { width: 100%; max-height: 400px; }
     .locator:not(.locator--full) .locator__map { flex: none; height: 320px; }
+
+    /* Collapse name/address/hours/phone to a single truncating line on
+       mobile/tablet -- Directions and More Info stay as their own buttons
+       below, untouched. */
+    .locator__item-name,
+    .locator__item-top,
+    .locator__item-bottom {
+        display: none;
+    }
+    .locator__item-line { display: block; }
+
+    /* Right-anchored badge sits under a right-handed user's thumb on a
+       one-handed phone grip, right where they'd naturally scroll/tap the
+       list -- move it to the left on mobile/tablet instead. */
+    .loc-count-wrap { left: 1.5rem; right: auto; }
+    .loc-count-number { transform: translate(-18%, 0); }
 }
 
 /* Two-half card: top half is the square thumbnail (left) next to the store
@@ -2463,7 +2493,7 @@ html:has(.loc-fullpage), body:has(.loc-fullpage) { overflow: hidden; }
     }
     .locator--full .locator__map-wrap { flex: none; height: 320px; order: -1; }
     .locator--full .locator__list { flex: 1; min-height: 0; max-height: none; }
-    .loc-count-wrap { right: 0.85rem; bottom: 0.85rem; }
+    .loc-count-wrap { left: 0.85rem; right: auto; bottom: 0.85rem; }
     .loc-count.loc-count--badge { padding: 0.45rem 1.1rem; }
     .loc-count-number { font-size: 6.5rem; bottom: 0.5rem; -webkit-text-stroke-width: 2.5px; }
 }

@@ -82,8 +82,16 @@
             const photo = store.image ? `<img class="locator__item-photo" src="${store.image}" alt="" loading="lazy" decoding="async">` : "";
             const arrow = '<svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
             const moreInfo = store.slug ? `<a class="locator__more-info" href="/locations/${store.slug}">More Info${arrow}</a>` : "";
+            const shortStoreName = store.name.replace("151 Coffee ", "");
+            // Mobile-only condensed summary -- same info as the stacked
+            // desktop layout (name, address, hours, phone) joined onto one
+            // truncating line so the card reads at a glance without the
+            // scroll height of 4 separate lines. Hidden on desktop; the
+            // stacked elements above are hidden on mobile instead (see the
+            // max-width: 900px rules in style.css).
+            const mobileLine = `<p class="locator__item-line">${shortStoreName} &middot; ${store.address}, ${store.city}, ${store.state} ${store.zip} &middot; ${HOURS} &middot; ${PHONE}</p>`;
             item.innerHTML = `
-                <h3 class="locator__item-name">${store.name.replace("151 Coffee ", "")}${dist}</h3>
+                <h3 class="locator__item-name">${shortStoreName}${dist}</h3>
                 <div class="locator__item-top">
                     ${photo}
                     <div class="locator__item-info">
@@ -93,10 +101,11 @@
                 <div class="locator__item-bottom">
                     <p class="locator__hours">${HOURS}</p>
                     <a class="locator__phone" href="tel:+1${PHONE_TEL}">${PHONE}</a>
-                    <div class="locator__item-actions">
-                        <a class="locator__directions" href="${directionsUrl(store)}" target="_blank" rel="noopener noreferrer">Directions${photo ? arrow : ""}</a>
-                        ${moreInfo}
-                    </div>
+                </div>
+                ${mobileLine}
+                <div class="locator__item-actions">
+                    <a class="locator__directions" href="${directionsUrl(store)}" target="_blank" rel="noopener noreferrer">Directions${photo ? arrow : ""}</a>
+                    ${moreInfo}
                 </div>
             `;
             item.addEventListener("click", (e) => {
