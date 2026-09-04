@@ -358,6 +358,7 @@
     min-height: 128px;
     display: flex;
     flex-direction: column;
+    justify-content: center;
     gap: 0.35rem;
     background: transparent;
     position: relative;
