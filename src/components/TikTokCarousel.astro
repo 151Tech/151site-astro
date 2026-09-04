@@ -140,7 +140,28 @@ const items = (videos ?? []).slice(0, 3);
     };
     applySlots(); // initial paint: all 3 slides visible at rest
 
-    setInterval(() => {
+    // setInterval + a nested setTimeout is fine while the tab stays in the
+    // foreground, but browsers throttle/pause timers on a backgrounded tab
+    // (switching apps on a phone, switching browser tabs) and then fire the
+    // backlog in a burst once it's foregrounded again. When that happens, an
+    // old tick's still-pending 700ms exit-timeout can land *after* one or
+    // more newer ticks have already reassigned slots, unconditionally
+    // re-adding .slot-right to a slide a newer tick already moved elsewhere
+    // -- leaving two slides both classed .slot-right at once (the reported
+    // "two overlap on the right side" after the page has sat open a while).
+    // Self-scheduling via setTimeout (rather than setInterval), tracking the
+    // pending exit timeout so it can be cancelled, and resetting cleanly on
+    // visibilitychange instead of letting a burst of missed ticks fire all
+    // fixes that.
+    let exitTimeoutId: ReturnType<typeof setTimeout> | null = null;
+    let rotateTimeoutId: ReturnType<typeof setTimeout> | null = null;
+
+    function clearPending() {
+      if (exitTimeoutId !== null) { clearTimeout(exitTimeoutId); exitTimeoutId = null; }
+      if (rotateTimeoutId !== null) { clearTimeout(rotateTimeoutId); rotateTimeoutId = null; }
+    }
+
+    function rotate() {
       const [leftIdx, centerIdx, rightIdx] = order;
       const leftEl = slides[leftIdx];
       const centerEl = slides[centerIdx];
@@ -158,7 +179,8 @@ const items = (videos ?? []).slice(0, 3);
       // left -> right: exit fully first, then reappear from the right.
       leftEl.classList.remove('slot-left');
       leftEl.classList.add('slot-exit');
-      setTimeout(() => {
+      exitTimeoutId = setTimeout(() => {
+        exitTimeoutId = null;
         leftEl.classList.remove('slot-exit');
         leftEl.classList.add('slot-enter-prep');
         void leftEl.offsetWidth; // force the instant off-right jump to paint
@@ -169,7 +191,29 @@ const items = (videos ?? []).slice(0, 3);
       }, EXIT_MS);
 
       order = [centerIdx, rightIdx, leftIdx];
-    }, ROTATE_INTERVAL_MS);
+      rotateTimeoutId = setTimeout(rotate, ROTATE_INTERVAL_MS);
+    }
+
+    rotateTimeoutId = setTimeout(rotate, ROTATE_INTERVAL_MS);
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        // Freeze in place rather than let the browser queue up a burst of
+        // missed ticks to fire all at once when it comes back.
+        clearPending();
+        return;
+      }
+      // Snap anything mid-exit to its resting spot instead of resuming a
+      // stale animation, then restart the loop clean.
+      slides.forEach((el) => {
+        if (el.classList.contains('slot-exit') || el.classList.contains('slot-enter-prep')) {
+          el.classList.remove('slot-exit', 'slot-enter-prep');
+          el.classList.add('slot-right');
+        }
+      });
+      clearPending();
+      rotateTimeoutId = setTimeout(rotate, ROTATE_INTERVAL_MS);
+    });
   }
 
   document.querySelectorAll('[data-tiktok-stage]').forEach(initTikTokStage);
