@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-04T18:02:09.143Z",
+  "generatedAt": "2026-09-08T21:52:18.396Z",
   "stories": {
     "settings/global": {
       "nav": [
@@ -1760,7 +1760,19 @@
           ],
           "badge": "",
           "image": {
-            "filename": "/images/whookie-cookie.webp"
+            "id": 217965867793176,
+            "alt": "",
+            "name": "",
+            "focus": "",
+            "title": "",
+            "source": "",
+            "filename": "https://a.storyblok.com/f/294671107081428/3712x3712/98825b985a/gf-cookies-whookie.JPG",
+            "copyright": "",
+            "fieldtype": "asset",
+            "meta_data": {
+              "size": "3712x3712"
+            },
+            "is_external_url": false
           },
           "category": "categories/treats",
           "subtitle": "Chocolate Sandwich Cookie - Gluten Free",
@@ -1784,7 +1796,19 @@
           ],
           "badge": "",
           "image": {
-            "filename": "/images/snickerdoodle.webp"
+            "id": 217966614833961,
+            "alt": "",
+            "name": "",
+            "focus": "",
+            "title": "",
+            "source": "",
+            "filename": "https://a.storyblok.com/f/294671107081428/3712x3712/0e9eae68f8/drl_4323.JPG",
+            "copyright": "",
+            "fieldtype": "asset",
+            "meta_data": {
+              "size": "3712x3712"
+            },
+            "is_external_url": false
           },
           "category": "categories/treats",
           "subtitle": "Cinnamon Sugar Classic",
@@ -1808,7 +1832,19 @@
           ],
           "badge": "",
           "image": {
-            "filename": "/images/sea-salt-chocolate-chip.webp"
+            "id": 217965867764501,
+            "alt": "",
+            "name": "",
+            "focus": "",
+            "title": "",
+            "source": "",
+            "filename": "https://a.storyblok.com/f/294671107081428/3712x3712/9f7157b19e/cookies-salted-choc-chip.JPG",
+            "copyright": "",
+            "fieldtype": "asset",
+            "meta_data": {
+              "size": "3712x3712"
+            },
+            "is_external_url": false
           },
           "category": "categories/treats",
           "subtitle": "Classic Chocolate Chip with a Sea Salt Finish",
@@ -1832,7 +1868,19 @@
           ],
           "badge": "",
           "image": {
-            "filename": "/images/pumpkin-spice-bread.webp"
+            "id": 217966614838059,
+            "alt": "",
+            "name": "",
+            "focus": "",
+            "title": "",
+            "source": "",
+            "filename": "https://a.storyblok.com/f/294671107081428/3712x3712/eadb45248c/drl_4517.JPG",
+            "copyright": "",
+            "fieldtype": "asset",
+            "meta_data": {
+              "size": "3712x3712"
+            },
+            "is_external_url": false
           },
           "category": "categories/treats",
           "subtitle": "Warm Spiced Pumpkin Loaf",
@@ -1850,7 +1898,19 @@
           "tags": [],
           "badge": "",
           "image": {
-            "filename": "/images/peanut-butter-cookie.webp"
+            "id": 217966614342439,
+            "alt": "",
+            "name": "",
+            "focus": "",
+            "title": "",
+            "source": "",
+            "filename": "https://a.storyblok.com/f/294671107081428/3712x3712/4f9e9a9463/drl_4313.JPG",
+            "copyright": "",
+            "fieldtype": "asset",
+            "meta_data": {
+              "size": "3712x3712"
+            },
+            "is_external_url": false
           },
           "category": "categories/treats",
           "subtitle": "Rich & Chewy Peanut Butter Cookie",
@@ -1874,7 +1934,19 @@
           ],
           "badge": "",
           "image": {
-            "filename": "/images/lemon-pound-cake.webp"
+            "id": 217966614330150,
+            "alt": "",
+            "name": "",
+            "focus": "",
+            "title": "",
+            "source": "",
+            "filename": "https://a.storyblok.com/f/294671107081428/3712x3712/b4e6a3c798/drl_4501.JPG",
+            "copyright": "",
+            "fieldtype": "asset",
+            "meta_data": {
+              "size": "3712x3712"
+            },
+            "is_external_url": false
           },
           "category": "categories/treats",
           "subtitle": "Bright & Buttery",
@@ -1916,7 +1988,19 @@
           ],
           "badge": "",
           "image": {
-            "filename": "/images/cinnamon-chip-crumbcake.webp"
+            "id": 217966614829864,
+            "alt": "",
+            "name": "",
+            "focus": "",
+            "title": "",
+            "source": "",
+            "filename": "https://a.storyblok.com/f/294671107081428/3712x3712/927b45ace3/drl_4363.JPG",
+            "copyright": "",
+            "fieldtype": "asset",
+            "meta_data": {
+              "size": "3712x3712"
+            },
+            "is_external_url": false
           },
           "category": "categories/treats",
           "subtitle": "Muffin Top",
@@ -1940,7 +2024,19 @@
           ],
           "badge": "",
           "image": {
-            "filename": "/images/cake-pops.webp"
+            "id": 217966614833962,
+            "alt": "",
+            "name": "",
+            "focus": "",
+            "title": "",
+            "source": "",
+            "filename": "https://a.storyblok.com/f/294671107081428/3712x3712/1db1b32119/drl_4484.JPG",
+            "copyright": "",
+            "fieldtype": "asset",
+            "meta_data": {
+              "size": "3712x3712"
+            },
+            "is_external_url": false
           },
           "category": "categories/treats",
           "subtitle": "Birthday Cake, Cookies & Cream, or Triple Chocolate",
@@ -1964,7 +2060,19 @@
           ],
           "badge": "",
           "image": {
-            "filename": "/images/blueberry-lemon-muffin-top.webp"
+            "id": 217965867784983,
+            "alt": "",
+            "name": "",
+            "focus": "",
+            "title": "",
+            "source": "",
+            "filename": "https://a.storyblok.com/f/294671107081428/3712x3712/b92deebefc/muffin-tops-lemon-blueberry.JPG",
+            "copyright": "",
+            "fieldtype": "asset",
+            "meta_data": {
+              "size": "3712x3712"
+            },
+            "is_external_url": false
           },
           "category": "categories/treats",
           "subtitle": "Tangy & Sweet",
@@ -1988,7 +2096,19 @@
           ],
           "badge": "",
           "image": {
-            "filename": "/images/banana-walnut-bread.webp"
+            "id": 217965867723540,
+            "alt": "",
+            "name": "",
+            "focus": "",
+            "title": "",
+            "source": "",
+            "filename": "https://a.storyblok.com/f/294671107081428/3712x3712/c78a7d324b/loafs-banana-walnut.JPG",
+            "copyright": "",
+            "fieldtype": "asset",
+            "meta_data": {
+              "size": "3712x3712"
+            },
+            "is_external_url": false
           },
           "category": "categories/treats",
           "subtitle": "Moist & Classic",
@@ -2567,7 +2687,19 @@
           "tags": [],
           "badge": "",
           "image": {
-            "filename": "/images/sticky-bun-coffee-cake.webp"
+            "id": 217965821319953,
+            "alt": "",
+            "name": "",
+            "focus": "",
+            "title": "",
+            "source": "",
+            "filename": "https://a.storyblok.com/f/294671107081428/3712x3712/06a443d42c/sticky-bun-coffee-cake.JPG",
+            "copyright": "",
+            "fieldtype": "asset",
+            "meta_data": {
+              "size": "3712x3712"
+            },
+            "is_external_url": false
           },
           "category": "categories/hotfood",
           "subtitle": "Served Warm",
