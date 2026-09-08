@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-08T21:52:18.396Z",
+  "generatedAt": "2026-09-08T21:56:38.468Z",
   "stories": {
     "settings/global": {
       "nav": [
@@ -1964,7 +1964,19 @@
           "tags": [],
           "badge": "",
           "image": {
-            "filename": "/images/hippie-cookie.webp"
+            "id": 217968343325520,
+            "alt": "",
+            "name": "",
+            "focus": "",
+            "title": "",
+            "source": "",
+            "filename": "https://a.storyblok.com/f/294671107081428/3712x3712/4697d9f9d3/drl_4424.JPG",
+            "copyright": "",
+            "fieldtype": "asset",
+            "meta_data": {
+              "size": "3712x3712"
+            },
+            "is_external_url": false
           },
           "category": "categories/treats",
           "subtitle": "Oatmeal & Cranberries - Gluten Free",
@@ -2753,7 +2765,19 @@
           "tags": [],
           "badge": "",
           "image": {
-            "filename": "/images/everything-bagel.webp"
+            "id": 217968305191759,
+            "alt": "",
+            "name": "",
+            "focus": "",
+            "title": "",
+            "source": "",
+            "filename": "https://a.storyblok.com/f/294671107081428/1087x1087/9cb8a5d052/d7dfb5a2-1bbc-4c2b-8822-1891797c64fe-1.JPEG",
+            "copyright": "",
+            "fieldtype": "asset",
+            "meta_data": {
+              "size": "1087x1087"
+            },
+            "is_external_url": false
           },
           "category": "categories/hotfood",
           "subtitle": "Spicy Sausage, Egg & Cheese on an Everything Bagel",
