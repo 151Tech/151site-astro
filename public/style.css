@@ -542,7 +542,13 @@ nav.nav-scrolled .nav-container {
 @media (min-width: 769px) {
     :root {
         --fd-pad: clamp(1.5rem, 4vh, 4rem);
-        --fd-img-h: clamp(220px, 40vh, 480px);
+        /* Capped by vh on short/desktop windows, but also by vw so the two
+           square columns below (image + text, each --fd-img-h wide) plus
+           their gap and padding always fit -- otherwise a viewport in the
+           tablet range (tall enough for a big vh-driven square, not wide
+           enough for two of them side by side) clips the cards at the
+           edges. */
+        --fd-img-h: clamp(220px, min(40vh, 38vw), 480px);
     }
     .featured-drink {
         padding: var(--fd-pad) 0;
@@ -719,7 +725,20 @@ nav.nav-scrolled .nav-container {
        on desktop where .featured-mobile-name is hidden instead. */
     .featured-text h2 { display: none; }
     .featured-card { order: 3; }
-    .featured-text p { order: 4; margin: 0 auto; }
+    /* .featured-text is un-boxed to `display: contents` above so its
+       children can join the mobile column directly -- but that also
+       strips the paragraph of any container, leaving it floating directly
+       on the section background. Give it its own card so it reads as a
+       distinct blurb instead of loose text. */
+    .featured-text p {
+        order: 4;
+        margin: 0 auto;
+        max-width: 340px;
+        background: #fff;
+        border-radius: 16px;
+        padding: 1.1rem 1.4rem;
+        box-shadow: 0 4px 18px rgba(0,0,0,0.06);
+    }
     .featured-cta { order: 5; }
 }
 
