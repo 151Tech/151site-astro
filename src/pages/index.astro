@@ -19,25 +19,29 @@ import type { TikTokVideo } from '../lib/tiktok';
 // local dev, and as a temporary production fallback so marketing/ownership
 // can review the section's look before the live integration is connected --
 // swap/remove this fallback once TikTok is actually wired up.
+// TikTok's own cover-image URLs are signed with a short expiry (they 403
+// within days), so they can't be used for a fallback that needs to keep
+// working indefinitely. These point at stable, non-expiring Storyblok asset
+// URLs instead -- real drink photos standing in for the actual cover art.
 const FALLBACK_TIKTOK_VIDEOS: TikTokVideo[] = [
   {
     id: '7681030997080575246',
     embedLink: 'https://www.tiktok.com/@151coffee/video/7681030997080575246',
-    coverImageUrl: 'https://p16-common-sign.tiktokcdn-us.com/tos-useast5-p-0068-tx/owZSYAaRISQEgEQqemFfDBgSXggYDmQIRuD5Et~tplv-tiktokx-origin.image?dr=9636&x-expires=1788620400&x-signature=bMnW7FoCVmsc4F8fN1j%2B0cHgoG4%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=43f4a2f9&idc=useast8',
+    coverImageUrl: 'https://a.storyblok.com/f/294671107081428/1350x1350/2aed89c3c6/151-caramel-mocha.jpg',
     title: 'Yup, sounds like its time for 151 Coffee. See you soon',
     createTime: 0,
   },
   {
     id: '7679924636250836238',
     embedLink: 'https://www.tiktok.com/@151coffee/video/7679924636250836238',
-    coverImageUrl: 'https://p19-common-sign.tiktokcdn-us.com/tos-useast5-p-85c255-tx/o8BfBtDJl8JfLcqXpCHwS6UECK5FIwqxDQgEaj~tplv-tiktokx-origin.image?dr=9636&x-expires=1788620400&x-signature=j1zhlwVMHGT4XOrJStV5%2BZxupbI%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=43f4a2f9&idc=useast8',
+    coverImageUrl: 'https://a.storyblok.com/f/294671107081428/3712x3712/eadb45248c/drl_4517.JPG',
     title: 'Fall featured drinks: Pumpkin Spice Latte, Pumpkin Caramel Brulee Latte, Pumpkin Spice Chai',
     createTime: 0,
   },
   {
     id: '7678065491113446669',
     embedLink: 'https://www.tiktok.com/@151coffee/video/7678065491113446669',
-    coverImageUrl: 'https://p16-common-sign.tiktokcdn-us.com/tos-useast5-p-85c255-tx/o8aAk8LNuIGGnfBTfosAeyIzqbQTGT3OIwf97F~tplv-tiktokx-origin.image?dr=9636&x-expires=1788620400&x-signature=K2EcFuarkE09ruGPQbZdFn3d2AM%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=43f4a2f9&idc=useast8',
+    coverImageUrl: 'https://a.storyblok.com/f/294671107081428/1350x1350/e5801ac01d/iced-or-hot-latte.jpg',
     title: 'Powered up. Locked in. See you in the drive-thru.',
     createTime: 0,
   },
