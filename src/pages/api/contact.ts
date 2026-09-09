@@ -9,6 +9,20 @@
 // markup even though nothing about this deployment is Netlify -- form-name
 // still tells this endpoint which form fired, and bot-field is the honeypot, so
 // removing them isn't worth the churn.
+//
+// Secrets come from the Cloudflare Workers runtime binding, NOT import.meta.env:
+// Vite/Astro inline import.meta.env.* by static text substitution at BUILD time,
+// so import.meta.env.RESEND_API_KEY would bake the live key as a plaintext
+// string into the deployed Worker bundle (verified in dist/server/chunks/) --
+// unrotatable without a rebuild, and readable by anyone with access to the
+// build artifact. It also silently breaks the dynamic `import.meta.env[key]`
+// lookup used for per-form recipients below, since Vite only rewrites literal
+// `.FOO` property access, never a computed one -- that always evaluated to
+// undefined. `env` from cloudflare:workers is a real per-request runtime
+// object, so both problems go away; this is the same accessor already proven
+// in src/pages/api/tiktok-oauth-callback.ts and src/lib/tiktok.ts.
+import { env } from 'cloudflare:workers';
+
 export const prerender = false;
 
 // Required by Webflow Cloud: API routes have to opt into the edge runtime or
@@ -40,16 +54,24 @@ const FORMS = {
   contact: {
     label: 'Contact Form Submission',
     toEnv: 'RESEND_TO_CONTACT',
+    // This form's markup (index.astro) collects firstName/lastName/email as
+    // required fields -- enforce that server-side too, since the client-side
+    // `required` attribute is not a security boundary.
+    requireIdentity: true,
     subject: (f: URLSearchParams) => {
-      const name = `${f.get('firstName') ?? ''} ${f.get('lastName') ?? ''}`.trim();
+      const name = `${cleanSubjectPart(f.get('firstName'))} ${cleanSubjectPart(f.get('lastName'))}`.trim();
       return name ? `Contact Form: ${name}` : 'Contact Form: New submission';
     },
   },
   'realestate-inquiry': {
     label: 'Real Estate Inquiry',
     toEnv: 'RESEND_TO_REALESTATE',
+    // This form (ourfuture.astro) only collects property + message, no name
+    // or email field at all -- requiring them here would reject every
+    // legitimate submission.
+    requireIdentity: false,
     subject: (f: URLSearchParams) =>
-      `Real Estate Inquiry: ${f.get('property')?.trim() || 'New submission'}`,
+      `Real Estate Inquiry: ${cleanSubjectPart(f.get('property')) || 'New submission'}`,
   },
 } as const;
 
@@ -80,9 +102,12 @@ function originAllowed(request: Request): boolean {
     return false;
   }
   if (ALLOWED_ORIGIN_HOSTS.has(host)) return true;
-  // Webflow Cloud serves preview/staging builds on its own subdomains.
-  if (host.endsWith('.webflow.io')) return true;
-  const extra = import.meta.env.EXTRA_ALLOWED_ORIGIN_HOST;
+  // *.webflow.io is a shared hosting domain handed out to every Webflow
+  // customer, not just us -- an endsWith() wildcard would let any other
+  // Webflow site's page POST here cross-origin. Pin the exact preview host
+  // instead of trusting the whole subdomain.
+  if (host === '151coffee-storyblok-f09993.webflow.io') return true;
+  const extra = (env as any).EXTRA_ALLOWED_ORIGIN_HOST;
   return Boolean(extra) && host === extra;
 }
 
@@ -90,6 +115,14 @@ function originAllowed(request: Request): boolean {
 // megabyte of text into the team's inbox or blow past Resend's payload limit.
 const MAX_FIELD_LENGTH = 5000;
 const MAX_FIELDS = 25;
+
+// Runs any raw field going into an email SUBJECT LINE (not the body, which is
+// already capped/escaped separately). Strips newlines/tabs so a scripted
+// submission can't stretch the subject into garbage or push past Resend's
+// payload limit with an oversized property/name field.
+function cleanSubjectPart(value: string | null | undefined): string {
+  return (value ?? '').replace(/[\r\n\t]+/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 150);
+}
 
 const FIELD_LABELS: Record<string, string> = {
   firstName: 'First Name',
@@ -117,13 +150,7 @@ function escapeHtml(value: string): string {
 }
 
 export async function POST({ request }: { request: Request }) {
-  // import.meta.env, NOT locals.runtime.env: the latter was removed in Astro
-  // v6 (we are on 7.x) and its getter now throws outright --
-  // "Astro.locals.runtime.env has been removed... use cloudflare:workers" --
-  // which optional chaining cannot catch, so the whole request 500s. Verified
-  // against a local Cloudflare-adapter dev server. src/lib/storyblok.ts reads
-  // its token the same way and works on the deployed app.
-  const apiKey = import.meta.env.RESEND_API_KEY;
+  const apiKey = (env as any).RESEND_API_KEY;
   if (!apiKey) {
     console.error('[contact] RESEND_API_KEY is not set');
     return new Response('Server misconfigured', { status: 500 });
@@ -137,6 +164,36 @@ export async function POST({ request }: { request: Request }) {
   const contentType = request.headers.get('content-type') ?? '';
   if (!contentType.includes('application/x-www-form-urlencoded')) {
     return new Response('Unsupported content type', { status: 400 });
+  }
+
+  // Cheap per-IP volume cap so a scripted loop cannot flood the team inbox or
+  // burn the Resend monthly quota (which would silently stop real leads from
+  // being delivered once exhausted). Reuses the TIKTOK_CACHE KV namespace
+  // under its own key prefix rather than provisioning a second binding.
+  // Deliberately fails OPEN: if KV is unavailable or errors, the submission
+  // still sends -- a rate limiter that blocks on infrastructure trouble would
+  // be worse than no rate limiter at all for a form that real customers rely on.
+  const rateLimitKv = (env as any).TIKTOK_CACHE;
+  if (rateLimitKv) {
+    try {
+      const ip =
+        request.headers.get('cf-connecting-ip') ||
+        request.headers.get('x-forwarded-for')?.split(',')[0]?.trim();
+      if (ip) {
+        const hourBucket = Math.floor(Date.now() / 3_600_000);
+        const key = `rl:contact:${ip}:${hourBucket}`;
+        const current = parseInt((await rateLimitKv.get(key)) ?? '0', 10) || 0;
+        if (current >= 5) {
+          return new Response('Too many requests', {
+            status: 429,
+            headers: { 'Retry-After': '3600' },
+          });
+        }
+        await rateLimitKv.put(key, String(current + 1), { expirationTtl: 3600 });
+      }
+    } catch (err) {
+      console.error('[contact] rate-limit check failed, continuing (fail open)', err);
+    }
   }
 
   const fields = new URLSearchParams(await request.text());
@@ -154,6 +211,23 @@ export async function POST({ request }: { request: Request }) {
   }
   const form = FORMS[requested as FormName];
 
+  // Forms that collect a name + email (contact) enforce it server-side too --
+  // the client-side `required` attribute is not a security boundary. Forms
+  // that don't collect either (realestate-inquiry) skip this entirely.
+  const firstName = fields.get('firstName')?.trim();
+  const lastName = fields.get('lastName')?.trim();
+  const submitterEmailRaw = fields.get('email')?.trim();
+  const emailLooksValid =
+    !!submitterEmailRaw && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(submitterEmailRaw);
+  if (form.requireIdentity) {
+    if (!firstName && !lastName) {
+      return new Response('Missing name', { status: 400 });
+    }
+    if (!emailLooksValid) {
+      return new Response('Missing or invalid email', { status: 400 });
+    }
+  }
+
   const rows: [string, string][] = [];
   for (const [key, rawValue] of fields.entries()) {
     if (key === 'form-name' || key === 'bot-field') continue;
@@ -166,16 +240,13 @@ export async function POST({ request }: { request: Request }) {
     return new Response('Empty submission', { status: 400 });
   }
 
-  const fromAddress = import.meta.env.RESEND_FROM_ADDRESS || DEFAULT_FROM_ADDRESS;
-  const toAddress = import.meta.env[form.toEnv] || DEFAULT_TO_ADDRESS;
+  const fromAddress = (env as any).RESEND_FROM_ADDRESS || DEFAULT_FROM_ADDRESS;
+  const toAddress = (env as any)[form.toEnv] || DEFAULT_TO_ADDRESS;
 
   // Only a plausible address is worth setting as reply_to: a malformed one can
-  // get the whole message rejected by Resend.
-  const submitterEmail = fields.get('email')?.trim();
-  const replyTo =
-    submitterEmail && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(submitterEmail)
-      ? submitterEmail
-      : undefined;
+  // get the whole message rejected by Resend. (emailLooksValid already ran
+  // above; reuse it here rather than re-testing the regex.)
+  const replyTo = emailLooksValid ? submitterEmailRaw : undefined;
 
   const html = `<h2>${escapeHtml(form.label)}</h2>
     <table cellpadding="6" style="border-collapse:collapse">

@@ -26,6 +26,13 @@ app, set:
 
 - `TIKTOK_CLIENT_KEY`
 - `TIKTOK_CLIENT_SECRET`
+- `TIKTOK_OAUTH_STATE` -- a random string you make up (e.g. run
+  `openssl rand -hex 16` or just mash the keyboard). This is a shared secret,
+  not shown anywhere public: the callback route rejects any request whose
+  `state` doesn't match it, which is what stops a stranger from running their
+  own TikTok authorization and hitting our callback URL directly to hijack
+  the stored refresh token. Put the same value in the `state=` param of the
+  authorize URL in step 4 below.
 
 ## 3. Create the KV namespace
 
@@ -41,10 +48,12 @@ This is the one step that has to be a human clicking "Allow" -- there's no
 way to script consent.
 
 Once steps 1-3 are live, visit this URL while logged into the browser as
-whoever can approve TikTok apps for @151coffee (replace `YOUR_CLIENT_KEY`):
+whoever can approve TikTok apps for @151coffee (replace `YOUR_CLIENT_KEY` and
+`YOUR_TIKTOK_OAUTH_STATE` with the values from step 2 -- they must match
+exactly what's set in Webflow Cloud, or the callback will reject it):
 
 ```
-https://www.tiktok.com/v2/auth/authorize/?client_key=YOUR_CLIENT_KEY&scope=video.list&response_type=code&redirect_uri=https%3A%2F%2Fwww.151coffee.com%2Fapi%2Ftiktok-oauth-callback&state=setup
+https://www.tiktok.com/v2/auth/authorize/?client_key=YOUR_CLIENT_KEY&scope=video.list&response_type=code&redirect_uri=https%3A%2F%2Fwww.151coffee.com%2Fapi%2Ftiktok-oauth-callback&state=YOUR_TIKTOK_OAUTH_STATE
 ```
 
 Log in as @151coffee, approve it, and you'll land back on

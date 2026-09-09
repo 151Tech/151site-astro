@@ -19,12 +19,27 @@ export async function GET({ request }: { request: Request }) {
   const url = new URL(request.url);
   const code = url.searchParams.get('code');
   const oauthError = url.searchParams.get('error');
+  const state = url.searchParams.get('state');
 
   if (oauthError) {
     return new Response(`TikTok authorization failed: ${oauthError}`, { status: 400 });
   }
   if (!code) {
     return new Response('Missing ?code from TikTok redirect', { status: 400 });
+  }
+
+  // TikTok echoes back whatever `state` value the authorize URL was built
+  // with, verbatim -- so a shared secret here works like a CSRF token without
+  // needing a separate pre-redirect KV write. Without this check, anyone who
+  // completes their own authorize flow against our public client_key could
+  // hit this callback directly and overwrite the stored refresh token,
+  // pointing the homepage carousel at their own TikTok account. Fails closed:
+  // if the secret isn't configured, the route refuses rather than trusting an
+  // absent check. See storyblok/tiktok-setup.md for where this goes in the
+  // authorize URL.
+  const expectedState = (env as any).TIKTOK_OAUTH_STATE;
+  if (!expectedState || state !== expectedState) {
+    return new Response('Invalid or missing state parameter', { status: 403 });
   }
 
   const clientKey = (env as any).TIKTOK_CLIENT_KEY;

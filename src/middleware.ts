@@ -71,7 +71,18 @@ export const onRequest = defineMiddleware(async (context, next) => {
   }
 
   if (context.request.method === 'GET' && response.status === 200) {
-    response.headers.set('Cache-Control', 'public, max-age=60, s-maxage=300, stale-while-revalidate=600');
+    // Draft-preview responses carry unpublished Storyblok content behind the
+    // access gate above -- marking them publicly cacheable would let a shared
+    // intermediary cache them outside the gate's control, and would also mean
+    // the Visual Editor's save-and-reload can be served stale draft HTML for
+    // up to 5 minutes. Only the real (non-draft) deployment gets the shared
+    // edge cache; draft mode gets none.
+    response.headers.set(
+      'Cache-Control',
+      IS_DRAFT_PREVIEW
+        ? 'private, no-store'
+        : 'public, max-age=60, s-maxage=300, stale-while-revalidate=600',
+    );
   }
   return response;
 });
