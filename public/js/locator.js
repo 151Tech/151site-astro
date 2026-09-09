@@ -29,12 +29,22 @@
     const zoomOutEl = document.getElementById("locator-zoom-out");
     const hasCustomZoom = !!(zoomInEl && zoomOutEl);
 
-    const map = L.map(mapEl, { scrollWheelZoom: true, attributionControl: false, zoomControl: !hasCustomZoom }).setView([33.0, -97.0], 6);
+    const map = L.map(mapEl, { scrollWheelZoom: true, attributionControl: false, zoomControl: !hasCustomZoom });
 
     if (hasCustomZoom) {
         zoomInEl.addEventListener("click", () => map.zoomIn());
         zoomOutEl.addEventListener("click", () => map.zoomOut());
     }
+
+    // Fit to the real store bounds before the tile layer is added, so
+    // Leaflet only ever requests tiles for the zoom level it actually
+    // settles on. Setting a throwaway initial view (e.g. a hardcoded
+    // zoom 6) here would make it fetch that zoom's tiles first, then
+    // immediately abort/replace them once fitBounds below changes the
+    // view -- wasted requests that the tile server was rejecting outright
+    // (503s) rather than just canceling client-side.
+    const bounds = L.latLngBounds(STORES.map(s => [s.lat, s.lng]));
+    map.fitBounds(bounds, { padding: [30, 30] });
 
     window.COFFEE151_LEAFLET.addTileLayer(L, map);
 
@@ -54,9 +64,6 @@
         marker.on("click", () => setActive(i, true));
         return marker;
     });
-
-    const bounds = L.latLngBounds(STORES.map(s => [s.lat, s.lng]));
-    map.fitBounds(bounds, { padding: [30, 30] });
 
     function directionsUrl(store) {
         return `https://www.google.com/maps/dir/?api=1&destination=${store.lat},${store.lng}`;
