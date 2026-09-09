@@ -614,40 +614,49 @@ nav.nav-scrolled .nav-container {
     max-width: 440px;
 }
 
-/* Pins the text column's height to the image card's (--fd-img-h) so the
-   grid row is always governed by the image, never by the text content --
-   which would otherwise grow with viewport width (the heading's clamp())
-   and break the hero's complementary calc(). min-height: 0 overrides the
-   grid item's automatic content-based minimum so it can actually shrink
-   to that height; any excess text just centers within it. */
-/* Same reasoning as the hero heading above: the badge/heading/paragraph's
-   sizing and gaps were width-driven only, with no floor tied to how much
-   vertical room --fd-img-h actually leaves on a short window, so they
-   could outgrow the row and get clipped by overflow:hidden below. Folding
-   vh into each clamp/margin lets them shrink together with the row's own
-   height; overflow stays visible as a safety net so if anything still
-   doesn't fit, it overlaps slightly instead of getting cut off. */
+/* The text column used to be force-pinned to the image card's square
+   height (--fd-img-h), on the assumption that shrinking that square (on a
+   short window) always left enough room since the copy shrank with it via
+   vh. But the copy has hard floors (a paragraph can only get so small
+   before it's unreadable), and once --fd-img-h could also shrink from a
+   narrow-but-tall viewport (via its vw cap, added for the tablet-width
+   clipping fix), those floors routinely lost to the box: the badge
+   poked out above it and the CTA button hung out below. Letting the text
+   column size to its own content instead avoids that -- the badge/
+   heading/paragraph still shrink somewhat on a short window (kept below),
+   but they're never forced into a box smaller than they can actually
+   render at. The image square is unaffected (still --fd-img-h, still
+   feeds the hero's complementary calc()); the grid row just grows to fit
+   whichever column is taller, and align-items: center keeps the shorter
+   one centered against it. */
 @media (min-width: 769px) {
+    /* These used to be sized off vh alone (1.5vh, 6vh, etc.), on the
+       assumption that --fd-img-h itself was purely vh-driven, so shrinking
+       the viewport's height always shrunk the box and this text together.
+       Now that --fd-img-h can also be capped by vw (so the two columns fit
+       side by side at tablet widths), a narrow-but-tall viewport can pin
+       the box to a small square via its width while these vh-only rules
+       stayed large -- the text no longer fit the box it was centered in
+       and spilled above/below it. Deriving every size from --fd-img-h
+       itself (at the same ratio the old vh value had to 40vh, its
+       unclamped value) keeps text and box shrinking together whichever
+       dimension is the binding one. */
     .featured-badge {
-        margin-bottom: clamp(0.35rem, 1.5vh, 0.75rem);
+        margin-bottom: clamp(0.35rem, calc(var(--fd-img-h) * 0.0375), 0.75rem);
     }
     .featured-text h2 {
-        font-size: clamp(1.6rem, min(4.5vw, 6vh), 3.6rem);
-        margin-bottom: clamp(0.25rem, 1vh, 0.5rem);
+        font-size: clamp(1.6rem, min(4.5vw, calc(var(--fd-img-h) * 0.15)), 3.6rem);
+        margin-bottom: clamp(0.25rem, calc(var(--fd-img-h) * 0.025), 0.5rem);
     }
     .featured-text p {
-        font-size: clamp(0.9rem, 1.6vh, 1.08rem);
-        margin-bottom: clamp(0.5rem, 1.5vh, 1rem);
+        font-size: clamp(0.9rem, calc(var(--fd-img-h) * 0.04), 1.08rem);
+        margin-bottom: clamp(0.5rem, calc(var(--fd-img-h) * 0.0375), 1rem);
     }
-    /* Square, matching the image card beside it: the height pin above
-       already equals the image's side, so fixing the width to the same
-       --fd-img-h is what squares it off. .featured-inner's columns are
-       sized to match (see the grid override below) so the plate fills its
-       cell rather than sitting left-aligned in a wider one. */
+    /* Width still matches the image card beside it (--fd-img-h), so the
+       two columns read as a matched pair -- only the height is no longer
+       forced to that same value; it's whatever the content needs. */
     .featured-text {
         width: var(--fd-img-h);
-        height: var(--fd-img-h);
-        min-height: 0;
         display: flex;
         flex-direction: column;
         align-items: flex-start;
