@@ -911,6 +911,117 @@
     .loc-modal-item { font-size: 0.8rem; padding: 0.45rem 1rem; }
 }
 
+/* ─── "Simple Menu" desktop toggle ─── */
+.menu-hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+}
+
+.menu-hero-actions .location-trigger { margin-top: 0; }
+
+.simple-menu-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.25rem;
+    background: transparent;
+    border: 1.5px solid rgba(255,255,255,0.25);
+    color: var(--white);
+    font-family: var(--font-inter), sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    padding: 0.6rem 1.1rem;
+    border-radius: var(--radius-pill);
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.simple-menu-trigger svg { width: 18px; height: 18px; flex-shrink: 0; }
+
+@media (hover: hover) and (pointer: fine) {
+    .simple-menu-trigger:hover {
+        background: rgba(255,255,255,0.1);
+        border-color: rgba(255,255,255,0.45);
+    }
+}
+
+/* Mobile visitors are already looking at the compact view this button
+   switches desktop visitors into -- nothing to toggle. */
+@media (max-width: 768px) {
+    .simple-menu-trigger { display: none; }
+}
+
+.simple-menu-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    background: rgba(0,0,0,0.72);
+    align-items: center;
+    justify-content: center;
+}
+
+.simple-menu-overlay.active { display: flex; }
+
+.simple-menu-close {
+    position: absolute;
+    top: 1.25rem;
+    right: 1.5rem;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255,255,255,0.12);
+    color: var(--white);
+    font-size: 1.8rem;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s ease;
+}
+
+.simple-menu-close:hover { background: rgba(255,255,255,0.22); }
+
+.simple-menu-frame-wrap {
+    /* The visual box the scaled-up iframe actually occupies on screen --
+       sized in the enlarged (post-transform) dimensions so the overlay
+       reserves the right amount of space and the iframe centers cleanly. */
+    width: 620px;
+    height: 88vh;
+    max-height: 900px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-radius: 18px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+}
+
+.simple-menu-frame {
+    /* Forced to a phone-width viewport so the SAME page genuinely applies
+       every @media (max-width: 768px) rule above and the isMobile() JS
+       branches, then scaled up via transform (which doesn't change the
+       layout width its own document's media queries see) to make better
+       use of the desktop screen space -- see the comment above
+       #simpleMenuOverlay in menu.astro for the full rationale. */
+    width: 420px;
+    height: 900px;
+    border: none;
+    background: var(--white, #fff);
+    transform: scale(1.476);
+    transform-origin: center center;
+}
+
+@media (max-height: 800px) {
+    .simple-menu-frame-wrap { height: 92vh; }
+}
+
 /* ─── Gallery cards on the quote ground ─── */
 /* The gallery sits on the celebrity-quote watermark, so everything that
    floats directly on it needs a settled surface underneath. See the "Text
