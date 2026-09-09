@@ -91,6 +91,30 @@ const isDraftPreview = import.meta.env.STORYBLOK_DRAFT_MODE === 'true';
   <slot />
   <script src="/js/script.js" is:inline defer></script>
   <script src="/js/animations.js" is:inline defer></script>
+
+  <!--
+    Cookie/tracking stack, in load order:
+      1. consent.js         -- read/write/subscribe API for the stored choice
+      2. tracking IDs        -- GA/Meta IDs from env, blank until real ones exist
+      3. analytics-loader.js -- loads GA + Meta Pixel, but only once consent.js
+                                 reports the visitor clicked "Accept All"
+      4. cookie-consent.js   -- the banner UI; calls consent.set() on a click,
+                                 which analytics-loader.js is already listening for
+    Order matters: each of these is a `defer` script, which the browser runs
+    in document order once parsing finishes, so a later file can safely
+    assume an earlier one already ran.
+  -->
+  <script src="/js/consent.js" is:inline defer></script>
+  <script
+    define:vars={{
+      gaId: import.meta.env.PUBLIC_GA_MEASUREMENT_ID || '',
+      metaPixelId: import.meta.env.PUBLIC_META_PIXEL_ID || '',
+    }}
+    is:inline
+  >
+    window.COFFEE151_TRACKING_IDS = { gaId, metaPixelId };
+  </script>
+  <script src="/js/analytics-loader.js" is:inline defer></script>
   <script src="/js/cookie-consent.js" is:inline defer></script>
 
   <!--

@@ -81,10 +81,25 @@ const igAppUrl = igUsername ? `instagram://user?username=${igUsername}` : undefi
         <p class="footer-web-design footer-web-design-mobile">
           <span>Design by</span> <a href="https://stillbuilt.co" target="_blank" rel="noopener noreferrer" aria-label="Stillbuilt"><img src="/images/stillbuilt-logo-animated-blink.svg" alt="Stillbuilt" width="802" height="130" class="footer-web-design-logo" /></a>
         </p>
+        <p>
+          <button type="button" id="cookiePreferencesBtn" class="footer-cookie-btn">Cookie Preferences</button>
+        </p>
       </div>
     </div>
   </div>
 </footer>
+
+<script is:inline>
+  // Reopens the cookie banner (see cookie-consent.js) so a visitor can
+  // change their earlier answer, without waiting for it to reappear on its
+  // own. window.COFFEE151_REOPEN_CONSENT may not exist yet if cookie-
+  // consent.js hasn't finished loading (both are `defer`, so on a slow
+  // connection this button can render first) or failed to load at all --
+  // guarded rather than assumed.
+  document.getElementById('cookiePreferencesBtn')?.addEventListener('click', () => {
+    window.COFFEE151_REOPEN_CONSENT?.();
+  });
+</script>
 
 <div id="giftCardModal" class="modal">
   <div class="modal-content">

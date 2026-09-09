@@ -2036,6 +2036,23 @@ footer {
     color: var(--light-gray);
 }
 
+.footer-cookie-btn {
+    font-family: var(--font-inter), sans-serif;
+    font-size: 0.82rem;
+    color: var(--light-gray);
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.footer-cookie-btn:hover,
+.footer-cookie-btn:focus-visible {
+    color: var(--red);
+}
+
 .footer-web-design {
     display: flex;
     flex-wrap: nowrap;
