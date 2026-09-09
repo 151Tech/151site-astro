@@ -3,15 +3,26 @@
 // tile layer only need to be defined in one place.
 window.COFFEE151_LEAFLET = {
     redIcon: function (L) {
+        // Logo URL comes from Layout.astro (Storyblok's image service isn't
+        // reachable from this plain, no-build JS file), so it's absent until
+        // an editor sets settings/global -> Logo -- the pin still works fine
+        // with no inner mark in that case.
+        var logoUrl = window.COFFEE151_LOGO_URL;
+        var mark = logoUrl ? '<img class="locator__marker-logo" src="' + logoUrl + '" alt="">' : '';
         return L.divIcon({
             className: 'locator__marker',
-            html: '<span class="locator__marker-pin"></span>',
+            html: '<span class="locator__marker-pin">' + mark + '</span>',
             iconSize: [28, 28],
             iconAnchor: [14, 28],
             popupAnchor: [0, -28]
         });
     },
     addTileLayer: function (L, map) {
+        // Stock OSM raster tiles (no API key needed). The duotone filter
+        // below (see .locator__map in style.css) grayscales this, then
+        // recolors it toward red -- the source style's brightest lines
+        // (main roads, which OSM already renders lightest/most saturated)
+        // come out reddest, while darker fill (land/water) stays muted gray.
         return L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
             subdomains: 'abc',

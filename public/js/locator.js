@@ -61,7 +61,7 @@
             ? `<a href="/locations/${store.slug}"><strong>${store.name}</strong></a>`
             : `<strong>${store.name}</strong>`;
         marker.bindPopup(`${nameHtml}<br>${store.address}<br>${store.city}, ${store.state} ${store.zip}<br>${HOURS}<br><a href="tel:+1${PHONE_TEL}">${PHONE}</a>`);
-        marker.on("click", () => setActive(i, true));
+        marker.on("click", () => setActive(i));
         return marker;
     });
 
@@ -117,7 +117,7 @@
             `;
             item.addEventListener("click", (e) => {
                 if (e.target.closest(".locator__directions, .locator__phone, .locator__more-info")) return;
-                setActive(originalIndex, false);
+                setActive(originalIndex);
             });
             listEl.appendChild(item);
         });
@@ -155,13 +155,16 @@
             .catch(() => { renderList(STORES); fitTo(STORES); }); // on any failure, show all
     }
 
-    function setActive(index, fromMarker) {
+    function setActive(index) {
         if (listEl) {
             listEl.querySelectorAll(".locator__item").forEach(el => el.classList.remove("active"));
             const item = listEl.querySelector(`.locator__item[data-index="${index}"]`);
             if (item) {
                 item.classList.add("active");
-                if (!fromMarker) item.scrollIntoView({ behavior: "smooth", block: "nearest" });
+                // Scroll the sidebar to the picked location either way -- a
+                // marker click should surface it in the list just as much as
+                // clicking the list itself flies the map to it.
+                item.scrollIntoView({ behavior: "smooth", block: "nearest" });
             }
         }
         const store = STORES[index];

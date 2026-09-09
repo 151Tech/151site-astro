@@ -29,6 +29,10 @@ const canonicalUrl = canonical ?? new URL(Astro.url.pathname, 'https://www.151co
 // in Storyblok (settings/global -> Favicon).
 const settingsData = (await getSettings()) as any;
 const favicon = imageUrl(settingsData?.favicon) ?? '/favicon.ico';
+// Small round mark reused inside the locator map's pin icons (see
+// leaflet-map-helpers.js) -- resized here rather than in that plain JS file,
+// which has no access to Storyblok's image service.
+const logoMarkUrl = imageUrl(settingsData?.logo, { width: 64 });
 
 // 74 of 88 indexable pages were shipping no og:image at all. The per-page
 // seo.ogImage fields are populated in Storyblok, but every one of them points
@@ -113,6 +117,9 @@ const isDraftPreview = import.meta.env.STORYBLOK_DRAFT_MODE === 'true';
     is:inline
   >
     window.COFFEE151_TRACKING_IDS = { gaId, metaPixelId };
+  </script>
+  <script define:vars={{ logoMarkUrl }} is:inline>
+    window.COFFEE151_LOGO_URL = logoMarkUrl || '';
   </script>
   <script src="/js/analytics-loader.js" is:inline defer></script>
   <script src="/js/cookie-consent.js" is:inline defer></script>
