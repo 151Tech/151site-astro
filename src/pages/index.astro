@@ -12,51 +12,23 @@ import { graph, organizationSchema, locationSchema } from '../lib/seo';
 import TikTokCarousel from '../components/TikTokCarousel.astro';
 import type { TikTokVideo } from '../lib/tiktok';
 
-// Stand-in cards so the carousel has something real to show before the
-// TikTok Display API is wired up (see storyblok/tiktok-setup.md -- it needs
-// a one-time, human-only OAuth authorization as @151coffee). These are real,
-// currently-live @151coffee video IDs (pulled by hand 2026-09-03). Used in
-// local dev, and as a temporary production fallback so marketing/ownership
-// can review the section's look before the live integration is connected --
-// swap/remove this fallback once TikTok is actually wired up.
-// TikTok's own cover-image URLs are signed with a short expiry (they 403
-// within days), so they can't be used for a fallback that needs to keep
-// working indefinitely. These point at stable, non-expiring Storyblok asset
-// URLs instead -- real drink photos standing in for the actual cover art.
-const FALLBACK_TIKTOK_VIDEOS: TikTokVideo[] = [
-  {
-    id: '7681030997080575246',
-    embedLink: 'https://www.tiktok.com/@151coffee/video/7681030997080575246',
-    coverImageUrl: 'https://a.storyblok.com/f/294671107081428/1350x1350/2aed89c3c6/151-caramel-mocha.jpg',
-    title: 'Yup, sounds like its time for 151 Coffee. See you soon',
-    createTime: 0,
-  },
-  {
-    id: '7679924636250836238',
-    embedLink: 'https://www.tiktok.com/@151coffee/video/7679924636250836238',
-    coverImageUrl: 'https://a.storyblok.com/f/294671107081428/3712x3712/eadb45248c/drl_4517.JPG',
-    title: 'Fall featured drinks: Pumpkin Spice Latte, Pumpkin Caramel Brulee Latte, Pumpkin Spice Chai',
-    createTime: 0,
-  },
-  {
-    id: '7678065491113446669',
-    embedLink: 'https://www.tiktok.com/@151coffee/video/7678065491113446669',
-    coverImageUrl: 'https://a.storyblok.com/f/294671107081428/1350x1350/e5801ac01d/iced-or-hot-latte.jpg',
-    title: 'Powered up. Locked in. See you in the drive-thru.',
-    createTime: 0,
-  },
-];
-
 // The TikTok Display API needs a KV binding (TIKTOK_CACHE) that only exists
 // under the Cloudflare adapter Webflow Cloud injects in production -- it
 // isn't there in plain `astro dev`, and `cloudflare:workers` doesn't even
 // exist as a module outside a Workers runtime. This dynamic import, gated on
 // DEV, is what keeps local dev working: Vite only resolves it if the line
 // actually runs, so a bare `astro dev` never touches it.
+//
+// No stand-in cards here: TikTok's real cover images are signed URLs with a
+// short expiry, so anything that looks like a real thumbnail (whether
+// hand-picked or pulled live via oEmbed) would bake an expiring URL into
+// this page's prerendered HTML and 403 within days -- the same failure mode
+// already hit once with a hardcoded fallback. TikTokCarousel already renders
+// nothing when `videos` is null/empty (see storyblok/tiktok-setup.md), which
+// is the only state that's safe to ship before the one-time, human-only
+// OAuth authorization as @151coffee is done.
 let tiktokVideos: TikTokVideo[] | null = null;
-if (import.meta.env.DEV) {
-  tiktokVideos = FALLBACK_TIKTOK_VIDEOS;
-} else {
+if (!import.meta.env.DEV) {
   try {
     const [{ env }, { getLatestTikToks }] = await Promise.all([
       import('cloudflare:workers'),
@@ -66,10 +38,6 @@ if (import.meta.env.DEV) {
   } catch (err) {
     console.error('[tiktok] unavailable on this request', err);
   }
-  // Live integration isn't connected yet -- show the same fallback cards as
-  // dev instead of hiding the section, so it's reviewable. Remove this once
-  // storyblok/tiktok-setup.md's OAuth step is done and real videos flow in.
-  if (!tiktokVideos) tiktokVideos = FALLBACK_TIKTOK_VIDEOS;
 }
 
 const [homeData, settingsData, locationsEntries] = await Promise.all([
