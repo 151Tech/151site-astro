@@ -9,6 +9,11 @@
 
     const listeners = [];
 
+    // Only ever set by an explicit click on the banner (see cookie-consent.js)
+    // -- there is no "implied" or partial state. Anything else (never
+    // visited, left without choosing, an older CONSENT_VERSION) reads back
+    // as null, which is what tells the banner to keep showing on every page
+    // until the visitor actually picks one of the two buttons.
     function get() {
         try {
             const raw = localStorage.getItem(STORAGE_KEY);
@@ -18,12 +23,8 @@
         } catch { return null; }
     }
 
-    // implied=true means the visitor never actively answered (e.g. left the
-    // site with the banner still up) -- accepted is always false in that
-    // case, so nothing tracking-related ever gets triggered by an implied
-    // record. Only an explicit click sets accepted=true.
-    function set(accepted, implied = false) {
-        const record = { version: CONSENT_VERSION, accepted, implied, date: new Date().toISOString() };
+    function set(accepted) {
+        const record = { version: CONSENT_VERSION, accepted, date: new Date().toISOString() };
         try {
             localStorage.setItem(STORAGE_KEY, JSON.stringify(record));
         } catch { /* storage unavailable (e.g. private mode), ignore */ }

@@ -22,7 +22,7 @@
                 <div class="cc-text">
                     <div>
                         <strong>We use cookies 🍪</strong>
-                        <p>Unlike our menu, these cookies won't give you a sugar rush -- just a faster site and the traffic/ad insights that help us reach more coffee lovers. No crumbs, we promise. Accept all, or keep it to the necessary ones.</p>
+                        <p>Unlike our menu, these cookies won't give you a sugar rush, just a faster site and the traffic/ad insights that help us reach more coffee lovers. No crumbs, we promise. Accept all, or keep it to the necessary ones.</p>
                     </div>
                 </div>
                 <div class="cc-actions">
@@ -33,9 +33,7 @@
             </div>
         `;
 
-        let answered = false;
         function choose(accepted) {
-            answered = true;
             consent.set(accepted);
             dismiss(banner);
             // Granting consent needs no reload: analytics-loader.js is already
@@ -52,15 +50,12 @@
         banner.querySelector('#ccDecline').addEventListener('click', () => choose(false));
         banner.querySelector('#ccClose').addEventListener('click', () => choose(false));
 
-        // If the visitor keeps browsing to another page without making an
-        // explicit choice, remember that as long as nothing was already
-        // stored -- but only as a non-accepting placeholder ("implied"), so
-        // the banner stops re-showing without ever having actually granted
-        // anything. An explicit click always overrides it.
-        window.addEventListener('pagehide', () => {
-            if (!answered && !consent.get()) consent.set(false, true);
-        }, { once: true });
-
+        // Deliberately no "leave without choosing" handler: nothing is ever
+        // recorded just for navigating away or closing the tab. init() below
+        // re-checks consent.get() fresh on every single page load, so if the
+        // visitor never actually clicked a button, this banner comes right
+        // back on the next page, and the one after that, for as long as it
+        // takes.
         document.body.appendChild(banner);
 
         // Slight delay so the slide-up animation plays on load
