@@ -1155,8 +1155,12 @@ nav.nav-scrolled .nav-container {
     gap: 0.75rem;
 }
 .locator__mobile-card .locator__item-photo {
+    /* Sized to be the tallest thing in the row (taller than the name/
+       hours/phone/Directions stack beside it), so it alone determines
+       the row's height -- that puts equal breathing room above and
+       below it, matching .locator__item's equal top/bottom padding. */
     flex: none;
-    width: 92px;
+    width: 116px;
     aspect-ratio: 1 / 1;
     height: auto;
     border-radius: var(--radius-sm);
@@ -1387,6 +1391,20 @@ nav.nav-scrolled .nav-container {
        list -- move it to the left on mobile/tablet instead. */
     .loc-count-wrap { left: 1.5rem; right: auto; }
     .loc-count-number { transform: translate(-18%, 0); }
+}
+
+/* Tablet-width slice of the mobile/tablet range: wide enough for two
+   cards side by side without cramping the photo+text row inside each.
+   Narrower than this (phones), the list stays a single column. */
+@media (min-width: 651px) and (max-width: 902px) {
+    .locator--full .locator__list {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.65rem;
+    }
+    .locator--full .locator__list .locator__item {
+        margin-bottom: 0;
+    }
 }
 
 /* Two-half card: top half is the square thumbnail (left) next to the store
