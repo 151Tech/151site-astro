@@ -2312,6 +2312,14 @@ footer {
 
 .modal.active { display: flex; }
 
+@keyframes modal-slide-up {
+    0%   { transform: translateY(60px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+}
+.modal.active .modal-content {
+    animation: modal-slide-up 0.5s cubic-bezier(.16,1,.3,1) both;
+}
+
 .modal-content {
     background: var(--white);
     border-radius: var(--radius);
