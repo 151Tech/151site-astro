@@ -44,7 +44,7 @@
     // a legible level; stores that fall outside the frame are still just a
     // pan away, and every store is one tap away via the list either way.
     const isMobileViewport = () => window.matchMedia("(max-width: 902px)").matches;
-    const MOBILE_MIN_ZOOM = 9;
+    const MOBILE_MIN_ZOOM = 10;
     function fitBoundsLegibly(latlngs, opts) {
         map.fitBounds(L.latLngBounds(latlngs), opts);
         if (isMobileViewport() && map.getZoom() < MOBILE_MIN_ZOOM) {

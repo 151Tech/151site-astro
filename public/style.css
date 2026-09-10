@@ -1151,15 +1151,13 @@ nav.nav-scrolled .nav-container {
    max-width: 902px rules below for the flip. */
 .locator__mobile-card {
     display: none;
-    align-items: stretch;
+    align-items: flex-start;
     gap: 0.75rem;
 }
-/* Stretches to match the height of the text column beside it (name +
-   hours + phone + Directions), so the photo takes up more of the row
-   instead of sitting as a small fixed square. */
 .locator__mobile-card .locator__item-photo {
     flex: none;
     width: 92px;
+    aspect-ratio: 1 / 1;
     height: auto;
     border-radius: var(--radius-sm);
     object-fit: cover;
@@ -1290,6 +1288,16 @@ nav.nav-scrolled .nav-container {
 .locator__map .leaflet-tile-pane,
 .ld-map .leaflet-tile-pane {
     filter: grayscale(1) contrast(1.5) brightness(1.08) sepia(0.5) hue-rotate(-50deg) saturate(2.5);
+}
+
+/* Roads and place labels read thinner at typical mobile tap-target sizes
+   than they do on a full desktop map -- push contrast and saturation
+   further here so red roads and black text both read boldly at a glance,
+   without needing to pinch-zoom in first. */
+@media (max-width: 902px) {
+    .locator__map .leaflet-tile-pane {
+        filter: grayscale(1) contrast(2.1) brightness(1) sepia(0.6) hue-rotate(-50deg) saturate(3.4);
+    }
 }
 
 .locator__marker-pin {
