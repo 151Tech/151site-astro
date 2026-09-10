@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-08T21:56:38.468Z",
+  "generatedAt": "2026-09-10T21:04:55.704Z",
   "stories": {
     "settings/global": {
       "nav": [
@@ -422,17 +422,17 @@
               "_uid": "3f48d2eb-c59a-4d21-aa76-f2d461d808c3",
               "href": "/menu",
               "image": {
-                "id": 215738597202535,
+                "id": 216423342703047,
                 "alt": "",
                 "name": "",
                 "focus": "",
                 "title": "",
                 "source": "",
-                "filename": "https://a.storyblok.com/f/294671107081428/1534x1534/3f7498c09b/test2.png",
+                "filename": "https://a.storyblok.com/f/294671107081428/1350x1350/9654003058/purple-dragon.jpg",
                 "copyright": "",
                 "fieldtype": "asset",
                 "meta_data": {
-                  "size": "1534x1534"
+                  "size": "1350x1350"
                 },
                 "is_external_url": false
               },
@@ -445,21 +445,17 @@
               "_uid": "62b43dbd-d290-414f-bfd2-509a3fa27028",
               "href": "/menu#hotfood",
               "image": {
-                "id": 212894227614158,
-                "alt": "Green Chile Burrito",
+                "id": 217968305191759,
+                "alt": "",
                 "name": "",
                 "focus": "",
-                "title": "Food Menu",
-                "source": "151 Coffee",
-                "filename": "https://a.storyblok.com/f/294671107081428/1600x1600/f74432ca16/foodmenu.JPG",
-                "copyright": "151 Coffee 2026",
+                "title": "",
+                "source": "",
+                "filename": "https://a.storyblok.com/f/294671107081428/1087x1087/9cb8a5d052/d7dfb5a2-1bbc-4c2b-8822-1891797c64fe-1.JPEG",
+                "copyright": "",
                 "fieldtype": "asset",
                 "meta_data": {
-                  "alt": "Green Chile Burrito",
-                  "size": "1600x1600",
-                  "title": "Food Menu",
-                  "source": "151 Coffee",
-                  "copyright": "151 Coffee 2026"
+                  "size": "1087x1087"
                 },
                 "is_external_url": false
               },
