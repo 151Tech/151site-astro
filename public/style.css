@@ -1295,20 +1295,13 @@ nav.nav-scrolled .nav-container {
    sepia+hue-rotate+saturate recolors that grayscale toward red instead of
    brown -- the classic "tint a monochrome image" recipe. Scoped to the tile
    pane only, so pins/tooltips/popups (separate Leaflet panes) keep their
-   real colors on top of it. */
+   real colors on top of it. Contrast/saturation pushed higher than a
+   "neutral" duotone would use -- OSM's state-line dashes, city labels, and
+   minor roads are already low-contrast in the source tiles, and a gentler
+   filter was washing them out to near-invisible. */
 .locator__map .leaflet-tile-pane,
 .ld-map .leaflet-tile-pane {
-    filter: grayscale(1) contrast(1.5) brightness(1.08) sepia(0.5) hue-rotate(-50deg) saturate(2.5);
-}
-
-/* Roads and place labels read thinner at typical mobile tap-target sizes
-   than they do on a full desktop map -- push contrast and saturation
-   further here so red roads and black text both read boldly at a glance,
-   without needing to pinch-zoom in first. */
-@media (max-width: 902px) {
-    .locator__map .leaflet-tile-pane {
-        filter: grayscale(1) contrast(2.1) brightness(1) sepia(0.6) hue-rotate(-50deg) saturate(3.4);
-    }
+    filter: grayscale(1) contrast(2.1) brightness(1) sepia(0.6) hue-rotate(-50deg) saturate(3.4);
 }
 
 .locator__marker-pin {

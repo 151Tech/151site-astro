@@ -36,19 +36,24 @@
         zoomOutEl.addEventListener("click", () => map.zoomOut());
     }
 
-    // The map box is much shorter on mobile (40vh vs. a full-height desktop
-    // panel), so fitBounds naturally has to zoom out further to fit the same
-    // spread of stores into that shorter box -- at which point road lines and
-    // labels shrink to the point of being unreadable. Floor the zoom level
-    // after every fitBounds call on narrow viewports so it never goes below
-    // a legible level; stores that fall outside the frame are still just a
-    // pan away, and every store is one tap away via the list either way.
+    // fitBounds can zoom out much further than the actual store spread
+    // needs -- the map box is shorter on mobile (40vh vs. a full-height
+    // desktop panel) so it naturally zooms out further there, and on any
+    // viewport it can be thrown off by the container not having its final
+    // size yet on first layout (map.invalidateSize() below guards against
+    // that, but the floor is a hard backstop either way). Below that floor
+    // road lines and labels shrink to unreadable, so clamp the zoom level
+    // after every fitBounds call; stores that fall outside the frame are
+    // still just a pan away, and every store is one tap away via the list.
     const isMobileViewport = () => window.matchMedia("(max-width: 902px)").matches;
     const MOBILE_MIN_ZOOM = 10;
+    const DESKTOP_MIN_ZOOM = 6;
     function fitBoundsLegibly(latlngs, opts) {
+        map.invalidateSize();
         map.fitBounds(L.latLngBounds(latlngs), opts);
-        if (isMobileViewport() && map.getZoom() < MOBILE_MIN_ZOOM) {
-            map.setZoom(MOBILE_MIN_ZOOM);
+        const floor = isMobileViewport() ? MOBILE_MIN_ZOOM : DESKTOP_MIN_ZOOM;
+        if (map.getZoom() < floor) {
+            map.setZoom(floor);
         }
     }
 
