@@ -1151,22 +1151,23 @@ nav.nav-scrolled .nav-container {
    max-width: 902px rules below for the flip. */
 .locator__mobile-card {
     display: none;
-    /* Grid (not flex) so the photo column can be told to stretch to
-       match the info column's full height via align-items: stretch --
-       the info column's natural height (name+hours+phone+Directions)
-       sets the row height, and the photo fills it edge to edge. */
-    grid-template-columns: auto 1fr;
+    /* The photo's column is a share of the card's own width (not sized
+       from its height) so it scales up with the card -- on a wide card
+       (the 2-up tablet grid, or a wide phone) that's a much bigger photo
+       instead of a small fixed thumbnail with dead space stretching out
+       to the card's right edge. The info column only gets what's left,
+       which pushes the text over to sit right against the (now larger)
+       photo instead of floating in a wide, mostly-empty column. */
+    grid-template-columns: minmax(96px, 42%) 1fr;
     align-items: stretch;
     gap: 0.75rem;
 }
 .locator__mobile-card .locator__item-photo {
-    /* height: 100% stretches to the grid row's height (the info column
-       next to it); width is then derived from that height via
-       aspect-ratio, so it stays a true square that reaches from the
-       top of the row all the way to the bottom of the Directions
-       button, instead of a fixed size that leaves a gap underneath. */
-    width: auto;
-    height: 100%;
+    /* width: 100% fills its grid column; height follows from that via
+       aspect-ratio, so it's always a true square, sized by the card's
+       width rather than by the text column's height. */
+    width: 100%;
+    height: auto;
     aspect-ratio: 1 / 1;
     border-radius: var(--radius-sm);
     object-fit: cover;
@@ -1176,9 +1177,10 @@ nav.nav-scrolled .nav-container {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    /* Spreads name/hours/phone/Directions out to fill the taller row
-       instead of clumping at the top with dead space below. */
-    justify-content: space-between;
+    /* Centers name/hours/phone/Directions in whatever height the (now
+       width-driven, possibly taller-than-the-text) photo establishes for
+       the row. */
+    justify-content: center;
 }
 .locator__mobile-name {
     font-family: var(--font-inter), sans-serif;
@@ -1295,16 +1297,23 @@ nav.nav-scrolled .nav-container {
    sepia+hue-rotate+saturate recolors that grayscale toward red instead of
    brown -- the classic "tint a monochrome image" recipe. Scoped to the tile
    pane only, so pins/tooltips/popups (separate Leaflet panes) keep their
-   real colors on top of it. Contrast/saturation pushed higher than a
-   "neutral" duotone would use -- OSM's state-line dashes, city labels, and
-   minor roads are already low-contrast in the source tiles, and a gentler
-   filter was washing them out to near-invisible. Brightness is pulled down
-   *before* that contrast boost (rather than left at 1) so those faint,
-   near-white minor roads land in the midtones contrast actually stretches,
-   instead of clipping straight to white/invisible against the cream fill. */
+   real colors on top of it. These are the values that read as cream land
+   with red roads (not yellow/washed out) -- pushing contrast/saturation
+   past this, or pulling brightness down to compensate, tips the whole
+   image toward yellow instead of making anything more legible.
+   The drop-shadow chain after the color values doesn't touch color at
+   all -- it stacks a few soft, tight-radius shadows along every dark
+   edge (roads, text, borders), which visually thickens them like a
+   faux font-weight increase, without changing the underlying hue. */
 .locator__map .leaflet-tile-pane,
 .ld-map .leaflet-tile-pane {
-    filter: grayscale(1) contrast(2.6) brightness(0.88) sepia(0.65) hue-rotate(-50deg) saturate(4.2);
+    filter:
+        grayscale(1) contrast(1.7) brightness(1.08) sepia(0.5) hue-rotate(-50deg) saturate(3)
+        drop-shadow(0 0 1.2px rgba(0,0,0,1))
+        drop-shadow(0 0 1.2px rgba(0,0,0,1))
+        drop-shadow(0 0 1.2px rgba(0,0,0,1))
+        drop-shadow(0 0 1.2px rgba(0,0,0,1))
+        drop-shadow(0 0 0.6px rgba(0,0,0,1));
 }
 
 .locator__marker-pin {
@@ -1437,7 +1446,15 @@ nav.nav-scrolled .nav-container {
     min-width: 0;
     display: flex;
     flex-direction: column;
+    align-items: flex-start;
     justify-content: center;
+}
+
+/* More Info now sits right under the address instead of down in the
+   Directions row, so it reads as "more about this specific address"
+   rather than a second call-to-action next to Directions. */
+.locator-photo-card .locator__item-info .locator__more-info {
+    margin-top: 0.4rem;
 }
 
 .locator-photo-card .locator__directions,

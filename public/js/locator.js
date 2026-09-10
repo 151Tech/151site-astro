@@ -57,6 +57,16 @@
         }
     }
 
+    // Locations page has state-narrowing buttons ("Texas" / "Kansas", one
+    // marked up as .active -- see locations.astro); the homepage locator
+    // has neither, so it always starts from every store. Read whichever
+    // button starts active rather than hardcoding a state here, so the
+    // default stays in sync with the markup instead of two places having
+    // to agree on it.
+    const initialStateBtn = document.querySelector("[data-state-filter].active");
+    const initialState = initialStateBtn ? initialStateBtn.dataset.stateFilter : "";
+    const initialStores = initialState ? STORES.filter((s) => s.state === initialState) : STORES;
+
     // Fit to the real store bounds before the tile layer is added, so
     // Leaflet only ever requests tiles for the zoom level it actually
     // settles on. Setting a throwaway initial view (e.g. a hardcoded
@@ -64,7 +74,7 @@
     // immediately abort/replace them once fitBounds below changes the
     // view -- wasted requests that the tile server was rejecting outright
     // (503s) rather than just canceling client-side.
-    fitBoundsLegibly(STORES.map(s => [s.lat, s.lng]), { padding: [30, 30] });
+    fitBoundsLegibly(initialStores.map(s => [s.lat, s.lng]), { padding: [30, 30] });
 
     window.COFFEE151_LEAFLET.addTileLayer(L, map);
 
@@ -138,6 +148,7 @@
                     ${photo}
                     <div class="locator__item-info">
                         <p>${store.address}<br>${store.city}, ${store.state} ${store.zip}</p>
+                        ${moreInfo}
                     </div>
                 </div>
                 <div class="locator__item-bottom">
@@ -147,7 +158,6 @@
                 ${mobileCard}
                 <div class="locator__item-actions">
                     <a class="locator__directions" href="${directionsUrl(store)}" target="_blank" rel="noopener noreferrer">Directions${photo ? arrow : ""}</a>
-                    ${moreInfo}
                 </div>
             `;
             item.addEventListener("click", (e) => {
@@ -243,9 +253,9 @@
         fitTo(list);
     });
 
-    // Optional state-narrowing buttons (locations page only -- "All" /
-    // "Texas" / "Kansas"). Clears whatever's in the search box so the two
-    // filters don't fight each other over what the list shows.
+    // Optional state-narrowing buttons (locations page only -- "Texas" /
+    // "Kansas"). Clears whatever's in the search box so the two filters
+    // don't fight each other over what the list shows.
     const stateButtons = document.querySelectorAll("[data-state-filter]");
     stateButtons.forEach((btn) => {
         btn.addEventListener("click", () => {
@@ -259,5 +269,5 @@
         });
     });
 
-    renderList(STORES);
+    renderList(initialStores);
 })();
