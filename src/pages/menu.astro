@@ -407,6 +407,18 @@ const flavors: { value: string; index: number }[] = allFlavors
         var label = trigger.querySelector('span');
         if (label) label.textContent = 'Standard Menu';
       }
+      // This whole page (Nav, Footer, everything) is rendered a second time
+      // inside /menu/simple's iframe. Every real link on it -- nav items,
+      // footer links, drink cards, gift card, etc -- would otherwise
+      // navigate the iframe itself, leaving the top-level tab stuck on the
+      // /menu/simple URL/title forever (and a refresh there reloads the
+      // iframe back to this same page). Force every non-fragment link to
+      // break out to the top-level document instead.
+      document.querySelectorAll('a[href]').forEach(function (a) {
+        var href = a.getAttribute('href');
+        if (!href || href.charAt(0) === '#') return;
+        a.target = '_parent';
+      });
     }
     var mobileMq = window.matchMedia('(max-width: 768px)');
     function isMobile() { return forceSimple || mobileMq.matches; }
