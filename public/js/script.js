@@ -220,6 +220,39 @@ if (giftCardModal) {
     });
 }
 
+// Invest Banner Modal functionality
+const investModal = document.getElementById('investModal');
+const investBannerBtn = document.getElementById('investBannerBtn');
+const closeInvestModal = document.getElementById('closeInvestModal');
+
+function openInvestModal() {
+    if (!investModal) return;
+    investModal.classList.add('active');
+}
+
+if (investBannerBtn) {
+    investBannerBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        openInvestModal();
+    });
+}
+
+if (closeInvestModal) {
+    closeInvestModal.addEventListener('click', function() {
+        investModal.classList.remove('active');
+        investModal.style.display = '';
+    });
+}
+
+if (investModal) {
+    investModal.addEventListener('click', function(e) {
+        if (e.target === investModal) {
+            investModal.classList.remove('active');
+            investModal.style.display = '';
+        }
+    });
+}
+
 // ── Contact forms (AJAX submit, no page reload) ──
 // Shared by every form marked data-netlify="true" (home contact + real
 // estate inquiry). The data-netlify/form-name/bot-field attributes are

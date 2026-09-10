@@ -2355,6 +2355,140 @@ footer {
     overflow: hidden;
 }
 
+/* ─── Invest Banner ─── */
+.invest-banner {
+    width: 100%;
+    background-color: #161616;
+    background-image:
+        radial-gradient(120% 60% at 50% 0%,   rgba(230,57,70,0.16) 0%, transparent 60%),
+        radial-gradient(80% 60% at 100% 100%, rgba(230,57,70,0.09) 0%, transparent 60%),
+        radial-gradient(rgba(255,255,255,0.06) 2px, transparent 2.5px);
+    background-size: auto, auto, 26px 26px;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 1rem 0;
+}
+
+.invest-banner-inner {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 0.3rem;
+}
+
+.invest-banner-image {
+    width: 3.5rem;
+    height: auto;
+    max-height: 4.5rem;
+    object-fit: contain;
+    border-radius: var(--radius-sm);
+    margin-bottom: 0.2rem;
+}
+
+.invest-banner-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.invest-banner-title {
+    font-family: var(--font-bebas-neue), 'Impact', sans-serif;
+    font-size: 2.1rem;
+    letter-spacing: 0.03em;
+    color: var(--white);
+    margin: 0;
+}
+
+.invest-banner-blurb {
+    font-size: 0.95rem;
+    line-height: 1.55;
+    color: var(--light-gray);
+    margin: 0.1rem 0 0.55rem;
+    max-width: 26rem;
+    text-wrap: balance;
+}
+
+.invest-banner-btn {
+    background: var(--red);
+    color: var(--white);
+    border: none;
+    border-radius: var(--radius-pill);
+    padding: 0.6rem 1.6rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    margin-top: 0;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.invest-banner-btn:hover {
+    background: var(--red-dark);
+    transform: translateY(-1px);
+}
+
+.invest-modal-content {
+    max-width: 460px;
+    padding: 2.5rem 2rem 2rem;
+    background: var(--white);
+    color: var(--black);
+}
+
+.invest-modal-header { margin-bottom: 1.5rem; text-align: center; }
+
+.invest-modal-header h3 {
+    font-family: var(--font-bebas-neue), 'Impact', sans-serif;
+    font-size: 1.75rem;
+    letter-spacing: 0.02em;
+    margin-bottom: 0.5rem;
+}
+
+.invest-modal-header p {
+    color: var(--mid-gray);
+    font-size: 0.95rem;
+}
+
+.invest-modal-form .form-group:last-of-type { margin-bottom: 1.25rem; }
+
+.invest-modal-form .form-group,
+.invest-modal-form .form-group label {
+    text-align: center;
+}
+
+.invest-modal-disclaimer {
+    font-size: 0.78rem;
+    line-height: 1.5;
+    color: var(--mid-gray);
+    margin-top: 0.85rem;
+    text-align: center;
+}
+
+.invest-modal-form .form-group label {
+    color: var(--mid-gray);
+}
+
+.invest-modal-form .form-group input {
+    background: #fff;
+    border: 1px solid rgba(0,0,0,0.15);
+    color: var(--black);
+}
+
+.invest-modal-form .form-group input:focus {
+    border-color: var(--red);
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(230,57,70,0.12);
+}
+
+.invest-modal-form .form-group input::placeholder {
+    color: rgba(0,0,0,0.32);
+}
+
 @media (max-width: 768px) {
     .modal-content { width: 96%; max-height: 88vh; }
     .crisp iframe { width: 100% !important; }

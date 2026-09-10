@@ -48,7 +48,7 @@ const [homeData, settingsData, locationsEntries] = await Promise.all([
 
 const p = unwrapSingletons(homeData as any, [
   'seo', 'hero', 'visibility', 'featuredDrink', 'menuSection', 'locationsSection',
-  'cta', 'reviews', 'investment', 'faqs', 'contact',
+  'cta', 'reviews', 'investment', 'faqs', 'contact', 'investBanner',
 ]);
 const s = (settingsData as any) ?? {};
 const locations = locationsEntries
@@ -126,6 +126,35 @@ const storesJson = JSON.stringify(locations.map((l: any) => ({
       </div>
     </div>
   </section>
+
+  <!-- Invest Banner -->
+  {p.investBanner?.visible !== false && (
+    <section class:list={['invest-banner', { 'has-image': !!imageUrl(p.investBanner?.image, { width: 200 }) }]}>
+      <div class="invest-banner-inner">
+        {imageUrl(p.investBanner?.image, { width: 200 }) && (
+          <img
+            class="invest-banner-image"
+            src={imageUrl(p.investBanner?.image, { width: 200 })}
+            alt={p.investBanner?.imageAlt ?? ''}
+            width="120"
+            height="160"
+            loading="lazy"
+            decoding="async"
+          />
+        )}
+        <div class="invest-banner-content">
+          <Editable blok={p.investBanner} />
+          <p class="invest-banner-title">{p.investBanner?.title ?? 'Invest in 151 Coffee'}</p>
+          <p class="invest-banner-blurb">
+            {p.investBanner?.blurb ?? "Our next investment round isn't open yet, but it's coming soon. Join the waitlist to be first in line."}
+          </p>
+          <button type="button" class="invest-banner-btn" id="investBannerBtn">
+            {p.investBanner?.buttonLabel ?? 'Learn More'}
+          </button>
+        </div>
+      </div>
+    </section>
+  )}
 
   <BlockRenderer sections={p.sectionsAfterHero} />
 

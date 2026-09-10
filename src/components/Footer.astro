@@ -109,3 +109,29 @@ const igAppUrl = igUsername ? `instagram://user?username=${igUsername}` : undefi
     </div>
   </div>
 </div>
+
+<div id="investModal" class="modal">
+  <div class="modal-content invest-modal-content">
+    <button id="closeInvestModal" class="modal-close">&times;</button>
+    <div class="invest-modal-header">
+      <h3>Join the Investor Waitlist</h3>
+      <p>Leave your email and we'll reach out with details on our next investment round.</p>
+    </div>
+    <form class="invest-modal-form" name="invest-waitlist" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+      <input type="hidden" name="form-name" value="invest-waitlist" />
+      <p style="display:none"><label>Leave this field blank: <input name="bot-field" /></label></p>
+      <div class="form-group"><label for="investName">Name</label><input type="text" id="investName" name="name" placeholder="Your name" required /></div>
+      <div class="form-group"><label for="investEmail">Email Address</label><input type="email" id="investEmail" name="email" placeholder="john@company.com" required /></div>
+      <button type="submit" class="form-submit"><span>Join Waitlist</span></button>
+    </form>
+    <p class="invest-modal-disclaimer">
+      We plan on filing a new offering soon. We haven't filed the required paperwork (Form C) with the SEC for this new offering yet.
+    </p>
+    <p class="invest-modal-disclaimer">
+      We can't accept investments or any payment until that paperwork is filed.
+    </p>
+    <p class="invest-modal-disclaimer">
+      To reserve your spot, join the waitlist today!
+    </p>
+  </div>
+</div>

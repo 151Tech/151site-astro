@@ -73,6 +73,14 @@ const FORMS = {
     subject: (f: URLSearchParams) =>
       `Real Estate Inquiry: ${cleanSubjectPart(f.get('property')) || 'New submission'}`,
   },
+  'invest-waitlist': {
+    label: 'Investor Waitlist Signup',
+    toEnv: 'RESEND_TO_INVEST',
+    // This form (invest banner popup) only collects name + email.
+    requireIdentity: false,
+    subject: (f: URLSearchParams) =>
+      `Investor Waitlist: ${cleanSubjectPart(f.get('name')) || 'New signup'}`,
+  },
 } as const;
 
 type FormName = keyof typeof FORMS;
@@ -127,6 +135,7 @@ function cleanSubjectPart(value: string | null | undefined): string {
 const FIELD_LABELS: Record<string, string> = {
   firstName: 'First Name',
   lastName: 'Last Name',
+  name: 'Name',
   email: 'Email',
   phone: 'Phone',
   message: 'Message',
