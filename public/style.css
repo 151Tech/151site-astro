@@ -1298,10 +1298,13 @@ nav.nav-scrolled .nav-container {
    real colors on top of it. Contrast/saturation pushed higher than a
    "neutral" duotone would use -- OSM's state-line dashes, city labels, and
    minor roads are already low-contrast in the source tiles, and a gentler
-   filter was washing them out to near-invisible. */
+   filter was washing them out to near-invisible. Brightness is pulled down
+   *before* that contrast boost (rather than left at 1) so those faint,
+   near-white minor roads land in the midtones contrast actually stretches,
+   instead of clipping straight to white/invisible against the cream fill. */
 .locator__map .leaflet-tile-pane,
 .ld-map .leaflet-tile-pane {
-    filter: grayscale(1) contrast(2.1) brightness(1) sepia(0.6) hue-rotate(-50deg) saturate(3.4);
+    filter: grayscale(1) contrast(2.6) brightness(0.88) sepia(0.65) hue-rotate(-50deg) saturate(4.2);
 }
 
 .locator__marker-pin {
