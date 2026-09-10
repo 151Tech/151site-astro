@@ -12,9 +12,9 @@ window.COFFEE151_LEAFLET = {
         return L.divIcon({
             className: 'locator__marker',
             html: '<span class="locator__marker-pin">' + mark + '</span>',
-            iconSize: [28, 28],
-            iconAnchor: [14, 28],
-            popupAnchor: [0, -28]
+            iconSize: [40, 40],
+            iconAnchor: [20, 40],
+            popupAnchor: [0, -40]
         });
     },
     addTileLayer: function (L, map) {

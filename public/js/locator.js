@@ -54,7 +54,7 @@
         marker.bindTooltip(shortName, {
             permanent: true,
             direction: "top",
-            offset: [0, -26],
+            offset: [0, -38],
             className: "locator__marker-tooltip"
         });
         const nameHtml = store.slug
@@ -90,13 +90,23 @@
             const arrow = '<svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
             const moreInfo = store.slug ? `<a class="locator__more-info" href="/locations/${store.slug}">More Info${arrow}</a>` : "";
             const shortStoreName = store.name.replace("151 Coffee ", "");
-            // Mobile-only condensed summary -- same info as the stacked
-            // desktop layout (name, address, hours, phone) joined onto one
-            // truncating line so the card reads at a glance without the
-            // scroll height of 4 separate lines. Hidden on desktop; the
-            // stacked elements above are hidden on mobile instead (see the
-            // max-width: 900px rules in style.css).
-            const mobileLine = `<p class="locator__item-line">${shortStoreName} &middot; ${store.address}, ${store.city}, ${store.state} ${store.zip} &middot; ${HOURS} &middot; ${PHONE}</p>`;
+            // Mobile-only card: photo + non-truncating name/hours/phone, so
+            // the row reads at a glance without cutting anything off. No
+            // address here by design -- the row itself now opens the
+            // store's More Info page (which has the full address), and
+            // Directions doesn't need it repeated either. Hidden on
+            // desktop; the stacked elements above are hidden on mobile
+            // instead (see the max-width: 902px rules in style.css).
+            const mobileCard = `
+                <div class="locator__mobile-card">
+                    ${photo}
+                    <div class="locator__mobile-info">
+                        <p class="locator__mobile-name">${shortStoreName}</p>
+                        <p class="locator__mobile-hours">${HOURS}</p>
+                        <p class="locator__mobile-phone">${PHONE}</p>
+                    </div>
+                </div>
+            `;
             item.innerHTML = `
                 <h3 class="locator__item-name">${shortStoreName}${dist}</h3>
                 <div class="locator__item-top">
@@ -109,7 +119,7 @@
                     <p class="locator__hours">${HOURS}</p>
                     <a class="locator__phone" href="tel:+1${PHONE_TEL}">${PHONE}</a>
                 </div>
-                ${mobileLine}
+                ${mobileCard}
                 <div class="locator__item-actions">
                     <a class="locator__directions" href="${directionsUrl(store)}" target="_blank" rel="noopener noreferrer">Directions${photo ? arrow : ""}</a>
                     ${moreInfo}
@@ -117,6 +127,15 @@
             `;
             item.addEventListener("click", (e) => {
                 if (e.target.closest(".locator__directions, .locator__phone, .locator__more-info")) return;
+                // Compact rows (mobile + the shared tablet breakpoint, see
+                // the max-width: 902px rules in style.css) drop the visible
+                // "More Info" button -- tapping the row itself takes its
+                // place. Desktop keeps its old behavior: highlight + fly the
+                // map to it, since More Info is still its own button there.
+                if (store.slug && window.matchMedia("(max-width: 902px)").matches) {
+                    window.location.href = `/locations/${store.slug}`;
+                    return;
+                }
                 setActive(originalIndex);
             });
             listEl.appendChild(item);
