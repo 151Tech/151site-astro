@@ -76,10 +76,12 @@ const FORMS = {
   'invest-waitlist': {
     label: 'Investor Waitlist Signup',
     toEnv: 'RESEND_TO_INVEST',
-    // This form (invest banner popup) only collects name + email.
+    // This form (invest banner popup) only collects email + phone.
     requireIdentity: false,
-    subject: (f: URLSearchParams) =>
-      `Investor Waitlist: ${cleanSubjectPart(f.get('name')) || 'New signup'}`,
+    // Matches the subject/preview convention from the old Wix waitlist
+    // form's own notification email, not tied to any particular field.
+    subject: () => 'Investor Waitlist Signup got a new submission',
+    previewText: 'A site visitor just submitted your form Investor Waitlist Signup',
   },
 } as const;
 
@@ -135,7 +137,6 @@ function cleanSubjectPart(value: string | null | undefined): string {
 const FIELD_LABELS: Record<string, string> = {
   firstName: 'First Name',
   lastName: 'Last Name',
-  name: 'Name',
   email: 'Email',
   phone: 'Phone',
   message: 'Message',
@@ -257,7 +258,15 @@ export async function POST({ request }: { request: Request }) {
   // above; reuse it here rather than re-testing the regex.)
   const replyTo = emailLooksValid ? submitterEmailRaw : undefined;
 
-  const html = `<h2>${escapeHtml(form.label)}</h2>
+  // A preheader: invisible in the rendered email itself, but inbox list
+  // views (Gmail, Outlook, etc.) show it right after the subject line --
+  // matching the "preview text" field the old Wix notification email had.
+  const previewText = 'previewText' in form ? (form as { previewText: string }).previewText : undefined;
+  const preheader = previewText
+    ? `<div style="display:none;max-height:0;overflow:hidden">${escapeHtml(previewText)}</div>`
+    : '';
+
+  const html = `${preheader}<h2>${escapeHtml(form.label)}</h2>
     <table cellpadding="6" style="border-collapse:collapse">
       ${rows
         .map(
