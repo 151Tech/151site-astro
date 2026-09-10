@@ -36,6 +36,22 @@
         zoomOutEl.addEventListener("click", () => map.zoomOut());
     }
 
+    // The map box is much shorter on mobile (40vh vs. a full-height desktop
+    // panel), so fitBounds naturally has to zoom out further to fit the same
+    // spread of stores into that shorter box -- at which point road lines and
+    // labels shrink to the point of being unreadable. Floor the zoom level
+    // after every fitBounds call on narrow viewports so it never goes below
+    // a legible level; stores that fall outside the frame are still just a
+    // pan away, and every store is one tap away via the list either way.
+    const isMobileViewport = () => window.matchMedia("(max-width: 902px)").matches;
+    const MOBILE_MIN_ZOOM = 9;
+    function fitBoundsLegibly(latlngs, opts) {
+        map.fitBounds(L.latLngBounds(latlngs), opts);
+        if (isMobileViewport() && map.getZoom() < MOBILE_MIN_ZOOM) {
+            map.setZoom(MOBILE_MIN_ZOOM);
+        }
+    }
+
     // Fit to the real store bounds before the tile layer is added, so
     // Leaflet only ever requests tiles for the zoom level it actually
     // settles on. Setting a throwaway initial view (e.g. a hardcoded
@@ -43,8 +59,7 @@
     // immediately abort/replace them once fitBounds below changes the
     // view -- wasted requests that the tile server was rejecting outright
     // (503s) rather than just canceling client-side.
-    const bounds = L.latLngBounds(STORES.map(s => [s.lat, s.lng]));
-    map.fitBounds(bounds, { padding: [30, 30] });
+    fitBoundsLegibly(STORES.map(s => [s.lat, s.lng]), { padding: [30, 30] });
 
     window.COFFEE151_LEAFLET.addTileLayer(L, map);
 
@@ -97,6 +112,10 @@
             // Directions doesn't need it repeated either. Hidden on
             // desktop; the stacked elements above are hidden on mobile
             // instead (see the max-width: 902px rules in style.css).
+            // The Directions link lives here (under the name/hours/phone
+            // text) rather than in .locator__item-actions below, which is
+            // hidden on mobile -- see the max-width: 902px rules in
+            // style.css. Desktop keeps its own copy in .locator__item-actions.
             const mobileCard = `
                 <div class="locator__mobile-card">
                     ${photo}
@@ -104,6 +123,7 @@
                         <p class="locator__mobile-name">${shortStoreName}</p>
                         <p class="locator__mobile-hours">${HOURS}</p>
                         <p class="locator__mobile-phone">${PHONE}</p>
+                        <a class="locator__directions locator__directions--mobile" href="${directionsUrl(store)}" target="_blank" rel="noopener noreferrer">Directions${arrow}</a>
                     </div>
                 </div>
             `;
@@ -153,7 +173,7 @@
 
     function fitTo(stores) {
         if (!stores.length) return;
-        map.fitBounds(L.latLngBounds(stores.map(s => [s.lat, s.lng])), { padding: [30, 30], maxZoom: 13 });
+        fitBoundsLegibly(stores.map(s => [s.lat, s.lng]), { padding: [30, 30], maxZoom: 13 });
     }
 
     // Geocode a US ZIP (free OpenStreetMap Nominatim) and order stores by distance.
@@ -169,7 +189,7 @@
                 renderList(sorted, [olat, olon]);
                 // Frame the searched ZIP plus the nearest few stores.
                 const pts = [[olat, olon]].concat(sorted.slice(0, 4).map(s => [s.lat, s.lng]));
-                map.fitBounds(L.latLngBounds(pts), { padding: [40, 40], maxZoom: 12 });
+                fitBoundsLegibly(pts, { padding: [40, 40], maxZoom: 12 });
             })
             .catch(() => { renderList(STORES); fitTo(STORES); }); // on any failure, show all
     }

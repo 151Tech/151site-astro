@@ -1151,19 +1151,25 @@ nav.nav-scrolled .nav-container {
    max-width: 902px rules below for the flip. */
 .locator__mobile-card {
     display: none;
-    align-items: center;
+    align-items: stretch;
     gap: 0.75rem;
 }
+/* Stretches to match the height of the text column beside it (name +
+   hours + phone + Directions), so the photo takes up more of the row
+   instead of sitting as a small fixed square. */
 .locator__mobile-card .locator__item-photo {
     flex: none;
-    width: 56px;
-    height: 56px;
+    width: 92px;
+    height: auto;
     border-radius: var(--radius-sm);
     object-fit: cover;
 }
 .locator__mobile-info {
     min-width: 0;
     flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 }
 .locator__mobile-name {
     font-family: var(--font-inter), sans-serif;
@@ -1183,6 +1189,11 @@ nav.nav-scrolled .nav-container {
     font-size: 0.78rem;
     color: #6B6B6B;
     margin: 0.1rem 0 0;
+}
+.locator__directions--mobile {
+    margin-top: 0.5rem;
+    font-size: 0.68rem;
+    padding: 0.4rem 0.75rem;
 }
 .locator__phone {
     display: inline-block;
@@ -1355,27 +1366,11 @@ nav.nav-scrolled .nav-container {
         display: flex;
     }
 
+    /* The Directions button now lives inside .locator__mobile-card (under
+       the name/hours/phone text) -- this standalone row would just
+       duplicate it, and More Info's row-tap replacement, so both are
+       hidden here entirely. */
     .locator__item-actions {
-        flex-direction: row;
-        flex-shrink: 0;
-        align-items: center;
-        gap: 0.5rem;
-        margin-top: 0;
-    }
-
-    /* Smaller than the desktop pill so it fits beside the line without
-       wrapping, even on a narrow phone. */
-    .locator__item-actions .locator__directions {
-        font-size: 0.66rem;
-        padding: 0.4rem 0.7rem;
-    }
-
-    /* Redundant here -- tapping anywhere on the row (outside Directions)
-       already opens this same store's More Info page, see locator.js.
-       Extra-specific selector needed to beat .locator-photo-card
-       .locator__more-info further down, which also sets `display`. */
-    .locator .locator-photo-card .locator__more-info,
-    .locator__item-actions .locator__more-info {
         display: none;
     }
 
@@ -2625,10 +2620,26 @@ html:has(.loc-fullpage), body:has(.loc-fullpage) { overflow: hidden; }
         display: contents;
     }
     /* Search bar is now the topmost visible thing on the page, sitting
-       directly under the fixed nav -- same top clearance the hidden
-       .locator__panel-header used to provide. */
-    .locator--full .locator__search { order: -3; padding: 5.75rem 1.1rem 0.75rem; }
-    .locator--full .locator__state-filters { order: -2; }
+       directly under the fixed nav -- just enough top clearance to clear
+       the nav's own height (~4.5rem), kept tight since there's no heading
+       above it anymore to absorb extra breathing room. */
+    .locator--full .locator__search {
+        order: -3;
+        padding: 4.6rem 0.85rem 0.4rem;
+    }
+    .locator--full .locator__search input {
+        padding: 0.6rem 1rem;
+        font-size: 0.85rem;
+    }
+    .locator--full .locator__state-filters {
+        order: -2;
+        padding: 0 0.85rem 0.5rem;
+        gap: 0.4rem;
+    }
+    .locator--full .locator__state-btn {
+        padding: 0.35rem 0.6rem;
+        font-size: 0.72rem;
+    }
     .locator--full .locator__map-wrap { flex: none; height: 40vh; order: -1; }
     .locator--full .locator__list {
         order: 0;
