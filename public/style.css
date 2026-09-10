@@ -1151,27 +1151,34 @@ nav.nav-scrolled .nav-container {
    max-width: 902px rules below for the flip. */
 .locator__mobile-card {
     display: none;
-    align-items: flex-start;
+    /* Grid (not flex) so the photo column can be told to stretch to
+       match the info column's full height via align-items: stretch --
+       the info column's natural height (name+hours+phone+Directions)
+       sets the row height, and the photo fills it edge to edge. */
+    grid-template-columns: auto 1fr;
+    align-items: stretch;
     gap: 0.75rem;
 }
 .locator__mobile-card .locator__item-photo {
-    /* Sized to be the tallest thing in the row (taller than the name/
-       hours/phone/Directions stack beside it), so it alone determines
-       the row's height -- that puts equal breathing room above and
-       below it, matching .locator__item's equal top/bottom padding. */
-    flex: none;
-    width: 116px;
+    /* height: 100% stretches to the grid row's height (the info column
+       next to it); width is then derived from that height via
+       aspect-ratio, so it stays a true square that reaches from the
+       top of the row all the way to the bottom of the Directions
+       button, instead of a fixed size that leaves a gap underneath. */
+    width: auto;
+    height: 100%;
     aspect-ratio: 1 / 1;
-    height: auto;
     border-radius: var(--radius-sm);
     object-fit: cover;
 }
 .locator__mobile-info {
     min-width: 0;
-    flex: 1;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    /* Spreads name/hours/phone/Directions out to fill the taller row
+       instead of clumping at the top with dead space below. */
+    justify-content: space-between;
 }
 .locator__mobile-name {
     font-family: var(--font-inter), sans-serif;
@@ -1193,7 +1200,7 @@ nav.nav-scrolled .nav-container {
     margin: 0.1rem 0 0;
 }
 .locator__directions--mobile {
-    margin-top: 0.5rem;
+    margin-top: 0.4rem;
     font-size: 0.68rem;
     padding: 0.4rem 0.75rem;
 }
@@ -1375,7 +1382,7 @@ nav.nav-scrolled .nav-container {
     }
 
     .locator__mobile-card {
-        display: flex;
+        display: grid;
     }
 
     /* The Directions button now lives inside .locator__mobile-card (under

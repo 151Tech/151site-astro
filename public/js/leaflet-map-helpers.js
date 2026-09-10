@@ -23,9 +23,19 @@ window.COFFEE151_LEAFLET = {
         // recolors it toward red -- the source style's brightest lines
         // (main roads, which OSM already renders lightest/most saturated)
         // come out reddest, while darker fill (land/water) stays muted gray.
+        //
+        // tileSize 512 + zoomOffset -1 is the standard "retina tile" trick:
+        // it fetches each tile from one zoom level deeper (where road lines
+        // and place labels are drawn larger relative to the source image),
+        // then stretches that over double the on-screen area at the map's
+        // actual zoom level. Net effect: roads and text render noticeably
+        // bigger and bolder at any given zoom, without changing how far
+        // zoomed in the map itself appears to be.
         return L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
             subdomains: 'abc',
+            tileSize: 512,
+            zoomOffset: -1,
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
     }
