@@ -107,7 +107,6 @@ nav.nav-scrolled .nav-container {
     justify-content: space-between;
     padding: 0.85rem 2rem;
     width: 100%;
-    max-width: 1300px;
     gap: 1rem;
 }
 
@@ -158,6 +157,18 @@ nav.nav-scrolled .nav-container {
 .nav-links a.active {
     color: var(--white);
     background: var(--red);
+}
+
+/* 916-1020px still shows the full inline nav (the hamburger switch-over is
+   below, at 915px) but is too narrow for all six links plus the logo and
+   gift-card button without "Our Future" (the widest label) wrapping to two
+   lines. Contact is the least-visited link (and already reachable from the
+   footer on every page), so it's the one that drops out here; at 1021px+
+   there's room for everything again. */
+@media (min-width: 916px) and (max-width: 1020px) {
+    .nav-links a[href="/#contact"] {
+        display: none;
+    }
 }
 
 /* ─── Buttons (unified) ─── */
@@ -374,10 +385,12 @@ nav.nav-scrolled .nav-container {
 }
 
 /* Hamburger → X when open */
-@media (max-width: 900px) {
+@media (max-width: 915px) {
     /* The full desktop nav (6 links + logo + gift-card button) gets cramped
        well before phone widths, switch to the hamburger drawer here too
-       so tablets get the same clean, already-solved mobile top bar. */
+       so tablets get the same clean, already-solved mobile top bar. Pushed
+       up to 915px (from 900px) because "Our Future" was still wrapping to
+       two lines at 901-915px even with Contact dropped. */
     .menu-toggle { display: flex; }
     .main-menu-btn { display: none; }
 
@@ -614,21 +627,12 @@ nav.nav-scrolled .nav-container {
     max-width: 440px;
 }
 
-/* The text column used to be force-pinned to the image card's square
-   height (--fd-img-h), on the assumption that shrinking that square (on a
-   short window) always left enough room since the copy shrank with it via
-   vh. But the copy has hard floors (a paragraph can only get so small
-   before it's unreadable), and once --fd-img-h could also shrink from a
-   narrow-but-tall viewport (via its vw cap, added for the tablet-width
-   clipping fix), those floors routinely lost to the box: the badge
-   poked out above it and the CTA button hung out below. Letting the text
-   column size to its own content instead avoids that -- the badge/
-   heading/paragraph still shrink somewhat on a short window (kept below),
-   but they're never forced into a box smaller than they can actually
-   render at. The image square is unaffected (still --fd-img-h, still
-   feeds the hero's complementary calc()); the grid row just grows to fit
-   whichever column is taller, and align-items: center keeps the shorter
-   one centered against it. */
+/* The text column is pinned to the same square as the image (--fd-img-h,
+   both directions) so the two read as a matched pair. A hard height alone
+   broke this before -- long copy pushed the badge above the box and the
+   CTA below it -- so the paragraph is also line-clamped here as the actual
+   fix: whatever the copy's length, it's truncated with an ellipsis rather
+   than spilling out of the square. */
 @media (min-width: 769px) {
     /* These used to be sized off vh alone (1.5vh, 6vh, etc.), on the
        assumption that --fd-img-h itself was purely vh-driven, so shrinking
@@ -645,23 +649,29 @@ nav.nav-scrolled .nav-container {
         margin-bottom: clamp(0.35rem, calc(var(--fd-img-h) * 0.0375), 0.75rem);
     }
     .featured-text h2 {
-        font-size: clamp(1.6rem, min(4.5vw, calc(var(--fd-img-h) * 0.15)), 3.6rem);
+        font-size: clamp(1.6rem, min(4.5vw, calc(var(--fd-img-h) * 0.13)), 3rem);
         margin-bottom: clamp(0.25rem, calc(var(--fd-img-h) * 0.025), 0.5rem);
     }
     .featured-text p {
         font-size: clamp(0.9rem, calc(var(--fd-img-h) * 0.04), 1.08rem);
         margin-bottom: clamp(0.5rem, calc(var(--fd-img-h) * 0.0375), 1rem);
+        /* Truncate rather than push the CTA below the square -- see the
+           note above this block. */
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 4;
+        overflow: hidden;
     }
-    /* Width still matches the image card beside it (--fd-img-h), so the
-       two columns read as a matched pair -- only the height is no longer
-       forced to that same value; it's whatever the content needs. */
+    /* Same square as the image card beside it (--fd-img-h both ways), so
+       the two columns actually match instead of just lining up by width. */
     .featured-text {
         width: var(--fd-img-h);
+        height: var(--fd-img-h);
+        overflow: hidden;
         display: flex;
         flex-direction: column;
         align-items: flex-start;
         justify-content: center;
-        overflow: visible;
     }
 
     /* Both cells are now exactly one square wide, so the pair is centred
@@ -1055,7 +1065,7 @@ nav.nav-scrolled .nav-container {
     border: 1px solid rgba(0,0,0,0.07);
 }
 
-.locator__search { padding: 1.25rem 1.25rem 0.75rem; }
+.locator__search { padding: 0 1.25rem 0.75rem; }
 
 .locator__search input {
     width: 100%;
@@ -1118,28 +1128,36 @@ nav.nav-scrolled .nav-container {
     text-transform: none;
     letter-spacing: normal;
     color: var(--black);
-    margin: 0 0 0.5rem;
+    margin: 0 0 0.3rem;
 }
 
 .locator__item-info p { font-size: 0.82rem; line-height: 1.4; color: #6B6B6B; }
 
-/* Bottom half: hours, phone, and the two action links/buttons, each its own
-   left-aligned line rather than sharing a row. */
+/* Bottom half: hours + phone on the left, Directions on the right of them
+   -- same left-text/right-button pairing as the top half's address and
+   photo, instead of Directions stacking below as its own separate row. */
 .locator__item-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-top: 0.65rem;
+    padding-top: 0.6rem;
+    border-top: 1px solid rgba(0,0,0,0.07);
+}
+.locator__item-bottom-text {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     gap: 0.15rem;
-    margin-top: 0.65rem;
-    padding-top: 0.6rem;
-    border-top: 1px solid rgba(0,0,0,0.07);
+    min-width: 0;
 }
 .locator__item-bottom .locator__hours,
 .locator__item-bottom .locator__phone {
     margin-top: 0;
 }
 .locator__item-actions {
-    margin-top: 0.45rem;
+    flex-shrink: 0;
 }
 
 /* Mobile-only condensed single-line summary (name, address, hours, phone) --
@@ -1151,60 +1169,98 @@ nav.nav-scrolled .nav-container {
    max-width: 902px rules below for the flip. */
 .locator__mobile-card {
     display: none;
-    /* The photo's column is a share of the card's own width (not sized
-       from its height) so it scales up with the card -- on a wide card
-       (the 2-up tablet grid, or a wide phone) that's a much bigger photo
-       instead of a small fixed thumbnail with dead space stretching out
-       to the card's right edge. The info column only gets what's left,
-       which pushes the text over to sit right against the (now larger)
-       photo instead of floating in a wide, mostly-empty column. */
-    grid-template-columns: minmax(96px, 42%) 1fr;
-    align-items: stretch;
-    gap: 0.75rem;
+    /* Sizes name/hours/phone/Directions off the CARD's own width (cqi),
+       not a fixed rem -- on a narrow phone they stay small and compact,
+       but on anything wider (a big phone, or a tablet's 2-up grid cell)
+       they scale up with the card instead of staying pinned to a small
+       fixed size and leaving a wide gap of empty space to the right. */
+    container-type: inline-size;
+    /* Neither CSS grid nor flex reliably derives a square photo's size
+       from its sibling's stretched height (aspect-ratio + stretch is
+       inconsistent across browsers for this) -- so locator.js measures
+       the rendered .locator__mobile-info height and sets this photo's
+       width/height (inline) to match exactly. That's what keeps the
+       photo flush top-to-bottom with the text column and square, with
+       no leftover centering slack. The size below is just the pre-JS
+       fallback for the first paint. */
+    align-items: flex-start;
+    /* The info column no longer grows to fill the card (see its flex
+       below) -- centering the whole photo+text group here means whatever
+       empty width is left over gets split evenly on both sides instead of
+       all piling up to the right of a short name/hours/phone block. */
+    justify-content: center;
+    gap: clamp(0.45rem, -1.2rem + 10cqi, 4.5rem);
 }
 .locator__mobile-card .locator__item-photo {
-    /* width: 100% fills its grid column; height follows from that via
-       aspect-ratio, so it's always a true square, sized by the card's
-       width rather than by the text column's height. */
-    width: 100%;
-    height: auto;
-    aspect-ratio: 1 / 1;
+    flex: none;
+    width: 62px;
+    height: 62px;
     border-radius: var(--radius-sm);
     object-fit: cover;
 }
 .locator__mobile-info {
+    /* Sized to its own content (name/hours/phone/Directions), not
+       stretched to fill the rest of the card -- that's what lets the
+       card's justify-content: center above actually center the group
+       instead of the text column eating all the slack on its own. */
+    flex: 0 1 auto;
+    max-width: 65cqi;
     min-width: 0;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    /* Centers name/hours/phone/Directions in whatever height the (now
-       width-driven, possibly taller-than-the-text) photo establishes for
-       the row. */
+    position: relative;
+    padding-left: clamp(0.5rem, -1.3rem + 10.5cqi, 5rem);
+    /* Centers name/hours/phone/Directions in whatever height the photo's
+       square (driven off the text column's own natural height) ends up
+       establishing for the row. */
     justify-content: center;
+}
+/* A soft-edged red rule instead of a flat border -- fades in/out at the
+   top and bottom rather than hard-stopping flush with the photo's corners,
+   which reads as a more deliberate divider than a plain 2px line. */
+.locator__mobile-info::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 4%;
+    bottom: 4%;
+    width: 3px;
+    border-radius: 3px;
+    background: linear-gradient(to bottom, transparent, var(--red) 20%, var(--red) 80%, transparent);
 }
 .locator__mobile-name {
     font-family: var(--font-inter), sans-serif;
-    font-size: 0.9rem;
-    font-weight: 700;
+    font-size: clamp(0.74rem, 0.58rem + 1.7cqi, 1rem);
+    font-weight: 800;
+    letter-spacing: -0.01em;
     color: var(--black);
     margin: 0;
-    white-space: normal;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
 }
 .locator__mobile-hours {
-    font-size: 0.76rem !important;
+    font-size: clamp(0.63rem, 0.52rem + 1.15cqi, 0.78rem) !important;
     font-weight: 600;
     color: #1f8a4e !important;
-    margin: 0.15rem 0 0 !important;
+    margin: 0.1rem 0 0 !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
 }
 .locator__mobile-phone {
-    font-size: 0.78rem;
+    font-size: clamp(0.63rem, 0.53rem + 1.05cqi, 0.78rem);
+    font-weight: 500;
     color: #6B6B6B;
     margin: 0.1rem 0 0;
 }
 .locator__directions--mobile {
-    margin-top: 0.4rem;
-    font-size: 0.68rem;
-    padding: 0.4rem 0.75rem;
+    margin-top: clamp(0.25rem, 0.18rem + 0.7cqi, 0.42rem);
+    font-size: clamp(0.56rem, 0.5rem + 0.6cqi, 0.66rem);
+    padding: clamp(0.26rem, 0.22rem + 0.35cqi, 0.35rem) clamp(0.55rem, 0.4rem + 1.5cqi, 0.9rem);
 }
 .locator__phone {
     display: inline-block;
@@ -1230,13 +1286,6 @@ nav.nav-scrolled .nav-container {
 }
 
 .locator__item-info { min-width: 0; }
-
-.locator__item-actions {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
-}
 
 .locator__directions {
     flex-shrink: 0;
@@ -1382,12 +1431,13 @@ nav.nav-scrolled .nav-container {
     .locator__item {
         flex-direction: column;
         align-items: stretch;
-        gap: 0.6rem;
-        padding: 0.75rem 0.9rem;
+        gap: 0.35rem;
+        padding: 0.45rem 0.6rem;
+        margin-bottom: 0.4rem;
     }
 
     .locator__mobile-card {
-        display: grid;
+        display: flex;
     }
 
     /* The Directions button now lives inside .locator__mobile-card (under
@@ -1437,6 +1487,7 @@ nav.nav-scrolled .nav-container {
     flex: none;
     width: 88px;
     height: auto;
+    aspect-ratio: 1 / 1;
     border-radius: var(--radius-sm);
     object-fit: cover;
 }
@@ -2496,21 +2547,27 @@ html:has(.loc-fullpage), body:has(.loc-fullpage) { overflow: hidden; }
    fixed nav -- the top padding clears the nav's own height so the heading
    isn't hidden behind it. */
 .locator__panel-header {
-    padding: 5.75rem 1.1rem 0.5rem;
+    /* Top padding is the fixed nav's own height plus the same 1.25rem gap
+       used on every other side, so the heading sits in a box with equal
+       breathing room all around -- matches .locator__search's own side
+       padding too, so "Find Your 151" spans the same width as the search
+       bar below it instead of a wider (or narrower) block of its own. */
+    padding: 4.6rem 1.25rem 1.25rem;
     text-align: center;
 }
 .locator__panel-header h1 {
     font-family: var(--font-bebas-neue), sans-serif;
-    font-size: 1.9rem;
+    font-size: 3.65rem;
     line-height: 1;
     letter-spacing: 0.01em;
     color: var(--black);
-    margin: 0 0 0.15rem;
+    margin: 0;
 }
+/* "X Locations Open" already shows on the map's own badge -- no need to
+   repeat it here too. */
 .locator__panel-header .loc-count-inline {
-    color: rgba(0,0,0,0.55);
+    display: none;
 }
-.locator__panel-header .loc-count-inline strong { color: var(--red); }
 
 @media (max-width: 902px) {
     /* The badge on the map already shows the count -- no need to repeat
@@ -2666,33 +2723,38 @@ html:has(.loc-fullpage), body:has(.loc-fullpage) { overflow: hidden; }
         display: contents;
     }
     /* Search bar is now the topmost visible thing on the page, sitting
-       directly under the fixed nav -- just enough top clearance to clear
-       the nav's own height (~4.5rem), kept tight since there's no heading
-       above it anymore to absorb extra breathing room. */
+       directly under the fixed nav. Top padding is the nav's own height
+       (~4.7rem) plus the same 0.85rem gap used on every other side, so
+       the search bar sits in a box with equal breathing room all around
+       instead of a big nav-clearance gap up top and a much smaller one
+       everywhere else. */
     .locator--full .locator__search {
-        order: -3;
-        padding: 4.6rem 0.85rem 0.4rem;
+        order: -2;
+        padding: 3.85rem 0.85rem 0.85rem;
     }
     .locator--full .locator__search input {
         padding: 0.6rem 1rem;
         font-size: 0.85rem;
     }
+    .locator--full .locator__map-wrap { flex: none; height: 40vh; order: -1; }
+    /* Texas/Kansas now sit at the top of the listings themselves (below
+       the map), not bundled under the search bar -- their own small header
+       bar for the list, visually separated from the map above. */
     .locator--full .locator__state-filters {
-        order: -2;
-        padding: 0 0.85rem 0.5rem;
+        order: 0;
+        padding: 0.6rem 0.85rem;
         gap: 0.4rem;
+        border-top: 1px solid rgba(0,0,0,0.08);
     }
     .locator--full .locator__state-btn {
         padding: 0.35rem 0.6rem;
         font-size: 0.72rem;
     }
-    .locator--full .locator__map-wrap { flex: none; height: 40vh; order: -1; }
     .locator--full .locator__list {
-        order: 0;
+        order: 1;
         flex: 1;
         min-height: 0;
         max-height: none;
-        border-top: 1px solid rgba(0,0,0,0.08);
     }
     .loc-count-wrap { left: 0.85rem; right: auto; bottom: 0.85rem; }
     .loc-count.loc-count--badge { padding: 0.45rem 1.1rem; }

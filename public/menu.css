@@ -180,6 +180,16 @@
     flex: 0 0 2rem;
 }
 
+/* Wraps each category's title card + its drinks/descriptor cards so the
+   simple-menu grid (see .menu-simple-mode below) can lay a category's own
+   cards out in their own indented, wrapping row -- transparent on the real
+   desktop rail and mobile 2-up grid, where the category's cards still need
+   to sit as plain flex siblings of every other category's cards. */
+.cat-group,
+.cat-drinks-wrap {
+    display: contents;
+}
+
 /* ─── Category Title Card ─── */
 /* No box at all — just a slim red rule and big quiet typography, so it
    reads as a chapter marker rather than another product tile. */
@@ -748,6 +758,354 @@
     }
 }
 
+/* /menu/simple: the "Simple Menu" page loads THIS page in an iframe at
+   full desktop width with ?simple=1, which the inline script below reads
+   to add this class (see the isMobile() override next to it) -- same
+   idea as the mobile block above (vertical, wrapping cards instead of the
+   horizontal timeline) but full-viewport-wide, so instead of the mobile
+   block's fixed 2-up split (which at desktop width would just mean two
+   huge cards) this uses a small fixed card size and lets as many columns
+   fit as the screen allows. */
+.menu-simple-mode .menu-hero {
+    /* The mobile block's aspect-ratio: 16/9 is sized for a phone-width
+       hero -- at full desktop width that same ratio comes out ~700px
+       tall, which is most of the screen wasted on the video/still behind
+       "Our Menu". Capped instead, since this page is about the drink grid
+       below, not the hero. */
+    aspect-ratio: auto;
+    height: 240px;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-bottom: 0;
+}
+.menu-simple-mode .menu-hero .hero-bg,
+.menu-simple-mode .menu-hero .hero-bg.hero-mobile-still {
+    width: 100%;
+    height: 100%;
+    min-width: 100%;
+    min-height: 100%;
+    object-fit: cover;
+}
+.menu-simple-mode .menu-hero-content {
+    padding: 2.5rem 1.5rem;
+}
+.menu-simple-mode .timeline-wrap {
+    padding: 1.25rem 0 3rem;
+}
+/* "Compact two-up cards": category collapses to a small dark label strip
+   (name only, no desc/arrow) that sits above its own drinks instead of
+   beside them, and each drink becomes a small photo+text row instead of
+   the desktop's big photo-on-top plate card -- two (or more, depending on
+   width) per line, so far more of the menu is visible without scrolling
+   than either the desktop rail or the earlier "same cards, smaller" pass. */
+.menu-simple-mode .timeline-scroll {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    overflow: visible;
+    left: auto;
+    margin: 0;
+    width: 100%;
+    padding: 1rem 1.25rem 0;
+    gap: 1.1rem;
+    cursor: default;
+    opacity: 1;
+    scroll-behavior: auto;
+}
+.menu-simple-mode .cat-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+.menu-simple-mode .cat-title-card {
+    width: 100% !important;
+    min-width: 0 !important;
+    margin-left: 0 !important;
+    min-height: 0;
+}
+.menu-simple-mode .cat-title-card::before { display: none; }
+.menu-simple-mode .cat-title-inner {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    width: auto;
+    height: auto;
+    background: #1a1512;
+    color: #f7f3ee;
+    border-radius: 8px;
+    padding: 0.85rem 1.3rem;
+    gap: 0;
+}
+/* Original display font and size, just the dark strip's background swapped
+   in place of the card's own -- kept large since it's still the thing that
+   identifies the section, everything else here is in support of it. */
+.menu-simple-mode .cat-title-text {
+    font-size: clamp(1.9rem, 3.9vw, 3.3rem) !important;
+    line-height: 1;
+    color: inherit;
+    white-space: nowrap;
+    flex: 0 0 auto;
+}
+/* Same line as the title -- a red dot stands in for the punctuation a
+   divider/rule would add, without needing a second element in the
+   markup. */
+.menu-simple-mode .cat-title-desc {
+    display: block;
+    position: relative;
+    max-width: none;
+    font-size: 1rem;
+    line-height: 1.3;
+    color: rgba(247, 243, 238, 0.65);
+    margin: 0 0 0 1.3rem;
+    padding-left: 1.2rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+    flex: 1 1 auto;
+}
+.menu-simple-mode .cat-title-desc::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--red);
+}
+.menu-simple-mode .cat-arrow { display: none; }
+/* Exactly 5 tracks, not auto-fill -- cards stretch to fill whatever width
+   the row has (never wider than 5 up), and a 6th+ drink simply starts the
+   grid's next row instead of the row growing past 5. */
+.menu-simple-mode .cat-drinks-wrap {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0.85rem;
+}
+/* Same "photo on top, plate slides up behind it" idea as the desktop
+   drink card (see --gallery-overlap), just turned 90 degrees: the photo
+   is full card height on the left, and the text plate sits behind it
+   (lower z-index) starting a little under the photo's right edge instead
+   of a little above the photo's bottom edge. */
+.menu-simple-mode .drink-card {
+    position: relative;
+    flex-direction: row;
+    align-items: stretch;
+    height: 128px;
+    width: auto !important;
+    min-width: 0 !important;
+    background: transparent;
+    border-radius: 14px;
+    padding: 0;
+}
+.menu-simple-mode .drink-card:hover { transform: none; }
+.menu-simple-mode .drink-img-wrap {
+    width: 128px;
+    height: 100%;
+    flex: 0 0 auto;
+    aspect-ratio: auto;
+    border-radius: 14px;
+    box-shadow: 0 6px 16px rgba(20,17,14,0.16);
+    z-index: 2;
+}
+.menu-simple-mode .drink-img-wrap img { border-radius: 14px; }
+.menu-simple-mode .drink-info {
+    flex: 1 1 auto;
+    min-width: 0;
+    width: auto;
+    height: 100% !important;
+    min-height: 0 !important;
+    margin-top: 0 !important;
+    margin-left: -28px;
+    padding: 0 0.75rem 0 46px !important;
+    background: rgba(255, 255, 255, 0.92);
+    border: 1px solid rgba(20,17,14,0.08);
+    border-radius: 0 14px 14px 0;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    gap: 0.15rem;
+    z-index: 1;
+}
+.menu-simple-mode .drink-info h3 {
+    font-size: 1.05rem;
+    line-height: 1.2;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+}
+.menu-simple-mode .drink-info p {
+    font-size: 0.82rem;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+}
+/* Same footprint as a single drink card (one grid column, same fixed
+   height) instead of spanning two -- the label + wrapped chip list take
+   the place of a photo, so it reads as "one more tile in the row" rather
+   than a wide strip that breaks the row's rhythm. */
+.menu-simple-mode .descriptor-card {
+    grid-column: span 1;
+    width: auto !important;
+    min-width: 0 !important;
+    height: 128px;
+    background: var(--white, #fff) !important;
+    border: 1px solid rgba(20,17,14,0.08);
+    border-radius: 14px;
+    padding: 0.5rem 0.55rem !important;
+    justify-content: flex-start !important;
+    align-items: flex-start !important;
+    gap: 0.2rem !important;
+    margin-left: 0 !important;
+    overflow: hidden;
+}
+.menu-simple-mode .descriptor-card--wide {
+    grid-column: span 2;
+}
+.menu-simple-mode .descriptor-card::before { display: none; }
+.menu-simple-mode .descriptor-label {
+    font-size: 0.52rem;
+    line-height: 1.2;
+    white-space: normal;
+    color: rgba(20, 17, 14, 0.6) !important;
+}
+/* Wrapping chips instead of a fixed 6-row column grid -- at one card's
+   width there isn't room for even two of the old columns side by side. */
+.menu-simple-mode .descriptor-list {
+    display: grid;
+    grid-template-rows: repeat(2, 1fr);
+    grid-auto-flow: column;
+    grid-auto-columns: max-content;
+    align-items: center;
+    justify-items: start;
+    gap: 0.4rem 0.7rem;
+    overflow: hidden;
+    height: 100%;
+}
+.menu-simple-mode .descriptor-list > span:not(.descriptor-label) {
+    font-size: 0.52rem;
+    line-height: 1.3;
+    padding: 0.08rem 0.32rem;
+    background: rgba(20,17,14,0.06);
+    border-radius: 999px;
+    white-space: nowrap;
+}
+/* The soda/tea cards render both a plain label+chip view and a logo/text
+   "simple view" in the same markup (see menu.astro); only one is ever
+   shown; the plain view is what the real /menu page has always used.
+   display/gap here just reproduces what .descriptor-card gave its two
+   direct children before they were wrapped in this div. */
+.descriptor-plain-view {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+}
+.descriptor-simple-view { display: none; }
+.menu-simple-mode .descriptor-plain-view { display: none; }
+/* Label in its own column on the left, logos in two independent horizontal
+   rows (not a paired grid) to the right -- so a brand's diet/zero variant
+   can sit directly beside it without needing a same-column partner in the
+   other row. */
+.menu-simple-mode .descriptor-list--labeled {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    width: 100%;
+    height: 100%;
+}
+.menu-simple-mode .descriptor-label-block {
+    display: flex;
+    flex-direction: column;
+    flex: 0 0 auto;
+    gap: 0;
+    padding-right: 0.6rem;
+    border-right: 1px solid rgba(20, 17, 14, 0.1);
+    align-self: stretch;
+    justify-content: center;
+}
+.menu-simple-mode .descriptor-label-line {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    line-height: 1.05;
+    white-space: nowrap;
+    color: rgba(20, 17, 14, 0.6) !important;
+}
+.menu-simple-mode .descriptor-logo-rows {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.35rem;
+    flex: 1 1 auto;
+    min-width: 0;
+    height: 100%;
+}
+.menu-simple-mode .descriptor-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    flex-wrap: nowrap;
+    width: 100%;
+}
+.menu-simple-mode .descriptor-logo {
+    height: 30px;
+    width: auto;
+    max-width: 74px;
+    object-fit: contain;
+    flex: 0 0 auto;
+}
+.menu-simple-mode .descriptor-row--text {
+    justify-content: center;
+    gap: 0.6rem;
+}
+.menu-simple-mode .descriptor-text-chip {
+    font-size: 0.62rem;
+    font-weight: 600;
+    line-height: 1;
+    white-space: nowrap;
+    padding: 0.3rem 0.65rem;
+    background: rgba(20, 17, 14, 0.06);
+    border-radius: 999px;
+    color: rgba(20, 17, 14, 0.75) !important;
+    flex: 0 0 auto;
+}
+.menu-simple-mode .timeline-empty-state { width: 100%; min-width: 0; }
+.menu-simple-mode .timeline-end-spacer { display: none; }
+.menu-simple-mode .cat-nav { display: none; }
+
+/* Responsive column count for the simple-menu grid: 5 columns is the
+   baseline (desktop/tablet), scaling up on very large displays and down
+   to a single column on the narrowest phones. Thresholds are set by how
+   much width a drink card needs to hold its longest real title (e.g.
+   "White Chocolate Macadamia") on two lines without the text overflowing
+   the card's fixed height -- not round device-width numbers -- so a title
+   never breaks out the top/bottom of its card at any width. */
+@media (min-width: 1920px) {
+    .menu-simple-mode .cat-drinks-wrap { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+}
+@media (max-width: 1919px) {
+    .menu-simple-mode .cat-drinks-wrap { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+}
+@media (max-width: 1439px) {
+    .menu-simple-mode .cat-drinks-wrap { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+@media (max-width: 1159px) {
+    .menu-simple-mode .cat-drinks-wrap { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 899px) {
+    .menu-simple-mode .cat-drinks-wrap { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 619px) {
+    .menu-simple-mode .cat-drinks-wrap { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+    .menu-simple-mode .descriptor-card--wide { grid-column: span 1; }
+}
+
 @media (max-width: 900px) {
     .cz-row {
         flex-direction: column;
@@ -955,71 +1313,22 @@
     .simple-menu-trigger { display: none; }
 }
 
-.simple-menu-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    z-index: 1000;
-    background: rgba(0,0,0,0.72);
-    align-items: center;
-    justify-content: center;
-}
-
-.simple-menu-overlay.active { display: flex; }
-
-.simple-menu-close {
-    position: absolute;
-    top: 1.25rem;
-    right: 1.5rem;
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    border: none;
-    background: rgba(255,255,255,0.12);
-    color: var(--white);
-    font-size: 1.8rem;
-    line-height: 1;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.2s ease;
-}
-
-.simple-menu-close:hover { background: rgba(255,255,255,0.22); }
-
-.simple-menu-frame-wrap {
-    /* The visual box the scaled-up iframe actually occupies on screen --
-       sized in the enlarged (post-transform) dimensions so the overlay
-       reserves the right amount of space and the iframe centers cleanly. */
-    width: 620px;
-    height: 88vh;
-    max-height: 900px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    border-radius: 18px;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+/* /menu/simple: a real page (own URL, real back button) rather than an
+   overlay -- the iframe fills the whole viewport so /menu's own
+   .menu-simple-mode grid (see below) gets the full width to lay small
+   cards out across, instead of being boxed into a phone-sized frame. */
+.simple-menu-page {
+    position: relative;
+    height: 100vh;
+    background: var(--white, #fff);
 }
 
 .simple-menu-frame {
-    /* Forced to a phone-width viewport so the SAME page genuinely applies
-       every @media (max-width: 768px) rule above and the isMobile() JS
-       branches, then scaled up via transform (which doesn't change the
-       layout width its own document's media queries see) to make better
-       use of the desktop screen space -- see the comment above
-       #simpleMenuOverlay in menu.astro for the full rationale. */
-    width: 420px;
-    height: 900px;
+    display: block;
+    width: 100%;
+    height: 100%;
     border: none;
     background: var(--white, #fff);
-    transform: scale(1.476);
-    transform-origin: center center;
-}
-
-@media (max-height: 800px) {
-    .simple-menu-frame-wrap { height: 92vh; }
 }
 
 /* ─── Gallery cards on the quote ground ─── */

@@ -21,6 +21,33 @@ const p = unwrapSingletons(menuData as any, [
   'seo', 'visibility', 'hero', 'labels', 'locationPicker', 'drinkPage', 'customize',
 ]);
 const heroVideoSrc = mediaUrl(p.heroVideo);
+
+// Hard-coded content for the "All Sodas Available" descriptor card (simple
+// menu) -- not sourced from Storyblok, since this exact brand lineup/layout
+// doesn't need to be editable there. Two explicit rows so Diet Coke can sit
+// right next to Coca-Cola without needing to pair 1:1 with a bottom-row item.
+const SODA_TOP_ROW = [
+  { name: 'Coca-Cola', logo: '/images/soda-logos/coca-cola.webp' },
+  { name: 'Diet Coke', logo: '/images/soda-logos/diet-coke.webp' },
+  { name: 'Mountain Dew', logo: '/images/soda-logos/mountain-dew.webp' },
+  { name: 'Fanta', logo: '/images/soda-logos/fanta.webp' },
+  { name: 'Pepsi', logo: '/images/soda-logos/pepsi.webp' },
+  { name: 'Diet Pepsi', logo: '/images/soda-logos/diet-pepsi.webp' },
+];
+const SODA_BOTTOM_ROW = [
+  { name: 'Coke Zero', logo: '/images/soda-logos/coke-zero.webp' },
+  { name: 'Sprite', logo: '/images/soda-logos/sprite.webp' },
+  { name: 'Sprite Zero', logo: '/images/soda-logos/sprite-zero.webp' },
+  { name: 'Dr. Pepper', logo: '/images/soda-logos/dr-pepper.webp' },
+  { name: 'Diet Dr. Pepper', logo: '/images/soda-logos/diet-dr-pepper.webp' },
+  { name: 'Mug Root Beer', logo: '/images/soda-logos/mug-root-beer.webp' },
+];
+
+// Same "labeled" descriptor-card treatment as the soda card, but with plain
+// text (no logos) for the "Hot Teas Available" card -- hard-coded so the
+// two-row order doesn't depend on Storyblok's item order.
+const TEA_TOP_ROW = ['Paris', 'Earl Grey', 'Sencha'];
+const TEA_BOTTOM_ROW = ['Mint', 'Cinnamon Spice'];
 const allDrinks = drinksEntries
   .sort((a: any, b: any) => (Number(a.menuOrder) || 99) - (Number(b.menuOrder) || 99));
 
@@ -151,17 +178,17 @@ const flavors: { value: string; index: number }[] = allFlavors
           Desktop-only shortcut to the same compact layout mobile visitors
           already get -- one drink per glance instead of the wide horizontal
           timeline. Hidden below 768px in menu.css (mobile IS that view
-          already, there's nothing to switch to). See the simple-menu-*
-          script below for how it actually renders that view without a
-          second template to maintain.
+          already, there's nothing to switch to). Real navigation to its own
+          page (/menu/simple) rather than a popup -- see that page for how
+          it actually renders the compact view without a second template.
         -->
-        <button type="button" class="simple-menu-trigger" id="simpleMenuTrigger">
+        <a href="/menu/simple" class="simple-menu-trigger">
           <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             <rect x="7" y="2.5" width="10" height="19" rx="2.2" stroke="currentColor" stroke-width="1.8"/>
             <line x1="10.5" y1="18" x2="13.5" y2="18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
           </svg>
           <span>Simple Menu</span>
-        </button>
+        </a>
       </div>
     </div>
     <div class="cat-nav" id="catNav">
@@ -200,28 +227,13 @@ const flavors: { value: string; index: number }[] = allFlavors
     </div>
   </div>
 
-  <!--
-    "Simple Menu": rather than maintaining a second template, this reopens
-    THIS SAME page inside an iframe that's forced to a phone-width viewport
-    (see simple-menu-frame's fixed width in menu.css), so every mobile media
-    query and the isMobile() branches in the script below apply for real,
-    not just a visual approximation -- then scales that iframe up with a CSS
-    transform (which doesn't change the layout width the media queries see)
-    so it actually uses the extra desktop screen space instead of sitting in
-    a phone-sized box in the middle of a big monitor.
-  -->
-  <div id="simpleMenuOverlay" class="simple-menu-overlay" role="dialog" aria-modal="true" aria-label="Simple menu view">
-    <button type="button" class="simple-menu-close" id="simpleMenuClose" aria-label="Close simple menu">&times;</button>
-    <div class="simple-menu-frame-wrap" id="simpleMenuFrameWrap"></div>
-  </div>
-
   {(p.visibility?.timeline ?? true) && (
   <section class="timeline-wrap">
     <div class="timeline-scroll" id="timelineScroll">
       {CATEGORIES.map((cat: any, catIndex: number) => {
         const drinks = allDrinks.filter((d: any) => catSlug(d) === cat.tab);
         return (
-          <>
+          <div class="cat-group" data-cat={cat.tab}>
             <div class="cat-title-card" id={`cat-${cat.tab}`} data-cat={cat.tab}
               data-visible={cat.hiddenByDefault ? 'false' : undefined}
 >
@@ -235,6 +247,7 @@ const flavors: { value: string; index: number }[] = allFlavors
                 </svg>
               </div>
             </div>
+            <div class="cat-drinks-wrap">
             {drinks.map((drink: any) => (
               <a class={`drink-card${drink.slug === 'coldbrew-nitro-brew' ? ' nitro-card' : ''}`}
                 data-cat={cat.tab} href={`/drinks/${drink.slug}`}
@@ -253,17 +266,72 @@ const flavors: { value: string; index: number }[] = allFlavors
                 </div>
               </a>
             ))}
-            {cat.extraCards.map((card: any, cardIndex: number) => (
-              <div class="descriptor-card" data-cat={cat.tab}
-                data-visible={cat.hiddenByDefault ? 'false' : undefined}
+            {cat.extraCards.map((card: any, cardIndex: number) => {
+              const items: string[] = card.items ?? [];
+              const isSodaCard = items.length > 6;
+              const isTeaCard = /hot teas/i.test(card.label ?? '');
+              const isWide = isSodaCard;
+              return (
+                <div class={`descriptor-card${isWide ? ' descriptor-card--wide' : ''}`} data-cat={cat.tab}
+                  data-visible={cat.hiddenByDefault ? 'false' : undefined}
 >
-                <p class="descriptor-label">{card.label}</p>
-                <div class="descriptor-list">
-                  {(card.items ?? []).map((item: string) => <span>{item}</span>)}
+                  {/* Plain label + chip list -- the normal /menu view always
+                      uses this (unchanged from before the simple-menu logo
+                      treatment existed). Hidden via CSS in simple mode. */}
+                  <div class="descriptor-plain-view">
+                    <p class="descriptor-label">{card.label}</p>
+                    <div class="descriptor-list">
+                      {items.map((item: string) => <span>{item}</span>)}
+                    </div>
+                  </div>
+                  {/* Logo/text row treatment -- only shown in simple mode
+                      (see .menu-simple-mode .descriptor-simple-view in
+                      menu.css); hardcoded rather than sourced from
+                      card.items/card.label, see SODA_TOP_ROW etc. above. */}
+                  {isSodaCard ? (
+                    <div class="descriptor-simple-view descriptor-list descriptor-list--labeled">
+                      <div class="descriptor-label-block">
+                        <span class="descriptor-label-line">All Sodas</span>
+                        <span class="descriptor-label-line">Available</span>
+                      </div>
+                      <div class="descriptor-logo-rows">
+                        <div class="descriptor-row">
+                          {SODA_TOP_ROW.map((soda) => (
+                            <img class="descriptor-logo" src={soda.logo} alt={soda.name} loading="lazy" />
+                          ))}
+                        </div>
+                        <div class="descriptor-row">
+                          {SODA_BOTTOM_ROW.map((soda) => (
+                            <img class="descriptor-logo" src={soda.logo} alt={soda.name} loading="lazy" />
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  ) : isTeaCard ? (
+                    <div class="descriptor-simple-view descriptor-list descriptor-list--labeled">
+                      <div class="descriptor-label-block">
+                        <span class="descriptor-label-line">Hot Teas</span>
+                        <span class="descriptor-label-line">Available</span>
+                      </div>
+                      <div class="descriptor-logo-rows">
+                        <div class="descriptor-row descriptor-row--text">
+                          {TEA_TOP_ROW.map((tea) => (
+                            <span class="descriptor-text-chip">{tea}</span>
+                          ))}
+                        </div>
+                        <div class="descriptor-row descriptor-row--text">
+                          {TEA_BOTTOM_ROW.map((tea) => (
+                            <span class="descriptor-text-chip">{tea}</span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  ) : null}
                 </div>
-              </div>
-            ))}
-          </>
+              );
+            })}
+            </div>
+          </div>
         );
       })}
 
@@ -318,8 +386,30 @@ const flavors: { value: string; index: number }[] = allFlavors
     var filterHint = document.getElementById('czFilterHint');
     var emptyState = document.getElementById('timelineEmpty');
 
+    // /menu/simple loads this same page in a full-width iframe with
+    // ?simple=1 so it can reuse this exact markup/script for its compact,
+    // small-card grid view instead of maintaining a second template --
+    // see .menu-simple-mode in menu.css. isMobile() covers that case too,
+    // so every branch below (autoscroll, equalizeCards, scroll direction,
+    // wheel handling) treats it exactly like a real narrow viewport.
+    var forceSimple = new URLSearchParams(window.location.search).get('simple') === '1';
+    if (forceSimple) {
+      document.body.classList.add('menu-simple-mode');
+      // Loaded inside /menu/simple's iframe -- flip the trigger into a way
+      // back to the real menu instead of a link to the page we're already
+      // (functionally) showing. target="_parent" so it navigates the
+      // top-level /menu/simple document out of the iframe, not the frame
+      // itself back to a bare, un-wrapped /menu.
+      var trigger = document.querySelector('.simple-menu-trigger');
+      if (trigger) {
+        trigger.href = '/menu';
+        trigger.target = '_parent';
+        var label = trigger.querySelector('span');
+        if (label) label.textContent = 'Standard Menu';
+      }
+    }
     var mobileMq = window.matchMedia('(max-width: 768px)');
-    function isMobile() { return mobileMq.matches; }
+    function isMobile() { return forceSimple || mobileMq.matches; }
 
     function equalizeCards() {
       var cards = scroll.querySelectorAll('.drink-card');
@@ -611,49 +701,4 @@ const flavors: { value: string; index: number }[] = allFlavors
   })();
   </script>
 
-  <script is:inline>
-  (function () {
-    var trigger = document.getElementById('simpleMenuTrigger');
-    var overlay = document.getElementById('simpleMenuOverlay');
-    var closeBtn = document.getElementById('simpleMenuClose');
-    var frameWrap = document.getElementById('simpleMenuFrameWrap');
-    if (!trigger || !overlay || !closeBtn || !frameWrap) return;
-
-    var iframe = null;
-    function ensureFrame() {
-      if (iframe) return;
-      // Built lazily -- on first open only, not on every page load -- since
-      // most desktop visitors will never click this button.
-      iframe = document.createElement('iframe');
-      iframe.className = 'simple-menu-frame';
-      iframe.title = 'Simple menu (mobile view)';
-      // Same page, reloaded fresh at a phone-width viewport (see
-      // .simple-menu-frame's fixed width in menu.css). Any store already
-      // selected carries over on its own: selectStore() above persists it to
-      // localStorage, which this iframe reads independently since it's the
-      // same origin -- nothing to pass through the URL for that.
-      iframe.src = '/menu';
-      frameWrap.appendChild(iframe);
-    }
-
-    function open() {
-      ensureFrame();
-      overlay.classList.add('active');
-      document.body.style.overflow = 'hidden';
-      closeBtn.focus();
-    }
-    function close() {
-      overlay.classList.remove('active');
-      document.body.style.overflow = '';
-      trigger.focus();
-    }
-
-    trigger.addEventListener('click', open);
-    closeBtn.addEventListener('click', close);
-    overlay.addEventListener('click', function (e) { if (e.target === overlay) close(); });
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && overlay.classList.contains('active')) close();
-    });
-  })();
-  </script>
 </Layout>
