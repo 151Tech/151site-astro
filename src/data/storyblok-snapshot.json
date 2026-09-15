@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-15T20:31:49.112Z",
+  "generatedAt": "2026-09-15T23:14:35.350Z",
   "stories": {
     "settings/global": {
       "nav": [
@@ -1752,6 +1752,66 @@
   "collections": {
     "drinks": [
       {
+        "slug": "pumpkin-spice-chai",
+        "content": {
+          "_uid": "b9e6af1b-0cda-4994-9ca3-effe485f7664",
+          "name": "Pumpkin Spice Chai",
+          "tags": [],
+          "badge": "",
+          "image": {
+            "id": 220360708685075,
+            "alt": "",
+            "name": "",
+            "focus": "",
+            "title": "",
+            "source": "",
+            "filename": "https://a.storyblok.com/f/294671107081428/1350x1350/6eb5e39dc3/pumpkin-spice-chai.jpg",
+            "copyright": "",
+            "fieldtype": "asset",
+            "meta_data": {
+              "size": "1350x1350"
+            },
+            "is_external_url": false
+          },
+          "category": "f21473b9-ba0e-4fde-9a2b-e0bfa665aa2a",
+          "subtitle": "Pumpkin & Spiced Chai",
+          "component": "drink",
+          "menuOrder": "3",
+          "description": "",
+          "unavailableAt": []
+        }
+      },
+      {
+        "slug": "pumpkin-spice-latte",
+        "content": {
+          "_uid": "093a48d9-7bf1-4dc9-a7d9-a0f9fb7d2439",
+          "name": "Pumpkin Spice Latte",
+          "tags": [],
+          "badge": "",
+          "image": {
+            "id": 220360708697364,
+            "alt": "",
+            "name": "",
+            "focus": "",
+            "title": "",
+            "source": "",
+            "filename": "https://a.storyblok.com/f/294671107081428/1350x1350/d621dcfaae/pumpkin-spice-latte.jpg",
+            "copyright": "",
+            "fieldtype": "asset",
+            "meta_data": {
+              "size": "1350x1350"
+            },
+            "is_external_url": false
+          },
+          "category": "f21473b9-ba0e-4fde-9a2b-e0bfa665aa2a",
+          "subtitle": "Pumpkin",
+          "component": "drink",
+          "menuOrder": "2",
+          "description": "",
+          "unavailableAt": []
+        }
+      },
+      {
         "slug": "pumpkin-caramel-brulee",
         "content": {
           "_uid": "eb695925-fb02-4757-b7ef-5313a4b41701",
@@ -1784,7 +1844,7 @@
             },
             "is_external_url": false
           },
-          "category": "",
+          "category": "f21473b9-ba0e-4fde-9a2b-e0bfa665aa2a",
           "subtitle": "Pumpkin & Salted Caramel",
           "component": "drink",
           "menuOrder": "1",
