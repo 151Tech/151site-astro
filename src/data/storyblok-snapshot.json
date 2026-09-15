@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-15T17:24:19.781Z",
+  "generatedAt": "2026-09-15T18:50:19.749Z",
   "stories": {
     "settings/global": {
       "nav": [
@@ -113,6 +113,15 @@
           "instagram": "https://www.instagram.com/151coffee/"
         }
       ],
+      "ogimage": {
+        "id": null,
+        "alt": "151 Coffee: It's a Good Day to Have a Good Day",
+        "name": "",
+        "focus": "",
+        "title": "",
+        "filename": "https://a.storyblok.com/f/294671107081428/1200x630/ef0e30a8e2/og-image-1200x630.png",
+        "fieldtype": "asset"
+      },
       "siteName": "151 Coffee",
       "component": "settings_global",
       "copyright": "© 151 Coffee, LLC. It's a Good Day to Have a Good Day.",
@@ -239,7 +248,7 @@
             "filename": "https://www.151coffee.com/images/splash1.jpg"
           },
           "component": "page_home_seo",
-          "description": "151 Coffee is a fast drive-thru coffee shop serving handcrafted espresso, cold brew, blended energy drinks, smoothies, teas & breakfast across Texas and Kansas."
+          "description": "151 Coffee is a fast drive-thru coffee shop serving handcrafted espresso, cold brew, energy drinks, smoothies, teas and breakfast across Texas and Kansas."
         }
       ],
       "_uid": "bc1efb34-e644-44a1-8bd6-5158abd48623",
