@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-15T16:40:29.165Z",
+  "generatedAt": "2026-09-15T16:58:41.791Z",
   "stories": {
     "settings/global": {
       "nav": [
@@ -422,13 +422,13 @@
               "_uid": "3f48d2eb-c59a-4d21-aa76-f2d461d808c3",
               "href": "/menu",
               "image": {
-                "id": 216423342703047,
+                "id": 220360769637655,
                 "alt": "",
                 "name": "",
                 "focus": "",
                 "title": "",
                 "source": "",
-                "filename": "https://a.storyblok.com/f/294671107081428/1350x1350/9654003058/purple-dragon.jpg",
+                "filename": "https://a.storyblok.com/f/294671107081428/1350x1350/58fbc30d0a/purple-dragon.jpg",
                 "copyright": "",
                 "fieldtype": "asset",
                 "meta_data": {
@@ -445,17 +445,17 @@
               "_uid": "62b43dbd-d290-414f-bfd2-509a3fa27028",
               "href": "/menu#hotfood",
               "image": {
-                "id": 217968305191759,
+                "id": 220360954318140,
                 "alt": "",
                 "name": "",
                 "focus": "",
                 "title": "",
                 "source": "",
-                "filename": "https://a.storyblok.com/f/294671107081428/1087x1087/9cb8a5d052/d7dfb5a2-1bbc-4c2b-8822-1891797c64fe-1.JPEG",
+                "filename": "https://a.storyblok.com/f/294671107081428/1350x1350/c5d3244f11/5.jpg",
                 "copyright": "",
                 "fieldtype": "asset",
                 "meta_data": {
-                  "size": "1087x1087"
+                  "size": "1350x1350"
                 },
                 "is_external_url": false
               },
@@ -475,13 +475,13 @@
           "name": "Pumpkin",
           "badge": "",
           "image": {
-            "id": 216423342723539,
+            "id": 220360708451602,
             "alt": "",
             "name": "",
             "focus": "",
             "title": "",
             "source": "",
-            "filename": "https://a.storyblok.com/f/294671107081428/1350x1350/b0fbd8a84f/pumpkin-caramel-brulee-latte.jpg",
+            "filename": "https://a.storyblok.com/f/294671107081428/1350x1350/459747b7c3/pumpkin-caramel-brulee-latte.jpg",
             "copyright": "",
             "fieldtype": "asset",
             "meta_data": {
@@ -495,7 +495,7 @@
           "imagealt": "Pumpkin Caramel Brûlée",
           "namebold": "Caramel Brûlée",
           "component": "page_home_featureddrink",
-          "description": "Fall's here, and it's pouring cold. Our bold cold brew meets real pumpkin, warm brûléed caramel, and a hit of cinnamon spice, poured over ice for a crisp, cozy sip. Limited time only, so get it while the season lasts."
+          "description": "Our bold espresso meets pumpkin, salted caramel, and silky sweet cap, poured over ice for a crisp, cozy sip."
         }
       ],
       "locationssection": [
