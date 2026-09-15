@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-15T16:58:41.791Z",
+  "generatedAt": "2026-09-15T17:24:19.781Z",
   "stories": {
     "settings/global": {
       "nav": [
@@ -1743,6 +1743,22 @@
   "collections": {
     "drinks": [
       {
+        "slug": "hotfood-green-chile-burrito",
+        "content": {
+          "_uid": "f0f60d1f-3c6e-4bda-91ec-6aafbc70e8b1",
+          "name": "Green Chile Burrito",
+          "tags": [],
+          "badge": "",
+          "image": "",
+          "category": "categories/hotfood",
+          "subtitle": "Scrambled Eggs, Cheese & Roasted Green Chile",
+          "component": "drink",
+          "menuOrder": "6",
+          "description": "A hearty breakfast burrito packed with fluffy scrambled eggs, melted cheese, and roasted green chile for a little kick to start your day.",
+          "unavailableAt": []
+        }
+      },
+      {
         "slug": "treats-whookie-gf-cookie",
         "content": {
           "_uid": "81e5c4f9-d193-409d-b593-73bf132c3072",
@@ -1773,7 +1789,7 @@
           "category": "categories/treats",
           "subtitle": "Chocolate Sandwich Cookie - Gluten Free",
           "component": "drink",
-          "menuOrder": "99",
+          "menuOrder": "2",
           "description": "A gluten-free chocolate sandwich cookie that doesn't play it safe. Rich, chocolatey, and satisfying in every bite.",
           "unavailableAt": []
         }
@@ -1809,7 +1825,7 @@
           "category": "categories/treats",
           "subtitle": "Cinnamon Sugar Classic",
           "component": "drink",
-          "menuOrder": "99",
+          "menuOrder": "5",
           "description": "Soft and perfectly spiced with cinnamon sugar. The snickerdoodle is the cookie that always disappears first. You already know.",
           "unavailableAt": []
         }
@@ -1845,7 +1861,7 @@
           "category": "categories/treats",
           "subtitle": "Classic Chocolate Chip with a Sea Salt Finish",
           "component": "drink",
-          "menuOrder": "99",
+          "menuOrder": "3",
           "description": "The cookie that needs no introduction. A gooey chocolate chip with a flaky sea salt finish that makes the chocolate sing. Pairs perfectly with everything on the menu.",
           "unavailableAt": []
         }
@@ -1881,7 +1897,7 @@
           "category": "categories/treats",
           "subtitle": "Warm Spiced Pumpkin Loaf",
           "component": "drink",
-          "menuOrder": "99",
+          "menuOrder": "7",
           "description": "A warmly spiced pumpkin loaf that's tender, aromatic, and exactly what you want alongside a hot coffee. Seasonal flavor, all-the-time worthy.",
           "unavailableAt": []
         }
@@ -1911,7 +1927,7 @@
           "category": "categories/treats",
           "subtitle": "Rich & Chewy Peanut Butter Cookie",
           "component": "drink",
-          "menuOrder": "99",
+          "menuOrder": "4",
           "description": "Dense, rich, and perfectly chewy. Made for peanut butter people, the ones who don't mess around when it comes to their cookies.",
           "unavailableAt": []
         }
@@ -1947,7 +1963,7 @@
           "category": "categories/treats",
           "subtitle": "Bright & Buttery",
           "component": "drink",
-          "menuOrder": "99",
+          "menuOrder": "8",
           "description": "Dense, buttery pound cake with a bright lemon punch. The kind of thing you eat half of before you get home.",
           "unavailableAt": []
         }
@@ -1977,7 +1993,7 @@
           "category": "categories/treats",
           "subtitle": "Oatmeal & Cranberries - Gluten Free",
           "component": "drink",
-          "menuOrder": "99",
+          "menuOrder": "6",
           "description": "Hearty oatmeal and sweet cranberries baked into a gluten-free cookie that actually tastes great. No compromise on flavor, just a different kind of cookie for a different kind of person.",
           "unavailableAt": []
         }
@@ -2013,7 +2029,7 @@
           "category": "categories/treats",
           "subtitle": "Muffin Top",
           "component": "drink",
-          "menuOrder": "99",
+          "menuOrder": "10",
           "description": "All muffin top, no muffin stump. Packed with cinnamon chips and topped with a crumble crust that makes every bite feel like the best part.",
           "unavailableAt": []
         }
@@ -2049,7 +2065,7 @@
           "category": "categories/treats",
           "subtitle": "Birthday Cake, Cookies & Cream, or Triple Chocolate",
           "component": "drink",
-          "menuOrder": "99",
+          "menuOrder": "1",
           "description": "Three flavors, zero wrong answers. Birthday Cake, Cookies & Cream, and Triple Chocolate. Grab one (or all three) for the road.",
           "unavailableAt": []
         }
@@ -2085,7 +2101,7 @@
           "category": "categories/treats",
           "subtitle": "Tangy & Sweet",
           "component": "drink",
-          "menuOrder": "99",
+          "menuOrder": "11",
           "description": "Bursting blueberries and bright lemon zest baked into a golden muffin top. Tangy, sweet, and perfectly domed. It's the muffin top that earns its reputation.",
           "unavailableAt": []
         }
@@ -2121,7 +2137,7 @@
           "category": "categories/treats",
           "subtitle": "Moist & Classic",
           "component": "drink",
-          "menuOrder": "99",
+          "menuOrder": "9",
           "description": "Moist banana bread loaded with walnuts, and it tastes like someone's grandmother made it. Comfort food at its finest.",
           "unavailableAt": []
         }
@@ -2790,7 +2806,7 @@
           "category": "categories/hotfood",
           "subtitle": "Egg, Jack & Cheddar, Bacon, Sausage, Hash Browns & Gravy",
           "component": "drink",
-          "menuOrder": "99",
+          "menuOrder": "4",
           "description": "If you're going to do breakfast, do it right. Egg, two kinds of meat, melted cheese, hash browns, and gravy all wrapped into one. The name says it all.",
           "unavailableAt": []
         }
@@ -2850,7 +2866,7 @@
           "category": "categories/hotfood",
           "subtitle": "Sausage & Egg on a Maple Waffle",
           "component": "drink",
-          "menuOrder": "99",
+          "menuOrder": "1",
           "description": "Sweet meets savory on a golden maple waffle with a sausage patty and egg. The perfect balance of morning flavors in one handheld bite.",
           "unavailableAt": []
         }
@@ -2880,7 +2896,7 @@
           "category": "categories/hotfood",
           "subtitle": "Spicy Sausage, Egg & Cheese on a Jalapeno Cheddar Biscuit",
           "component": "drink",
-          "menuOrder": "99",
+          "menuOrder": "2",
           "description": "A flaky, spicy jalapeno cheddar biscuit stacked with spicy sausage, egg, and cheese. For the ones who like their mornings with a kick.",
           "unavailableAt": []
         }
@@ -2910,7 +2926,7 @@
           "category": "categories/hotfood",
           "subtitle": "Spicy Sausage, Egg & Cheese on an Everything Bagel",
           "component": "drink",
-          "menuOrder": "99",
+          "menuOrder": "3",
           "description": "Toasted everything bagel loaded with a spicy sausage patty, egg, and melted cheese. Bold flavor, satisfying crunch. It's the breakfast sandwich for people who don't do boring.",
           "unavailableAt": []
         }
@@ -2928,7 +2944,7 @@
           "category": "categories/hotfood",
           "subtitle": "Spinach, Feta & Roasted Red Pepper",
           "component": "drink",
-          "menuOrder": "99",
+          "menuOrder": "8",
           "description": "Light and satisfying. Egg whites baked with spinach, salty feta, and sweet roasted red pepper. Proof that eating well doesn't have to mean eating bland.",
           "unavailableAt": []
         }
@@ -2958,7 +2974,7 @@
           "category": "categories/hotfood",
           "subtitle": "Egg, Jack & Cheddar, Chorizo, Hash Browns & Sour Cream",
           "component": "drink",
-          "menuOrder": "99",
+          "menuOrder": "5",
           "description": "A packed breakfast burrito loaded with scrambled egg, melted jack and cheddar, smoky chorizo, crispy hash browns, and sour cream. Grab and go, no regrets.",
           "unavailableAt": []
         }
@@ -2976,7 +2992,7 @@
           "category": "categories/hotfood",
           "subtitle": "Three Per Order",
           "component": "drink",
-          "menuOrder": "99",
+          "menuOrder": "7",
           "description": "Three tender, protein-packed egg bites loaded with crispy bacon and sharp cheddar. Small but mighty, they're exactly what a busy morning needs.",
           "unavailableAt": []
         }
@@ -3442,7 +3458,7 @@
           "category": "categories/coldbrew",
           "subtitle": "Hazelnut & Caramel, Chocolate Milk",
           "component": "drink",
-          "menuOrder": "99",
+          "menuOrder": "4",
           "description": "The beloved candy bar gets the cold brew treatment. Hazelnut, caramel, and chocolate milk meet slow-steeped coffee for an indulgent cold sip.",
           "unavailableAt": []
         }
@@ -3472,7 +3488,7 @@
           "category": "categories/coldbrew",
           "subtitle": "Velvety Nitro-Infused Cold Brew",
           "component": "drink",
-          "menuOrder": "99",
+          "menuOrder": "2",
           "description": "Cold brew infused with nitrogen for a velvety, almost creamy texture with a cascading pour. Naturally bold yet smooth. This one's in a league of its own.",
           "unavailableAt": []
         }
@@ -3513,7 +3529,7 @@
           "category": "categories/coldbrew",
           "subtitle": "White Chocolate & Brown Sugar Cinnamon",
           "component": "drink",
-          "menuOrder": "99",
+          "menuOrder": "5",
           "description": "Cold brew steeped in the flavors of Sunday morning. White chocolate and brown sugar cinnamon transform your coffee into something that tastes like brunch.",
           "unavailableAt": []
         }
@@ -3543,7 +3559,7 @@
           "category": "categories/coldbrew",
           "subtitle": "Smooth & Bold",
           "component": "drink",
-          "menuOrder": "99",
+          "menuOrder": "1",
           "description": "Slow-steeped for 18 hours for a concentrate that's smoother and less acidic than regular iced coffee. Clean, bold, and built to carry you through the day.",
           "unavailableAt": []
         }
@@ -3584,7 +3600,7 @@
           "category": "categories/coldbrew",
           "subtitle": "Caramel & Vanilla",
           "component": "drink",
-          "menuOrder": "99",
+          "menuOrder": "3",
           "description": "All the sweet, golden flavors you want in one cup. One of our fan favorites.",
           "unavailableAt": []
         }
@@ -3620,7 +3636,7 @@
           "category": "categories/coldbrew",
           "subtitle": "Dark Chocolate & Milk",
           "component": "drink",
-          "menuOrder": "99",
+          "menuOrder": "6",
           "description": "Bold cold brew meets rich chocolate. Deep, smooth, and unapologetically chocolatey.",
           "unavailableAt": []
         }
@@ -3707,7 +3723,7 @@
           "category": "categories/coffee",
           "subtitle": "Hazelnut & Caramel, Chocolate Milk",
           "component": "drink",
-          "menuOrder": "99",
+          "menuOrder": "2",
           "description": "Everything you love about the classic candy bar. Hazelnut and caramel blended into a bold espresso drink made with chocolate milk.",
           "unavailableAt": []
         }
@@ -3773,7 +3789,7 @@
           "category": "categories/coffee",
           "subtitle": "Irish Cream",
           "component": "drink",
-          "menuOrder": "99",
+          "menuOrder": "4",
           "description": "A smooth espresso drink with the creamy, slightly sweet flavor of Irish cream. Rich, velvety, and dangerously easy to drink.",
           "unavailableAt": []
         }
@@ -3855,7 +3871,7 @@
           "category": "categories/coffee",
           "subtitle": "Coconut & Caramel, Chocolate Milk",
           "component": "drink",
-          "menuOrder": "99",
+          "menuOrder": "5",
           "description": "Inspired by the beloved cake. Coconut and caramel swirl through rich chocolate milk and espresso. Toasty, sweet, and deeply satisfying.",
           "unavailableAt": []
         }
@@ -3896,7 +3912,7 @@
           "category": "categories/coffee",
           "subtitle": "Brown Sugar Cinnamon & Caramel",
           "component": "drink",
-          "menuOrder": "99",
+          "menuOrder": "3",
           "description": "Warm brown sugar cinnamon meets buttery caramel in this cozy, spiced espresso drink. It tastes like fall in a cup, any time of year.",
           "unavailableAt": []
         }
@@ -3967,7 +3983,7 @@
           "category": "categories/coffee",
           "subtitle": "Caramel & Vanilla",
           "component": "drink",
-          "menuOrder": "99",
+          "menuOrder": "1",
           "description": "A smooth, golden espresso drink layered with rich caramel syrup and a hint of vanilla. Sweet enough to feel like a treat, balanced enough to be your everyday go-to.",
           "unavailableAt": []
         }
