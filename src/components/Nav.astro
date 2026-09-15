@@ -9,6 +9,7 @@ const s = (await getSettings()) as any;
 const siteName = s.siteName ?? '151 Coffee';
 const logo = imageUrl(s.logo, { width: 128 });
 const giftCardLabel = s.giftCardLabel ?? 'Gift Card';
+const loyaltyLabel = s.loyaltyLabel ?? 'Loyalty';
 
 const navLinks: { label: string; href: string }[] = s.nav ?? [
   { label: 'Menu', href: '/menu' },
@@ -42,6 +43,7 @@ function isActive(href: string): boolean {
         <li><a href={link.href} class={`nav-link${isActive(link.href) ? ' active' : ''}`}>{link.label}</a></li>
       ))}
     </ul>
+    <button type="button" id="loyaltyNavBtn" class="main-menu-btn">{loyaltyLabel}</button>
     <button type="button" id="giftCardNavBtn" class="main-menu-btn">{giftCardLabel}</button>
     <div class="menu-toggle" role="button" tabindex="0" aria-label="Toggle navigation menu" aria-expanded="false">
       <span></span><span></span><span></span>
