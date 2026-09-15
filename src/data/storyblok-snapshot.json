@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-15T18:55:52.714Z",
+  "generatedAt": "2026-09-15T20:31:49.112Z",
   "stories": {
     "settings/global": {
       "nav": [
@@ -1751,6 +1751,47 @@
   },
   "collections": {
     "drinks": [
+      {
+        "slug": "pumpkin-caramel-brulee",
+        "content": {
+          "_uid": "eb695925-fb02-4757-b7ef-5313a4b41701",
+          "name": "Pumpkin Caramel Brulee",
+          "tags": [
+            {
+              "_uid": "28498931-1190-40e9-9f9d-a4fc94d54d32",
+              "value": "Pumpkin",
+              "component": "text_item"
+            },
+            {
+              "_uid": "eac809c6-f186-43ed-a217-207fd14c0d3f",
+              "value": "Salted Caramel",
+              "component": "text_item"
+            }
+          ],
+          "badge": "",
+          "image": {
+            "id": 220360708451602,
+            "alt": "",
+            "name": "",
+            "focus": "",
+            "title": "",
+            "source": "",
+            "filename": "https://a.storyblok.com/f/294671107081428/1350x1350/459747b7c3/pumpkin-caramel-brulee-latte.jpg",
+            "copyright": "",
+            "fieldtype": "asset",
+            "meta_data": {
+              "size": "1350x1350"
+            },
+            "is_external_url": false
+          },
+          "category": "",
+          "subtitle": "Pumpkin & Salted Caramel",
+          "component": "drink",
+          "menuOrder": "1",
+          "description": "",
+          "unavailableAt": []
+        }
+      },
       {
         "slug": "hotfood-green-chile-burrito",
         "content": {
@@ -4041,6 +4082,19 @@
     ],
     "categories": [
       {
+        "slug": "lto",
+        "content": {
+          "_uid": "675bfe44-af1b-4f9c-b0d5-ce45635fe78b",
+          "title": "LTO",
+          "number": "01",
+          "component": "category",
+          "extraCards": [],
+          "description": "Here, but not for long. Check out our seasonal offerings!",
+          "unavailableAt": [],
+          "hiddenByDefault": false
+        }
+      },
+      {
         "slug": "treats",
         "content": {
           "_uid": "83ccffa0-01f2-45d7-a8f4-126167198e04",
@@ -4147,19 +4201,6 @@
           "component": "category",
           "extraCards": [],
           "description": "Light, fruity, and made to cool you down. Real fruit purees and coconut cream over ice. No caffeine, all flavor.",
-          "unavailableAt": [],
-          "hiddenByDefault": false
-        }
-      },
-      {
-        "slug": "misc",
-        "content": {
-          "_uid": "0bac456b-4e9c-4597-8cc3-c166f264b122",
-          "title": "Misc.",
-          "number": "03",
-          "component": "category",
-          "extraCards": [],
-          "description": "Not a coffee, not an energy drink, but just what you need.",
           "unavailableAt": [],
           "hiddenByDefault": false
         }
@@ -4310,7 +4351,7 @@
         "content": {
           "_uid": "47ac565f-7da7-4150-a0cd-979bc6a3a495",
           "title": "Cold Brew",
-          "number": "02",
+          "number": "03",
           "component": "category",
           "extraCards": [],
           "description": "Slow-steeped for 18 hours. Smoother, bolder, and less acidic than iced coffee. Drink it straight or dressed up.",
@@ -4323,7 +4364,7 @@
         "content": {
           "_uid": "0506f6bf-d0ee-483f-98d5-d79d6cebe8a9",
           "title": "Coffee",
-          "number": "01",
+          "number": "02",
           "component": "category",
           "extraCards": [],
           "description": "Espresso-based drinks built around bold shots and real flavor. Classic lattes, signature mochas, and everything in between.",
