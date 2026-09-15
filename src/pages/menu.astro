@@ -152,6 +152,24 @@ const flavors: { value: string; index: number }[] = allFlavors
   .map((f: string, index: number) => ({ value: f, index }))
   .filter(({ value }: any) => FLAVORS_WITH_DRINKS.has(value));
 
+// Slim drink list for the "Help Me Decide" popup -- only what the card
+// needs to render (name/subtitle/image). Hot Food, Treats, and Kids are
+// excluded so the randomizer only ever lands on an actual drink someone
+// would order on a whim -- a wider exclusion than FOOD_CATS above (which
+// only needs to keep non-drink tags out of the flavor filter, not keep
+// Kids drinks out of a "surprise me" pick).
+const DECIDE_EXCLUDED_CATS = new Set(['hotfood', 'treats', 'kids']);
+const decideDrinksArr = allDrinks
+  .filter((d: any) => !DECIDE_EXCLUDED_CATS.has(catSlug(d)))
+  .map((d: any) => ({
+    name: d.name,
+    subtitle: d.subtitle ?? '',
+    image: imageUrl(d.image, { width: 640 }) ?? '',
+    slug: d.slug,
+  }))
+  .filter((d: any) => d.image);
+const decideDrinksJson = JSON.stringify(decideDrinksArr);
+
 ---
 <Layout title={p.seo?.title ?? 'Menu | 151 Coffee - Coffee, Cold Brew, Energy & Dirty Pop'} description={p.seo?.description ?? 'Explore the full 151 Coffee menu. Signature espresso drinks, cold brew, blended energy, Dirty Pop sodas, refreshers, smoothies, teas, and more.'} ogImage={imageUrl(p.seo?.ogImage, { width: 1200, height: 630 })}>
   <Fragment slot="head">
@@ -223,6 +241,28 @@ const flavors: { value: string; index: number }[] = allFlavors
             </div>
           ))}
         </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="decideModal" class="modal decide-modal">
+    <div class="modal-content decide-modal-content">
+      <button type="button" class="modal-close" id="closeDecideModal" aria-label="Close">&times;</button>
+      <div class="decide-stage" id="decideStage">
+        <p class="decide-eyebrow">Today's Pick</p>
+        <div class="decide-reel" id="decideReel">
+          <div class="decide-card" id="decideCard">
+            <div class="decide-card-inner">
+              <div class="decide-img-wrap" id="decideImgWrap">
+                <div class="decide-carousel-track" id="decideTrack"></div>
+                <div class="decide-sparkles" id="decideSparkles"></div>
+              </div>
+              <h3 id="decideName"></h3>
+              <p id="decideSubtitle"></p>
+            </div>
+          </div>
+        </div>
+        <button type="button" class="decide-again-btn" id="decideAgainBtn">Pick Another</button>
       </div>
     </div>
   </div>
@@ -341,6 +381,18 @@ const flavors: { value: string; index: number }[] = allFlavors
       </div>
       <div class="timeline-end-spacer"></div>
     </div>
+    <!--
+      Mobile/simple-menu only: on a narrow viewport the timeline scrolls
+      vertically and the customize-section (where the desktop "Help Me
+      Decide" button lives, to the right of the flavor pills) can be a long
+      scroll away, so give mobile visitors the same trigger right here,
+      immediately after the last category. Hidden on desktop via menu.css.
+    -->
+    <div class="decide-btn-mobile-wrap">
+      <button type="button" class="decide-btn decide-btn--mobile" id="helpMeDecideBtnMobile">
+        Help Me Decide
+      </button>
+    </div>
   </section>
   )}
 
@@ -362,6 +414,11 @@ const flavors: { value: string; index: number }[] = allFlavors
             ))}
           </div>
         </div>
+        <div class="cz-block cz-decide-block">
+          <button type="button" class="decide-btn" id="helpMeDecideBtn">
+            Help Me Decide
+          </button>
+        </div>
       </div>
     </div>
   </section>
@@ -369,11 +426,134 @@ const flavors: { value: string; index: number }[] = allFlavors
 
   <Footer />
 
-  <script define:vars={{ drinksJson, categoriesMetaJson, locationsMetaJson, locationTriggerDefault: p.locationPicker?.triggerLabel ?? 'Select Your Location' }} is:inline>
+  <script define:vars={{ drinksJson, categoriesMetaJson, locationsMetaJson, decideDrinksJson, locationTriggerDefault: p.locationPicker?.triggerLabel ?? 'Select Your Location' }} is:inline>
     window.DRINKS = JSON.parse(drinksJson);
     window.CATEGORIES_META = JSON.parse(categoriesMetaJson);
     window.LOCATIONS_META = JSON.parse(locationsMetaJson);
+    window.DECIDE_DRINKS = JSON.parse(decideDrinksJson);
     window.LOCATION_TRIGGER_DEFAULT = locationTriggerDefault;
+  </script>
+  <script is:inline>
+  (function () {
+    // ── "Help Me Decide" random drink popup ──
+    // Reveal is two beats: the drinks scroll past like a carousel reel,
+    // decelerating to a stop on the winner, then it's announced with a
+    // spotlight bloom + sparkle burst.
+    var drinks = window.DECIDE_DRINKS || [];
+    var modal = document.getElementById('decideModal');
+    var card = document.getElementById('decideCard');
+    var imgWrap = document.getElementById('decideImgWrap');
+    var track = document.getElementById('decideTrack');
+    var nameEl = document.getElementById('decideName');
+    var subtitleEl = document.getElementById('decideSubtitle');
+    var sparkles = document.getElementById('decideSparkles');
+    var closeBtn = document.getElementById('closeDecideModal');
+    var againBtn = document.getElementById('decideAgainBtn');
+    var openBtns = [document.getElementById('helpMeDecideBtn'), document.getElementById('helpMeDecideBtnMobile')];
+    if (!modal || !drinks.length) return;
+
+    var spinning = false;
+    var spinToken = 0; // invalidates a still-running spin's transitionend if re-triggered
+
+    // Warm the browser's image cache up front so the reel never stalls on a
+    // network fetch mid-scroll -- every frame is already built into the
+    // track before the animation starts (see play() below), so a cold
+    // cache would otherwise show blank frames sliding past.
+    drinks.forEach(function (d) { var pre = new Image(); pre.src = d.image; });
+
+    function pickRandom(excludeSlug) {
+      if (drinks.length < 2) return drinks[0];
+      var d;
+      do { d = drinks[Math.floor(Math.random() * drinks.length)]; } while (d.slug === excludeSlug);
+      return d;
+    }
+
+    function renderSparkles() {
+      sparkles.innerHTML = '';
+      var n = 12;
+      for (var i = 0; i < n; i++) {
+        var s = document.createElement('span');
+        s.className = 'decide-spark';
+        var angle = (360 / n) * i + (Math.random() * 14 - 7);
+        var dist = 74 + Math.random() * 42;
+        s.style.setProperty('--a', angle + 'deg');
+        s.style.setProperty('--d', dist + 'px');
+        s.style.animationDelay = (Math.random() * 0.12) + 's';
+        sparkles.appendChild(s);
+      }
+    }
+
+    function frameEl(drink) {
+      var frame = document.createElement('div');
+      frame.className = 'decide-carousel-frame';
+      var im = document.createElement('img');
+      im.src = drink.image;
+      im.alt = drink.name;
+      frame.appendChild(im);
+      return frame;
+    }
+
+    function play() {
+      var token = ++spinToken;
+      spinning = true;
+      card.classList.remove('decide-landed');
+
+      var frameCount = 20;
+      var finalDrink = pickRandom();
+      var lastSlug = null;
+      var sequence = [];
+      for (var i = 0; i < frameCount - 1; i++) {
+        var d = pickRandom(lastSlug);
+        lastSlug = d.slug;
+        sequence.push(d);
+      }
+      sequence.push(finalDrink);
+
+      track.style.transition = 'none';
+      track.style.transform = 'translateX(0px)';
+      track.innerHTML = '';
+      sequence.forEach(function (d) { track.appendChild(frameEl(d)); });
+
+      var frameWidth = imgWrap.getBoundingClientRect().width;
+      var travel = frameWidth * (sequence.length - 1);
+
+      // Force layout to flush before animating, so the reel visibly starts
+      // at frame 0 instead of jumping straight to the end state.
+      void track.offsetWidth;
+
+      requestAnimationFrame(function () {
+        if (token !== spinToken) return;
+        // Long duration + a curve that front-loads deceleration: reads as a
+        // heavy reel coasting to a natural stop, not a slot machine ticking.
+        track.style.transition = 'transform 2.1s cubic-bezier(0.1, 0.7, 0.15, 1)';
+        track.style.transform = 'translateX(-' + travel + 'px)';
+      });
+
+      function onSettled(e) {
+        if (e && e.target !== track) return;
+        track.removeEventListener('transitionend', onSettled);
+        if (token !== spinToken) return;
+        nameEl.textContent = finalDrink.name;
+        subtitleEl.textContent = finalDrink.subtitle || '';
+        card.classList.add('decide-landed');
+        renderSparkles();
+        spinning = false;
+      }
+      track.addEventListener('transitionend', onSettled);
+    }
+
+    function openModal() {
+      modal.classList.add('active');
+      play();
+    }
+    function closeModal() { modal.classList.remove('active'); }
+
+    openBtns.forEach(function (btn) { if (btn) btn.addEventListener('click', openModal); });
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', function (e) { if (e.target === modal) closeModal(); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && modal.classList.contains('active')) closeModal(); });
+    againBtn.addEventListener('click', function () { if (!spinning) play(); });
+  })();
   </script>
   <script is:inline>
   (function () {

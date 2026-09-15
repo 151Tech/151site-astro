@@ -1131,6 +1131,19 @@
         font-size: 0.78rem;
         padding: 0.35rem 0.8rem;
     }
+    /* .cz-row stacks to a single column above, which left-aligns every
+       child by default (align-items: flex-start) -- fine for the heading
+       and pills, but it left the button hugging the left edge on its own
+       line instead of reading as an intentional, separate call to action.
+       Give it its own centered row, set off with a divider like the
+       heading gets above. */
+    .cz-decide-block {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        padding-top: 1.25rem;
+        border-top: 1px solid rgba(255,255,255,0.1);
+    }
 }
 
 /* ─── Location filtering ─── */
@@ -1522,4 +1535,283 @@
         min-height: calc(92px + var(--gallery-overlap));
         padding: calc(0.7rem + var(--gallery-overlap)) 0.5rem 0.7rem;
     }
+}
+
+/* ─── "Help Me Decide" button ─── */
+.decide-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    background: var(--red);
+    color: #fff;
+    border: none;
+    border-radius: 999px;
+    font-family: var(--font-inter), sans-serif;
+    font-size: 0.92rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    padding: 0.85rem 1.6rem;
+    cursor: pointer;
+    white-space: nowrap;
+    box-shadow: 0 10px 24px rgba(230,57,70,0.35);
+    transition: transform 0.2s cubic-bezier(0.34,1.4,0.64,1), box-shadow 0.2s ease, background 0.2s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .decide-btn:hover {
+        transform: translateY(-3px) scale(1.03);
+        box-shadow: 0 14px 30px rgba(230,57,70,0.45);
+        background: #ef4a54;
+    }
+}
+
+.decide-btn:active { transform: translateY(0) scale(0.98); }
+
+/* Desktop block sits to the right of the flavor pills in .cz-row (flex
+   row); shrink-to-fit rather than stretching like .cz-flavor-block. */
+.cz-decide-block {
+    flex: 0 0 auto;
+    align-self: center;
+}
+
+/* Mobile trigger renders right after the last category in the timeline;
+   desktop already has the one in .cz-row, so hide this one there. A
+   dedicated full-width wrapper centers the (intrinsically-sized) pill
+   instead of letting the button itself stretch edge to edge -- a
+   full-width pill read as an oversized, misaligned control rather than a
+   normal centered button. */
+.decide-btn-mobile-wrap {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    /* The desktop button's home (.cz-row) stacks to full width at 900px,
+       but stays visible there too -- on a touch device that scrolled all
+       the way down it's a fine second chance to use it. This mobile trigger
+       is the one meant to be seen right away, directly under the drinks. */
+    .decide-btn-mobile-wrap {
+        display: flex;
+        justify-content: center;
+        flex: 0 0 100%;
+        margin: 1.75rem 0 0.5rem;
+    }
+}
+
+/* ─── "Help Me Decide" popup ─── */
+.decide-modal-content {
+    max-width: 460px;
+    /* Two soft red blooms in opposite corners, a faint dot-grid for texture,
+       over the same dark ground as .customize-section -- lively without
+       competing with the reel itself. */
+    background:
+        radial-gradient(circle at 12% -8%, rgba(230,57,70,0.4) 0%, transparent 45%),
+        radial-gradient(circle at 104% 108%, rgba(230,57,70,0.28) 0%, transparent 48%),
+        radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1.5px) 0 0/20px 20px,
+        #1c1815;
+    padding: 2.5rem 2rem 2.25rem;
+    text-align: center;
+    overflow: visible;
+}
+
+.decide-eyebrow {
+    font-family: var(--font-inter), sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--red);
+    margin: 0 0 1.1rem;
+}
+
+.decide-reel {
+    position: relative;
+    perspective: 1000px;
+    margin: 0 auto;
+}
+
+.decide-card {
+    position: relative;
+}
+
+.decide-card-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* The visible window onto the reel -- same rounded-corner treatment as a
+   menu drink card, clipping the scrolling track to a single frame's worth
+   at a time so nothing outside it is ever visible mid-scroll. */
+.decide-img-wrap {
+    position: relative;
+    width: 220px;
+    height: 220px;
+    margin: 0 auto 1.25rem;
+    border-radius: 22px;
+    background: radial-gradient(circle at 50% 40%, rgba(230,57,70,0.25), transparent 70%);
+    overflow: hidden;
+}
+
+/* The reel itself: one frame per drink, laid out edge to edge and slid
+   left via `transform: translateX(...)` (set in JS) so the drinks glide
+   past like a carousel rather than flashing in place. */
+.decide-carousel-track {
+    display: flex;
+    height: 100%;
+    will-change: transform;
+}
+
+.decide-carousel-frame {
+    flex: 0 0 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px;
+}
+
+.decide-carousel-frame img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: 14px;
+    filter: drop-shadow(0 18px 28px rgba(0,0,0,0.45));
+}
+
+.decide-card h3 {
+    font-family: var(--font-bebas-neue), sans-serif;
+    color: #f5efe8;
+    font-size: 1.9rem;
+    letter-spacing: 0.02em;
+    line-height: 1.1;
+    margin: 0 0 0.35rem;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+}
+
+.decide-card p {
+    font-family: var(--font-inter), sans-serif;
+    color: rgba(255,255,255,0.55);
+    font-size: 0.85rem;
+    margin: 0;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+}
+
+.decide-card.decide-landed h3,
+.decide-card.decide-landed p {
+    opacity: 1;
+}
+
+.decide-again-btn {
+    margin-top: 1.75rem;
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.25);
+    color: #fff;
+    font-family: var(--font-inter), sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    border-radius: 999px;
+    padding: 0.65rem 1.4rem;
+    cursor: pointer;
+    transition: background 0.18s ease, border-color 0.18s ease, transform 0.15s ease;
+}
+
+.decide-again-btn:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.45); }
+.decide-again-btn:active { transform: scale(0.97); }
+
+/* Sparkle burst, shared by all three reveal styles */
+.decide-sparkles {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+.decide-spark {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--red);
+    box-shadow: 0 0 8px 1px rgba(230,57,70,0.6);
+    opacity: 0;
+    transform: translate(-50%, -50%);
+    animation: decide-spark-burst 0.65s cubic-bezier(0.16,1,0.3,1) both;
+}
+
+.decide-spark:nth-child(3n) { background: #f5efe8; box-shadow: 0 0 8px 1px rgba(245,239,232,0.6); }
+.decide-spark:nth-child(4n) { width: 4px; height: 4px; }
+
+@keyframes decide-spark-burst {
+    0%   { opacity: 1; transform: translate(-50%, -50%) rotate(var(--a)) translateX(0) scale(1); }
+    100% { opacity: 0; transform: translate(-50%, -50%) rotate(var(--a)) translateX(var(--d)) scale(0.4); }
+}
+
+/* While the reel scrolls, a faint ring pulses around the frame -- reads as
+   "still picking" independent of the carousel motion itself. */
+@keyframes decide-cycling-ring {
+    0%, 100% { box-shadow: inset 0 0 0 3px rgba(230,57,70,0.18); }
+    50%      { box-shadow: inset 0 0 0 3px rgba(230,57,70,0.4); }
+}
+
+.decide-card:not(.decide-landed) .decide-img-wrap {
+    animation: decide-cycling-ring 0.5s ease-in-out infinite;
+}
+
+/* Landing beat: a radial spotlight blooms open from behind the card as it
+   pops in with a soft overshoot, then a sparkle burst punctuates the pick. */
+.decide-stage {
+    position: relative;
+}
+
+.decide-stage::before {
+    content: '';
+    position: absolute;
+    top: 46%;
+    left: 50%;
+    width: 40px;
+    height: 40px;
+    background: radial-gradient(circle, rgba(230,57,70,0.55) 0%, rgba(230,57,70,0.18) 45%, transparent 72%);
+    transform: translate(-50%, -50%) scale(0);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.decide-card.decide-landed {
+    position: relative;
+    z-index: 1;
+}
+
+.decide-card.decide-landed .decide-img-wrap {
+    animation: none;
+    box-shadow: none;
+}
+
+.decide-card.decide-landed {
+    animation: decide-card-pop 0.6s cubic-bezier(0.2,1.4,0.4,1) both;
+}
+
+.decide-stage:has(.decide-card.decide-landed)::before {
+    animation: decide-spotlight-grow 0.7s cubic-bezier(0.16,1,0.3,1) both;
+}
+
+@keyframes decide-spotlight-grow {
+    0%   { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+    60%  { transform: translate(-50%, -50%) scale(9); opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(11); opacity: 1; }
+}
+
+@keyframes decide-card-pop {
+    0%   { transform: scale(0.9); }
+    60%  { transform: scale(1.06); }
+    100% { transform: scale(1); }
+}
+
+@media (max-width: 480px) {
+    .decide-modal-content { padding: 2rem 1.25rem 1.75rem; }
+    .decide-img-wrap { width: 180px; height: 180px; }
 }
