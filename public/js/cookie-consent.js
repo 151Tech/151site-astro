@@ -22,7 +22,7 @@
                 <div class="cc-text">
                     <div>
                         <strong>We use cookies 🍪</strong>
-                        <p>Unlike our menu, these cookies won't give you a sugar rush, just a faster site and the traffic/ad insights that help us reach more coffee lovers. No crumbs, we promise. Accept all, or keep it to the necessary ones.</p>
+                        <p>Unlike our menu, these cookies won't give you a sugar rush, just a faster site and the traffic/ad insights that help us reach more coffee lovers. No crumbs, we promise.</p>
                     </div>
                 </div>
                 <div class="cc-actions">

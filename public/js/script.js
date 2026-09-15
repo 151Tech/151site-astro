@@ -194,9 +194,16 @@ function activateCrispEmbed(modal) {
     const wrapper = modal.querySelector('.crisp');
     const iframe = modal.querySelector('iframe[data-src]');
     if (!iframe) return; // already activated on a previous open
-    iframe.addEventListener('load', function() {
+    // The iframe's 'load' event fires once the outer document loads, but
+    // Crisp's own app then paints its (initially dark) loading state before
+    // rendering the real white-themed form. Holding the reveal for a fixed
+    // minimum keeps our white spinner up through that inner flash instead of
+    // handing off straight to Crisp's own transition.
+    const minDelay = new Promise((resolve) => setTimeout(resolve, 1200));
+    const loaded = new Promise((resolve) => iframe.addEventListener('load', resolve, { once: true }));
+    Promise.all([minDelay, loaded]).then(() => {
         wrapper?.classList.add('crisp-loaded');
-    }, { once: true });
+    });
     iframe.src = iframe.getAttribute('data-src');
     iframe.removeAttribute('data-src');
 }

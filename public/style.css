@@ -2391,6 +2391,7 @@ footer {
    that gap with a spinner reads as an intentional load instead of a
    choppy pop-in. */
 .crisp iframe {
+    background: var(--white);
     opacity: 0;
     transition: opacity 0.6s ease;
 }
