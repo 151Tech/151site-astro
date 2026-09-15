@@ -76,6 +76,10 @@ const FORMS = {
   'invest-waitlist': {
     label: 'Investor Waitlist Signup',
     toEnv: 'RESEND_TO_INVEST',
+    // No real inbox for this one yet -- until RESEND_TO_INVEST is set, refuse
+    // to send rather than silently falling back to DEFAULT_TO_ADDRESS, which
+    // would misdeliver investor leads to the general tech inbox.
+    requireToEnv: true,
     // This form (invest banner popup) only collects email + phone.
     requireIdentity: false,
     // Matches the subject/preview convention from the old Wix waitlist
@@ -251,7 +255,12 @@ export async function POST({ request }: { request: Request }) {
   }
 
   const fromAddress = (env as any).RESEND_FROM_ADDRESS || DEFAULT_FROM_ADDRESS;
-  const toAddress = (env as any)[form.toEnv] || DEFAULT_TO_ADDRESS;
+  const configuredToAddress = (env as any)[form.toEnv];
+  if ('requireToEnv' in form && form.requireToEnv && !configuredToAddress) {
+    console.warn(`[contact] ${form.toEnv} not set, refusing to send ${requested} submission`);
+    return new Response('Form not yet accepting submissions', { status: 503 });
+  }
+  const toAddress = configuredToAddress || DEFAULT_TO_ADDRESS;
 
   // Only a plausible address is worth setting as reply_to: a malformed one can
   // get the whole message rejected by Resend. (emailLooksValid already ran

@@ -1,0 +1,941 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>151 Bounce</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0; height: 100%; overflow: hidden;
+    font-family: 'Rajdhani', 'Arial Narrow', Arial, sans-serif;
+    color: #f5f5f5;
+  }
+  @font-face {
+    font-family: 'Rajdhani';
+    src: local('Rajdhani');
+  }
+  #wrap { position: relative; width: 100vw; height: 100vh; overflow: hidden; }
+  canvas { display: block; position: relative; z-index: 1; }
+
+  /* Background: the site's black/red grid, plus a slow drift and a vignette
+     so the play field reads as a contained arena instead of a flat backdrop. */
+  #bg {
+    position: fixed; inset: -40px; z-index: 0;
+    background-color: #0b0b0b;
+    background-image:
+      radial-gradient(120% 60% at 50% 0%,   rgba(230,57,70,0.32) 0%, transparent 60%),
+      radial-gradient(80% 60% at 100% 100%, rgba(230,57,70,0.20) 0%, transparent 60%),
+      radial-gradient(rgba(255,255,255,0.07) 1.5px, transparent 2px);
+    background-size: auto, auto, 26px 26px;
+    animation: bg-drift 22s ease-in-out infinite;
+  }
+  #vignette {
+    position: fixed; inset: 0; z-index: 2; pointer-events: none;
+    background: radial-gradient(120% 85% at 50% 45%, transparent 55%, rgba(0,0,0,0.55) 100%);
+  }
+  @keyframes bg-drift {
+    0%, 100% { background-position: 0 0, 0 0, 0 0; }
+    50% { background-position: 10px -14px, -10px 14px, 13px 13px; }
+  }
+
+  #hud {
+    position: fixed; top: 0; left: 0; right: 0;
+    display: flex; justify-content: space-between; align-items: flex-start;
+    padding: 24px 32px; pointer-events: none; z-index: 5;
+    gap: 16px;
+  }
+  .hud-block {
+    display: flex; flex-direction: column; gap: 4px;
+    background: linear-gradient(180deg, rgba(30,20,19,0.88), rgba(13,9,8,0.88));
+    border: 1px solid rgba(230,57,70,0.4);
+    border-radius: 12px;
+    padding: 10px 20px;
+    box-shadow: 0 0 24px rgba(230,57,70,0.14), inset 0 1px 0 rgba(255,255,255,0.05);
+    backdrop-filter: blur(4px);
+    min-width: 96px;
+  }
+  .hud-block.hud-right { align-items: flex-end; }
+  .hud-label {
+    font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: rgba(230,57,70,0.75); font-weight: 700;
+  }
+  .hud-value {
+    font-size: 28px; font-weight: 700; letter-spacing: 0.02em;
+    color: #fff; text-shadow: 0 0 14px rgba(230,57,70,0.6);
+    font-variant-numeric: tabular-nums;
+    line-height: 1.1;
+  }
+
+  #balls-row { display:flex; flex-wrap: wrap; gap:6px; justify-content: flex-end; max-width: 150px; }
+  .ball-pip {
+    width: 13px; height: 13px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #fff, #E63946 55%, #7a1119 100%);
+    box-shadow: 0 0 8px rgba(230,57,70,0.7);
+  }
+  .ball-pip.spent { background: #2a2a2a; box-shadow: none; opacity: 0.5; }
+
+  #overlay {
+    position: fixed; inset: 0; display: none; align-items: center; justify-content: center;
+    flex-direction: column; gap: 22px; z-index: 20;
+    background: radial-gradient(60% 60% at 50% 45%, rgba(20,12,12,0.92), rgba(6,4,4,0.97));
+    backdrop-filter: blur(6px);
+    text-align: center;
+  }
+  #overlay.show { display: flex; }
+  #overlay h2 {
+    font-size: 54px; margin: 0; letter-spacing: 0.12em; text-transform: uppercase;
+    background: linear-gradient(180deg, #fff, #E63946);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    text-shadow: 0 0 40px rgba(230,57,70,0.5);
+    animation: pop-in 0.5s cubic-bezier(0.2,1.4,0.4,1) both;
+  }
+  #overlay p { margin: 0; font-size: 18px; color: #ddd; letter-spacing: 0.05em; }
+  #overlay button {
+    margin-top: 6px;
+    font-family: inherit; font-size: 16px; letter-spacing: 0.12em; text-transform: uppercase;
+    font-weight: 700; color: #fff;
+    background: linear-gradient(180deg, #ff4d5a, #b3202c);
+    border: none; border-radius: 999px; padding: 14px 38px;
+    cursor: pointer;
+    box-shadow: 0 6px 0 #6e131b, 0 10px 24px rgba(230,57,70,0.45);
+    transition: transform 0.12s ease;
+  }
+  #overlay button:active { transform: translateY(4px); box-shadow: 0 2px 0 #6e131b, 0 4px 12px rgba(230,57,70,0.4); }
+
+  @keyframes pop-in {
+    0% { opacity: 0; transform: scale(0.6) translateY(20px); }
+    100% { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  #hint {
+    position: fixed; bottom: 128px; left: 50%; transform: translateX(-50%);
+    font-size: 12px; letter-spacing: 0.14em; color: rgba(245,245,245,0.5);
+    text-transform: uppercase; z-index: 4; pointer-events: none;
+    transition: opacity 0.6s ease;
+  }
+
+  #controls {
+    position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%);
+    display: flex; align-items: center; gap: 22px; z-index: 6;
+    padding: 14px 26px;
+    background: linear-gradient(180deg, rgba(24,16,15,0.7), rgba(10,7,6,0.7));
+    border: 1px solid rgba(230,57,70,0.25);
+    border-radius: 999px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.04);
+    backdrop-filter: blur(6px);
+  }
+  .ctrl-btn {
+    -webkit-tap-highlight-color: transparent;
+    user-select: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-family: inherit; color: #fff;
+    background: linear-gradient(180deg, #2e211f, #140d0b);
+    border: 1px solid rgba(230,57,70,0.5);
+    box-shadow: 0 4px 0 #05000090, 0 8px 18px rgba(230,57,70,0.18), inset 0 1px 0 rgba(255,255,255,0.06);
+    transition: transform 0.08s ease, box-shadow 0.08s ease, background 0.15s ease;
+  }
+  .ctrl-btn:active,
+  .ctrl-btn.pressed {
+    transform: translateY(3px);
+    box-shadow: 0 1px 0 #05000090, 0 3px 10px rgba(230,57,70,0.25), inset 0 1px 0 rgba(255,255,255,0.06);
+    background: linear-gradient(180deg, #3d2320, #170d0c);
+  }
+  .aim-btn { width: 58px; height: 58px; border-radius: 14px; }
+  .aim-btn svg { width: 22px; height: 22px; fill: #fff; filter: drop-shadow(0 0 6px rgba(230,57,70,0.7)); }
+  #fire-btn {
+    width: 122px; height: 58px; border-radius: 999px;
+    font-family: inherit;
+    font-size: 15px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase;
+    color: #fff; border: 1px solid rgba(255,255,255,0.15);
+    background: linear-gradient(180deg, #ff4d5a, #b3202c);
+    box-shadow: 0 6px 0 #6e131b, 0 10px 22px rgba(230,57,70,0.4);
+    cursor: pointer;
+    transition: transform 0.08s ease, box-shadow 0.08s ease;
+  }
+  #fire-btn:active,
+  #fire-btn.pressed {
+    transform: translateY(4px);
+    box-shadow: 0 2px 0 #6e131b, 0 4px 12px rgba(230,57,70,0.35);
+  }
+  #fire-btn:disabled {
+    opacity: 0.4; cursor: default;
+    background: linear-gradient(180deg, #5a4443, #2a1c1b);
+    box-shadow: none;
+  }
+</style>
+</head>
+<body>
+<div id="bg"></div>
+<div id="vignette"></div>
+<div id="wrap">
+  <div id="hud">
+    <div class="hud-block">
+      <div class="hud-label">Score</div>
+      <div class="hud-value" id="score">0</div>
+    </div>
+    <div class="hud-block hud-right">
+      <div class="hud-label">Balls</div>
+      <div id="balls-row"></div>
+    </div>
+  </div>
+  <canvas id="c"></canvas>
+  <div id="hint">Steer with the arrows &bull; fire with space</div>
+  <div id="controls">
+    <button type="button" class="ctrl-btn aim-btn" id="aim-left" aria-label="Aim left">
+      <svg viewBox="0 0 24 24"><path d="M15.5 3.5L6 12l9.5 8.5 1.4-1.6L9.3 12l7.6-6.9z"/></svg>
+    </button>
+    <button type="button" id="fire-btn">Fire</button>
+    <button type="button" class="ctrl-btn aim-btn" id="aim-right" aria-label="Aim right">
+      <svg viewBox="0 0 24 24"><path d="M8.5 3.5L18 12l-9.5 8.5-1.4-1.6L14.7 12 7.1 5.1z"/></svg>
+    </button>
+  </div>
+  <div id="overlay">
+    <h2 id="overlay-title">Level Clear</h2>
+    <p id="overlay-sub">Every target down. Nice shooting.</p>
+    <button id="retry-btn">Play Again</button>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+<script>
+(function () {
+  const { Engine, World, Bodies, Body, Composite, Events, Vector, Query } = Matter;
+
+  const canvas = document.getElementById('c');
+  const ctx = canvas.getContext('2d');
+  const scoreEl = document.getElementById('score');
+  const ballsRow = document.getElementById('balls-row');
+  const overlay = document.getElementById('overlay');
+  const overlayTitle = document.getElementById('overlay-title');
+  const overlaySub = document.getElementById('overlay-sub');
+  const hint = document.getElementById('hint');
+
+  let W = window.innerWidth, H = window.innerHeight;
+  function resize() {
+    W = window.innerWidth; H = window.innerHeight;
+    canvas.width = W; canvas.height = H;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  // --- Logo texture (bounced ball skin) -----------------------------------
+  const LOGO_URL = 'https://a.storyblok.com/f/294671107081428/512x512/f216729c1e/logo.png';
+  const logoImg = new Image();
+  logoImg.crossOrigin = 'anonymous';
+  let logoReady = false;
+  logoImg.onload = () => { logoReady = true; };
+  logoImg.src = LOGO_URL;
+
+  // --- Physics world -------------------------------------------------------
+  const engine = Engine.create();
+  engine.gravity.y = 1.15;
+  const world = engine.world;
+
+  const WALL_T = 40;
+  const walls = [
+    Bodies.rectangle(W / 2, -WALL_T / 2, W + WALL_T * 2, WALL_T, { isStatic: true, render: { visible: false } }),
+    Bodies.rectangle(-WALL_T / 2, H / 2, WALL_T, H * 3, { isStatic: true, render: { visible: false } }),
+    Bodies.rectangle(W + WALL_T / 2, H / 2, WALL_T, H * 3, { isStatic: true, render: { visible: false } }),
+  ];
+  World.add(world, walls);
+
+  // --- Layout -----------------------------------------------------------------
+  // Peggle-style board: a field of small fixed pegs the ball ricochets through.
+  // Two flavors share one array -- 'target' pegs (red, must all be cleared to
+  // win) and 'bumper' pegs (grey, pure pinball chaos + score, never cleared) --
+  // rather than a brick grid, so the ball's path is genuinely unpredictable
+  // instead of settling into a repeating grid bounce.
+  const BALL_R = 18;
+  const PEG_R = 13;
+  const launcherY = 64;
+  let launcherX = W / 2;
+
+  const pegs = []; // {body, type: 'target'|'bumper', hitFlash, alive}
+  let catcher = null; // {x, width, dir} -- moving tray at the bottom, Peggle's "free ball" bucket
+
+  function addPeg(x, y, type) {
+    const body = Bodies.circle(x, y, PEG_R, {
+      isStatic: true,
+      restitution: type === 'bumper' ? 1.02 : 0.78,
+      label: 'peg',
+    });
+    pegs.push({ body, type, hitFlash: 0, alive: true });
+    World.add(world, body);
+  }
+
+  // Keeps generated points from landing on top of each other or too close to
+  // the field edges, which is what causes a ball to get stuck rattling in
+  // place instead of cascading through the board.
+  function farEnough(x, y, minDist) {
+    if (x < 60 || x > W - 60 || y < 110 || y > H * 0.68) return false;
+    return pegs.every((p) => {
+      const dx = p.body.position.x - x, dy = p.body.position.y - y;
+      return dx * dx + dy * dy >= minDist * minDist;
+    });
+  }
+
+  // Samples evenly-spaced points along a polyline given as unit-box (0..1)
+  // coordinates, so a digit's strokes can be authored once as simple line
+  // segments and turned into peg positions at any on-screen scale.
+  function samplePolyline(points, boxX, boxY, boxW, boxH, spacing) {
+    const out = [];
+    for (let i = 0; i < points.length - 1; i++) {
+      const [ux1, uy1] = points[i];
+      const [ux2, uy2] = points[i + 1];
+      const x1 = boxX + ux1 * boxW, y1 = boxY + uy1 * boxH;
+      const x2 = boxX + ux2 * boxW, y2 = boxY + uy2 * boxH;
+      const len = Math.hypot(x2 - x1, y2 - y1);
+      const steps = Math.max(1, Math.round(len / spacing));
+      for (let s = 0; s <= steps; s++) {
+        // Skip the very first point after the first segment so shared
+        // corners between segments aren't double-placed.
+        if (i > 0 && s === 0) continue;
+        const t = s / steps;
+        out.push([x1 + (x2 - x1) * t, y1 + (y2 - y1) * t]);
+      }
+    }
+    return out;
+  }
+
+  // "1": a flag stroke, the vertical spine, and a base serif.
+  const DIGIT_ONE = [[0.30, 0.16], [0.52, 0.0], [0.52, 1.0], [0.24, 1.0], [0.80, 1.0]];
+  // "5": traced like a seven-segment digit -- top, upper-left, middle,
+  // lower-right, bottom -- drawn as one continuous polyline.
+  const DIGIT_FIVE = [
+    [0.95, 0.02], [0.05, 0.02], [0.05, 0.52], [0.95, 0.52], [0.95, 0.98], [0.05, 0.98],
+  ];
+
+  function buildLevel() {
+    pegs.forEach((p) => World.remove(world, p.body));
+    pegs.length = 0;
+
+    const midX = W / 2;
+    const fieldTop = 130;
+    const fieldBottom = H * 0.62;
+    const minGap = PEG_R * 4.4;
+    const logoCenterY = fieldTop + (fieldBottom - fieldTop) * 0.42;
+
+    // --- The "151" logo, spelled out in target pegs inside a ring ------------
+    const ringR = 205;
+    const shapeSpacing = 32;
+
+    const digitH = 220;
+    const digitW = digitH * 0.5;
+    const gap = 26;
+    const totalW = digitW * 3 + gap * 2;
+    const startX = midX - totalW / 2;
+    const boxY = logoCenterY - digitH / 2;
+
+    [DIGIT_ONE, DIGIT_FIVE, DIGIT_ONE].forEach((digit, i) => {
+      const boxX = startX + i * (digitW + gap);
+      samplePolyline(digit, boxX, boxY, digitW, digitH, shapeSpacing).forEach(([x, y]) => {
+        addPeg(x, y, 'target');
+      });
+    });
+
+    // The ring around it, sampled from the circle's circumference.
+    const circumference = Math.PI * 2 * ringR;
+    const ringCount = Math.round(circumference / shapeSpacing);
+    for (let i = 0; i < ringCount; i++) {
+      const angle = (i / ringCount) * Math.PI * 2;
+      addPeg(midX + Math.cos(angle) * ringR, logoCenterY + Math.sin(angle) * ringR, 'target');
+    }
+
+    // --- Ambient bumper field around the logo --------------------------------
+    // Kept sparse and pushed toward the edges/corners so the "151" + ring
+    // stays the readable centerpiece instead of competing with more shapes.
+    const arcs = [
+      { yBase: fieldTop + 20, amp: 30, freq: 1.8, phase: 0 },
+      { yBase: fieldBottom - 30, amp: 34, freq: 1.6, phase: 1.7 },
+    ];
+    arcs.forEach((arc) => {
+      const steps = 13;
+      for (let i = 0; i <= steps; i++) {
+        const t = i / steps;
+        const x = 80 + t * (W - 160);
+        const y = arc.yBase + Math.sin(t * Math.PI * arc.freq + arc.phase) * arc.amp;
+        if (farEnough(x, y, minGap)) addPeg(x, y, 'bumper');
+      }
+    });
+
+    // Seeded scatter so the layout is stable across reloads, biased away
+    // from the logo's own footprint (farEnough already keeps clear of it
+    // since every logo peg is already in `pegs` by this point).
+    let seed = 42;
+    const rand = () => { seed = (seed * 1103515245 + 12345) & 0x7fffffff; return seed / 0x7fffffff; };
+    let attempts = 0;
+    let placed = 0;
+    while (placed < 14 && attempts < 500) {
+      attempts++;
+      const x = 80 + rand() * (W - 160);
+      const y = fieldTop + rand() * (fieldBottom - fieldTop);
+      if (farEnough(x, y, minGap)) { addPeg(x, y, 'bumper'); placed++; }
+    }
+
+    // Big fixed side bumpers, like Peggle's wall-mounted bumpers -- rare but
+    // punchy deflections back into play.
+    addPeg(70, H * 0.4, 'bumper');
+    addPeg(W - 70, H * 0.4, 'bumper');
+    Body.scale(pegs[pegs.length - 1].body, 1.6, 1.6);
+    Body.scale(pegs[pegs.length - 2].body, 1.6, 1.6);
+
+    catcher = { x: midX, width: 130, dir: 1 };
+  }
+  buildLevel();
+
+  // --- Ball management -------------------------------------------------------
+  const TOTAL_BALLS = 6;
+  let ballsLeft = TOTAL_BALLS;
+  let activeBall = null;
+  let trail = [];
+  let score = 0;
+  let comboCount = 0;
+  let comboTimer = 0;
+  let gameOver = false;
+  let aimAngle = 0; // radians from vertical (0 = straight down)
+
+  function renderBallsRow() {
+    ballsRow.innerHTML = '';
+    const slots = Math.max(TOTAL_BALLS, ballsLeft);
+    for (let i = 0; i < slots; i++) {
+      const pip = document.createElement('div');
+      pip.className = 'ball-pip' + (i < ballsLeft ? '' : ' spent');
+      ballsRow.appendChild(pip);
+    }
+  }
+  renderBallsRow();
+
+  const MUZZLE_OFFSET = 50; // matches the barrel length drawn in drawLauncher
+
+  function spawnBall(vx, vy) {
+    const muzzleX = launcherX + Math.sin(aimAngle) * MUZZLE_OFFSET;
+    const muzzleY = launcherY + Math.cos(aimAngle) * MUZZLE_OFFSET;
+    const body = Bodies.circle(muzzleX, muzzleY, BALL_R, {
+      restitution: 0.86,
+      friction: 0.02,
+      frictionAir: 0.0018,
+      density: 0.0016,
+      label: 'ball',
+    });
+    Body.setVelocity(body, { x: vx, y: vy });
+    World.add(world, body);
+    activeBall = body;
+    trail = [];
+  }
+
+  let recoil = 0;    // 0..1, eases back after firing -- kicks the barrel back
+  let muzzleFlash = 0; // 0..1, a bright flash at the muzzle right on fire
+
+  function fire() {
+    if (activeBall || ballsLeft <= 0 || gameOver) return;
+    ballsLeft--;
+    renderBallsRow();
+    const speed = 15.5;
+    const vx = Math.sin(aimAngle) * speed;
+    const vy = Math.cos(aimAngle) * speed;
+    spawnBall(vx, vy);
+    hint.style.opacity = '0';
+    recoil = 1;
+    muzzleFlash = 1;
+  }
+
+  // --- Steering: left/right buttons + arrow keys, fire button + space --------
+  const MAX_AIM = 1.15; // ~66 degrees either side
+  const AIM_SPEED = 0.032; // radians per frame while held
+
+  let steer = 0; // -1 left, 0 idle, 1 right
+  function setSteer(dir, on) {
+    if (on) steer = dir; else if (steer === dir) steer = 0;
+  }
+
+  const aimLeftBtn = document.getElementById('aim-left');
+  const aimRightBtn = document.getElementById('aim-right');
+  const fireBtn = document.getElementById('fire-btn');
+
+  function bindHold(el, onDown, onUp) {
+    el.addEventListener('pointerdown', (e) => { e.preventDefault(); el.classList.add('pressed'); onDown(); });
+    el.addEventListener('pointerup', () => { el.classList.remove('pressed'); onUp(); });
+    el.addEventListener('pointerleave', () => { el.classList.remove('pressed'); onUp(); });
+    el.addEventListener('pointercancel', () => { el.classList.remove('pressed'); onUp(); });
+  }
+  bindHold(aimLeftBtn, () => setSteer(-1, true), () => setSteer(-1, false));
+  bindHold(aimRightBtn, () => setSteer(1, true), () => setSteer(1, false));
+
+  fireBtn.addEventListener('click', fire);
+
+  window.addEventListener('keydown', (e) => {
+    if (e.code === 'Space') { e.preventDefault(); fireBtn.classList.add('pressed'); fire(); }
+    else if (e.code === 'ArrowLeft') { e.preventDefault(); aimLeftBtn.classList.add('pressed'); setSteer(-1, true); }
+    else if (e.code === 'ArrowRight') { e.preventDefault(); aimRightBtn.classList.add('pressed'); setSteer(1, true); }
+  });
+  window.addEventListener('keyup', (e) => {
+    if (e.code === 'Space') fireBtn.classList.remove('pressed');
+    else if (e.code === 'ArrowLeft') { aimLeftBtn.classList.remove('pressed'); setSteer(-1, false); }
+    else if (e.code === 'ArrowRight') { aimRightBtn.classList.remove('pressed'); setSteer(1, false); }
+  });
+
+  function updateAim() {
+    if (steer !== 0) {
+      aimAngle = Math.max(-MAX_AIM, Math.min(MAX_AIM, aimAngle + steer * AIM_SPEED));
+    }
+  }
+
+  // --- Particles --------------------------------------------------------------
+  const particles = [];
+  function burst(x, y, color, n) {
+    for (let i = 0; i < n; i++) {
+      const angle = Math.random() * Math.PI * 2;
+      const speed = 2 + Math.random() * 6;
+      particles.push({
+        x, y,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed - 1,
+        life: 1,
+        decay: 0.02 + Math.random() * 0.02,
+        size: 2 + Math.random() * 3,
+        color,
+      });
+    }
+  }
+
+  let shake = 0;
+
+  // --- Collisions ---------------------------------------------------------------
+  Events.on(engine, 'collisionStart', (evt) => {
+    for (const pair of evt.pairs) {
+      const bodies = [pair.bodyA, pair.bodyB];
+      const ball = bodies.find((b) => b.label === 'ball');
+      if (!ball) continue;
+      const other = bodies.find((b) => b !== ball);
+      if (!other || other.label !== 'peg') continue;
+
+      const entry = pegs.find((p) => p.body === other);
+      if (!entry || !entry.alive) continue;
+      entry.hitFlash = 1;
+
+      if (entry.type === 'target') {
+        entry.alive = false;
+        World.remove(world, entry.body);
+        burst(other.position.x, other.position.y, '#E63946', 18);
+        comboCount++;
+        comboTimer = 60;
+        score += 100 * Math.max(1, Math.min(comboCount, 8));
+        shake = Math.min(shake + 4, 14);
+      } else {
+        score += 10;
+        burst(other.position.x, other.position.y, '#f5f5f5', 5);
+      }
+      scoreEl.textContent = score.toLocaleString();
+    }
+  });
+
+  // --- Main loop -----------------------------------------------------------------
+  let lastTime = performance.now();
+  function loop(t) {
+    const dt = Math.min(32, t - lastTime);
+    lastTime = t;
+    Engine.update(engine, dt);
+    updateAim();
+    fireBtn.disabled = !!activeBall || ballsLeft <= 0 || gameOver;
+    if (recoil > 0) recoil = Math.max(0, recoil - 0.06);
+    if (muzzleFlash > 0) muzzleFlash = Math.max(0, muzzleFlash - 0.12);
+
+    // The catcher tray drifts back and forth along the bottom -- Peggle's
+    // "free ball" bucket. Position updates even with no ball in flight so it
+    // reads as alive/ambient rather than only moving mid-shot.
+    if (catcher) {
+      catcher.x += catcher.dir * 2.4;
+      const half = catcher.width / 2;
+      if (catcher.x - half < 40) { catcher.x = 40 + half; catcher.dir = 1; }
+      if (catcher.x + half > W - 40) { catcher.x = W - 40 - half; catcher.dir = -1; }
+    }
+
+    // Ball lifecycle: caught by the tray, or fell past it off the bottom.
+    if (activeBall) {
+      trail.push({ x: activeBall.position.x, y: activeBall.position.y, a: activeBall.angle });
+      if (trail.length > 14) trail.shift();
+
+      const catcherY = H - 46;
+      if (
+        catcher &&
+        activeBall.position.y > catcherY - PEG_R &&
+        activeBall.position.y < catcherY + 20 &&
+        Math.abs(activeBall.position.x - catcher.x) < catcher.width / 2
+      ) {
+        World.remove(world, activeBall);
+        activeBall = null;
+        trail = [];
+        ballsLeft++;
+        renderBallsRow();
+        burst(catcher.x, catcherY, '#ffffff', 24);
+        shake = Math.min(shake + 6, 14);
+      } else if (activeBall.position.y > H + 80) {
+        World.remove(world, activeBall);
+        activeBall = null;
+        trail = [];
+        comboCount = 0;
+        checkEndState();
+      }
+    }
+
+    if (comboTimer > 0) comboTimer--; else comboCount = 0;
+
+    draw();
+    requestAnimationFrame(loop);
+  }
+
+  function checkEndState() {
+    const remaining = pegs.filter((p) => p.type === 'target' && p.alive).length;
+    if (remaining === 0) {
+      endGame(true);
+    } else if (ballsLeft <= 0 && !activeBall) {
+      endGame(false);
+    }
+  }
+
+  function endGame(won) {
+    gameOver = true;
+    overlayTitle.textContent = won ? 'Level Clear' : 'Out of Balls';
+    overlaySub.textContent = won
+      ? `Every target cleared — final score ${score.toLocaleString()}.`
+      : `${pegs.filter((p) => p.type === 'target' && p.alive).length} targets left standing. Final score ${score.toLocaleString()}.`;
+    setTimeout(() => overlay.classList.add('show'), 350);
+  }
+
+  document.getElementById('retry-btn').addEventListener('click', () => {
+    location.reload();
+  });
+
+  // --- Drawing ---------------------------------------------------------------
+  function drawGrid() {
+    ctx.save();
+    ctx.strokeStyle = 'rgba(230,57,70,0.06)';
+    ctx.lineWidth = 1;
+    const step = 52;
+    for (let x = 0; x < W; x += step) {
+      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
+    }
+    for (let y = 0; y < H; y += step) {
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  function drawLauncher() {
+    const pulse = 0.5 + 0.5 * Math.sin(performance.now() / 260);
+
+    // Fixed mount plate under the turret -- a hex pad that doesn't rotate,
+    // so the turret head reads as sitting on something rather than floating.
+    ctx.save();
+    ctx.translate(launcherX, launcherY);
+    ctx.beginPath();
+    for (let i = 0; i < 6; i++) {
+      const a = (i / 6) * Math.PI * 2 - Math.PI / 2;
+      const px = Math.cos(a) * 34, py = 8 + Math.sin(a) * 12;
+      i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+    }
+    ctx.closePath();
+    const padGrad = ctx.createLinearGradient(0, -4, 0, 20);
+    padGrad.addColorStop(0, '#2a1e1c');
+    padGrad.addColorStop(1, '#0a0706');
+    ctx.fillStyle = padGrad;
+    ctx.fill();
+    ctx.strokeStyle = `rgba(230,57,70,${0.35 + pulse * 0.25})`;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    ctx.restore();
+
+    ctx.save();
+    ctx.translate(launcherX, launcherY);
+    // Canvas rotate() is clockwise for a positive angle, which is the
+    // opposite sense from the vx = sin(aimAngle) used for the fired ball
+    // (and from aim-left/aim-right decreasing/increasing aimAngle) -- negate
+    // it here so the turret visibly points the same way the ball actually
+    // goes instead of mirrored.
+    ctx.rotate(-aimAngle);
+    // Recoil pulls the whole turret back away from the firing direction
+    // right after a shot, then eases forward again.
+    ctx.translate(0, -recoil * 10);
+
+    // Aim guide (dotted trajectory hint) from the muzzle tip down the field.
+    ctx.save();
+    ctx.setLineDash([6, 10]);
+    ctx.strokeStyle = 'rgba(230,57,70,0.32)';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(0, 52);
+    ctx.lineTo(0, H * 0.55);
+    ctx.stroke();
+    ctx.restore();
+
+    // Side fins on the housing.
+    ctx.fillStyle = '#1a1211';
+    ctx.strokeStyle = 'rgba(230,57,70,0.5)';
+    ctx.lineWidth = 1.5;
+    [-1, 1].forEach((side) => {
+      ctx.beginPath();
+      ctx.moveTo(side * 14, -22);
+      ctx.lineTo(side * 30, -12);
+      ctx.lineTo(side * 26, 2);
+      ctx.lineTo(side * 14, -4);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+    });
+
+    // Turret housing (the wide body the barrel emerges from).
+    const bodyGrad = ctx.createLinearGradient(-18, -30, 18, 6);
+    bodyGrad.addColorStop(0, '#4a3230');
+    bodyGrad.addColorStop(0.5, '#221715');
+    bodyGrad.addColorStop(1, '#050302');
+    ctx.fillStyle = bodyGrad;
+    ctx.beginPath();
+    ctx.roundRect(-19, -30, 38, 36, 12);
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(230,57,70,0.65)';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Glowing core window, pulsing gently even when idle.
+    ctx.save();
+    ctx.shadowColor = `rgba(230,57,70,${0.6 + pulse * 0.4})`;
+    ctx.shadowBlur = 14 + pulse * 10;
+    const coreGrad = ctx.createRadialGradient(0, -16, 0, 0, -16, 9);
+    coreGrad.addColorStop(0, '#fff');
+    coreGrad.addColorStop(0.4, '#ff5c66');
+    coreGrad.addColorStop(1, '#7a1119');
+    ctx.fillStyle = coreGrad;
+    ctx.beginPath();
+    ctx.arc(0, -16, 7, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+
+    // Barrel, banded with a couple of raised rings, pointing toward the field.
+    const barrelGrad = ctx.createLinearGradient(-11, 0, 11, 0);
+    barrelGrad.addColorStop(0, '#0d0908');
+    barrelGrad.addColorStop(0.45, '#3a2826');
+    barrelGrad.addColorStop(0.55, '#3a2826');
+    barrelGrad.addColorStop(1, '#0d0908');
+    ctx.fillStyle = barrelGrad;
+    ctx.beginPath();
+    ctx.roundRect(-11, 0, 22, 50, 6);
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(230,57,70,0.55)';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+    ctx.fillStyle = 'rgba(230,57,70,0.55)';
+    ctx.fillRect(-11, 16, 22, 4);
+    ctx.fillRect(-11, 32, 22, 4);
+
+    // Muzzle ring.
+    ctx.beginPath();
+    ctx.arc(0, 50, 9, 0, Math.PI * 2);
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Muzzle flash, only right after firing.
+    if (muzzleFlash > 0) {
+      ctx.save();
+      ctx.globalAlpha = muzzleFlash;
+      ctx.shadowColor = '#fff';
+      ctx.shadowBlur = 30;
+      ctx.fillStyle = '#fff8f0';
+      ctx.beginPath();
+      ctx.arc(0, 50, 6 + muzzleFlash * 14, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = '#ff8a91';
+      ctx.lineWidth = 2;
+      for (let i = 0; i < 6; i++) {
+        const a = (i / 6) * Math.PI * 2;
+        ctx.beginPath();
+        ctx.moveTo(Math.cos(a) * 8, 50 + Math.sin(a) * 8);
+        ctx.lineTo(Math.cos(a) * (10 + muzzleFlash * 26), 50 + Math.sin(a) * (10 + muzzleFlash * 26));
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+
+    ctx.restore();
+  }
+
+  function drawPeg(entry) {
+    if (!entry.alive) return;
+    const { x, y } = entry.body.position;
+    const r = entry.body.circleRadius;
+    const flash = entry.hitFlash;
+    entry.hitFlash = Math.max(0, entry.hitFlash - 0.06);
+    const isTarget = entry.type === 'target';
+
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.shadowColor = flash > 0 ? 'rgba(255,255,255,0.95)' : isTarget ? 'rgba(230,57,70,0.65)' : 'rgba(245,245,245,0.25)';
+    ctx.shadowBlur = 8 + flash * 24;
+
+    const grad = ctx.createRadialGradient(-r * 0.3, -r * 0.35, 1, 0, 0, r);
+    if (flash > 0) {
+      grad.addColorStop(0, '#ffffff');
+      grad.addColorStop(1, isTarget ? '#ffb3b8' : '#e9e9e9');
+    } else if (isTarget) {
+      grad.addColorStop(0, '#ff6b74');
+      grad.addColorStop(0.6, '#E63946');
+      grad.addColorStop(1, '#7a1119');
+    } else {
+      grad.addColorStop(0, '#4a3230');
+      grad.addColorStop(0.6, '#241614');
+      grad.addColorStop(1, '#0e0908');
+    }
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.arc(0, 0, r, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.strokeStyle = isTarget ? 'rgba(255,255,255,0.35)' : 'rgba(230,57,70,0.5)';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawCatcher() {
+    if (!catcher) return;
+    const y = H - 46;
+    const half = catcher.width / 2;
+    ctx.save();
+    ctx.shadowColor = 'rgba(230,57,70,0.6)';
+    ctx.shadowBlur = 16;
+    const grad = ctx.createLinearGradient(catcher.x - half, y, catcher.x + half, y + 22);
+    grad.addColorStop(0, '#3a2422');
+    grad.addColorStop(0.5, '#E63946');
+    grad.addColorStop(1, '#3a2422');
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.roundRect(catcher.x - half, y, catcher.width, 20, 8);
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,0.4)';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    ctx.fillStyle = 'rgba(255,255,255,0.85)';
+    ctx.font = '600 10px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText('FREE BALL', catcher.x, y + 13);
+    ctx.restore();
+  }
+
+  function drawBallTrail() {
+    for (let i = 0; i < trail.length; i++) {
+      const p = trail[i];
+      const t = i / trail.length;
+      ctx.save();
+      ctx.globalAlpha = t * 0.35;
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.a);
+      const r = BALL_R * (0.4 + t * 0.6);
+      ctx.beginPath();
+      ctx.arc(0, 0, r, 0, Math.PI * 2);
+      ctx.fillStyle = '#E63946';
+      ctx.fill();
+      ctx.restore();
+    }
+  }
+
+  function drawBall() {
+    if (!activeBall) return;
+    const { x, y } = activeBall.position;
+    const angle = activeBall.angle;
+    ctx.save();
+    ctx.translate(x, y);
+
+    // Outer glow
+    ctx.save();
+    ctx.shadowColor = 'rgba(230,57,70,0.9)';
+    ctx.shadowBlur = 26;
+    ctx.beginPath();
+    ctx.arc(0, 0, BALL_R, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(230,57,70,0.001)';
+    ctx.fill();
+    ctx.restore();
+
+    ctx.rotate(angle);
+    ctx.beginPath();
+    ctx.arc(0, 0, BALL_R, 0, Math.PI * 2);
+    ctx.clip();
+
+    if (logoReady) {
+      ctx.fillStyle = '#0d0d0d';
+      ctx.fillRect(-BALL_R, -BALL_R, BALL_R * 2, BALL_R * 2);
+      ctx.drawImage(logoImg, -BALL_R, -BALL_R, BALL_R * 2, BALL_R * 2);
+    } else {
+      ctx.fillStyle = '#E63946';
+      ctx.fillRect(-BALL_R, -BALL_R, BALL_R * 2, BALL_R * 2);
+    }
+
+    // glass highlight
+    const shine = ctx.createRadialGradient(-BALL_R * 0.35, -BALL_R * 0.4, 1, 0, 0, BALL_R * 1.3);
+    shine.addColorStop(0, 'rgba(255,255,255,0.55)');
+    shine.addColorStop(0.3, 'rgba(255,255,255,0.08)');
+    shine.addColorStop(1, 'rgba(255,255,255,0)');
+    ctx.fillStyle = shine;
+    ctx.fillRect(-BALL_R, -BALL_R, BALL_R * 2, BALL_R * 2);
+
+    ctx.restore();
+
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.beginPath();
+    ctx.arc(0, 0, BALL_R, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(255,255,255,0.5)';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawParticles() {
+    for (let i = particles.length - 1; i >= 0; i--) {
+      const p = particles[i];
+      p.x += p.vx; p.y += p.vy;
+      p.vy += 0.18;
+      p.life -= p.decay;
+      if (p.life <= 0) { particles.splice(i, 1); continue; }
+      ctx.save();
+      ctx.globalAlpha = Math.max(0, p.life);
+      ctx.fillStyle = p.color;
+      ctx.shadowColor = p.color;
+      ctx.shadowBlur = 8;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+
+    ctx.save();
+    if (shake > 0) {
+      const dx = (Math.random() - 0.5) * shake;
+      const dy = (Math.random() - 0.5) * shake;
+      ctx.translate(dx, dy);
+      shake *= 0.85;
+      if (shake < 0.2) shake = 0;
+    }
+
+    drawGrid();
+    drawCatcher();
+    pegs.forEach(drawPeg);
+    drawBallTrail();
+    drawBall();
+    drawParticles();
+    if (!activeBall && ballsLeft > 0 && !gameOver) drawLauncher();
+
+    ctx.restore();
+  }
+
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>

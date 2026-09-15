@@ -143,22 +143,24 @@
                 </div>
             `;
             item.innerHTML = `
-                <h3 class="locator__item-name">${shortStoreName}${dist}</h3>
                 <div class="locator__item-top">
                     ${photo}
                     <div class="locator__item-info">
+                        <h3 class="locator__item-name">${shortStoreName}${dist}</h3>
                         <p>${store.address}<br>${store.city}, ${store.state} ${store.zip}</p>
                         ${moreInfo}
                     </div>
                 </div>
                 <div class="locator__item-bottom">
-                    <p class="locator__hours">${HOURS}</p>
-                    <a class="locator__phone" href="tel:+1${PHONE_TEL}">${PHONE}</a>
+                    <div class="locator__item-bottom-text">
+                        <p class="locator__hours">${HOURS}</p>
+                        <a class="locator__phone" href="tel:+1${PHONE_TEL}">${PHONE}</a>
+                    </div>
+                    <div class="locator__item-actions">
+                        <a class="locator__directions" href="${directionsUrl(store)}" target="_blank" rel="noopener noreferrer">Directions${photo ? arrow : ""}</a>
+                    </div>
                 </div>
                 ${mobileCard}
-                <div class="locator__item-actions">
-                    <a class="locator__directions" href="${directionsUrl(store)}" target="_blank" rel="noopener noreferrer">Directions${photo ? arrow : ""}</a>
-                </div>
             `;
             item.addEventListener("click", (e) => {
                 if (e.target.closest(".locator__directions, .locator__phone, .locator__more-info")) return;
@@ -175,7 +177,32 @@
             });
             listEl.appendChild(item);
         });
+        requestAnimationFrame(squareMobilePhotos);
     }
+
+    // Sizes each mobile-card photo (inline, in px) to exactly match its own
+    // row's text-column height, so it's a true square flush with the card's
+    // padding on every side -- see the comment on .locator__mobile-card in
+    // style.css for why this has to happen in JS rather than pure CSS.
+    function squareMobilePhotos() {
+        if (!listEl || !window.matchMedia("(max-width: 902px)").matches) return;
+        listEl.querySelectorAll(".locator__mobile-card").forEach((card) => {
+            const info = card.querySelector(".locator__mobile-info");
+            const photo = card.querySelector(".locator__item-photo");
+            if (!info || !photo) return;
+            const h = info.offsetHeight;
+            if (h) {
+                photo.style.width = h + "px";
+                photo.style.height = h + "px";
+            }
+        });
+    }
+
+    let resizeTimer;
+    window.addEventListener("resize", () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(squareMobilePhotos, 150);
+    });
 
     // Great-circle distance in miles.
     function haversineMiles(lat1, lon1, lat2, lon2) {

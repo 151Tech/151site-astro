@@ -24,19 +24,12 @@ export const COMPONENTS = {
         type: 'option',
         display_name: 'Category',
         description: 'Which menu section this drink belongs under (Coffee, Cold Brew, Energy, etc.). Controls where it appears on the menu.',
-        options: [
-          { value: 'categories/coffee', name: 'Coffee' },
-          { value: 'categories/coldbrew', name: 'Cold Brew' },
-          { value: 'categories/dirtypop', name: 'Dirty Pop' },
-          { value: 'categories/energy', name: 'Energy Drinks' },
-          { value: 'categories/hotfood', name: 'Hot Food' },
-          { value: 'categories/kids', name: 'Kids' },
-          { value: 'categories/refreshers', name: 'Refreshers' },
-          { value: 'categories/smoothies', name: 'Smoothies' },
-          { value: 'categories/teas', name: 'Teas' },
-          { value: 'categories/treats', name: 'Treats' },
-          { value: 'categories/misc', name: 'Misc' },
-        ],
+        // Sourced live from the `category` stories under categories/ instead of
+        // a hand-maintained list, so a new category shows up here as soon as
+        // it's created in Storyblok -- no schema push required.
+        source: 'internal_stories',
+        filter_content_type: ['category'],
+        folder_slug: 'categories',
       }, // Storyblok slug of the matching category story
       subtitle: { type: 'text' },
       description: { type: 'textarea' },

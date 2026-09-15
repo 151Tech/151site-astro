@@ -924,6 +924,13 @@ nav.nav-scrolled .nav-container {
     transform: translateX(-50%) rotate(-6deg);
 }
 
+/* The one signature that's secretly a link (see index.astro) -- looks
+   identical to the rest so it reads as a found-it moment, not a button. */
+.cta-signature--link {
+    text-decoration: none;
+    cursor: pointer;
+}
+
 .cta-content {
     position: relative;
     z-index: 1;
@@ -3452,4 +3459,116 @@ html:has(.loc-fullpage), body:has(.loc-fullpage) { overflow: hidden; }
 /* The subpage hero stacks two plates, so they need to clear each other. */
 .page-hero .page-hero-content p {
     margin-top: 0.6rem;
+}
+
+/* Easter egg: 20 clicks in a row on any page (see public/js/click-egg.js). */
+#click-egg-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(6, 4, 4, 0.88);
+    cursor: default;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+}
+#click-egg-overlay.click-egg-dismissable {
+    cursor: pointer;
+}
+#click-egg-overlay.click-egg-show {
+    opacity: 1;
+}
+#click-egg-overlay.click-egg-leaving {
+    opacity: 0;
+}
+#click-egg-confetti {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+#click-egg-spotlight {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: min(900px, 140vw);
+    height: min(900px, 140vw);
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, rgba(230, 57, 70, 0.35) 0%, rgba(230, 57, 70, 0.12) 35%, transparent 68%);
+    pointer-events: none;
+}
+#click-egg-panel {
+    position: relative;
+    text-align: center;
+    padding: 0 2rem;
+    max-width: 640px;
+    transform: scale(0.4);
+    opacity: 0;
+    transition: transform 0.5s cubic-bezier(0.2, 1.6, 0.4, 1), opacity 0.3s ease;
+}
+#click-egg-overlay.click-egg-show #click-egg-panel {
+    transform: scale(1);
+    opacity: 1;
+}
+#click-egg-heading {
+    margin: 0;
+    font-family: var(--font-bebas-neue), sans-serif;
+    font-size: clamp(3.5rem, 12vw, 7rem);
+    letter-spacing: 0.06em;
+    line-height: 1;
+    background: linear-gradient(180deg, #ffffff, var(--red) 85%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 0 50px rgba(230, 57, 70, 0.6);
+}
+#click-egg-sub {
+    margin-top: 1.25rem;
+    font-size: 1.15rem;
+    line-height: 1.5;
+    color: var(--white);
+}
+#click-egg-hint {
+    margin-top: 1.5rem;
+    font-size: 0.8rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(245, 245, 245, 0.5);
+}
+#click-egg-close {
+    position: absolute;
+    top: -2.75rem;
+    right: -0.5rem;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid rgba(245, 245, 245, 0.25);
+    background: rgba(20, 13, 12, 0.7);
+    color: var(--white);
+    font-size: 1.4rem;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: not-allowed;
+    opacity: 0.35;
+    transition: opacity 0.2s ease, transform 0.15s ease, border-color 0.2s ease;
+}
+#click-egg-close:not(:disabled) {
+    cursor: pointer;
+    opacity: 1;
+    border-color: rgba(230, 57, 70, 0.6);
+}
+#click-egg-close:not(:disabled):hover {
+    transform: scale(1.08);
+    border-color: var(--red);
+}
+@media (prefers-reduced-motion: reduce) {
+    #click-egg-overlay,
+    #click-egg-panel {
+        transition: none;
+    }
 }
