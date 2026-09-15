@@ -2380,8 +2380,58 @@ footer {
 
 .crisp {
     width: 100%;
+    min-height: 650px;
     border-radius: var(--radius);
     overflow: hidden;
+    position: relative;
+}
+
+/* The Crisp embeds (gift card / loyalty check) are third-party apps that
+   paint in visibly over a second or so. Fading the iframe in and covering
+   that gap with a spinner reads as an intentional load instead of a
+   choppy pop-in. */
+.crisp iframe {
+    opacity: 0;
+    transition: opacity 0.6s ease;
+}
+
+.crisp.crisp-loaded iframe {
+    opacity: 1;
+}
+
+.crisp-loader {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--white);
+    transition: opacity 0.5s ease;
+}
+
+.crisp.crisp-loaded .crisp-loader {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.crisp-loader::after {
+    content: '';
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 3px solid rgba(230,57,70,0.2);
+    border-top-color: var(--red);
+    animation: crisp-spin 0.8s linear infinite;
+}
+
+@keyframes crisp-spin {
+    to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .crisp iframe { transition: none; }
+    .crisp-loader { transition: none; }
+    .crisp-loader::after { animation: none; }
 }
 
 /* ─── Invest Banner ─── */

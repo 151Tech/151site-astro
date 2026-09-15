@@ -186,17 +186,28 @@ const giftCardFooterBtn = document.getElementById('giftCardFooterBtn');
 const giftCardFooterSupportBtn = document.getElementById('giftCardFooterSupportBtn');
 const closeGiftCardModal = document.getElementById('closeGiftCardModal');
 
+// Crisp's embedded apps (gift card / loyalty check) paint in visibly after
+// the iframe starts loading. Keeping the iframe hidden behind a spinner
+// (see .crisp-loader in style.css) until its 'load' event fires turns that
+// choppy pop-in into a deliberate fade.
+function activateCrispEmbed(modal) {
+    const wrapper = modal.querySelector('.crisp');
+    const iframe = modal.querySelector('iframe[data-src]');
+    if (!iframe) return; // already activated on a previous open
+    iframe.addEventListener('load', function() {
+        wrapper?.classList.add('crisp-loaded');
+    }, { once: true });
+    iframe.src = iframe.getAttribute('data-src');
+    iframe.removeAttribute('data-src');
+}
+
 // The gift-card balance checker is a full third-party embedded app (Crisp).
 // Loading its iframe eagerly would run that app's JS on every single page
 // view, even though almost nobody opens this modal - so its src is set only
 // the first time the modal is actually opened.
 function openGiftCardModal() {
     if (!giftCardModal) return;
-    const iframe = giftCardModal.querySelector('iframe[data-src]');
-    if (iframe) {
-        iframe.src = iframe.getAttribute('data-src');
-        iframe.removeAttribute('data-src');
-    }
+    activateCrispEmbed(giftCardModal);
     giftCardModal.classList.add('active');
 }
 
@@ -247,11 +258,7 @@ const closeLoyaltyModal = document.getElementById('closeLoyaltyModal');
 // iframe src is set only the first time the modal is actually opened.
 function openLoyaltyModal() {
     if (!loyaltyModal) return;
-    const iframe = loyaltyModal.querySelector('iframe[data-src]');
-    if (iframe) {
-        iframe.src = iframe.getAttribute('data-src');
-        iframe.removeAttribute('data-src');
-    }
+    activateCrispEmbed(loyaltyModal);
     loyaltyModal.classList.add('active');
 }
 
