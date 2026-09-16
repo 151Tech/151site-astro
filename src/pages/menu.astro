@@ -752,7 +752,12 @@ const decideDrinksJson = JSON.stringify(decideDrinksArr);
     function categoryVisible(tab) {
       var meta = CATEGORIES_META[tab];
       if (!meta) return true;
-      if (!selectedStore) return !meta.hiddenByDefault;
+      // hiddenByDefault is an absolute "nothing is in this section right now"
+      // switch -- it must win even after a location is picked, otherwise
+      // picking a store re-reveals a category (e.g. an empty seasonal
+      // lineup) that unavailableAt was never asked to hide per-location.
+      if (meta.hiddenByDefault) return false;
+      if (!selectedStore) return true;
       return meta.unavailableAt.indexOf(selectedStore) === -1;
     }
     function drinkVisible(slug) {
