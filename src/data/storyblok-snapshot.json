@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-15T20:31:49.112Z",
+  "generatedAt": "2026-09-16T16:58:34.672Z",
   "stories": {
     "settings/global": {
       "nav": [
@@ -1752,7 +1752,70 @@
   "collections": {
     "drinks": [
       {
+        "slug": "pumpkin-spice-chai",
+        "uuid": "24a45bf6-ac1e-49ca-adb9-547ae513e43c",
+        "content": {
+          "_uid": "b9e6af1b-0cda-4994-9ca3-effe485f7664",
+          "name": "Pumpkin Spice Chai",
+          "tags": [],
+          "badge": "",
+          "image": {
+            "id": 220360708685075,
+            "alt": "",
+            "name": "",
+            "focus": "",
+            "title": "",
+            "source": "",
+            "filename": "https://a.storyblok.com/f/294671107081428/1350x1350/6eb5e39dc3/pumpkin-spice-chai.jpg",
+            "copyright": "",
+            "fieldtype": "asset",
+            "meta_data": {
+              "size": "1350x1350"
+            },
+            "is_external_url": false
+          },
+          "category": "categories/lto",
+          "subtitle": "Pumpkin & Spiced Chai",
+          "component": "drink",
+          "menuOrder": "3",
+          "description": "Chai spiced up with pumpkin. Warm, cozy, and just sweet enough.",
+          "unavailableAt": []
+        }
+      },
+      {
+        "slug": "pumpkin-spice-latte",
+        "uuid": "27387c5e-aaa5-4c88-9df9-de2be9fb4be6",
+        "content": {
+          "_uid": "093a48d9-7bf1-4dc9-a7d9-a0f9fb7d2439",
+          "name": "Pumpkin Spice Latte",
+          "tags": [],
+          "badge": "",
+          "image": {
+            "id": 220360708697364,
+            "alt": "",
+            "name": "",
+            "focus": "",
+            "title": "",
+            "source": "",
+            "filename": "https://a.storyblok.com/f/294671107081428/1350x1350/d621dcfaae/pumpkin-spice-latte.jpg",
+            "copyright": "",
+            "fieldtype": "asset",
+            "meta_data": {
+              "size": "1350x1350"
+            },
+            "is_external_url": false
+          },
+          "category": "categories/lto",
+          "subtitle": "Pumpkin",
+          "component": "drink",
+          "menuOrder": "2",
+          "description": "Our take on the classic. Real pumpkin spice, espresso, and steamed milk.",
+          "unavailableAt": []
+        }
+      },
+      {
         "slug": "pumpkin-caramel-brulee",
+        "uuid": "37160952-65b4-488b-b9ca-fe331b980067",
         "content": {
           "_uid": "eb695925-fb02-4757-b7ef-5313a4b41701",
           "name": "Pumpkin Caramel Brulee",
@@ -1784,16 +1847,17 @@
             },
             "is_external_url": false
           },
-          "category": "",
+          "category": "categories/lto",
           "subtitle": "Pumpkin & Salted Caramel",
           "component": "drink",
           "menuOrder": "1",
-          "description": "",
+          "description": "Pumpkin and salted caramel, layered over espresso and finished with a brulee drizzle. Fall in a cup.",
           "unavailableAt": []
         }
       },
       {
         "slug": "hotfood-green-chile-burrito",
+        "uuid": "47fccf5e-03d4-4d99-a0bc-7a597120ab40",
         "content": {
           "_uid": "f0f60d1f-3c6e-4bda-91ec-6aafbc70e8b1",
           "name": "Green Chile Burrito",
@@ -1810,6 +1874,7 @@
       },
       {
         "slug": "treats-whookie-gf-cookie",
+        "uuid": "65bf2af0-ef8a-4128-8dd3-993d151fa0e8",
         "content": {
           "_uid": "81e5c4f9-d193-409d-b593-73bf132c3072",
           "name": "Whookie GF Cookie",
@@ -1846,6 +1911,7 @@
       },
       {
         "slug": "treats-snickerdoodle",
+        "uuid": "3562dc8d-88cd-4cb5-81c7-5820747435d6",
         "content": {
           "_uid": "9cc2caa3-ad4d-4c7b-85f5-a4184fa2693b",
           "name": "Snickerdoodle",
@@ -1882,6 +1948,7 @@
       },
       {
         "slug": "treats-sea-salt-chocolate-chip",
+        "uuid": "06cb9f69-ea12-497e-a4cc-e3282c73c919",
         "content": {
           "_uid": "d8267930-d8f9-434b-8184-4bb701091049",
           "name": "Sea Salt Chocolate Chip",
@@ -1918,6 +1985,7 @@
       },
       {
         "slug": "treats-pumpkin-spice-bread",
+        "uuid": "c241c701-3d65-47a2-9b49-26cae420c091",
         "content": {
           "_uid": "96a0cf4f-b885-46a5-81df-45bb2c5395b1",
           "name": "Pumpkin Spice Bread",
@@ -1954,6 +2022,7 @@
       },
       {
         "slug": "treats-peanut-butter",
+        "uuid": "20d4ab99-5f55-4e2f-8120-549a7568a30a",
         "content": {
           "_uid": "5b476439-bd70-4df7-bd28-52a6557432b2",
           "name": "Peanut Butter Cookie",
@@ -1984,6 +2053,7 @@
       },
       {
         "slug": "treats-lemon-pound-cake",
+        "uuid": "22ed15f6-8307-46ba-8979-72792dc7536a",
         "content": {
           "_uid": "8c6d195c-4246-4877-9434-11cac5ec80e0",
           "name": "Lemon Pound Cake",
@@ -2020,6 +2090,7 @@
       },
       {
         "slug": "treats-hippie-gf-cookie",
+        "uuid": "5aa0e717-c9bf-406d-b72d-8ba471644883",
         "content": {
           "_uid": "34a529bd-5160-4b14-b7da-155530c8f771",
           "name": "\"Hippie\" GF Cookie",
@@ -2050,6 +2121,7 @@
       },
       {
         "slug": "treats-cinnamon-chip-crumbcake",
+        "uuid": "6879dc6c-0996-46ab-b079-9d4d4e9b3bd5",
         "content": {
           "_uid": "b2d60e5a-8823-44f2-aa6c-0af90349f49a",
           "name": "Cinnamon Chip Crumbcake",
@@ -2086,6 +2158,7 @@
       },
       {
         "slug": "treats-cake-pops",
+        "uuid": "abed7bc3-cc3d-4970-a486-73a63f23ef66",
         "content": {
           "_uid": "3bb2422b-2f14-447b-ac18-aa081a4dff76",
           "name": "Cake Pops",
@@ -2122,6 +2195,7 @@
       },
       {
         "slug": "treats-blueberry-lemon-muffin-top",
+        "uuid": "63cafcda-9e21-4104-894b-2d0185e74f03",
         "content": {
           "_uid": "b35460b9-cdd3-4b35-adf9-562367f3c157",
           "name": "Blueberry-Lemon Muffin Top",
@@ -2158,6 +2232,7 @@
       },
       {
         "slug": "treats-banana-walnut-bread",
+        "uuid": "bf774317-2f27-493d-89cc-b8f35d2b3424",
         "content": {
           "_uid": "8aaa2faf-b5c0-4f9f-a92e-22f2443dc1df",
           "name": "Banana Walnut Bread",
@@ -2194,6 +2269,7 @@
       },
       {
         "slug": "teas-sweet-tea",
+        "uuid": "80b3d913-8db7-45c5-a8c6-642915e1d0db",
         "content": {
           "_uid": "cc262361-af40-4106-9bba-9ca99bd46850",
           "name": "Sweet Tea",
@@ -2230,6 +2306,7 @@
       },
       {
         "slug": "teas-pomekazi",
+        "uuid": "bde0875e-da57-4721-8c4c-060f3e814c89",
         "content": {
           "_uid": "eb2f3be6-a470-4458-b8b5-407b3e373730",
           "name": "Pomekazi",
@@ -2271,6 +2348,7 @@
       },
       {
         "slug": "teas-georgia-peach",
+        "uuid": "b2c015b9-6493-482c-86db-bfce4d572114",
         "content": {
           "_uid": "6ffa4be4-0836-486b-94f9-1e8dc4b2b1e5",
           "name": "Georgia Peach",
@@ -2312,6 +2390,7 @@
       },
       {
         "slug": "teas-berry-refresher",
+        "uuid": "260be4d1-1d7e-43de-ba4c-00e0391c5182",
         "content": {
           "_uid": "061c45a1-7878-410a-adce-f8de7f5e4479",
           "name": "Berry Refresher",
@@ -2353,6 +2432,7 @@
       },
       {
         "slug": "smoothies-strawberry-lemonade",
+        "uuid": "c17b4b93-f384-45cb-8978-cde7dd9af330",
         "content": {
           "_uid": "70beabe5-b8d2-4a85-ac62-70555399bb1c",
           "name": "Strawberry Lemonade",
@@ -2394,6 +2474,7 @@
       },
       {
         "slug": "smoothies-pina-colada",
+        "uuid": "c24278cc-b160-479a-9553-e1e1a7bbc640",
         "content": {
           "_uid": "8b06c648-3755-4116-9b73-fa8218752a69",
           "name": "Pina Colada",
@@ -2435,6 +2516,7 @@
       },
       {
         "slug": "smoothies-georgia-peach",
+        "uuid": "71b5ac44-5e63-4f9f-9369-359f2cdf93c2",
         "content": {
           "_uid": "ab89c008-2f18-4437-9e0c-94533431ebef",
           "name": "Georgia Peach",
@@ -2476,6 +2558,7 @@
       },
       {
         "slug": "smoothies-aloha",
+        "uuid": "9141dd6e-03f5-4705-ae5d-a965c25941f8",
         "content": {
           "_uid": "313e15e6-61a8-469d-89c3-c770aa99e896",
           "name": "Aloha",
@@ -2522,6 +2605,7 @@
       },
       {
         "slug": "refreshers-purple-dragon",
+        "uuid": "7d90818c-d346-4897-a703-60ec91b98d9b",
         "content": {
           "_uid": "20235bcd-ea27-4223-939a-91e219c2d3d8",
           "name": "Purple Dragon",
@@ -2568,6 +2652,7 @@
       },
       {
         "slug": "refreshers-pink-drink",
+        "uuid": "026f0479-2161-48ac-bf2e-9857c30b7c65",
         "content": {
           "_uid": "ad28bf73-89fd-4eb8-a135-23a7a5ee6b9e",
           "name": "Pink Drink",
@@ -2614,6 +2699,7 @@
       },
       {
         "slug": "refreshers-peaches-and-cream",
+        "uuid": "e3bb935a-1395-4edb-a188-82c8c0065c76",
         "content": {
           "_uid": "3faa14e8-2d50-4db3-a0f2-035f4a655a79",
           "name": "Peaches & Cream",
@@ -2655,6 +2741,7 @@
       },
       {
         "slug": "refreshers-mango-dream",
+        "uuid": "d45e07f3-0584-4a8f-aa50-652a00304abd",
         "content": {
           "_uid": "1e26674c-635b-4a39-aaa5-2e6cf0993d3b",
           "name": "Mango Dream",
@@ -2701,6 +2788,7 @@
       },
       {
         "slug": "kids-hot-cocoa",
+        "uuid": "8b4c96d9-e40e-4283-a2d9-69ba2d1fd5ba",
         "content": {
           "_uid": "7779a8be-924f-431d-ae73-5261bb30f13f",
           "name": "Hot Cocoa",
@@ -2737,6 +2825,7 @@
       },
       {
         "slug": "kids-hot-cider",
+        "uuid": "8151340c-a8da-4333-828c-92e83cc8fe10",
         "content": {
           "_uid": "957cbe63-9ec2-417b-81ff-5a357cb82d59",
           "name": "Hot Cider",
@@ -2767,6 +2856,7 @@
       },
       {
         "slug": "kids-chocolate-milk",
+        "uuid": "6f7cd88c-0402-4e1b-bbe2-bdd34de3a5a7",
         "content": {
           "_uid": "54aea9f7-781b-4d42-b2b4-6c98aa573587",
           "name": "Chocolate Milk",
@@ -2803,6 +2893,7 @@
       },
       {
         "slug": "kids-apple-juice",
+        "uuid": "41523a2f-4b94-481f-9fea-9884e41c76de",
         "content": {
           "_uid": "cdebf908-bc50-4a82-acd5-87406ba92179",
           "name": "Apple Juice",
@@ -2833,6 +2924,7 @@
       },
       {
         "slug": "hotfood-ultimate-burrito",
+        "uuid": "724e750f-ce49-4c04-a635-fbd9ba8e9d9c",
         "content": {
           "_uid": "188c866b-9283-4d58-bceb-b3c8b4dbbd71",
           "name": "The Ultimate Burrito",
@@ -2863,6 +2955,7 @@
       },
       {
         "slug": "hotfood-sticky-bun-coffee-cake",
+        "uuid": "4dfaa2b5-a252-4fb1-b59c-cd1548b03cc1",
         "content": {
           "_uid": "bd2f3fa6-b2f7-4e26-8b42-1fb57d8cb8b8",
           "name": "Sticky Bun Coffee Cake",
@@ -2893,6 +2986,7 @@
       },
       {
         "slug": "hotfood-maple-waffle",
+        "uuid": "2de2c66f-153c-4ae5-a051-0085ab1cbd3c",
         "content": {
           "_uid": "7f284768-0fcc-41fc-afcd-d861b5bc46da",
           "name": "Maple Waffle",
@@ -2923,6 +3017,7 @@
       },
       {
         "slug": "hotfood-jalapeno-biscuit",
+        "uuid": "9d383b2d-89ad-4ffc-ad3a-e3390b4352ef",
         "content": {
           "_uid": "6787649c-3d6b-4385-a54f-12eb7f2adafd",
           "name": "Jalapeno Biscuit",
@@ -2953,6 +3048,7 @@
       },
       {
         "slug": "hotfood-everything-bagel",
+        "uuid": "932c7493-3fa8-4faa-b3a8-dcf53a7aebc3",
         "content": {
           "_uid": "4d0a612d-dc08-4c5f-8f3c-36060340953d",
           "name": "Everything Bagel",
@@ -2983,6 +3079,7 @@
       },
       {
         "slug": "hotfood-egg-white-frittata",
+        "uuid": "dbcebfaf-7847-4674-a1d1-144ea5fc9db8",
         "content": {
           "_uid": "fc2d76eb-0d85-498e-93ec-7c3c7ad73775",
           "name": "Egg White Frittata",
@@ -3001,6 +3098,7 @@
       },
       {
         "slug": "hotfood-chorizo-burrito",
+        "uuid": "e2fba152-75c4-4b3d-9669-dead3c0caa4b",
         "content": {
           "_uid": "face1db2-1eea-4130-aeb5-2f9c2e53846c",
           "name": "Chorizo Burrito",
@@ -3031,6 +3129,7 @@
       },
       {
         "slug": "hotfood-bacon-cheddar-egg-bites",
+        "uuid": "4dfcac9d-8b3c-4d0d-91e6-77323d3dbfe1",
         "content": {
           "_uid": "3c1baa0e-4e3e-4eee-b7cc-3af626a912c9",
           "name": "Bacon Cheddar Egg Bites",
@@ -3049,6 +3148,7 @@
       },
       {
         "slug": "energy-tigers-blood",
+        "uuid": "debc4d12-08ae-4076-a25c-86710a5c93a7",
         "content": {
           "_uid": "90cd6585-4fd1-4980-90ce-6648f91028bb",
           "name": "Tigers Blood",
@@ -3090,6 +3190,7 @@
       },
       {
         "slug": "energy-starry-night",
+        "uuid": "735d1ab6-f735-4cbd-8972-678334458be0",
         "content": {
           "_uid": "dec54d78-9c45-49b6-a8a0-76242f1ec266",
           "name": "Starry Night",
@@ -3131,6 +3232,7 @@
       },
       {
         "slug": "energy-ocean-water",
+        "uuid": "7ab246c7-d80b-41bb-9a53-062c23d936fd",
         "content": {
           "_uid": "47d037ab-8634-4f9e-9db6-b2ba8bd9f65a",
           "name": "Ocean Water",
@@ -3177,6 +3279,7 @@
       },
       {
         "slug": "energy-jolly-rancher",
+        "uuid": "18c7d9bd-7fd8-45a0-a61e-0e8e4ba8c6f1",
         "content": {
           "_uid": "c676d7fc-fa0a-4db7-8d7b-10ea627ee937",
           "name": "Jolly Rancher",
@@ -3218,6 +3321,7 @@
       },
       {
         "slug": "dirtypop-texas-special",
+        "uuid": "6ca08c3e-ec49-4444-8fac-cadd2dedf062",
         "content": {
           "_uid": "02c32bed-58e6-486f-8eaf-56faff7ce5fa",
           "name": "Texas Special",
@@ -3259,6 +3363,7 @@
       },
       {
         "slug": "dirtypop-smooth-classic",
+        "uuid": "227e8464-12d7-4682-adde-04dbce19f8d6",
         "content": {
           "_uid": "2ea2b44b-4e0a-49cf-895c-10a4630ca14c",
           "name": "Smooth Classic",
@@ -3300,6 +3405,7 @@
       },
       {
         "slug": "dirtypop-just-dew-it",
+        "uuid": "4e1085a7-8dbb-46de-8320-dbde178caff1",
         "content": {
           "_uid": "cc7e8284-4301-4a2e-b083-1794e7393582",
           "name": "Just Dew It",
@@ -3341,6 +3447,7 @@
       },
       {
         "slug": "dirtypop-dr-feel-good",
+        "uuid": "fd769ad8-09b4-470b-b38d-a7db75ce6149",
         "content": {
           "_uid": "a9813c62-0712-44c2-9e11-b82ac2667cfe",
           "name": "Dr. Feel Good",
@@ -3382,6 +3489,7 @@
       },
       {
         "slug": "dirtypop-cast-away",
+        "uuid": "322e13a5-e608-435b-8d1f-c54e9ddadda0",
         "content": {
           "_uid": "97d1f5eb-cdcb-4a3a-9cfd-eec034bd4dde",
           "name": "Cast Away",
@@ -3428,6 +3536,7 @@
       },
       {
         "slug": "dirtypop-butter-brew",
+        "uuid": "73e1e78f-fecd-4ce3-b32b-913b408550e8",
         "content": {
           "_uid": "c7c2baa9-9192-447d-a1f3-ac1085802b97",
           "name": "Butter Brew",
@@ -3469,6 +3578,7 @@
       },
       {
         "slug": "coldbrew-snickers",
+        "uuid": "14a141e6-fa3e-4cf1-94ba-f49136537c0a",
         "content": {
           "_uid": "daca65c5-1eec-43b0-8d1b-2d9ec20762f3",
           "name": "Snickers",
@@ -3515,6 +3625,7 @@
       },
       {
         "slug": "coldbrew-nitro-brew",
+        "uuid": "c091f548-3273-4bd3-af40-1fa6bee49c2a",
         "content": {
           "_uid": "1a9c1028-5212-4d53-aa52-b39c3f35c804",
           "name": "Nitro Brew",
@@ -3545,6 +3656,7 @@
       },
       {
         "slug": "coldbrew-french-toast",
+        "uuid": "8170afc1-01ca-44cf-916f-42f6640372e2",
         "content": {
           "_uid": "8cf2f3f8-6248-4edc-b176-6907d73e32a6",
           "name": "French Toast",
@@ -3586,6 +3698,7 @@
       },
       {
         "slug": "coldbrew-cold-brew",
+        "uuid": "66364cf5-ecfc-4071-80d9-e0356dfa7357",
         "content": {
           "_uid": "681481f7-68c8-49b4-8eab-e06af37e7ea2",
           "name": "Cold Brew",
@@ -3616,6 +3729,7 @@
       },
       {
         "slug": "coldbrew-caramel-blondie",
+        "uuid": "6d691fe4-de58-489a-a73b-7ad31d008a82",
         "content": {
           "_uid": "b3a998b2-c7a2-4d88-9cbf-51ba2c27fb9a",
           "name": "Caramel Blondie",
@@ -3657,6 +3771,7 @@
       },
       {
         "slug": "coldbrew-151-mocha",
+        "uuid": "e99f9b25-d3e5-4fa7-94ef-1611e0de955b",
         "content": {
           "_uid": "de58b033-842a-4e27-8953-6a6ac05fcf3d",
           "name": "151 Mocha",
@@ -3693,6 +3808,7 @@
       },
       {
         "slug": "coffee-white-chocolate-macadamia",
+        "uuid": "7fced92e-ab0f-4332-8ab8-f2000f7b6f8b",
         "content": {
           "_uid": "f8adac80-6a23-42ea-af50-2457ee48bcf2",
           "name": "White Chocolate Macadamia",
@@ -3734,6 +3850,7 @@
       },
       {
         "slug": "coffee-snickers",
+        "uuid": "63822628-e0f9-4106-8971-cd2b3dde3cbe",
         "content": {
           "_uid": "88804eac-5157-4687-bc98-56e06063b04c",
           "name": "Snickers",
@@ -3780,6 +3897,7 @@
       },
       {
         "slug": "coffee-latte",
+        "uuid": "85d96faa-400c-442e-8b8d-7d0a9f968306",
         "content": {
           "_uid": "37f958e4-2179-4f53-8af7-4055c55a6998",
           "name": "Latte",
@@ -3810,6 +3928,7 @@
       },
       {
         "slug": "coffee-irish-sin",
+        "uuid": "3097bb27-ca31-4d97-9263-01369407b1a8",
         "content": {
           "_uid": "a64b5809-d764-439a-b5e0-3f87eec6980e",
           "name": "Irish Sin",
@@ -3846,6 +3965,7 @@
       },
       {
         "slug": "coffee-hot-cocoa",
+        "uuid": "6325ed65-8467-4fed-b7c2-943a574557c2",
         "content": {
           "_uid": "11bb45ea-ee78-45b5-80e9-76616e04c220",
           "name": "Hot Cocoa",
@@ -3882,6 +4002,7 @@
       },
       {
         "slug": "coffee-german-chocolate",
+        "uuid": "8e5f742a-154a-46f4-afdc-ef19e17581ef",
         "content": {
           "_uid": "d5323fad-ee27-4532-a42a-52de5815fb74",
           "name": "German Chocolate",
@@ -3928,6 +4049,7 @@
       },
       {
         "slug": "coffee-cinnamon-dulce",
+        "uuid": "4885bd9c-0ede-4dc2-9b47-06acddfd188e",
         "content": {
           "_uid": "3ba9962e-3db8-46f1-b176-1399e091434c",
           "name": "Cinnamon Dulce",
@@ -3969,6 +4091,7 @@
       },
       {
         "slug": "coffee-chai-latte",
+        "uuid": "69f1b892-a81a-41b6-9ec6-013164a47732",
         "content": {
           "_uid": "338b3686-32d2-4ed3-a4dd-2ef2f0eba689",
           "name": "Chai Latte",
@@ -3999,6 +4122,7 @@
       },
       {
         "slug": "coffee-caramel-blondie",
+        "uuid": "18ca3c9a-c6a3-4b66-bb04-96179b908a28",
         "content": {
           "_uid": "1722df2f-c496-4930-a5d3-d58297117541",
           "name": "Caramel Blondie",
@@ -4040,6 +4164,7 @@
       },
       {
         "slug": "coffee-151-caramel-mocha",
+        "uuid": "aa6c2218-48ea-4e0a-b12b-375855b73966",
         "content": {
           "_uid": "fd52e220-1642-414c-96c1-02566f51d1c3",
           "name": "151 Caramel Mocha",
@@ -4083,19 +4208,21 @@
     "categories": [
       {
         "slug": "lto",
+        "uuid": "f21473b9-ba0e-4fde-9a2b-e0bfa665aa2a",
         "content": {
           "_uid": "675bfe44-af1b-4f9c-b0d5-ce45635fe78b",
           "title": "LTO",
           "number": "01",
           "component": "category",
           "extraCards": [],
-          "description": "Here, but not for long. Check out our seasonal offerings!",
+          "description": "Seasonal drinks, here for a limited time only. Grab them before they're gone.",
           "unavailableAt": [],
           "hiddenByDefault": false
         }
       },
       {
         "slug": "treats",
+        "uuid": "080b50a1-5074-41d6-926f-12d0de335975",
         "content": {
           "_uid": "83ccffa0-01f2-45d7-a8f4-126167198e04",
           "title": "Treats",
@@ -4135,6 +4262,7 @@
       },
       {
         "slug": "teas",
+        "uuid": "7ad3dc3c-b9d9-4f1c-a002-9fc803d0f823",
         "content": {
           "_uid": "8420d4e7-4d78-46dc-b8d2-b55e658670e7",
           "title": "Teas",
@@ -4181,6 +4309,7 @@
       },
       {
         "slug": "smoothies",
+        "uuid": "cda02200-12b5-4591-afb8-893c6c0232ed",
         "content": {
           "_uid": "81a98b16-08b1-41fd-8153-604a2417fcee",
           "title": "Smoothies",
@@ -4194,6 +4323,7 @@
       },
       {
         "slug": "refreshers",
+        "uuid": "3813ba3c-267f-406f-8d95-3c1186f87417",
         "content": {
           "_uid": "c0f72628-4abe-465f-8e86-d9f938d2099e",
           "title": "Refreshers",
@@ -4207,6 +4337,7 @@
       },
       {
         "slug": "kids",
+        "uuid": "2282b080-d641-4a2a-9e5f-1e461b5a2d30",
         "content": {
           "_uid": "2ca858a2-a897-4ee3-ba57-7a02ed545748",
           "title": "Kids",
@@ -4220,6 +4351,7 @@
       },
       {
         "slug": "hotfood",
+        "uuid": "8e24cb68-1305-4ae0-b266-da3566907f24",
         "content": {
           "_uid": "2f71fe8a-a018-41c7-95ac-758a5024baee",
           "title": "Hot Food",
@@ -4259,6 +4391,7 @@
       },
       {
         "slug": "energy",
+        "uuid": "a62d80f0-0fae-4245-badd-726e8abad748",
         "content": {
           "_uid": "e4c30a19-50f1-4af8-be84-3302f81958ce",
           "title": "Energy",
@@ -4272,6 +4405,7 @@
       },
       {
         "slug": "dirtypop",
+        "uuid": "513ae734-e0bb-4959-ad2a-4f3ee46cb592",
         "content": {
           "_uid": "3e6ca0dd-62de-4fb7-abc6-af6b1d303afe",
           "title": "Dirty Pop",
@@ -4348,6 +4482,7 @@
       },
       {
         "slug": "coldbrew",
+        "uuid": "e6900e0e-8bb7-4898-bfea-5f0489c65318",
         "content": {
           "_uid": "47ac565f-7da7-4150-a0cd-979bc6a3a495",
           "title": "Cold Brew",
@@ -4361,6 +4496,7 @@
       },
       {
         "slug": "coffee",
+        "uuid": "db01ab01-3cfc-4701-96a9-c4167320bbb3",
         "content": {
           "_uid": "0506f6bf-d0ee-483f-98d5-d79d6cebe8a9",
           "title": "Coffee",
@@ -4376,6 +4512,7 @@
     "locations": [
       {
         "slug": "151-coffee-westworth-village",
+        "uuid": "c94a7af0-4b86-4e9f-8c40-212e035d7ced",
         "content": {
           "lat": "32.7642639",
           "lng": "-97.4099758",
@@ -4407,6 +4544,7 @@
       },
       {
         "slug": "151-coffee-the-colony",
+        "uuid": "166d7085-5f00-4ab4-ac84-0da4757cd1af",
         "content": {
           "lat": "33.079624",
           "lng": "-96.8562017",
@@ -4438,6 +4576,7 @@
       },
       {
         "slug": "151-coffee-rowlett",
+        "uuid": "2f04e10e-f21a-4694-aa40-7ffa66e062d1",
         "content": {
           "lat": "32.907404",
           "lng": "-96.567121",
@@ -4469,6 +4608,7 @@
       },
       {
         "slug": "151-coffee-roanoke",
+        "uuid": "c09c64a4-ce84-4caa-b87c-62037335a126",
         "content": {
           "lat": "33.0125118",
           "lng": "-97.2200814",
@@ -4500,6 +4640,7 @@
       },
       {
         "slug": "151-coffee-plano",
+        "uuid": "bd2934a9-7368-4cb9-aeb6-900b3868a138",
         "content": {
           "lat": "33.041912",
           "lng": "-96.7943275",
@@ -4531,6 +4672,7 @@
       },
       {
         "slug": "151-coffee-overland-park",
+        "uuid": "149c5160-39b2-47aa-ab47-99415445690c",
         "content": {
           "lat": "38.9624981",
           "lng": "-94.6677576",
@@ -4562,6 +4704,7 @@
       },
       {
         "slug": "151-coffee-north-richland-hills",
+        "uuid": "eff8cbbc-e673-4d97-b7b4-4dd98164b936",
         "content": {
           "lat": "32.8580904",
           "lng": "-97.2378174",
@@ -4593,6 +4736,7 @@
       },
       {
         "slug": "151-coffee-manhattan",
+        "uuid": "3b74ed12-2d53-4079-8431-bc9879db7276",
         "content": {
           "lat": "39.1880443",
           "lng": "-96.5598186",
@@ -4624,6 +4768,7 @@
       },
       {
         "slug": "151-coffee-lewisville",
+        "uuid": "6c8fc356-3abe-492d-ad87-609226ad442c",
         "content": {
           "lat": "33.0458472",
           "lng": "-97.0111036",
@@ -4655,6 +4800,7 @@
       },
       {
         "slug": "151-coffee-lawrence",
+        "uuid": "a19f9666-91a9-46f6-bb41-1af5bac9761c",
         "content": {
           "lat": "38.9424193",
           "lng": "-95.2543922",
@@ -4683,6 +4829,7 @@
       },
       {
         "slug": "151-coffee-keller",
+        "uuid": "5e73c75b-f86b-470d-afdb-abfe3a63e5b0",
         "content": {
           "lat": "32.933998",
           "lng": "-97.2174392",
@@ -4714,6 +4861,7 @@
       },
       {
         "slug": "151-coffee-flower-mound",
+        "uuid": "374596b6-801d-4844-8aa9-a6b79d64f72c",
         "content": {
           "lat": "33.0309506",
           "lng": "-97.0705513",
@@ -4745,6 +4893,7 @@
       },
       {
         "slug": "151-coffee-coppell",
+        "uuid": "52301b76-659e-4a61-88ad-398dcc8faecf",
         "content": {
           "lat": "32.9679663",
           "lng": "-96.9941574",
@@ -4776,6 +4925,7 @@
       },
       {
         "slug": "151-coffee-burleson",
+        "uuid": "f2900da1-3da5-4476-942c-a0de95adce8b",
         "content": {
           "lat": "32.5209435",
           "lng": "-97.3477463",
@@ -4807,6 +4957,7 @@
       },
       {
         "slug": "151-coffee-alliance",
+        "uuid": "11263daf-c85a-44b6-bfab-75cf756f9dfb",
         "content": {
           "lat": "32.9377",
           "lng": "-97.3145",
