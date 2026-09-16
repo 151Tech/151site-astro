@@ -40,37 +40,6 @@ if (!import.meta.env.DEV) {
   }
 }
 
-// TEMPORARY: owner asked for the section back before the real OAuth/API
-// integration above is authorized. These are locally-hosted screenshots
-// (captured cover frames, not TikTok's own signed CDN URLs -- see the
-// no-expiring-URL note above), so they don't share that failure mode.
-// Remove this block once tiktokVideos above is reliably populated.
-if (!tiktokVideos) {
-  tiktokVideos = [
-    {
-      id: '7685497467449773325',
-      embedLink: 'https://www.tiktok.com/@151coffee/video/7685497467449773325',
-      coverImageUrl: '/images/tiktok/tiktok-1.jpg',
-      title: 'Did we say your name? What names should we say next?',
-      createTime: 0,
-    },
-    {
-      id: '7684665451523149070',
-      embedLink: 'https://www.tiktok.com/@151coffee/video/7684665451523149070',
-      coverImageUrl: '/images/tiktok/tiktok-2.jpg',
-      title: 'Sticker drop alert! Free sticker with every drink Tuesday 9/15.',
-      createTime: 0,
-    },
-    {
-      id: '7684262533624089870',
-      embedLink: 'https://www.tiktok.com/@151coffee/video/7684262533624089870',
-      coverImageUrl: '/images/tiktok/tiktok-3.jpg',
-      title: 'Hey students! Fill-A-Tray for $16, every Friday in September.',
-      createTime: 0,
-    },
-  ];
-}
-
 const [homeData, settingsData, locationsEntries] = await Promise.all([
   getPage('home'),
   getSettings(),
