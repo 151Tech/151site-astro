@@ -18,21 +18,23 @@ window.COFFEE151_LEAFLET = {
         });
     },
     addTileLayer: function (L, map) {
-        // Stock OSM raster tiles (no API key needed). The duotone filter
-        // below (see .locator__map in style.css) grayscales this, then
-        // recolors it toward red -- the source style's brightest lines
-        // (main roads, which OSM already renders lightest/most saturated)
-        // come out reddest, while darker fill (land/water) stays muted gray.
-        //
-        // (Previously tried loading tiles one zoom level deeper stretched to
-        // 2x display size to make roads/labels look bigger -- that upscales
-        // a lower-resolution source image, so it just made everything
-        // blurry instead. Reverted: legibility comes from the zoom floor in
-        // locator.js and the contrast/saturation below instead.)
-        return L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        // CARTO's free Positron basemap, served off their own CDN -- fast
+        // and built for production traffic, unlike hotlinking OSM's own
+        // tile.openstreetmap.org servers (their usage policy explicitly asks
+        // sites not to do that; it's a community server, not a CDN, which is
+        // exactly why the map was slow/choppy). No API key or signup needed,
+        // and CARTO's free basemaps have been a stable, widely-used default
+        // for Leaflet sites for years. Positron's pale, low-contrast style
+        // was picked deliberately: it makes the red pins the only thing that
+        // pops, so no CSS recolor filter is needed on top (that filter --
+        // grayscale/contrast/sepia/hue-rotate/saturate plus five stacked
+        // drop-shadows, previously in .locator__map .leaflet-tile-pane in
+        // style.css -- was expensive to render on every tile during pan/zoom
+        // and is what made the map unreadable at some zoom levels; removed).
+        return L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
             maxZoom: 19,
-            subdomains: 'abc',
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            subdomains: 'abcd',
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
         }).addTo(map);
     }
 };
