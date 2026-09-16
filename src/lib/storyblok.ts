@@ -260,9 +260,13 @@ export async function getStories(startsWith: string) {
 // each file only needs its fetch line + import swapped.
 export const getPage = (slug: string) => getStory(`pages/${slug}`);
 export const getSettings = () => getStory('settings/global');
-export const getDrinks = () => getStories('drinks');
+// Storyblok folder is "products" (renamed from "drinks" since it holds food
+// items too, not just drinks) -- these wrapper names stay as-is since every
+// call site already reads getDrinks()/getDrink() and the public /drinks/
+// site URL is unaffected.
+export const getDrinks = () => getStories('products');
 export const getCategories = () => getStories('categories');
 export const getLocations = () => getStories('locations');
-export const getDrink = (slug: string) => getStory(`drinks/${slug}`);
+export const getDrink = (slug: string) => getStory(`products/${slug}`);
 export const getLocation = (slug: string) => getStory(`locations/${slug}`);
 export const getCategoryBySlug = (slug: string) => getStory(`categories/${slug}`);

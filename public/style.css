@@ -1370,29 +1370,6 @@ nav.nav-scrolled .nav-container {
     border: 1px solid rgba(0,0,0,0.07);
 }
 
-/* Duotone tile filter: grayscale flattens the source style's color, then
-   sepia+hue-rotate+saturate recolors that grayscale toward red instead of
-   brown -- the classic "tint a monochrome image" recipe. Scoped to the tile
-   pane only, so pins/tooltips/popups (separate Leaflet panes) keep their
-   real colors on top of it. These are the values that read as cream land
-   with red roads (not yellow/washed out) -- pushing contrast/saturation
-   past this, or pulling brightness down to compensate, tips the whole
-   image toward yellow instead of making anything more legible.
-   The drop-shadow chain after the color values doesn't touch color at
-   all -- it stacks a few soft, tight-radius shadows along every dark
-   edge (roads, text, borders), which visually thickens them like a
-   faux font-weight increase, without changing the underlying hue. */
-.locator__map .leaflet-tile-pane,
-.ld-map .leaflet-tile-pane {
-    filter:
-        grayscale(1) contrast(1.7) brightness(1.08) sepia(0.5) hue-rotate(-50deg) saturate(3)
-        drop-shadow(0 0 1.2px rgba(0,0,0,1))
-        drop-shadow(0 0 1.2px rgba(0,0,0,1))
-        drop-shadow(0 0 1.2px rgba(0,0,0,1))
-        drop-shadow(0 0 1.2px rgba(0,0,0,1))
-        drop-shadow(0 0 0.6px rgba(0,0,0,1));
-}
-
 .locator__marker-pin {
     display: flex;
     align-items: center;

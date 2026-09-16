@@ -18,21 +18,17 @@ window.COFFEE151_LEAFLET = {
         });
     },
     addTileLayer: function (L, map) {
-        // Stock OSM raster tiles (no API key needed). The duotone filter
-        // below (see .locator__map in style.css) grayscales this, then
-        // recolors it toward red -- the source style's brightest lines
-        // (main roads, which OSM already renders lightest/most saturated)
-        // come out reddest, while darker fill (land/water) stays muted gray.
-        //
-        // (Previously tried loading tiles one zoom level deeper stretched to
-        // 2x display size to make roads/labels look bigger -- that upscales
-        // a lower-resolution source image, so it just made everything
-        // blurry instead. Reverted: legibility comes from the zoom floor in
-        // locator.js and the contrast/saturation below instead.)
-        return L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        // CARTO Voyager raster tiles via a CARTO account key, served off
+        // their own CDN -- fast and built for production traffic, unlike
+        // hotlinking OSM's own tile.openstreetmap.org servers (their usage
+        // policy explicitly asks sites not to do that; it's a community
+        // server, not a CDN, which is exactly why the map was slow/choppy).
+        // The key is meant to be visible client-side (same as it works for
+        // Google Maps JS keys) -- it's a rate-limit/quota identifier, not a
+        // secret, and CARTO's dashboard can restrict it by domain if needed.
+        return L.tileLayer('https://basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png?key=cb1_3nr9_1_383e18c49d0d0238db05d4c2', {
             maxZoom: 19,
-            subdomains: 'abc',
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
         }).addTo(map);
     }
 };
