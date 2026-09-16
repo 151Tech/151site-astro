@@ -42,8 +42,10 @@ const STORY_SLUGS = [
   'pages/privacy',
 ];
 
-// Every folder fetched via getStories() across the codebase.
-const COLLECTIONS = ['drinks', 'categories', 'locations'];
+// Every folder fetched via getStories() across the codebase. "products" is
+// the Storyblok folder (renamed from "drinks" since it holds food items
+// too) that src/lib/storyblok.ts's getDrinks()/getDrink() read from.
+const COLLECTIONS = ['products', 'categories', 'locations'];
 
 async function fetchStory(slug) {
   const { data } = await client.get(`cdn/stories/${slug}`, { version: 'published' });
@@ -82,7 +84,7 @@ for (const name of COLLECTIONS) {
 const categoryUuidToSlug = Object.fromEntries(
   collections.categories.map((c) => [c.uuid, `categories/${c.slug}`]),
 );
-for (const drink of collections.drinks) {
+for (const drink of collections.products) {
   const cat = drink.content.category;
   if (categoryUuidToSlug[cat]) {
     drink.content.category = categoryUuidToSlug[cat];

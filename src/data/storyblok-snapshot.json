@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-16T17:42:10.211Z",
+  "generatedAt": "2026-09-16T17:46:30.059Z",
   "stories": {
     "settings/global": {
       "nav": [
@@ -1750,7 +1750,7 @@
     }
   },
   "collections": {
-    "drinks": [
+    "products": [
       {
         "slug": "pumpkin-spice-chai",
         "uuid": "24a45bf6-ac1e-49ca-adb9-547ae513e43c",
