@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-16T17:31:25.530Z",
+  "generatedAt": "2026-09-16T17:42:10.211Z",
   "stories": {
     "settings/global": {
       "nav": [
@@ -1863,7 +1863,21 @@
           "name": "Green Chile Burrito",
           "tags": [],
           "badge": "",
-          "image": "",
+          "image": {
+            "id": 220360954289466,
+            "alt": "",
+            "name": "",
+            "focus": "",
+            "title": "",
+            "source": "",
+            "filename": "https://a.storyblok.com/f/294671107081428/1350x1350/9ebf77ccd9/64.jpg",
+            "copyright": "",
+            "fieldtype": "asset",
+            "meta_data": {
+              "size": "1350x1350"
+            },
+            "is_external_url": false
+          },
           "category": "categories/hotfood",
           "subtitle": "Scrambled Eggs, Cheese & Roasted Green Chile",
           "component": "drink",
