@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-16T18:34:16.747Z",
+  "generatedAt": "2026-09-16T18:43:08.984Z",
   "stories": {
     "settings/global": {
       "nav": [
@@ -498,7 +498,7 @@
             },
             "is_external_url": false
           },
-          "ctahref": "/menu",
+          "ctahref": "/drinks/pumpkin-caramel-brulee",
           "visible": true,
           "ctalabel": "Explore the Menu",
           "imagealt": "Pumpkin Caramel Brûlée",
