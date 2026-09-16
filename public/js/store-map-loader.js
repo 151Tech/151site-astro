@@ -21,7 +21,10 @@
         script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
         script.onload = function () {
             var helpersScript = document.createElement('script');
-            helpersScript.src = '/js/leaflet-map-helpers.js';
+            // Versioned so a change to this file's content bypasses any
+            // browser/CDN cache of the unfingerprinted /js/ path -- see the
+            // matching note in locator-loader.js.
+            helpersScript.src = '/js/leaflet-map-helpers.js?v=2';
             helpersScript.onload = initMap;
             document.body.appendChild(helpersScript);
         };
