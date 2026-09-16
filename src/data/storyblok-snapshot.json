@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-16T17:20:59.996Z",
+  "generatedAt": "2026-09-16T17:31:25.530Z",
   "stories": {
     "settings/global": {
       "nav": [
@@ -4211,7 +4211,7 @@
         "uuid": "f21473b9-ba0e-4fde-9a2b-e0bfa665aa2a",
         "content": {
           "_uid": "675bfe44-af1b-4f9c-b0d5-ce45635fe78b",
-          "title": "LTO",
+          "title": "Seasonal",
           "number": "01",
           "component": "category",
           "extraCards": [],
