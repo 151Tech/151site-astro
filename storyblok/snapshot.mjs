@@ -91,6 +91,22 @@ for (const drink of collections.products) {
   }
 }
 
+// Same UUID-vs-slug mismatch, same fix, for `unavailableAt` on drinks and
+// categories: it's now a multi-select "options" field sourced from
+// internal_stories (folder locations), which stores each pick as the
+// location story's UUID. menu.astro's toLocationSlugs() only ever matches
+// the literal "locations/{slug}" form, so normalize every UUID entry the
+// same way the category field above does.
+const locationUuidToSlug = Object.fromEntries(
+  collections.locations.map((l) => [l.uuid, `locations/${l.slug}`]),
+);
+function normalizeUnavailableAt(content) {
+  if (!Array.isArray(content.unavailableAt)) return;
+  content.unavailableAt = content.unavailableAt.map((v) => locationUuidToSlug[v] ?? v);
+}
+for (const drink of collections.products) normalizeUnavailableAt(drink.content);
+for (const category of collections.categories) normalizeUnavailableAt(category.content);
+
 fs.mkdirSync(path.dirname(outPath), { recursive: true });
 fs.writeFileSync(outPath, JSON.stringify({ generatedAt: new Date().toISOString(), stories, collections }, null, 2) + '\n');
 console.log(`Wrote snapshot to ${outPath}`);

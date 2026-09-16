@@ -14,6 +14,32 @@ export const NAV_LINK_SCHEMA = {
   href: { type: 'text' },
 };
 
+// A dropdown of locations instead of a hand-typed list, same reasoning as
+// the `category` field above: sourced live from the `location` stories
+// under locations/ so a new store shows up here automatically.
+const UNAVAILABLE_AT_SCHEMA = {
+  type: 'options',
+  display_name: 'Unavailable At',
+  description: 'Locations that do NOT carry this. Leave empty if it is available everywhere.',
+  source: 'internal_stories',
+  filter_content_type: ['location'],
+  folder_slug: 'locations',
+};
+
+const US_STATES = [
+  ['Alabama', 'AL'], ['Alaska', 'AK'], ['Arizona', 'AZ'], ['Arkansas', 'AR'], ['California', 'CA'],
+  ['Colorado', 'CO'], ['Connecticut', 'CT'], ['Delaware', 'DE'], ['Florida', 'FL'], ['Georgia', 'GA'],
+  ['Hawaii', 'HI'], ['Idaho', 'ID'], ['Illinois', 'IL'], ['Indiana', 'IN'], ['Iowa', 'IA'],
+  ['Kansas', 'KS'], ['Kentucky', 'KY'], ['Louisiana', 'LA'], ['Maine', 'ME'], ['Maryland', 'MD'],
+  ['Massachusetts', 'MA'], ['Michigan', 'MI'], ['Minnesota', 'MN'], ['Mississippi', 'MS'], ['Missouri', 'MO'],
+  ['Montana', 'MT'], ['Nebraska', 'NE'], ['Nevada', 'NV'], ['New Hampshire', 'NH'], ['New Jersey', 'NJ'],
+  ['New Mexico', 'NM'], ['New York', 'NY'], ['North Carolina', 'NC'], ['North Dakota', 'ND'], ['Ohio', 'OH'],
+  ['Oklahoma', 'OK'], ['Oregon', 'OR'], ['Pennsylvania', 'PA'], ['Rhode Island', 'RI'], ['South Carolina', 'SC'],
+  ['South Dakota', 'SD'], ['Tennessee', 'TN'], ['Texas', 'TX'], ['Utah', 'UT'], ['Vermont', 'VT'],
+  ['Virginia', 'VA'], ['Washington', 'WA'], ['West Virginia', 'WV'], ['Wisconsin', 'WI'], ['Wyoming', 'WY'],
+  ['Washington DC', 'DC'],
+];
+
 export const COMPONENTS = {
   drink: {
     name: 'drink',
@@ -42,7 +68,7 @@ export const COMPONENTS = {
       badge: { type: 'text' },
       tags: { type: 'bloks', restrict_components: true, component_whitelist: ['text_item'] },
       menuOrder: { type: 'number' },
-      unavailableAt: { type: 'bloks', restrict_components: true, component_whitelist: ['text_item'] },
+      unavailableAt: UNAVAILABLE_AT_SCHEMA,
     },
   },
   category: {
@@ -53,7 +79,7 @@ export const COMPONENTS = {
       number: { type: 'text' },
       description: { type: 'textarea' },
       extraCards: { type: 'bloks', restrict_components: true, component_whitelist: ['category_extra_card'] },
-      unavailableAt: { type: 'bloks', restrict_components: true, component_whitelist: ['text_item'] },
+      unavailableAt: UNAVAILABLE_AT_SCHEMA,
       hiddenByDefault: { type: 'boolean' },
     },
   },
@@ -71,7 +97,12 @@ export const COMPONENTS = {
       name: { type: 'text' },
       address: { type: 'text' },
       city: { type: 'text' },
-      state: { type: 'text' },
+      state: {
+        type: 'option',
+        display_name: 'State',
+        description: 'Which state this location is in.',
+        options: US_STATES.map(([name, value]) => ({ name, value })),
+      },
       zip: { type: 'text' },
       lat: { type: 'number' },
       lng: { type: 'number' },
@@ -177,7 +208,7 @@ export function drinkContent(d) {
     badge: d.badge ?? '',
     tags: textItems(d.tags),
     menuOrder: String(d.menuOrder ?? 99),
-    unavailableAt: textItems((d.unavailableAt ?? []).map(locationSlug)),
+    unavailableAt: (d.unavailableAt ?? []).map(locationSlug),
   };
 }
 
@@ -193,7 +224,7 @@ export function categoryContent(c) {
       label: card.label ?? '',
       items: textItems(card.items),
     })),
-    unavailableAt: textItems((c.unavailableAt ?? []).map(locationSlug)),
+    unavailableAt: (c.unavailableAt ?? []).map(locationSlug),
     hiddenByDefault: !!c.hiddenByDefault,
   };
 }

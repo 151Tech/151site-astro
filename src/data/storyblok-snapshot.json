@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-16T17:52:37.899Z",
+  "generatedAt": "2026-09-16T18:34:16.747Z",
   "stories": {
     "settings/global": {
       "nav": [
@@ -264,7 +264,7 @@
             },
             {
               "_uid": "71db218e-b587-442a-8f59-4a3f4ebb9448",
-              "answer": "We currently have 12+ locations across the Dallas-Fort Worth metro in Texas and in Lawrence, Manhattan, and Overland Park, Kansas. Use the locator on our homepage or visit the Locations page to find the nearest store.",
+              "answer": "We currently have 12+ locations across the Dallas-Fort Worth metro in Texas and 3 in Kansas. Use the locator on our homepage or visit the Locations page to find the nearest store.",
               "question": "Where is 151 Coffee located?",
               "component": "page_home_faqs_items_item"
             },
@@ -4245,31 +4245,11 @@
           "extraCards": [],
           "description": "House-baked cookies and fresh breads. The kind of thing you add to your order and don't regret.",
           "unavailableAt": [
-            {
-              "_uid": "e7a2b0d2-3710-4698-87a7-748e12232cdf",
-              "value": "locations/151-coffee-flower-mound",
-              "component": "text_item"
-            },
-            {
-              "_uid": "6e2af3d6-cb0c-4a12-8f04-2289f614fcd8",
-              "value": "locations/151-coffee-north-richland-hills",
-              "component": "text_item"
-            },
-            {
-              "_uid": "128a42d1-0027-4a10-adde-1be65ecffd34",
-              "value": "locations/151-coffee-lawrence",
-              "component": "text_item"
-            },
-            {
-              "_uid": "fe84544f-e703-42d6-b723-439c1d999e8f",
-              "value": "locations/151-coffee-manhattan",
-              "component": "text_item"
-            },
-            {
-              "_uid": "ebefbe4c-1e3a-4b7e-b43f-b0639e8ba061",
-              "value": "locations/151-coffee-overland-park",
-              "component": "text_item"
-            }
+            "locations/151-coffee-flower-mound",
+            "locations/151-coffee-north-richland-hills",
+            "locations/151-coffee-lawrence",
+            "locations/151-coffee-manhattan",
+            "locations/151-coffee-overland-park"
           ],
           "hiddenByDefault": true
         }
@@ -4374,31 +4354,11 @@
           "extraCards": [],
           "description": "Real food made for the morning rush. Burritos, bagels, biscuits, and more. Fresh, hot, and ready to go.",
           "unavailableAt": [
-            {
-              "_uid": "9955d2ec-32d6-44d2-949c-27b1ac3ea0c8",
-              "value": "locations/151-coffee-north-richland-hills",
-              "component": "text_item"
-            },
-            {
-              "_uid": "738a7d12-9871-48ff-a9d5-a8fb27b92e22",
-              "value": "locations/151-coffee-flower-mound",
-              "component": "text_item"
-            },
-            {
-              "_uid": "5cd75766-6985-4b50-a09e-dbe97eaa2f4d",
-              "value": "locations/151-coffee-lawrence",
-              "component": "text_item"
-            },
-            {
-              "_uid": "63031370-776c-40aa-a299-9bdffea593de",
-              "value": "locations/151-coffee-manhattan",
-              "component": "text_item"
-            },
-            {
-              "_uid": "c101cf18-ed59-40cb-a6c4-28d6986ff60b",
-              "value": "locations/151-coffee-overland-park",
-              "component": "text_item"
-            }
+            "locations/151-coffee-north-richland-hills",
+            "locations/151-coffee-flower-mound",
+            "locations/151-coffee-lawrence",
+            "locations/151-coffee-manhattan",
+            "locations/151-coffee-overland-park"
           ],
           "hiddenByDefault": true
         }
