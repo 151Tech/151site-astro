@@ -56,7 +56,7 @@ async function fetchCollection(startsWith) {
     version: 'published',
     per_page: 100,
   });
-  return data.stories.map((story) => ({ slug: story.slug, content: story.content }));
+  return data.stories.map((story) => ({ slug: story.slug, uuid: story.uuid, content: story.content }));
 }
 
 const stories = {};
@@ -69,6 +69,24 @@ const collections = {};
 for (const name of COLLECTIONS) {
   console.log(`Fetching collection: ${name}`);
   collections[name] = await fetchCollection(name);
+}
+
+// The drink `category` field is a Storyblok "option" field sourced from
+// internal_stories (see storyblok/collections-schema.mjs). Values written by
+// the old migration script are literal "categories/{slug}" strings, but
+// values picked through Storyblok's own UI save the target story's UUID
+// instead -- that mismatch is exactly what caused newly-added drinks to
+// silently not match any category tab in menu.astro. Normalize every
+// UUID-shaped category value back to "categories/{slug}" here so both
+// authoring paths resolve the same way downstream.
+const categoryUuidToSlug = Object.fromEntries(
+  collections.categories.map((c) => [c.uuid, `categories/${c.slug}`]),
+);
+for (const drink of collections.drinks) {
+  const cat = drink.content.category;
+  if (categoryUuidToSlug[cat]) {
+    drink.content.category = categoryUuidToSlug[cat];
+  }
 }
 
 fs.mkdirSync(path.dirname(outPath), { recursive: true });
