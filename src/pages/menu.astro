@@ -764,14 +764,21 @@ const decideDrinksJson = JSON.stringify(decideDrinksArr);
       // picking a store re-reveals a category (e.g. an empty seasonal
       // lineup) that unavailableAt was never asked to hide per-location.
       if (meta.hiddenByDefault) return false;
-      if (!selectedStore) return true;
+      // "All Stores" (no location picked) means "available everywhere" --
+      // anything with an unavailableAt list isn't, so it hides here too.
+      // Picking one of the stores NOT on that list still shows it.
+      if (!selectedStore) return meta.unavailableAt.length === 0;
       return meta.unavailableAt.indexOf(selectedStore) === -1;
     }
     function drinkVisible(slug) {
       var d = DRINKS[slug];
       if (!d) return false;
       if (!categoryVisible(d.catSlug)) return false;
-      if (selectedStore && d.unavailableAt.indexOf(selectedStore) !== -1) return false;
+      if (selectedStore) {
+        if (d.unavailableAt.indexOf(selectedStore) !== -1) return false;
+      } else if (d.unavailableAt.length) {
+        return false;
+      }
       if (activeFilter && (!d.tags || d.tags.indexOf(activeFilter) === -1)) return false;
       return true;
     }

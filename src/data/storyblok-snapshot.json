@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-17T13:34:03.632Z",
+  "generatedAt": "2026-09-17T13:56:28.272Z",
   "stories": {
     "settings/global": {
       "nav": [
@@ -4242,7 +4242,7 @@
             "locations/151-coffee-north-richland-hills",
             "locations/151-coffee-flower-mound"
           ],
-          "hiddenByDefault": true
+          "hiddenByDefault": false
         }
       },
       {
@@ -4348,7 +4348,7 @@
             "locations/151-coffee-flower-mound",
             "locations/151-coffee-north-richland-hills"
           ],
-          "hiddenByDefault": true
+          "hiddenByDefault": false
         }
       },
       {

@@ -20,7 +20,7 @@ export const NAV_LINK_SCHEMA = {
 const UNAVAILABLE_AT_SCHEMA = {
   type: 'options',
   display_name: 'Unavailable At',
-  description: 'Locations that do NOT carry this. Leave empty if it is available everywhere.',
+  description: "Locations that do NOT carry this. Leave empty if it is available everywhere. Also hides it from the menu's \"All Stores\" view, since it isn't available at every location.",
   source: 'internal_stories',
   filter_content_type: ['location'],
   folder_slug: 'locations',
@@ -80,7 +80,11 @@ export const COMPONENTS = {
       description: { type: 'textarea' },
       extraCards: { type: 'bloks', restrict_components: true, component_whitelist: ['category_extra_card'] },
       unavailableAt: UNAVAILABLE_AT_SCHEMA,
-      hiddenByDefault: { type: 'boolean' },
+      hiddenByDefault: {
+        type: 'boolean',
+        display_name: "Hide (on = won't show on the menu at all)",
+        description: "Hides this category everywhere, for every location, no exceptions -- use this for a fully retired or empty seasonal category. For a category that's just missing at a few stores, use Unavailable At below instead.",
+      },
     },
   },
   category_extra_card: {
