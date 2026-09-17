@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-17T13:56:28.272Z",
+  "generatedAt": "2026-09-17T14:16:09.052Z",
   "stories": {
     "settings/global": {
       "nav": [
@@ -563,21 +563,24 @@
         {
           "_uid": "fa40690e-9e58-4059-9886-29002efb3d35",
           "image": {
-            "id": 213249761295102,
-            "alt": "",
+            "id": 221039088283002,
+            "alt": "151 Leadership Team",
             "name": "",
             "focus": "",
             "title": "",
             "source": "",
-            "filename": "https://a.storyblok.com/f/294671107081428/900x700/99eb1a8fb2/about-intro-wix.jpg",
+            "filename": "https://a.storyblok.com/f/294671107081428/1350x1350/4dd96934ac/151leaders.jpg",
             "copyright": "",
             "fieldtype": "asset",
-            "meta_data": {},
+            "meta_data": {
+              "alt": "151 Leadership Team",
+              "size": "1350x1350"
+            },
             "is_external_url": false
           },
           "heading": "Not Your Typical",
           "tagline": "It's a Good Day to have a Good Day.",
-          "imagealt": "151 Coffee store",
+          "imagealt": "151 Coffee Leaders",
           "component": "page_about_intro",
           "paragraphs": [
             {
