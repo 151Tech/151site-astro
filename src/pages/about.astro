@@ -24,7 +24,8 @@ const p = unwrapSingletons((await getPage('about')) as any, [
     .about-hero h1 span { color: var(--red); }
     .about-hero p { font-family: var(--font-inter), sans-serif; font-size: 1.1rem; color: rgba(255,255,255,0.80); max-width: 520px; margin: 0 auto; }
     .about-intro { background-color: #f4efe9; background-image: var(--bg-quote); background-size: 1250px auto; background-position: top center; background-repeat: repeat; padding: var(--section-pad); }
-    .about-intro-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+    .about-intro-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: stretch; }
+    .about-intro-text { display: flex; flex-direction: column; justify-content: center; aspect-ratio: 1 / 1; box-sizing: border-box; }
     .about-intro-text h2 { font-size: clamp(1.8rem, 3.5vw, 2.8rem); color: var(--black); line-height: 1.12; margin-bottom: 1.25rem; }
     .about-intro-text h2 span { color: var(--red); }
     .about-intro-text .about-intro-tagline { font-family: var(--font-bebas-neue), sans-serif; font-size: clamp(1.8rem, 3.5vw, 2.8rem); color: var(--black); line-height: 1.12; letter-spacing: 0.04em; text-transform: uppercase; font-weight: 400; margin-top: 1.75rem; }
@@ -90,6 +91,7 @@ const p = unwrapSingletons((await getPage('about')) as any, [
     }
     @media (max-width: 900px) {
       .about-intro-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+      .about-intro-text { aspect-ratio: auto; }
       .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 2rem; }
       .founder-hero-img { position: relative; left: 0; width: 100%; height: 260px; }
       .founder-hero-img img { -webkit-mask-image: none; mask-image: none; }
@@ -135,7 +137,7 @@ const p = unwrapSingletons((await getPage('about')) as any, [
           ]).map((para: string, i: number) => (
             <p>{para}</p>
           ))}
-          <p class="about-intro-tagline">{p.intro?.tagline ?? "It's a Good Day to have a Good Day."}</p>
+          <p class="about-intro-tagline" set:html={(p.intro?.tagline ?? "It's a Good Day to have a Good Day.").replace(/^(It.s a Good Day) /i, '$1<br />')} />
         </div>
         {imageUrl(p.intro?.image, { width: 1000 }) && (
           <div class="about-intro-img">

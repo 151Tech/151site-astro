@@ -1472,6 +1472,12 @@ nav.nav-scrolled .nav-container {
     .locator--full .locator__list .locator__item {
         margin-bottom: 0;
     }
+    /* One row of two-up cards is roughly this tall -- trimming it back off
+       the list gives it to the map instead, so the map reads as more than
+       a strip above the list on a tablet-sized screen. */
+    .locator--full .locator__map-wrap {
+        height: calc(40vh + 130px);
+    }
 }
 
 /* Two-half card: top half is the square thumbnail (left) next to the store
@@ -1490,6 +1496,7 @@ nav.nav-scrolled .nav-container {
 
 .locator-photo-card .locator__item-photo {
     flex: none;
+    align-self: flex-start;
     width: 88px;
     height: auto;
     aspect-ratio: 1 / 1;
@@ -3378,9 +3385,9 @@ html:has(.loc-fullpage), body:has(.loc-fullpage) { overflow: hidden; }
    so the artwork still shows through and the sections keep reading as one
    textured band instead of a stack of boxes. */
 :root {
-    --plate-bg: rgba(244, 239, 233, 0.86);
-    --plate-ring: 1px solid rgba(17, 17, 17, 0.06);
-    --plate-shadow: 0 2px 14px rgba(0, 0, 0, 0.04);
+    --plate-bg: rgba(255, 253, 250, 0.78);
+    --plate-ring: 1px solid rgba(17, 17, 17, 0.10);
+    --plate-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 }
 
 /* Prose blocks: full-width plates, since the text already fills the column. */
@@ -3391,12 +3398,25 @@ html:has(.loc-fullpage), body:has(.loc-fullpage) { overflow: hidden; }
 .about-history .history-timeline,
 .blk-split:not(.blk-split--dark) .blk-split-text {
     background: var(--plate-bg);
-    -webkit-backdrop-filter: blur(6px);
-    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
     border: var(--plate-ring);
     border-radius: var(--radius);
     box-shadow: var(--plate-shadow);
     padding: 1.75rem 2rem;
+}
+
+/* Headings that sit on the quote ground or a photo get extra weight and a
+   drop shadow so they read as the page's clear focal point rather than
+   text that happens to be floating over the background. */
+.featured-drink .featured-text h2,
+.about-intro-text h2,
+.about-history .history-body h2,
+.re-overview-text h2,
+.about-hero h1,
+.page-hero .page-hero-content h1 {
+    font-weight: 700;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.18);
 }
 
 /* The featured-drink plate is the one plate with a fixed size (it's squared
@@ -3425,12 +3445,24 @@ html:has(.loc-fullpage), body:has(.loc-fullpage) { overflow: hidden; }
 .page-hero .page-hero-content p {
     display: inline-block;
     background: var(--plate-bg);
-    -webkit-backdrop-filter: blur(6px);
-    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
     border: var(--plate-ring);
     border-radius: var(--radius);
     box-shadow: var(--plate-shadow);
     padding: 0.5rem 1.25rem;
+}
+
+.features .section-header h2,
+.pricing .section-header h2,
+.contact .section-header h2,
+.about-history .section-header h2,
+.re-ideal .section-header h2,
+.re-contact .section-header h2,
+.blk-testimonials .section-header h2,
+.blk-cardgrid .section-header h2 {
+    font-weight: 700;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.10);
 }
 
 /* The subpage hero stacks two plates, so they need to clear each other. */
