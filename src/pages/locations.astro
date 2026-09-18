@@ -147,9 +147,12 @@ const locationsJsonLd = graph(
         ))}
       </div>
     </div>
-
-    <Footer />
   </div>
+
+  <!-- Rendered outside .loc-page-tail (which is display:none) - the gift
+       card modal it contains must stay reachable from the nav button even
+       though the sitemap tail itself is hidden. -->
+  <Footer />
 
   <script define:vars={{ storesJson, hours: s.hours, phone: s.phone }} is:inline>
     window.COFFEE151_STORES = JSON.parse(storesJson);

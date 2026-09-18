@@ -93,23 +93,6 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         drawer.appendChild(cloned);
     }
 
-    // Loyalty button inside drawer
-    const loyaltyBtn = document.querySelector('#loyaltyNavBtn');
-    if (loyaltyBtn) {
-        const wrapper = document.createElement('div');
-        wrapper.className = 'drawer-gc-btn';
-        const btn = document.createElement('button');
-        btn.className = 'main-menu-btn';
-        btn.style.width = '100%';
-        btn.textContent = loyaltyBtn.textContent;
-        btn.addEventListener('click', () => {
-            closeDrawer();
-            openLoyaltyModal();
-        });
-        wrapper.appendChild(btn);
-        drawer.appendChild(wrapper);
-    }
-
     // Gift card button inside drawer
     const gcBtn = document.querySelector('#giftCardNavBtn');
     if (gcBtn) {
@@ -186,7 +169,7 @@ const giftCardFooterBtn = document.getElementById('giftCardFooterBtn');
 const giftCardFooterSupportBtn = document.getElementById('giftCardFooterSupportBtn');
 const closeGiftCardModal = document.getElementById('closeGiftCardModal');
 
-// Crisp's embedded apps (gift card / loyalty check) paint in visibly after
+// Crisp's embedded gift card app paints in visibly after
 // the iframe starts loading. Keeping the iframe hidden behind a spinner
 // (see .crisp-loader in style.css) until its 'load' event fires turns that
 // choppy pop-in into a deliberate fade.
@@ -251,50 +234,6 @@ if (giftCardModal) {
         if (e.target === giftCardModal) {
             giftCardModal.classList.remove('active');
             giftCardModal.style.display = '';
-        }
-    });
-}
-
-// Loyalty Modal functionality
-const loyaltyModal = document.getElementById('loyaltyModal');
-const loyaltyNavBtn = document.getElementById('loyaltyNavBtn');
-const loyaltyFooterBtn = document.getElementById('loyaltyFooterBtn');
-const closeLoyaltyModal = document.getElementById('closeLoyaltyModal');
-
-// Same as the gift-card checker: a third-party embedded app (Crisp), so its
-// iframe src is set only the first time the modal is actually opened.
-function openLoyaltyModal() {
-    if (!loyaltyModal) return;
-    activateCrispEmbed(loyaltyModal);
-    loyaltyModal.classList.add('active');
-}
-
-if (loyaltyNavBtn) {
-    loyaltyNavBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        openLoyaltyModal();
-    });
-}
-
-if (loyaltyFooterBtn) {
-    loyaltyFooterBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        openLoyaltyModal();
-    });
-}
-
-if (closeLoyaltyModal) {
-    closeLoyaltyModal.addEventListener('click', function() {
-        loyaltyModal.classList.remove('active');
-        loyaltyModal.style.display = '';
-    });
-}
-
-if (loyaltyModal) {
-    loyaltyModal.addEventListener('click', function(e) {
-        if (e.target === loyaltyModal) {
-            loyaltyModal.classList.remove('active');
-            loyaltyModal.style.display = '';
         }
     });
 }

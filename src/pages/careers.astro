@@ -205,8 +205,13 @@ const heroVideoSrc = mediaUrl(p.heroVideo);
         </a>
       </div>
     </section>
-    <Footer />
   </div>
+
+  <!-- Rendered outside #careersContent (which stays display:none until the
+       age gate is passed) - the gift card modal it contains must be reachable
+       from the nav button regardless of age-gate state, or the button appears
+       broken while the gate is up. -->
+  <Footer />
 
   <script is:inline>
     (function () {

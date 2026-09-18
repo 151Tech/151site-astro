@@ -2377,7 +2377,7 @@ footer {
     position: relative;
 }
 
-/* The Crisp embeds (gift card / loyalty check) are third-party apps that
+/* The Crisp gift card embed is a third-party app that
    paint in visibly over a second or so. Fading the iframe in and covering
    that gap with a spinner reads as an intentional load instead of a
    choppy pop-in. */
@@ -3451,6 +3451,21 @@ html:has(.loc-fullpage), body:has(.loc-fullpage) { overflow: hidden; }
     border-radius: var(--radius);
     box-shadow: var(--plate-shadow);
     padding: 0.5rem 1.25rem;
+}
+
+/* inline-block above lets each plate hug its own text, but that also puts
+   the heading and subheading side by side on wide viewports instead of
+   stacked. Forcing them onto their own line keeps the hugging width while
+   still centering (width:fit-content + margin:auto) below the heading. */
+.page-hero .page-hero-content h1 {
+    display: block;
+    width: fit-content;
+    margin: 0 auto 0.75rem;
+}
+.page-hero .page-hero-content p {
+    display: block;
+    width: fit-content;
+    margin: 0 auto;
 }
 
 .features .section-header h2,
