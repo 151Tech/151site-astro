@@ -733,9 +733,19 @@ const decideDrinksJson = JSON.stringify(decideDrinksArr);
     }
     function animateIn(el, delay) {
       el.style.display = ''; el.classList.remove('filter-animating-out','filter-animating-in');
-      void el.offsetWidth; el.style.animationDelay = (delay || 0) + 'ms';
-      el.classList.add('filter-animating-in');
       el.addEventListener('animationend', function() { el.classList.remove('filter-animating-in'); el.style.animationDelay = ''; }, { once: true });
+      // `void el.offsetWidth` used to force this restart, but that forces a
+      // synchronous layout flush *per card* - with a couple dozen cards
+      // toggling in the same refresh(), those forced reflows pile up on the
+      // main thread and delay whichever cards' animateOut/animateIn calls
+      // come later in the same forEach, so the filter looked like it was
+      // popping cards out at uneven times. rAF waits for the display change
+      // to actually land before adding the animation class, without forcing
+      // layout work in the middle of the loop.
+      requestAnimationFrame(function() {
+        el.style.animationDelay = (delay || 0) + 'ms';
+        el.classList.add('filter-animating-in');
+      });
     }
     // Only actually animates elements whose visibility changed since the
     // last refresh, otherwise every store/flavor change would re-trigger
