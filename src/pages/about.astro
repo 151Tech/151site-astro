@@ -75,35 +75,35 @@ const p = unwrapSingletons((await getPage('about')) as any, [
     @media (max-width: 700px) {
       .history-timeline { grid-template-columns: 1fr; }
     }
-    /* The portrait sits in a contained, roughly-square card above the text
-       at every width -- the old wide masked half-bleed treatment cropped
-       oddly and is gone for good. */
+    /* Portrait sits pinned in its own column alongside the bio instead of
+       stacked above it -- the old single centered column read as one long,
+       narrow scroll of alternating centered/left-aligned blocks. */
     .about-founder { background: var(--black); position: relative; overflow: hidden; padding: 5rem 0 var(--section-pad); }
-    .about-founder > .container { display: flex; flex-direction: column; align-items: center; height: auto; justify-content: center; }
-    .founder-left { position: relative; z-index: 1; display: flex; align-items: center; justify-content: center; box-sizing: border-box; width: 100%; }
-    .founder-hero-img { position: relative; width: 100%; max-width: 380px; aspect-ratio: 1 / 1; margin: 2rem auto; border-radius: 18px; overflow: hidden; }
+    .founder-header { text-align: center; margin-bottom: 3rem; }
+    .founder-header h2 { font-size: clamp(1.8rem, 3vw, 2.6rem); color: #fff; line-height: 1.1; margin-bottom: 0.35rem; }
+    .founder-title { font-family: var(--font-inter), sans-serif; font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--red); }
+    .founder-grid { display: grid; grid-template-columns: minmax(260px, 340px) 1fr; gap: 3.5rem; align-items: start; }
+    .founder-media { display: flex; justify-content: center; }
+    .founder-hero-img { position: sticky; top: 110px; width: 100%; max-width: 340px; aspect-ratio: 1 / 1; border-radius: 18px; overflow: hidden; }
     .founder-hero-img img {
       width: 100%; height: 100%; object-fit: cover; object-position: top; display: block;
     }
-    .founder-inner { max-width: 680px; margin: 0 auto; text-align: center; }
-    .founder-text { max-width: 680px; margin: 0 auto; }
-    .founder-text h2 { font-size: clamp(1.8rem, 3vw, 2.6rem); color: #fff; line-height: 1.1; margin-bottom: 0.35rem; text-align: center; }
-    .founder-title { font-family: var(--font-inter), sans-serif; font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--red); margin-bottom: 1.5rem; text-align: center; }
-    .founder-text p { font-family: var(--font-inter), sans-serif; font-size: 0.97rem; line-height: 1.75; color: rgba(255,255,255,0.62); margin-bottom: 1rem; text-align: left; }
-    .founder-bio { position: relative; margin-top: 0.5rem; }
+    .founder-content { text-align: left; }
+    .founder-content p { font-family: var(--font-inter), sans-serif; font-size: 0.97rem; line-height: 1.75; color: rgba(255,255,255,0.62); margin-bottom: 1rem; }
+    .founder-bio { position: relative; }
     .founder-bio::before {
       content: '\201C'; display: block; font-family: Georgia, 'Times New Roman', serif;
       font-size: 4.5rem; line-height: 1; color: var(--red); opacity: 0.85; margin-bottom: -0.5rem;
     }
     .founder-bio p:first-of-type { font-size: 1.08rem; font-weight: 500; color: rgba(255,255,255,0.85); }
-    .founder-ventures { margin-top: 1.75rem; display: flex; flex-direction: column; gap: 1rem; text-align: left; }
+    .founder-ventures { margin-top: 1.75rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
     .founder-closing {
       position: relative; margin-top: 2.25rem; padding-top: 1.5rem; font-style: italic; color: rgba(255,255,255,0.72);
     }
     .founder-closing::before {
-      content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+      content: ''; position: absolute; top: 0; left: 0;
       width: 3.25rem; height: 3px; border-radius: var(--radius-pill);
-      background: linear-gradient(90deg, transparent, var(--red), transparent);
+      background: linear-gradient(90deg, var(--red), transparent);
     }
     .venture-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 1.1rem 1.25rem; transition: border-color 0.2s; }
     .venture-card:hover { border-color: rgba(230,57,70,0.35); }
@@ -122,11 +122,9 @@ const p = unwrapSingletons((await getPage('about')) as any, [
     @media (max-width: 900px) {
       .about-intro-inner { grid-template-columns: 1fr; gap: 2.5rem; }
       .about-intro-text { aspect-ratio: auto; }
-      .founder-hero-img { max-width: 280px; margin-bottom: 2rem; }
       .about-founder { padding: 3rem 0 var(--section-pad); }
-      .founder-left { padding: 0 1.5rem; }
-      .founder-inner { max-width: 100%; }
-      .founder-text { max-width: 100%; }
+      .founder-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .founder-hero-img { position: static; max-width: 280px; margin: 0 auto 1rem; }
     }
     @media (max-width: 600px) {
       .about-hero { padding: 6rem 0 5rem; }
@@ -222,19 +220,22 @@ const p = unwrapSingletons((await getPage('about')) as any, [
   <section class="about-founder">
     <Editable blok={p.founder} />
     <div class="container">
-    <div class="founder-left">
-      <div class="founder-inner">
-        <div class="founder-text">
-          <h2>{p.founder?.heading ?? 'Meet the Founder'}</h2>
-          <div class="founder-title">{p.founder?.name ?? 'Mark Wattles'}</div>
-          {imageUrl(p.founder?.image, { width: 900 }) && (
-            <div class="founder-hero-img">
-              <img loading="lazy" decoding="async"
-                src={imageUrl(p.founder?.image, { width: 900 })}
-                alt={p.founder?.imageAlt ?? 'Mark Wattles - Founder of 151 Coffee'}
-              />
-            </div>
-          )}
+    <div class="founder-header">
+      <h2>{p.founder?.heading ?? 'Meet the Founder'}</h2>
+      <div class="founder-title">{p.founder?.name ?? 'Mark Wattles'}</div>
+    </div>
+    <div class="founder-grid">
+      <div class="founder-media">
+        {imageUrl(p.founder?.image, { width: 900 }) && (
+          <div class="founder-hero-img">
+            <img loading="lazy" decoding="async"
+              src={imageUrl(p.founder?.image, { width: 900 })}
+              alt={p.founder?.imageAlt ?? 'Mark Wattles - Founder of 151 Coffee'}
+            />
+          </div>
+        )}
+      </div>
+      <div class="founder-content">
           {(() => {
             const bio = p.founder?.bio ?? [
               'Mark is a highly accomplished entrepreneur with a strong background in business development and growth. Born and raised in both Santa Monica and Texas, he developed a passion for surfing, wakeboarding, and snowboarding from a young age.',
@@ -266,7 +267,6 @@ const p = unwrapSingletons((await getPage('about')) as any, [
               </>
             );
           })()}
-        </div>
       </div>
     </div>
     </div>
