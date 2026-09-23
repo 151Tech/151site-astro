@@ -4,12 +4,16 @@ import Layout from '../layouts/Layout.astro';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import BlockRenderer from '../components/blocks/BlockRenderer.astro';
-import { getPage, unwrapSingletons, imageUrl } from '../lib/storyblok';
+import { getPage, getLocations, unwrapSingletons, imageUrl } from '../lib/storyblok';
 import Editable from '../components/Editable.astro';
 
-const p = unwrapSingletons((await getPage('ourfuture')) as any, [
-  'seo', 'hero', 'visibility', 'overview', 'criteria', 'idealSite', 'markets', 'contact',
+const [p, locationsEntries] = await Promise.all([
+  getPage('ourfuture').then((page) => unwrapSingletons(page as any, [
+    'seo', 'hero', 'visibility', 'overview', 'criteria', 'idealSite', 'markets', 'contact',
+  ])),
+  getLocations(),
 ]);
+const openLocationsCount = locationsEntries.length;
 ---
 <Layout
   title={p.seo?.title ?? 'Real Estate & Site Development | 151 Coffee Drive-Thru Expansion'}
@@ -131,14 +135,10 @@ const p = unwrapSingletons((await getPage('ourfuture')) as any, [
             <p>{para}</p>
           ))}
           <div class="re-stats">
-            {(p.overview?.stats?.filter((s: any) => s.number && s.label)?.length
-              ? p.overview.stats.filter((s: any) => s.number && s.label)
-              : [
-              { number: '16', label: 'Open Locations' },
-              { number: '4+', label: 'Opening in 2026' },
-              { number: '500', label: 'Goal by 2028' },
+            {[
+              { number: `${openLocationsCount}`, label: 'Open Locations' },
               { number: '950sf', label: 'Building Footprint' },
-            ]).map((stat: any, i: number) => (
+            ].map((stat: any, i: number) => (
               <div class="re-stat">
                 <div class="re-stat-num">{stat.number}</div>
                 <div class="re-stat-label">{stat.label}</div>
