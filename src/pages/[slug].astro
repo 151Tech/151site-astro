@@ -285,7 +285,12 @@ function highlight(text: string): string {
     max-width: 34ch;
   }
 
-  .landing-highlight {
+  /* :global is required here: this span is injected via set:html (see
+     highlight() in the frontmatter), so it never receives Astro's scoped
+     data-astro-* attribute, and a plain `.landing-highlight { ... }` rule
+     (compiled to `.landing-highlight[data-astro-xxxxx]`) would silently
+     never match it. */
+  :global(.landing-highlight) {
     color: var(--red);
   }
 
