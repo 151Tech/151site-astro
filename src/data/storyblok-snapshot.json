@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-22T15:09:36.516Z",
+  "generatedAt": "2026-09-23T15:17:58.038Z",
   "stories": {
     "settings/global": {
       "nav": [
@@ -252,31 +252,31 @@
           "items": [
             {
               "_uid": "00960bb1-3d60-41a9-a091-61b3b1565ac8",
-              "answer": "151 Coffee is a fast drive-thru coffee concept serving handcrafted espresso, cold brew, and blended energy drinks across Texas and Kansas. Founded in 2017 by Mark Wattles, we live by one motto: It's a good day to have a good day.",
+              "answer": "151 Coffee is a fast drive-thru coffee concept serving handcrafted espresso, cold brew, and energy drinks across Texas and Kansas. Founded in 2017 by Mark Wattles, we live by one motto: It's a good day to have a good day.",
               "question": "What is 151 Coffee?",
               "component": "page_home_faqs_items_item"
             },
             {
               "_uid": "71db218e-b587-442a-8f59-4a3f4ebb9448",
-              "answer": "We currently have 12+ locations across the Dallas-Fort Worth metro in Texas and 3 in Kansas. Use the locator on our homepage or visit the Locations page to find the nearest store.",
+              "answer": "We currently have 12+ locations across the Dallas-Fort Worth area in Texas and 3 in Kansas. Use the locator on our homepage or visit the Locations page to find the nearest store.",
               "question": "Where is 151 Coffee located?",
               "component": "page_home_faqs_items_item"
             },
             {
               "_uid": "b5f6d7c6-d7b9-4642-b2cb-fab3b99e9d54",
-              "answer": "Our menu includes espresso drinks, cold brew, blended energy drinks, dirty sodas (Dirty Pops), refreshers, smoothies, teas, kids drinks, hot food items like burritos and bagels, and baked treats. With over 43,000 flavor combinations, there's something for everyone.",
+              "answer": "Our menu includes espresso drinks, cold brew, energy drinks, dirty sodas, refreshers, smoothies, teas, kids drinks, hot food items like burritos and bagels, and baked treats. There's something for everyone.",
               "question": "What does 151 Coffee serve?",
               "component": "page_home_faqs_items_item"
             },
             {
               "_uid": "215e6b85-1a64-4912-90e2-2492f17f5778",
-              "answer": "Yes! Every 151 Coffee location has a drive-thru concept, and an outdoor walk-up area as well. Speed and convenience are central to what we do. Our dual-lane drive-thru design and outdoor order-takers help us move fast even during peak hours.",
+              "answer": "Yes! Every 151 Coffee location has a drive-thru, and an outdoor walk-up area as well. Speed and convenience are central to what we do. Our dual-lane drive-thru design and outdoor order-takers help us move fast even during busy times.",
               "question": "Does 151 Coffee have a drive-thru?",
               "component": "page_home_faqs_items_item"
             },
             {
               "_uid": "0a085621-921a-41ea-be71-3ba5d031c4ea",
-              "answer": "Yes! You can purchase check gift cards in-store, and check gift card balances using the Gift Card button at the bottom of the page.",
+              "answer": "Yes! You can purchase check gift cards in-store, and check gift card balances by clicking here or by using the Gift Card button at the bottom of the page.",
               "question": "Does 151 Coffee sell gift cards?",
               "component": "page_home_faqs_items_item"
             },
@@ -284,6 +284,12 @@
               "_uid": "71615166-54f7-4074-a839-6c798dba3661",
               "answer": "Always. Visit our Careers page to see current openings. We look for people who are energetic, positive, and passionate about great customer experiences.",
               "question": "Is 151 Coffee hiring?",
+              "component": "page_home_faqs_items_item"
+            },
+            {
+              "_uid": "a0e0b850-f165-4dae-94a1-bb477d4a7e75",
+              "answer": "It's our founder's favorite temperature for a hot latte, and it's the temperature we steam our hot drinks to. Still hot, but you won't have to wait to take that first sip.",
+              "question": "What's the meaning behind the name?",
               "component": "page_home_faqs_items_item"
             }
           ],
@@ -475,30 +481,28 @@
       "featureddrink": [
         {
           "_uid": "3bb4afb8-f837-40f9-88d2-19b1667eaf5d",
-          "name": "Pumpkin",
+          "name": "Meet the",
           "badge": "",
           "image": {
-            "id": 220360708451602,
+            "id": 223150127588263,
             "alt": "",
             "name": "",
             "focus": "",
             "title": "",
             "source": "",
-            "filename": "https://a.storyblok.com/f/294671107081428/1350x1350/459747b7c3/pumpkin-caramel-brulee-latte.jpg",
+            "filename": "https://a.storyblok.com/f/294671107081428/2135x2135/4ba976f13b/pumpkiiiiiiiiiinnnn.png",
             "copyright": "",
             "fieldtype": "asset",
-            "meta_data": {
-              "size": "1350x1350"
-            },
+            "meta_data": {},
             "is_external_url": false
           },
-          "ctahref": "/drinks/pumpkin-caramel-brulee",
+          "ctahref": "/menu",
           "visible": true,
           "ctalabel": "Explore the Menu",
-          "imagealt": "Pumpkin Caramel Brûlée",
-          "namebold": "Caramel Brûlée",
+          "imagealt": "Pumpkin Lineup",
+          "namebold": "Pumpkin Lineup",
           "component": "page_home_featureddrink",
-          "description": "Our bold espresso meets pumpkin, salted caramel, and silky sweet cap, poured over ice for a crisp, cozy sip."
+          "description": "Our fall season favorites are back! The Pumpkin Spice Latte, Pumpkin Chai and Pumpkin Caramel Brûlée. Available for a limited time."
         }
       ],
       "locationssection": [
@@ -600,8 +604,8 @@
       "stats": [
         {
           "_uid": "bafb1558-c85a-4d2b-abca-1955c22d22aa",
-          "label": "Founded",
-          "number": "2017",
+          "label": "",
+          "number": "",
           "component": "page_about_stats_item"
         },
         {
@@ -612,14 +616,14 @@
         },
         {
           "_uid": "0e10f420-e664-45af-83e2-f54dbc7de5a5",
-          "label": "Founder's Track Record",
-          "number": "$2B",
+          "label": "Founded",
+          "number": "2017",
           "component": "page_about_stats_item"
         },
         {
           "_uid": "558e050d-9ece-4c34-957c-3714b85fe5a9",
-          "label": "Stores by 2038",
-          "number": "2,000",
+          "label": "",
+          "number": "",
           "component": "page_about_stats_item"
         }
       ],
@@ -634,6 +638,11 @@
             {
               "_uid": "594540b3-1612-4e37-9994-8bc486d4774c",
               "value": "Instead of pursuing a traditional college education, Mark chose to dive into the world of business and has since built an impressive portfolio of successful national ventures.",
+              "component": "text_item"
+            },
+            {
+              "_uid": "39b5d246-35a8-4e0c-b1bd-243a8d66d89b",
+              "value": "Now what makes a successful entrepreneur decide to start one more company? Mark created 151 Coffee as a place for his next generation to not just have a job, but as an entry point into what could be a long-term career; to create growth opportunities through mentorship and on-the-job development, and ultimately show our team that you don’t have to have a college degree in order to earn a six-figure income.",
               "component": "text_item"
             }
           ],
@@ -721,7 +730,7 @@
             },
             {
               "_uid": "95f9dc2a-585c-4c34-9ab6-dbd293c0ba03",
-              "text": "16 locations operating across Texas and Kansas, with several more in progress and many opening soon. The goal: 2,000 stores by the end of 2038.",
+              "text": "15 locations operating across Texas and Kansas, with several more in progress and many opening soon.",
               "year": "Today",
               "component": "page_about_history_timeline_item"
             }
@@ -1506,32 +1515,7 @@
             "meta_data": {},
             "is_external_url": false
           },
-          "stats": [
-            {
-              "_uid": "eba491a6-71f8-4907-a0c3-c140d4abca7e",
-              "label": "Open Locations",
-              "number": "16",
-              "component": "page_ourfuture_overview_stats_item"
-            },
-            {
-              "_uid": "1b58e0b5-3ee9-46a2-b2e3-457cf7698cdf",
-              "label": "Opening in 2026",
-              "number": "4+",
-              "component": "page_ourfuture_overview_stats_item"
-            },
-            {
-              "_uid": "0b7396cb-8d48-4728-acec-92b133ddb333",
-              "label": "Goal by 2028",
-              "number": "500",
-              "component": "page_ourfuture_overview_stats_item"
-            },
-            {
-              "_uid": "738af285-2ccb-4a32-9d47-1b035be9334e",
-              "label": "Building Footprint",
-              "number": "950sf",
-              "component": "page_ourfuture_overview_stats_item"
-            }
-          ],
+          "stats": [],
           "images": [
             {
               "_uid": "9819fbae-2a8d-4296-bbdf-8b325f9c1b83",
@@ -4647,18 +4631,16 @@
           "name": "151 Coffee Overland Park",
           "hours": "6am-8pm",
           "image": {
-            "id": 213246706932053,
+            "id": 223175047280946,
             "alt": "",
             "name": "",
             "focus": "",
             "title": "",
             "source": "",
-            "filename": "https://a.storyblok.com/f/294671107081428/670x670/774680df4b/overland-park.jpg",
+            "filename": "https://a.storyblok.com/f/294671107081428/2017x2017/022c504880/op.jpg",
             "copyright": "",
             "fieldtype": "asset",
-            "meta_data": {
-              "size": "670x670"
-            },
+            "meta_data": {},
             "is_external_url": false
           },
           "state": "KS",
