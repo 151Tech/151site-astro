@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-23T15:17:58.038Z",
+  "generatedAt": "2026-09-23T19:00:53.583Z",
   "stories": {
     "settings/global": {
       "nav": [
@@ -1494,7 +1494,7 @@
           "body": [
             {
               "_uid": "2fee8c56-eda9-4c01-b19e-a8a5182db9d4",
-              "value": "151 Coffee currently operates 16 locations across the Dallas-Fort Worth metro and Kansas City metro areas, with 4 more stores opening in 2026 and many more in the pipeline.",
+              "value": "151 Coffee currently operates 15 locations across the Dallas-Fort Worth metro and Kansas City. We aren't stopping here, either; there are many more in the pipeline.",
               "component": "text_item"
             },
             {
@@ -4757,16 +4757,19 @@
           "name": "151 Coffee Lawrence",
           "hours": "6am-8pm",
           "image": {
-            "id": null,
-            "alt": null,
+            "id": 223233169017230,
+            "alt": "",
             "name": "",
-            "focus": null,
-            "title": null,
-            "source": null,
-            "filename": "",
-            "copyright": null,
+            "focus": "",
+            "title": "",
+            "source": "",
+            "filename": "https://a.storyblok.com/f/294671107081428/3024x3024/71b4b25070/lw.jpg",
+            "copyright": "",
             "fieldtype": "asset",
-            "meta_data": {}
+            "meta_data": {
+              "size": "3024x3024"
+            },
+            "is_external_url": false
           },
           "state": "KS",
           "address": "1533 W 23rd St",
