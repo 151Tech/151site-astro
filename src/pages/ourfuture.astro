@@ -37,7 +37,7 @@ const openLocationsCount = locationsEntries.length;
     .re-overview-text p { font-family: var(--font-inter), sans-serif; font-size: 1.08rem; line-height: 1.85; color: rgba(17,17,17,0.62); padding: 0.4rem 0; margin-bottom: 1rem; }
     .re-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-top: auto; padding-top: 1.5rem; align-items: stretch; }
     .re-stat {
-      display: flex; flex-direction: column;
+      display: flex; flex-direction: column; align-items: center; text-align: center;
       background:
           radial-gradient(120% 100% at 100% 0%, rgba(230,57,70,0.16) 0%, transparent 55%),
           linear-gradient(160deg, #282828 0%, #1c1c1c 100%);
@@ -48,9 +48,9 @@ const openLocationsCount = locationsEntries.length;
       transition: border-color 0.2s, transform 0.2s;
     }
     .re-stat:hover { border-color: rgba(230,57,70,0.40); transform: translateY(-4px); }
-    .re-stat-num { font-size: 3rem; font-weight: 900; color: var(--red); line-height: 1; margin-bottom: 0.3rem; }
-    .re-stat-label { font-family: var(--font-inter), sans-serif; font-size: 0.95rem; color: rgba(255,255,255,0.90); font-weight: 700; letter-spacing: 0.03em; margin-bottom: 0.5rem; }
-    .re-stat-desc { font-family: var(--font-inter), sans-serif; font-size: 0.9rem; line-height: 1.55; color: rgba(255,255,255,0.62); margin-top: auto; }
+    .re-stat-num { font-size: 3.75rem; font-weight: 900; color: var(--red); line-height: 1; margin-bottom: 0.4rem; }
+    .re-stat-label { font-family: var(--font-inter), sans-serif; font-size: 1.1rem; color: rgba(255,255,255,0.90); font-weight: 700; letter-spacing: 0.03em; margin-bottom: 0.6rem; }
+    .re-stat-desc { font-family: var(--font-inter), sans-serif; font-size: 1rem; line-height: 1.55; color: rgba(255,255,255,0.62); margin-top: auto; }
     .re-map-img { border-radius: var(--radius); overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.22); position: relative; background: #1a1a1a; aspect-ratio: 1 / 1; }
     .re-map-img img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
     .re-map-img::after { content: ''; position: absolute; inset: 0; border: 1px solid rgba(0,0,0,0.06); border-radius: var(--radius); pointer-events: none; }
