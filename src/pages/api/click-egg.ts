@@ -35,7 +35,7 @@ function originAllowed(request: Request): boolean {
     return false;
   }
   if (ALLOWED_ORIGIN_HOSTS.has(host)) return true;
-  if (host === '151coffee-storyblok-f09993.webflow.io') return true;
+  if (host === '151coffee-storyblok-f09994.webflow.io') return true;
   const extra = (env as any).EXTRA_ALLOWED_ORIGIN_HOST;
   return Boolean(extra) && host === extra;
 }

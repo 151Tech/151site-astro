@@ -120,7 +120,7 @@ function originAllowed(request: Request): boolean {
   // customer, not just us -- an endsWith() wildcard would let any other
   // Webflow site's page POST here cross-origin. Pin the exact preview host
   // instead of trusting the whole subdomain.
-  if (host === '151coffee-storyblok-f09993.webflow.io') return true;
+  if (host === '151coffee-storyblok-f09994.webflow.io') return true;
   const extra = (env as any).EXTRA_ALLOWED_ORIGIN_HOST;
   return Boolean(extra) && host === extra;
 }
