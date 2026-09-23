@@ -1,8 +1,23 @@
 import { defineConfig, fontProviders } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
-import { readdirSync, copyFileSync, rmSync, existsSync } from 'node:fs';
+import { readdirSync, copyFileSync, rmSync, existsSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+
+// SMS/text-link discount landing pages (src/pages/[slug].astro) are meant
+// to be reachable only via the exact link they were sent, not discoverable
+// by searching the offer name -- see the `noindex` prop on their Layout
+// call. Advertising them in the sitemap would defeat that, the same
+// contradiction the /menu/<store> QR-stub filter below already guards
+// against. Read straight out of the committed snapshot (rather than
+// importing src/lib/storyblok.ts, which relies on import.meta.env and isn't
+// safe to import from this plain-Node config file) since the sitemap only
+// needs slugs, and the snapshot is already the source of truth for
+// everything this build renders.
+const landingPageSlugs = new Set(
+  JSON.parse(readFileSync(new URL('./src/data/storyblok-snapshot.json', import.meta.url), 'utf-8'))
+    .collections?.['landing-pages']?.map((s) => s.slug) ?? [],
+);
 
 // Webflow Cloud builds this project with its own platform configuration: it
 // injects the Cloudflare adapter, server output mode, and the mount path, and
@@ -117,7 +132,13 @@ export default defineConfig({
             // "Submitted URL marked 'noindex'" -- 30 of 117 URLs were doing
             // exactly that. The stubs still work for the printed QR codes;
             // they just aren't offered to crawlers as content.
-            filter: (page) => !/\/menu\/[^/]+\/?$/.test(new URL(page).pathname),
+            filter: (page) => {
+              const pathname = new URL(page).pathname;
+              if (/\/menu\/[^/]+\/?$/.test(pathname)) return false;
+              const slug = pathname.replace(/^\/|\/$/g, '');
+              if (landingPageSlugs.has(slug)) return false;
+              return true;
+            },
             // flattenRoutes rewrites every page to a flat .html, making the
             // canonical URL slash-less, but sitemap runs before that hook and
             // would otherwise advertise /menu/ for every page: URLs that all

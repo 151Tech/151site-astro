@@ -67,19 +67,26 @@ const hasRandomImage = !backgroundImage && !desktopHeroImage && randomDrinkImage
   title={`${page.headline || 'Special Offer'} | 151 Coffee`}
   description={page.offer || undefined}
   bodyClass="landing-page-body"
+  noindex
 >
   <Editable blok={page} />
 
   <main
     class:list={[
       'landing-page',
-      { 'has-bg-image': !!backgroundImage, 'has-desktop-hero': !!desktopHeroImage },
+      {
+        'has-bg-image': !!backgroundImage,
+        'has-desktop-hero': !!desktopHeroImage,
+        'has-random-image': hasRandomImage,
+      },
     ]}
     style={backgroundImage ? `--landing-bg: url(${backgroundImage})` : undefined}
   >
-    <a href="/" class="landing-logo" aria-label="151 Coffee home">
-      {logoUrl ? <img src={logoUrl} alt="151 Coffee" /> : <span>151 Coffee</span>}
-    </a>
+    {!hasRandomImage && (
+      <a href="/" class="landing-logo" aria-label="151 Coffee home">
+        {logoUrl ? <img src={logoUrl} alt="151 Coffee" /> : <span>151 Coffee</span>}
+      </a>
+    )}
 
     {desktopHeroImage && (
       <div class="landing-desktop-hero">
@@ -88,9 +95,14 @@ const hasRandomImage = !backgroundImage && !desktopHeroImage && randomDrinkImage
     )}
 
     {hasRandomImage && (
-      <div class="landing-random-image" data-random-images={JSON.stringify(randomDrinkImages)}>
+      <a
+        href="/"
+        class="landing-diag-photo"
+        aria-label="151 Coffee home"
+        data-random-images={JSON.stringify(randomDrinkImages)}
+      >
         <img data-random-image-el alt="" loading="eager" />
-      </div>
+      </a>
     )}
 
     <div class="landing-content">
@@ -352,25 +364,42 @@ const hasRandomImage = !backgroundImage && !desktopHeroImage && randomDrinkImage
   }
 
   /* Random drink photo for every page without its own bespoke art (see
-     hasRandomImage above). Sized off `vh` rather than a fixed px value or a
-     max-height media-query ladder like .landing-image uses, so it shrinks
-     continuously as the viewport gets shorter -- the rest of the offer
-     below it never needs a breakpoint to stay on screen. */
-  .landing-random-image {
+     hasRandomImage above) -- an angled, edge-to-edge banner instead of a
+     framed card. `.has-random-image` drops the page's own side/top padding
+     so the photo can run flush to every edge; `.landing-content` (below)
+     puts that padding back for the text, plus the negative margin that
+     lets it overlap the diagonal cut instead of leaving a hard seam. No
+     separate logo mark on this layout -- the drink photo itself already
+     has the 151 logo printed on the cup. */
+  .landing-page.has-random-image {
+    padding: 0 0 max(1.1rem, env(safe-area-inset-bottom));
+  }
+
+  .landing-diag-photo {
+    display: block;
     flex: 0 0 auto;
-    width: clamp(90px, 30vh, 220px);
-    aspect-ratio: 1 / 1;
-    margin-bottom: 0.9rem;
-    border-radius: var(--radius);
-    overflow: hidden;
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+    width: 100%;
+    height: clamp(150px, 32vh, 260px);
+    position: relative;
+    clip-path: polygon(0 0, 100% 0, 100% 78%, 0 100%);
     background: rgba(255, 255, 255, 0.04);
   }
-  .landing-random-image img {
+  .landing-diag-photo img {
     display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
+  }
+  .landing-diag-photo::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(160deg, rgba(230, 57, 70, 0.18) 0%, rgba(17, 17, 17, 0.55) 100%);
+  }
+
+  .landing-page.has-random-image .landing-content {
+    padding: 0 1.25rem;
+    margin-top: -0.9rem;
   }
 
   /* Wide viewport (desktop/tablet, not a phone held in a hand): the

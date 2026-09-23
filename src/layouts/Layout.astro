@@ -9,6 +9,7 @@ interface Props {
   ogImage?: string;
   canonical?: string;
   bodyClass?: string;
+  noindex?: boolean;
 }
 
 const {
@@ -17,6 +18,13 @@ const {
   ogImage,
   canonical,
   bodyClass = '',
+  // Text-message/SMS discount landing pages (src/pages/[slug].astro) pass
+  // this: they're meant to be reachable only by whoever was sent the exact
+  // link, not something anyone should be able to find by searching the
+  // offer name -- same "noindex + left out of the sitemap" treatment as the
+  // /menu/<store> QR-code stubs below, just via a Layout prop instead of a
+  // one-off <meta> tag since these pages already render through Layout.
+  noindex = false,
 } = Astro.props;
 
 // Points at the real domain even when this response is coming from the
@@ -67,7 +75,7 @@ const isDraftPreview = import.meta.env.STORYBLOK_DRAFT_MODE === 'true';
   <title>{title}</title>
   <meta name="description" content={description} />
   <link rel="canonical" href={canonicalUrl} />
-  <meta name="robots" content={isDraftPreview ? 'noindex, nofollow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'} />
+  <meta name="robots" content={isDraftPreview || noindex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'} />
   <meta name="author" content="151 Coffee" />
   <meta name="theme-color" content="#e63946" />
 
