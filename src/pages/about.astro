@@ -82,9 +82,9 @@ const p = unwrapSingletons((await getPage('about')) as any, [
     .founder-header { text-align: center; margin-bottom: 3rem; }
     .founder-header h2 { font-size: clamp(1.8rem, 3vw, 2.6rem); color: #fff; line-height: 1.1; margin-bottom: 0.35rem; }
     .founder-title { font-family: var(--font-inter), sans-serif; font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--red); }
-    .founder-grid { display: grid; grid-template-columns: minmax(260px, 340px) 1fr; gap: 3.5rem; align-items: start; }
+    .founder-grid { display: grid; grid-template-columns: minmax(220px, 300px) 1fr; gap: 3.5rem; align-items: start; }
     .founder-media { display: flex; justify-content: center; }
-    .founder-hero-img { position: sticky; top: 110px; width: 100%; max-width: 340px; aspect-ratio: 1 / 1; border-radius: 18px; overflow: hidden; }
+    .founder-hero-img { position: sticky; top: 110px; width: 100%; max-width: 300px; aspect-ratio: 3 / 4; border-radius: 18px; overflow: hidden; }
     .founder-hero-img img {
       width: 100%; height: 100%; object-fit: cover; object-position: top; display: block;
     }
@@ -124,7 +124,7 @@ const p = unwrapSingletons((await getPage('about')) as any, [
       .about-intro-text { aspect-ratio: auto; }
       .about-founder { padding: 3rem 0 var(--section-pad); }
       .founder-grid { grid-template-columns: 1fr; gap: 2rem; }
-      .founder-hero-img { position: static; max-width: 280px; margin: 0 auto 1rem; }
+      .founder-hero-img { position: static; max-width: 260px; margin: 0 auto 1rem; }
     }
     @media (max-width: 600px) {
       .about-hero { padding: 6rem 0 5rem; }
