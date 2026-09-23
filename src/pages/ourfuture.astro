@@ -27,6 +27,7 @@ const p = unwrapSingletons((await getPage('ourfuture')) as any, [
     .re-hero a.btn-white:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,0,0,0.25); }
     .re-overview { background-color: #f4efe9; background-image: var(--bg-quote); background-size: 1250px auto; background-position: top center; background-repeat: repeat; padding: var(--section-pad); }
     .re-overview-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+    .re-overview-text { display: flex; flex-direction: column; justify-content: center; aspect-ratio: 1 / 1; box-sizing: border-box; }
     .re-overview-text h2 { font-size: clamp(1.8rem, 3.5vw, 2.8rem); color: var(--black); line-height: 1.1; margin-bottom: 1.25rem; }
     .re-overview-text h2 span { color: var(--red); }
     .re-overview-text p { font-family: var(--font-inter), sans-serif; font-size: 1rem; line-height: 1.75; color: rgba(17,17,17,0.62); margin-bottom: 1rem; }
@@ -57,7 +58,7 @@ const p = unwrapSingletons((await getPage('ourfuture')) as any, [
     .criteria-card {
       background:
           radial-gradient(120% 100% at 100% 0%, rgba(230,57,70,0.16) 0%, transparent 55%),
-          linear-gradient(160deg, #202020 0%, #141414 100%);
+          linear-gradient(160deg, #282828 0%, #1c1c1c 100%);
       border: 1px solid rgba(255,255,255,0.06);
       border-radius: var(--radius);
       padding: 2rem 1.75rem;
@@ -93,6 +94,7 @@ const p = unwrapSingletons((await getPage('ourfuture')) as any, [
     .re-contact-email:hover { opacity: 0.8; }
     @media (max-width: 900px) {
       .re-overview-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+      .re-overview-text { aspect-ratio: auto; }
       .criteria-grid { grid-template-columns: 1fr 1fr; }
       .ideal-list { grid-template-columns: 1fr; }
     }
