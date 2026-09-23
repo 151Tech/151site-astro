@@ -36,14 +36,25 @@ const p = unwrapSingletons((await getPage('about')) as any, [
     .about-stats { background-color: #161616; background-image: var(--bg-dark-grid); background-size: auto, auto, 26px 26px; position: relative; padding: 4rem 0; }
     .about-stats::before { content: ''; position: absolute; inset: 0; background: radial-gradient(120% 60% at 50% 0%, rgba(255,255,255,0.22) 0%, transparent 55%), radial-gradient(120% 60% at 50% 100%, rgba(255,255,255,0.14) 0%, transparent 55%); pointer-events: none; }
     .about-stats .container { position: relative; z-index: 1; }
-    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; text-align: center; }
-    .stat-number { font-size: clamp(2rem, 4vw, 3rem); font-weight: 900; color: #fff; line-height: 1; margin-bottom: 0.4rem; }
-    .stat-label { font-family: var(--font-inter), sans-serif; font-size: 0.82rem; font-weight: 600; color: rgba(255,255,255,0.80); text-transform: uppercase; letter-spacing: 0.1em; }
+    .why-151 { max-width: 620px; margin: 0 auto; text-align: center; }
+    .why-151-badge {
+      display: inline-block; position: relative; padding-bottom: 0.9rem;
+      font-family: var(--font-bebas-neue), sans-serif; font-size: clamp(2.1rem, 5vw, 3.4rem);
+      letter-spacing: 0.04em; text-transform: uppercase; color: #fff; line-height: 1;
+    }
+    .why-151-badge span { color: var(--red); }
+    .why-151-badge::after {
+      content: ''; position: absolute; left: 50%; bottom: 0; transform: translateX(-50%) rotate(-2deg);
+      width: 3.75rem; height: 4px; border-radius: var(--radius-pill);
+      background: linear-gradient(90deg, transparent, var(--red), transparent);
+    }
+    .why-151-text { font-family: var(--font-inter), sans-serif; font-size: 1.05rem; line-height: 1.75; color: rgba(255,255,255,0.75); margin-top: 1.5rem; }
+    .why-151-more { font-family: var(--font-inter), sans-serif; font-size: 0.85rem; color: rgba(255,255,255,0.48); margin-top: 1.1rem; }
+    .why-151-more a { color: var(--red); font-weight: 600; text-decoration: underline; text-underline-offset: 2px; }
     .about-history { background-color: #f4efe9; background-image: var(--bg-quote); background-size: 1250px auto; background-position: top center; background-repeat: repeat; padding: var(--section-pad); }
     .about-history .section-header h2 { color: var(--red); }
     .history-body {
-      max-width: 900px; margin: 2rem auto 0; padding-left: 1.75rem;
-      border-left: 3px solid var(--red);
+      max-width: 900px; margin: 2rem auto 0;
       font-family: var(--font-inter), sans-serif; font-size: 1.05rem; line-height: 1.78; color: rgba(17,17,17,0.62);
     }
     .history-body p { margin-bottom: 1.25rem; }
@@ -80,7 +91,7 @@ const p = unwrapSingletons((await getPage('about')) as any, [
     .founder-text { max-width: 680px; margin: 0 auto; }
     .founder-text h2 { font-size: clamp(1.8rem, 3vw, 2.6rem); color: #fff; line-height: 1.1; margin-bottom: 0.35rem; text-align: center; }
     .founder-title { font-family: var(--font-inter), sans-serif; font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--red); margin-bottom: 1.5rem; text-align: center; }
-    .founder-text p { font-family: var(--font-inter), sans-serif; font-size: 0.97rem; line-height: 1.75; color: rgba(255,255,255,0.62); margin-bottom: 1rem; text-align: justify; text-align-last: center; }
+    .founder-text p { font-family: var(--font-inter), sans-serif; font-size: 0.97rem; line-height: 1.75; color: rgba(255,255,255,0.62); margin-bottom: 1rem; text-align: left; }
     .founder-bio { position: relative; margin-top: 0.5rem; }
     .founder-bio::before {
       content: '\201C'; display: block; font-family: Georgia, 'Times New Roman', serif;
@@ -113,7 +124,6 @@ const p = unwrapSingletons((await getPage('about')) as any, [
     @media (max-width: 900px) {
       .about-intro-inner { grid-template-columns: 1fr; gap: 2.5rem; }
       .about-intro-text { aspect-ratio: auto; }
-      .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 2rem; }
       .founder-hero-img { max-width: 280px; margin-bottom: 2rem; }
       .about-founder { padding: 3rem 0 var(--section-pad); }
       .founder-left { padding: 0 1.5rem; }
@@ -121,7 +131,6 @@ const p = unwrapSingletons((await getPage('about')) as any, [
       .founder-text { max-width: 100%; }
     }
     @media (max-width: 600px) {
-      .stats-grid { grid-template-columns: repeat(2, 1fr); }
       .about-hero { padding: 6rem 0 5rem; }
     }
   </style>
@@ -169,18 +178,12 @@ const p = unwrapSingletons((await getPage('about')) as any, [
   {(p.visibility?.stats ?? true) && (
   <section class="about-stats">
     <div class="container">
-      <div class="stats-grid">
-        {(p.stats ?? [
-          { number: '2017', label: 'Founded' },
-          { number: '15+', label: 'Locations' },
-          { number: '$2B', label: "Founder's Track Record" },
-          { number: '500', label: 'Stores by 2028' },
-        ]).map((stat: any, i: number) => (
-          <div class="stat-item">
-            <div class="stat-number">{stat.number}</div>
-            <div class="stat-label">{stat.label}</div>
-          </div>
-        ))}
+      <div class="why-151">
+        <div class="why-151-badge">Why <span>151</span>?</div>
+        <p class="why-151-text">
+          {p.whyName?.body ?? "It's our founder's favorite temperature for a hot latte, and it's the temperature we steam our hot drinks to. Still hot, but you won't have to wait to take that first sip."}
+        </p>
+        <p class="why-151-more">Curious how we picked the name? <a href="/#faq">More in our FAQ</a>.</p>
       </div>
     </div>
   </section>

@@ -9,19 +9,7 @@ const cmsCompanyLinks: { label: string; href: string }[] = f.companyLinks ?? [
   { label: 'Privacy Policy', href: '/privacy-policy' },
 ];
 
-// /loyalty exists to correct third-party misinformation about birthday drinks
-// and a "50% off Wednesday" (see src/pages/loyalty.astro), which only works if
-// crawlers can actually reach it -- an orphan page with no internal link
-// pointing at it gets crawled weakly and carries almost no weight. The footer
-// is the right prominence: reachable and indexable, but out of the main nav.
-//
-// Appended here rather than added to the fallback list above because
-// companyLinks is populated in Storyblok, so the fallback never runs in
-// production. Deduped by href, so the moment an editor adds the link in
-// Storyblok this line stops contributing and can be deleted.
-const companyLinks = cmsCompanyLinks.some((l) => l.href === '/loyalty')
-  ? cmsCompanyLinks
-  : [...cmsCompanyLinks, { label: 'Loyalty Policies', href: '/loyalty' }];
+const companyLinks = cmsCompanyLinks;
 const giftCardUrl = s.giftCardUrl ?? 'https://giftcards-151coffee-orders.crispnow.com';
 
 // Instagram supports a reliable username-based app URI scheme, so a tap can

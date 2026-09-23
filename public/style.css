@@ -3394,7 +3394,7 @@ html:has(.loc-fullpage), body:has(.loc-fullpage) { overflow: hidden; }
 .featured-drink .featured-text,
 .about-intro-text,
 .re-overview-text,
-.about-history .history-timeline,
+.about-history .history-body,
 .blk-split:not(.blk-split--dark) .blk-split-text {
     background: var(--plate-bg);
     -webkit-backdrop-filter: blur(8px);
