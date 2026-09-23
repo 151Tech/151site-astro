@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-23T19:00:53.583Z",
+  "generatedAt": "2026-09-23T19:04:01.587Z",
   "stories": {
     "settings/global": {
       "nav": [
@@ -4463,8 +4463,8 @@
         "slug": "151-coffee-westworth-village",
         "uuid": "c94a7af0-4b86-4e9f-8c40-212e035d7ced",
         "content": {
-          "lat": "32.7551122",
-          "lng": "-97.4288334",
+          "lat": "32.7642639",
+          "lng": "-97.4099758",
           "zip": "76114",
           "_uid": "0d07a76c-8453-4abc-960d-28b4745246e5",
           "city": "Westworth Village",
@@ -4910,7 +4910,7 @@
         "uuid": "11263daf-c85a-44b6-bfab-75cf756f9dfb",
         "content": {
           "lat": "32.9074565",
-          "lng": "-97.3181033",
+          "lng": "-97.3145",
           "zip": "76177",
           "_uid": "7bc8d89d-52c3-4a57-8b65-33832a4ae1d7",
           "city": "Fort Worth",

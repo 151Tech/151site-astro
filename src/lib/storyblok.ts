@@ -256,6 +256,21 @@ export async function getStories(startsWith: string) {
   }
 }
 
+// Storyblok's own lat/lng fields for these two stores are wrong (each was
+// verified against the real street address's rooftop-level geocode -- see
+// git history) and editing them in the CMS hasn't stuck across two publish
+// attempts. Coordinates for a physical store don't change once it's open,
+// so this overrides them at read time rather than fighting the CMS again.
+const LOCATION_COORD_OVERRIDES: Record<string, { lat: string; lng: string }> = {
+  '151-coffee-alliance': { lat: '32.9074565', lng: '-97.3181033' },
+  '151-coffee-westworth-village': { lat: '32.7551122', lng: '-97.4288334' },
+};
+
+function withCoordOverride<T>(slug: string, location: T): T {
+  const override = LOCATION_COORD_OVERRIDES[slug];
+  return override ? { ...location, ...override } : location;
+}
+
 // Convenience wrappers matching the old astro:content call sites 1:1, so
 // each file only needs its fetch line + import swapped.
 export const getPage = (slug: string) => getStory(`pages/${slug}`);
@@ -266,7 +281,8 @@ export const getSettings = () => getStory('settings/global');
 // site URL is unaffected.
 export const getDrinks = () => getStories('products');
 export const getCategories = () => getStories('categories');
-export const getLocations = () => getStories('locations');
+export const getLocations = async () =>
+  (await getStories('locations')).map((location) => withCoordOverride(location.slug, location));
 export const getDrink = (slug: string) => getStory(`products/${slug}`);
-export const getLocation = (slug: string) => getStory(`locations/${slug}`);
+export const getLocation = async (slug: string) => withCoordOverride(slug, await getStory(`locations/${slug}`));
 export const getCategoryBySlug = (slug: string) => getStory(`categories/${slug}`);
