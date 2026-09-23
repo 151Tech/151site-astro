@@ -90,11 +90,6 @@ const p = unwrapSingletons((await getPage('about')) as any, [
     }
     .founder-content { text-align: left; }
     .founder-content p { font-family: var(--font-inter), sans-serif; font-size: 0.97rem; line-height: 1.75; color: rgba(255,255,255,0.62); margin-bottom: 1rem; }
-    .founder-bio { position: relative; }
-    .founder-bio::before {
-      content: '\201C'; display: block; font-family: Georgia, 'Times New Roman', serif;
-      font-size: 4.5rem; line-height: 1; color: var(--red); opacity: 0.85; margin-bottom: -0.5rem;
-    }
     .founder-bio p:first-of-type { font-size: 1.08rem; font-weight: 500; color: rgba(255,255,255,0.85); }
     .founder-ventures { margin-top: 1.75rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
     .founder-closing {
