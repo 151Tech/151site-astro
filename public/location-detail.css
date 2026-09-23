@@ -207,6 +207,10 @@
     .ld-body-inner { grid-template-columns: 1fr; gap: 2rem; align-items: initial; }
     .ld-detail-card { padding: 1.75rem; height: auto; }
     .ld-photo { height: auto; aspect-ratio: 1 / 1; min-height: 0; }
+    /* Below the two-column layout the photo scales against the full
+       container instead of the detail card, so it needs its own cap --
+       otherwise it balloons toward 900px and crowds the edges toward 431px. */
+    .ld-img-col { max-width: min(420px, 100%); margin: 0 auto; }
 }
 
 @media (max-width: 520px) {

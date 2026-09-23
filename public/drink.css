@@ -357,6 +357,14 @@
         height: auto;
     }
 
+    /* Below the two-column layout the photo is no longer sized against the
+       detail card, so it needs its own cap -- full container width made it
+       balloon toward 900px and crowd the edges toward 431px alike. */
+    .dk-img-col {
+        max-width: min(420px, 100%);
+        margin: 0 auto;
+    }
+
     .dk-img-col .featured-card {
         height: auto;
     }
@@ -388,11 +396,6 @@
     .dk-img-col .featured-card .drink-img-wrap {
         height: auto;
         aspect-ratio: 1 / 1;
-    }
-
-    .dk-img-col {
-        max-width: 380px;
-        margin: 0 auto;
     }
 
     .dk-customize-card {
