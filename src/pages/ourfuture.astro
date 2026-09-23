@@ -27,11 +27,11 @@ const p = unwrapSingletons((await getPage('ourfuture')) as any, [
     .re-hero a.btn-white:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,0,0,0.25); }
     .re-overview { background-color: #f4efe9; background-image: var(--bg-quote); background-size: 1250px auto; background-position: top center; background-repeat: repeat; padding: var(--section-pad); }
     .re-overview-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
-    .re-overview-text { display: flex; flex-direction: column; justify-content: center; aspect-ratio: 1 / 1; box-sizing: border-box; }
+    .re-overview-text { display: flex; flex-direction: column; justify-content: flex-start; aspect-ratio: 1 / 1; box-sizing: border-box; }
     .re-overview-text h2 { font-size: clamp(1.8rem, 3.5vw, 2.8rem); color: var(--black); line-height: 1.1; margin-bottom: 1.25rem; }
     .re-overview-text h2 span { color: var(--red); }
     .re-overview-text p { font-family: var(--font-inter), sans-serif; font-size: 1rem; line-height: 1.75; color: rgba(17,17,17,0.62); margin-bottom: 1rem; }
-    .re-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-top: 2rem; }
+    .re-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-top: auto; padding-top: 2rem; }
     .re-stat {
       background:
           radial-gradient(120% 100% at 100% 0%, rgba(230,57,70,0.16) 0%, transparent 55%),
@@ -131,7 +131,9 @@ const p = unwrapSingletons((await getPage('ourfuture')) as any, [
             <p>{para}</p>
           ))}
           <div class="re-stats">
-            {(p.overview?.stats ?? [
+            {(p.overview?.stats?.filter((s: any) => s.number && s.label)?.length
+              ? p.overview.stats.filter((s: any) => s.number && s.label)
+              : [
               { number: '16', label: 'Open Locations' },
               { number: '4+', label: 'Opening in 2026' },
               { number: '500', label: 'Goal by 2028' },
