@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-23T14:15:12.781Z",
+  "generatedAt": "2026-09-23T15:17:58.038Z",
   "stories": {
     "settings/global": {
       "nav": [
@@ -4631,18 +4631,16 @@
           "name": "151 Coffee Overland Park",
           "hours": "6am-8pm",
           "image": {
-            "id": 213246706932053,
+            "id": 223175047280946,
             "alt": "",
             "name": "",
             "focus": "",
             "title": "",
             "source": "",
-            "filename": "https://a.storyblok.com/f/294671107081428/670x670/774680df4b/overland-park.jpg",
+            "filename": "https://a.storyblok.com/f/294671107081428/2017x2017/022c504880/op.jpg",
             "copyright": "",
             "fieldtype": "asset",
-            "meta_data": {
-              "size": "670x670"
-            },
+            "meta_data": {},
             "is_external_url": false
           },
           "state": "KS",
