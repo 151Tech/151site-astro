@@ -43,30 +43,46 @@ const p = unwrapSingletons((await getPage('about')) as any, [
     .about-history .section-header h2 { color: var(--red); }
     .history-body { max-width: 780px; margin: 2rem auto 0; font-family: var(--font-inter), sans-serif; font-size: 1rem; line-height: 1.78; color: rgba(17,17,17,0.62); }
     .history-body p { margin-bottom: 1.25rem; }
-    .history-timeline { display: flex; flex-direction: column; gap: 1.5rem; margin-top: 3rem; max-width: 780px; margin-left: auto; margin-right: auto; }
-    .timeline-item { display: flex; gap: 1.5rem; align-items: flex-start; }
-    .timeline-year { flex-shrink: 0; width: 56px; font-family: var(--font-inter), sans-serif; font-size: 0.8rem; font-weight: 800; color: var(--red); letter-spacing: 0.06em; padding-top: 0.15rem; }
-    .timeline-bar { flex-shrink: 0; display: flex; flex-direction: column; align-items: center; }
-    .timeline-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--red); flex-shrink: 0; margin-top: 0.3rem; }
-    .timeline-line { width: 2px; flex: 1; background: rgba(17,17,17,0.10); min-height: 32px; }
-    .timeline-content { padding-bottom: 0.5rem; }
-    .timeline-content p { font-family: var(--font-inter), sans-serif; font-size: 0.92rem; line-height: 1.65; color: rgba(17,17,17,0.60); margin: 0; }
-    .timeline-item:last-child .timeline-line { display: none; }
+    .history-timeline { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-top: 3rem; max-width: 900px; margin-left: auto; margin-right: auto; }
+    .timeline-item {
+      position: relative; display: flex; flex-direction: column; gap: 0.6rem;
+      background: #fff; border: 1px solid rgba(17,17,17,0.08); border-radius: var(--radius);
+      padding: 1.5rem 1.6rem; box-shadow: 0 10px 30px rgba(17,17,17,0.05);
+      transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+    }
+    .timeline-item:hover { transform: translateY(-3px); box-shadow: 0 16px 36px rgba(17,17,17,0.09); border-color: rgba(230,57,70,0.28); }
+    .timeline-year {
+      display: inline-flex; align-self: flex-start; align-items: center;
+      font-family: var(--font-inter), sans-serif; font-size: 0.78rem; font-weight: 800;
+      color: #fff; background: var(--red); letter-spacing: 0.07em; text-transform: uppercase;
+      padding: 0.3rem 0.8rem; border-radius: var(--radius-pill);
+    }
+    .timeline-content p { font-family: var(--font-inter), sans-serif; font-size: 0.94rem; line-height: 1.65; color: rgba(17,17,17,0.62); margin: 0; }
+    @media (max-width: 700px) {
+      .history-timeline { grid-template-columns: 1fr; }
+    }
     /* Default (< 1700px): the portrait doesn't crop/frame well as the wide
        masked half-bleed below, so it sits above the text in a contained,
        roughly-square card instead. The absolute/mask treatment only kicks
        back in once the viewport is wide enough to give it real room. */
     .about-founder { background: var(--black); position: relative; overflow: hidden; padding: 5rem 0 var(--section-pad); }
     .about-founder > .container { display: flex; flex-direction: column; align-items: center; height: auto; justify-content: center; }
-    .founder-left { position: relative; z-index: 1; display: flex; align-items: center; box-sizing: border-box; width: 100%; }
-    .founder-hero-img { position: relative; width: 100%; max-width: 380px; aspect-ratio: 1 / 1; margin: 0 auto 2.5rem; border-radius: 18px; overflow: hidden; }
+    .founder-left { position: relative; z-index: 1; display: flex; align-items: center; justify-content: center; box-sizing: border-box; width: 100%; }
+    .founder-hero-img { position: relative; width: 100%; max-width: 380px; aspect-ratio: 1 / 1; margin: 2rem auto; border-radius: 18px; overflow: hidden; }
     .founder-hero-img img {
       width: 100%; height: 100%; object-fit: cover; object-position: top; display: block;
     }
+    .founder-inner { max-width: 680px; margin: 0 auto; text-align: center; }
+    .founder-text { max-width: 680px; margin: 0 auto; }
+    .founder-text h2 { font-size: clamp(1.8rem, 3vw, 2.6rem); color: #fff; line-height: 1.1; margin-bottom: 0.35rem; text-align: center; }
+    .founder-title { font-family: var(--font-inter), sans-serif; font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--red); margin-bottom: 1.5rem; text-align: center; }
+    .founder-text p { font-family: var(--font-inter), sans-serif; font-size: 0.97rem; line-height: 1.75; color: rgba(255,255,255,0.62); margin-bottom: 1rem; text-align: center; }
+    .founder-ventures { margin-top: 1.75rem; display: flex; flex-direction: column; gap: 1rem; text-align: left; }
+    .founder-closing { margin-top: 1.75rem; }
     @media (min-width: 1700px) {
       .about-founder { padding: 6.5rem 0; }
       .about-founder > .container { flex-direction: row; height: 100%; }
-      .founder-left { width: auto; }
+      .founder-left { width: auto; justify-content: flex-start; }
       .founder-hero-img {
         position: absolute; inset: 0; left: 46%; width: 54%; max-width: none;
         aspect-ratio: auto; margin: 0; border-radius: 0;
@@ -75,13 +91,9 @@ const p = unwrapSingletons((await getPage('about')) as any, [
         -webkit-mask-image: linear-gradient(90deg, transparent 0%, transparent 34%, rgba(0,0,0,0.06) 42%, rgba(0,0,0,0.22) 50%, rgba(0,0,0,0.45) 58%, rgba(0,0,0,0.7) 66%, rgba(0,0,0,0.9) 74%, #000 82%);
         mask-image: linear-gradient(90deg, transparent 0%, transparent 34%, rgba(0,0,0,0.06) 42%, rgba(0,0,0,0.22) 50%, rgba(0,0,0,0.45) 58%, rgba(0,0,0,0.7) 66%, rgba(0,0,0,0.9) 74%, #000 82%);
       }
+      .founder-inner, .founder-text { text-align: left; margin: 0; }
+      .founder-text p { text-align: left; }
     }
-    .founder-inner { max-width: 680px; }
-    .founder-text { max-width: 680px; }
-    .founder-text h2 { font-size: clamp(1.8rem, 3vw, 2.6rem); color: #fff; line-height: 1.1; margin-bottom: 0.35rem; text-align: center; }
-    .founder-title { font-family: var(--font-inter), sans-serif; font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--red); margin-bottom: 1.5rem; text-align: center; }
-    .founder-text p { font-family: var(--font-inter), sans-serif; font-size: 0.97rem; line-height: 1.75; color: rgba(255,255,255,0.62); margin-bottom: 1rem; }
-    .founder-ventures { margin-top: 1.75rem; display: flex; flex-direction: column; gap: 1rem; }
     .venture-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 1.1rem 1.25rem; transition: border-color 0.2s; }
     .venture-card:hover { border-color: rgba(230,57,70,0.35); }
     .venture-name { font-family: var(--font-inter), sans-serif; font-size: 0.88rem; font-weight: 700; color: #fff; margin-bottom: 0.3rem; }
@@ -196,7 +208,6 @@ const p = unwrapSingletons((await getPage('about')) as any, [
         ]).map((item: any, i: number) => (
           <div class="timeline-item">
             <div class="timeline-year">{item.year}</div>
-            <div class="timeline-bar"><div class="timeline-dot"></div><div class="timeline-line"></div></div>
             <div class="timeline-content"><p>{item.text}</p></div>
           </div>
         ))}
@@ -208,38 +219,49 @@ const p = unwrapSingletons((await getPage('about')) as any, [
   {(p.visibility?.founder ?? true) && (
   <section class="about-founder">
     <Editable blok={p.founder} />
-    {imageUrl(p.founder?.image, { width: 900 }) && (
-      <div class="founder-hero-img">
-        <img loading="lazy" decoding="async"
-          src={imageUrl(p.founder?.image, { width: 900 })}
-          alt={p.founder?.imageAlt ?? 'Mark Wattles - Founder of 151 Coffee'}
-        />
-      </div>
-    )}
     <div class="container">
     <div class="founder-left">
       <div class="founder-inner">
         <div class="founder-text">
           <h2>{p.founder?.heading ?? 'Meet the Founder'}</h2>
           <div class="founder-title">{p.founder?.name ?? 'Mark Wattles'}</div>
-          {(p.founder?.bio ?? [
-            'Mark is a highly accomplished entrepreneur with a strong background in business development and growth. Born and raised in both Santa Monica and Texas, he developed a passion for surfing, wakeboarding, and snowboarding from a young age.',
-            'Instead of pursuing a traditional college education, Mark chose to dive into the world of business and has since built an impressive portfolio of successful national ventures.',
-          ]).map((para: string, i: number) => (
-            <p>{para}</p>
-          ))}
-          <div class="founder-ventures">
-            {(p.founder?.ventures ?? [
-              { name: 'Hollywood Entertainment, Inc.', desc: 'Started in 1988. Grew from one store to 1,000 corporate-owned stores in just ten years, reaching $2 Billion in revenue and 2,000 company-owned stores. Sold in 2005.' },
-              { name: 'HomeAdvisor.com', desc: 'Co-founder of the B2C online home improvement marketplace. Sold to IAC/InterActiveCorp (Nasdaq: IAC).' },
-              { name: 'Firebirds Wood Fired Grill', desc: 'One of four partners who built this full-service restaurant chain to 45 locations across 18 states. Majority stake sold to Angelo Gordon.' },
-            ]).map((v: any, i: number) => (
-              <div class="venture-card">
-                <div class="venture-name">{v.name}</div>
-                <div class="venture-desc">{v.desc}</div>
-              </div>
-            ))}
-          </div>
+          {imageUrl(p.founder?.image, { width: 900 }) && (
+            <div class="founder-hero-img">
+              <img loading="lazy" decoding="async"
+                src={imageUrl(p.founder?.image, { width: 900 })}
+                alt={p.founder?.imageAlt ?? 'Mark Wattles - Founder of 151 Coffee'}
+              />
+            </div>
+          )}
+          {(() => {
+            const bio = p.founder?.bio ?? [
+              'Mark is a highly accomplished entrepreneur with a strong background in business development and growth. Born and raised in both Santa Monica and Texas, he developed a passion for surfing, wakeboarding, and snowboarding from a young age.',
+              'Instead of pursuing a traditional college education, Mark chose to dive into the world of business and has since built an impressive portfolio of successful national ventures.',
+              'Now what makes a successful entrepreneur decide to start one more company? Mark created 151 Coffee as a place for his next generation to not just have a job, but as an entry point into what could be a long-term career; to create growth opportunities through mentorship and on-the-job development, and ultimately show our team that you don’t have to have a college degree in order to earn a six-figure income.',
+            ];
+            const lead = bio.slice(0, -1);
+            const closing = bio[bio.length - 1];
+            return (
+              <>
+                {lead.map((para: string, i: number) => (
+                  <p>{para}</p>
+                ))}
+                <div class="founder-ventures">
+                  {(p.founder?.ventures ?? [
+                    { name: 'Hollywood Entertainment, Inc.', desc: 'Started in 1988. Grew from one store to 1,000 corporate-owned stores in just ten years, reaching $2 Billion in revenue and 2,000 company-owned stores. Sold in 2005.' },
+                    { name: 'HomeAdvisor.com', desc: 'Co-founder of the B2C online home improvement marketplace. Sold to IAC/InterActiveCorp (Nasdaq: IAC).' },
+                    { name: 'Firebirds Wood Fired Grill', desc: 'One of four partners who built this full-service restaurant chain to 45 locations across 18 states. Majority stake sold to Angelo Gordon.' },
+                  ]).map((v: any, i: number) => (
+                    <div class="venture-card">
+                      <div class="venture-name">{v.name}</div>
+                      <div class="venture-desc">{v.desc}</div>
+                    </div>
+                  ))}
+                </div>
+                {closing && <p class="founder-closing">{closing}</p>}
+              </>
+            );
+          })()}
         </div>
       </div>
     </div>
