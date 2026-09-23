@@ -124,6 +124,60 @@ export const COMPONENTS = {
     name: 'text_item',
     schema: { value: { type: 'text' } },
   },
+  // One shared, reusable schema for every SMS/text-link discount landing
+  // page (see storyblok/push-landing-pages.mjs), instead of a bespoke
+  // component per page like the hand-built site pages get -- the whole
+  // point is that a non-developer can duplicate the "template" story in
+  // Storyblok and have a new page with zero schema changes. Deliberately
+  // flat, single-offer fields (not a generic "sections" bloks array like
+  // page.astro's supplementary blocks) because these are read on a phone
+  // via a text message: the entire offer has to fit above the fold on any
+  // phone with no scrolling, which only holds together with a fixed,
+  // single-card layout.
+  landing_page: {
+    name: 'landing_page',
+    is_root: true,
+    schema: {
+      eyebrow: {
+        type: 'text',
+        display_name: 'Eyebrow',
+        description: 'Small label above the headline, e.g. "VETERANS DAY" or "151 REWARDS".',
+      },
+      headline: {
+        type: 'text',
+        display_name: 'Headline',
+        description: 'The big, bold line -- keep this short, it is the first thing read on a phone.',
+      },
+      offer: {
+        type: 'textarea',
+        display_name: 'Offer',
+        description: 'The main offer sentence, e.g. "One free drink of any size."',
+      },
+      code: {
+        type: 'text',
+        display_name: 'Promo Code (optional)',
+        description: 'Shown in a copyable code chip. Leave blank if this offer has no code (e.g. redeemed by showing an ID instead).',
+      },
+      instructions: {
+        type: 'textarea',
+        display_name: 'How To Redeem',
+        description: 'Short redemption steps, e.g. "Show this text and a valid ID to your barista before ordering."',
+      },
+      terms: {
+        type: 'textarea',
+        display_name: 'Fine Print (optional)',
+        description: 'Expiration/eligibility text shown small at the bottom, e.g. "Expires 7 days from the date you received this text."',
+      },
+      ctaLabel: { type: 'text', display_name: 'Button Label' },
+      ctaHref: { type: 'text', display_name: 'Button Link', description: 'Where the button goes, e.g. /locations.' },
+      image: {
+        type: 'asset',
+        filetypes: ['images'],
+        display_name: 'Photo (optional)',
+        description: 'A bonus image below the offer card. Only shows if it fits after the required text on that phone -- never pushes the offer itself below the fold.',
+      },
+    },
+  },
   settings_global: {
     name: 'settings_global',
     is_root: true,
@@ -246,6 +300,21 @@ export function locationContent(l) {
     displayOrder: String(l.displayOrder ?? 99),
     image: l.image ?? '',
     hours: l.hours ?? '',
+  };
+}
+
+export function landingPageContent(l) {
+  return {
+    component: 'landing_page',
+    eyebrow: l.eyebrow ?? '',
+    headline: l.headline ?? '',
+    offer: l.offer ?? '',
+    code: l.code ?? '',
+    instructions: l.instructions ?? '',
+    terms: l.terms ?? '',
+    ctaLabel: l.ctaLabel ?? 'View Locations',
+    ctaHref: l.ctaHref ?? '/locations',
+    image: l.image ?? null,
   };
 }
 

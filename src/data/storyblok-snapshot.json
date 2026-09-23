@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-23T19:27:08.889Z",
+  "generatedAt": "2026-09-23T22:03:10.149Z",
   "stories": {
     "settings/global": {
       "nav": [
@@ -484,13 +484,13 @@
           "name": "Meet the",
           "badge": "",
           "image": {
-            "id": 223150127588263,
+            "id": 223277059244425,
             "alt": "",
             "name": "",
             "focus": "",
             "title": "",
             "source": "",
-            "filename": "https://a.storyblok.com/f/294671107081428/2135x2135/4ba976f13b/pumpkiiiiiiiiiinnnn.png",
+            "filename": "https://a.storyblok.com/f/294671107081428/1350x1350/c93b182cc8/pumpkiiiiiiiiiinnnn.jpg",
             "copyright": "",
             "fieldtype": "asset",
             "meta_data": {},
@@ -4935,6 +4935,144 @@
           "address": "9301 N Fwy",
           "component": "location",
           "displayOrder": "5"
+        }
+      }
+    ],
+    "landing-pages": [
+      {
+        "slug": "template",
+        "uuid": "e6b4f3f5-d7fc-4361-aad8-1a4e60ae0f65",
+        "content": {
+          "_uid": "bc28b3be-eb11-41a8-8184-3e508ea77a25",
+          "code": "",
+          "image": null,
+          "offer": "Describe the offer in one short, punchy sentence.",
+          "terms": "Optional fine print: expiration, eligibility, restrictions.",
+          "ctaHref": "/locations",
+          "eyebrow": "YOUR EYEBROW HERE",
+          "ctaLabel": "View Locations",
+          "headline": "Your Headline Here",
+          "component": "landing_page",
+          "instructions": "How to redeem this offer, in one or two short sentences."
+        }
+      },
+      {
+        "slug": "rewards-free-drink-7day",
+        "uuid": "bb2936ff-61bd-445d-91d8-3e63637db37a",
+        "content": {
+          "_uid": "65b87023-c14d-498c-8615-7bf1ae23fb77",
+          "code": "",
+          "image": null,
+          "offer": "We’ve added one FREE drink of any size to your Rewards account.",
+          "terms": "This offer expires 7 days from the date you received this text.",
+          "ctaHref": "/locations",
+          "eyebrow": "151 COFFEE REWARDS",
+          "ctaLabel": "View Locations",
+          "headline": "One Free Drink",
+          "component": "landing_page",
+          "instructions": "Give your phone number to the barista before ordering and ask to redeem your free drink."
+        }
+      },
+      {
+        "slug": "rewards-free-drink-3day",
+        "uuid": "080e7cc7-cd49-4b22-84fc-e28e24dedd72",
+        "content": {
+          "_uid": "5a79c2ae-2352-4242-bfa1-d43f4235fecc",
+          "code": "",
+          "image": null,
+          "offer": "We’ve added one FREE drink of any size to your Rewards account.",
+          "terms": "This offer expires 3 days from the date you received this text.",
+          "ctaHref": "/locations",
+          "eyebrow": "151 COFFEE REWARDS",
+          "ctaLabel": "View Locations",
+          "headline": "One Free Drink",
+          "component": "landing_page",
+          "instructions": "Give your phone number to the barista before ordering and ask to redeem your free drink."
+        }
+      },
+      {
+        "slug": "rewards-50-off",
+        "uuid": "713208c1-f14b-497e-be74-8cddf6f54a9f",
+        "content": {
+          "_uid": "96284701-0824-4801-82ff-d1a6e9d9dd80",
+          "code": "",
+          "image": null,
+          "offer": "We've added 50% off one drink of any size to your Rewards account.",
+          "terms": "This offer expires 7 days from the date you received this text.",
+          "ctaHref": "/locations",
+          "eyebrow": "151 COFFEE REWARDS",
+          "ctaLabel": "View Locations",
+          "headline": "50% Off One Drink",
+          "component": "landing_page",
+          "instructions": "Give your phone number to the barista before ordering and ask to redeem your 50% off coupon."
+        }
+      },
+      {
+        "slug": "student-happy-hour",
+        "uuid": "69b7f2f0-4514-4b8b-bc61-17879522e5bb",
+        "content": {
+          "_uid": "dd6c8c3e-eaff-41d9-a631-2f802ae47d71",
+          "code": "",
+          "image": null,
+          "offer": "Every Friday in September, from 2pm until close.",
+          "terms": "Cannot be combined with other offers or coupons.",
+          "ctaHref": "/locations",
+          "eyebrow": "STUDENT HAPPY HOUR",
+          "ctaLabel": "View Locations",
+          "headline": "4 Medium Drinks for $16",
+          "component": "landing_page",
+          "instructions": "Show your High School or College Student ID to your barista before ordering."
+        }
+      },
+      {
+        "slug": "family-day-v2",
+        "uuid": "e0860c2e-5a70-48d5-8227-ddad57656883",
+        "content": {
+          "_uid": "5ef139ec-d50c-4cef-b023-47c6769be829",
+          "code": "",
+          "image": null,
+          "offer": "We've added 50% off your entire order, every Sunday from 12pm until close.",
+          "terms": "Available to Rewards members who received this offer by text. Sundays, 12pm-close only.",
+          "ctaHref": "/locations",
+          "eyebrow": "151 COFFEE FAMILY DAY",
+          "ctaLabel": "View Locations",
+          "headline": "50% Off Your Entire Order",
+          "component": "landing_page",
+          "instructions": "Give your phone number to the barista before ordering and let them know you'd like to redeem your Family Day coupon."
+        }
+      },
+      {
+        "slug": "family-day",
+        "uuid": "51645e5b-9845-4289-a290-6f138bbd120d",
+        "content": {
+          "_uid": "fe6a1612-2dde-4738-93f7-8145763d9f18",
+          "code": "",
+          "image": null,
+          "offer": "We've added 50% off your entire order, every Sunday from 12pm until close.",
+          "terms": "Available to Rewards members who received this offer by text. Sundays, 12pm-close only.",
+          "ctaHref": "/locations",
+          "eyebrow": "151 COFFEE FAMILY DAY",
+          "ctaLabel": "View Locations",
+          "headline": "50% Off Your Entire Order",
+          "component": "landing_page",
+          "instructions": "Give your phone number to the barista before ordering and let them know you'd like to redeem your Family Day coupon."
+        }
+      },
+      {
+        "slug": "veterans-day",
+        "uuid": "c69099de-c289-43be-bdde-ac5c5a955b01",
+        "content": {
+          "_uid": "b1aa2d12-53fb-40f3-bc4c-c59d5908f1c9",
+          "code": "",
+          "image": null,
+          "offer": "Enjoy one FREE drink of any size, on us.",
+          "terms": "Valid on Veterans Day only, at any 151 Coffee location.",
+          "ctaHref": "/locations",
+          "eyebrow": "VETERANS DAY",
+          "ctaLabel": "View Locations",
+          "headline": "Thank You For Your Service",
+          "component": "landing_page",
+          "instructions": "Tell your barista you're a Veteran or active-duty military member and show proof of service or a military ID before ordering."
         }
       }
     ]

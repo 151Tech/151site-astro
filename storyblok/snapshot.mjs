@@ -45,7 +45,7 @@ const STORY_SLUGS = [
 // Every folder fetched via getStories() across the codebase. "products" is
 // the Storyblok folder (renamed from "drinks" since it holds food items
 // too) that src/lib/storyblok.ts's getDrinks()/getDrink() read from.
-const COLLECTIONS = ['products', 'categories', 'locations'];
+const COLLECTIONS = ['products', 'categories', 'locations', 'landing-pages'];
 
 async function fetchStory(slug) {
   const { data } = await client.get(`cdn/stories/${slug}`, { version: 'published' });

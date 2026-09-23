@@ -1,0 +1,222 @@
+---
+export const prerender = import.meta.env.STORYBLOK_DRAFT_MODE !== 'true';
+import Layout from '../layouts/Layout.astro';
+import Editable from '../components/Editable.astro';
+import { getLandingPages, getSettings, imageUrl } from '../lib/storyblok';
+
+// SMS/text-link discount landing pages -- every story under the
+// landing-pages/ folder gets a route here automatically (see
+// storyblok/push-landing-pages.mjs to seed new ones, or duplicate the
+// "template" story directly in Storyblok, no code change needed either way).
+// A plain top-level [slug] (rather than nesting under e.g. /deals/) is
+// deliberate: these links go out over text, so the URL itself needs to stay
+// as short as the offer's own short code was on the old site.
+export async function getStaticPaths() {
+  const pages = await getLandingPages();
+  return pages.map((p: any) => ({ params: { slug: p.slug } }));
+}
+
+const { slug } = Astro.params;
+const [pages, settingsData] = await Promise.all([getLandingPages(), getSettings()]);
+const page = pages.find((p: any) => p.slug === slug);
+
+if (!page) return Astro.redirect('/');
+
+const logoUrl = imageUrl((settingsData as any)?.logo, { width: 120 });
+const bonusImage = imageUrl(page.image, { width: 700 });
+---
+
+<Layout
+  title={`${page.headline || 'Special Offer'} | 151 Coffee`}
+  description={page.offer || undefined}
+  bodyClass="landing-page-body"
+>
+  <Editable blok={page} />
+
+  <main class="landing-page">
+    <a href="/" class="landing-logo" aria-label="151 Coffee home">
+      {logoUrl ? <img src={logoUrl} alt="151 Coffee" /> : <span>151 Coffee</span>}
+    </a>
+
+    <div class="landing-content">
+      {page.eyebrow && <p class="landing-eyebrow">{page.eyebrow}</p>}
+      {page.headline && <h1 class="landing-headline">{page.headline}</h1>}
+      {page.offer && <p class="landing-offer">{page.offer}</p>}
+      {page.code && <p class="landing-code">{page.code}</p>}
+
+      {bonusImage && (
+        <div class="landing-image">
+          <img src={bonusImage} alt="" loading="eager" />
+        </div>
+      )}
+
+      {page.instructions && <p class="landing-instructions">{page.instructions}</p>}
+
+      <a href={page.ctaHref || '/locations'} class="btn-primary landing-cta">
+        {page.ctaLabel || 'Find a Location'}
+      </a>
+
+      {page.terms && <p class="landing-terms">{page.terms}</p>}
+    </div>
+  </main>
+</Layout>
+
+<style>
+  /* Fixed, full-viewport, non-scrolling by design: these are opened straight
+     from a text message, often one-handed, and the entire offer -- not just
+     a hint of it above a scroll indicator -- has to be readable the instant
+     the page paints. `100dvh` (not `100vh`) accounts for a mobile browser's
+     collapsing address bar, which `vh` overshoots on first paint. The bonus
+     photo is the one thing allowed to disappear first: it's real content on
+     a tall phone, but the two media queries below drop it (and then tighten
+     spacing further) before anything else gives up, on shorter screens. */
+  :global(body.landing-page-body) {
+    overflow: hidden;
+    height: 100dvh;
+  }
+
+  .landing-page {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: radial-gradient(circle at 50% 0%, rgba(230, 57, 70, 0.25) 0%, transparent 55%), var(--black);
+    padding: max(1.1rem, env(safe-area-inset-top)) 1.25rem max(1.1rem, env(safe-area-inset-bottom));
+    overflow: hidden;
+  }
+
+  .landing-logo {
+    flex: 0 0 auto;
+    display: block;
+    margin-bottom: 0.6rem;
+  }
+  .landing-logo img {
+    height: 34px;
+    width: auto;
+    display: block;
+  }
+  .landing-logo span {
+    font-family: var(--font-bebas-neue), 'Impact', sans-serif;
+    color: var(--white);
+    font-size: 1.1rem;
+    letter-spacing: 0.04em;
+  }
+
+  .landing-content {
+    flex: 1 1 auto;
+    min-height: 0;
+    width: 100%;
+    max-width: 480px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 0.55rem;
+  }
+
+  .landing-eyebrow {
+    flex: 0 0 auto;
+    margin: 0;
+    color: var(--red-soft);
+    font-weight: 700;
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .landing-headline {
+    flex: 0 0 auto;
+    margin: 0;
+    font-family: var(--font-bebas-neue), 'Impact', sans-serif;
+    color: var(--white);
+    line-height: 1.02;
+    letter-spacing: 0.01em;
+    font-size: clamp(1.9rem, 9vw, 3rem);
+  }
+
+  .landing-offer {
+    flex: 0 0 auto;
+    margin: 0;
+    color: var(--white);
+    font-size: clamp(1rem, 4vw, 1.2rem);
+    line-height: 1.35;
+    max-width: 34ch;
+  }
+
+  .landing-code {
+    flex: 0 0 auto;
+    margin: 0.15rem 0;
+    display: inline-block;
+    padding: 0.4rem 1.1rem;
+    border: 2px dashed var(--red);
+    border-radius: var(--radius-pill);
+    color: var(--white);
+    font-family: var(--font-inter), monospace;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+  }
+
+  /* Allowed to shrink (and get clipped by its own overflow:hidden) before
+     any text block does -- see the top-of-file comment. */
+  .landing-image {
+    flex: 1 1 auto;
+    min-height: 0;
+    width: 100%;
+    max-width: 260px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-radius: var(--radius);
+    margin: 0.2rem 0;
+  }
+  .landing-image img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+
+  .landing-instructions {
+    flex: 0 0 auto;
+    margin: 0;
+    color: var(--light-gray);
+    font-size: 0.85rem;
+    line-height: 1.4;
+    max-width: 36ch;
+  }
+
+  .landing-cta {
+    flex: 0 0 auto;
+    margin-top: 0.2rem;
+  }
+
+  .landing-terms {
+    flex: 0 0 auto;
+    margin: 0.3rem 0 0;
+    color: var(--light-gray);
+    opacity: 0.7;
+    font-size: 0.7rem;
+    line-height: 1.35;
+    max-width: 38ch;
+  }
+
+  /* Drop the bonus photo first -- it was already the one thing explicitly
+     allowed to go (see the top-of-file comment) -- to guarantee every text
+     block still fits above the fold on a short/older phone (iPhone SE-class,
+     ~667px tall, minus browser chrome). */
+  @media (max-height: 700px) {
+    .landing-image { display: none; }
+  }
+
+  /* Below that, tighten spacing and type size further rather than drop
+     anything else -- the offer, redemption steps, and CTA are the whole
+     point of the page and are never allowed to require scrolling. */
+  @media (max-height: 580px) {
+    .landing-content { gap: 0.35rem; }
+    .landing-headline { font-size: clamp(1.5rem, 8vw, 2.2rem); }
+    .landing-offer { font-size: 0.95rem; }
+    .landing-instructions, .landing-terms { font-size: 0.75rem; }
+  }
+</style>

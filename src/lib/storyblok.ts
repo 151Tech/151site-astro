@@ -286,3 +286,9 @@ export const getLocations = async () =>
 export const getDrink = (slug: string) => getStory(`products/${slug}`);
 export const getLocation = async (slug: string) => withCoordOverride(slug, await getStory(`locations/${slug}`));
 export const getCategoryBySlug = (slug: string) => getStory(`categories/${slug}`);
+// SMS/text-link discount landing pages (see storyblok/push-landing-pages.mjs
+// and src/pages/[slug].astro) -- one flat, reusable "landing_page" component
+// per story, same folder-of-stories pattern as products/categories/locations
+// above, so a new page is just a new story, no code change required.
+export const getLandingPages = () => getStories('landing-pages');
+export const getLandingPage = (slug: string) => getStory(`landing-pages/${slug}`);
