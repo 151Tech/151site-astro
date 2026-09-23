@@ -24,6 +24,14 @@ if (!page) return Astro.redirect('/');
 
 const logoUrl = imageUrl((settingsData as any)?.logo, { width: 120 });
 const bonusImage = imageUrl(page.image, { width: 700 });
+
+// Per-slug background override -- veterans-day only, per the owner's
+// request -- rather than a new generic CMS field for a one-off ask (same
+// pattern as LOCATION_COORD_OVERRIDES in src/lib/storyblok.ts).
+const BACKGROUND_OVERRIDES: Record<string, string> = {
+  'veterans-day': '/images/landing/veterans-day-bg.jpg',
+};
+const backgroundImage = BACKGROUND_OVERRIDES[slug as string];
 ---
 
 <Layout
@@ -33,7 +41,10 @@ const bonusImage = imageUrl(page.image, { width: 700 });
 >
   <Editable blok={page} />
 
-  <main class="landing-page">
+  <main
+    class:list={['landing-page', { 'has-bg-image': !!backgroundImage }]}
+    style={backgroundImage ? `--landing-bg: url(${backgroundImage})` : undefined}
+  >
     <a href="/" class="landing-logo" aria-label="151 Coffee home">
       {logoUrl ? <img src={logoUrl} alt="151 Coffee" /> : <span>151 Coffee</span>}
     </a>
@@ -86,13 +97,28 @@ const bonusImage = imageUrl(page.image, { width: 700 });
     overflow: hidden;
   }
 
+  /* Per-slug background photo (see BACKGROUND_OVERRIDES above). `top center`
+     is deliberate: the source image has its subject (a flag) in the upper
+     portion with plain sky below, and `cover` on a phone's tall/narrow
+     viewport crops the sides rather than the top, so the subject stays
+     visible above the text at every viewport height. The scrim keeps the
+     text block legible without hiding the subject near the top. */
+  .landing-page.has-bg-image {
+    background-image:
+      linear-gradient(to bottom, rgba(17, 17, 17, 0.15) 0%, rgba(17, 17, 17, 0.55) 55%, rgba(17, 17, 17, 0.85) 100%),
+      var(--landing-bg);
+    background-size: cover;
+    background-position: top center;
+    background-repeat: no-repeat;
+  }
+
   .landing-logo {
     flex: 0 0 auto;
     display: block;
     margin-bottom: 0.6rem;
   }
   .landing-logo img {
-    height: 34px;
+    height: 52px;
     width: auto;
     display: block;
   }
@@ -218,5 +244,15 @@ const bonusImage = imageUrl(page.image, { width: 700 });
     .landing-headline { font-size: clamp(1.5rem, 8vw, 2.2rem); }
     .landing-offer { font-size: 0.95rem; }
     .landing-instructions, .landing-terms { font-size: 0.75rem; }
+  }
+
+  /* Narrower than the shared .btn-primary/.gc-btn padding on phones -- this
+     targets .landing-cta only, so other buttons on the site keep their
+     normal width. */
+  @media (max-width: 480px) {
+    .landing-cta {
+      padding: 0.65rem 1.15rem;
+      font-size: 0.9rem;
+    }
   }
 </style>
