@@ -1739,7 +1739,55 @@ nav.nav-scrolled .nav-container {
     width: 0%;
     background: var(--red);
     border-radius: inherit;
+    /* Driven directly from the video's own playback position (see the
+       `timeupdate` handler in InstagramCarousel.astro), not a fixed-duration
+       CSS transition -- a short transition here just smooths over the
+       browser's own timeupdate tick rate (roughly every 250ms) instead of
+       visibly stepping. */
+    transition: width 0.25s linear;
 }
+
+/* Only ever shown on the center slide -- side slides are always paused and
+   muted, so there is nothing to unmute there. */
+.ig-mute-btn {
+    position: absolute;
+    right: 0.7rem;
+    bottom: 0.7rem;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(17, 17, 17, 0.55);
+    color: var(--white);
+    cursor: pointer;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease, background 0.2s ease;
+}
+
+.ig-slide.is-active .ig-mute-btn {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.ig-mute-btn:hover {
+    background: rgba(17, 17, 17, 0.8);
+}
+
+.ig-mute-btn svg {
+    width: 18px;
+    height: 18px;
+}
+
+/* Two icons live in the DOM at once; only one is shown, matching the
+   video's own current muted state. */
+.ig-mute-btn .ig-icon-unmuted { display: none; }
+.ig-mute-btn.is-unmuted .ig-icon-muted { display: none; }
+.ig-mute-btn.is-unmuted .ig-icon-unmuted { display: block; }
 
 @keyframes ig-pulse {
     0%, 100% { transform: scale(1); opacity: 1; }

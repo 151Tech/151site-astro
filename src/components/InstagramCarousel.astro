@@ -71,7 +71,7 @@ const items = (media ?? []).slice(0, 3);
           </div>
           <a class="ig-card-placeholder" href={m.permalink} target="_blank" rel="noopener noreferrer" aria-label={m.caption || 'View on Instagram'}>
             {m.videoUrl ? (
-              <video src={m.videoUrl} poster={m.mediaUrl || undefined} autoplay muted loop playsinline preload="metadata" />
+              <video src={m.videoUrl} poster={m.mediaUrl || undefined} muted playsinline preload="metadata" />
             ) : (
               <>
                 {m.mediaUrl && <img src={m.mediaUrl} alt="" loading="lazy" />}
@@ -79,6 +79,12 @@ const items = (media ?? []).slice(0, 3);
               </>
             )}
           </a>
+          {m.videoUrl && (
+            <button type="button" class="ig-mute-btn" data-mute-btn aria-label="Unmute" aria-pressed="false">
+              <svg class="ig-icon-muted" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4 9v6h4l5 5V4L8 9H4zm11.5 3a4.5 4.5 0 0 0-2.5-4.03v8.06A4.5 4.5 0 0 0 15.5 12z"/><path d="M18.5 4.5 4.5 18.5l-1-1L17.5 3.5z"/></svg>
+              <svg class="ig-icon-unmuted" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4 9v6h4l5 5V4L8 9H4zm11.5 3a4.5 4.5 0 0 0-2.5-4.03v8.06A4.5 4.5 0 0 0 15.5 12zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+            </button>
+          )}
         </div>
       ))}
     </div>
@@ -90,10 +96,13 @@ const items = (media ?? []).slice(0, 3);
 )}
 
 <script>
-  // Rotates which of the (up to) 3 slides sits in the left/center/right slot
-  // on a fixed timer. See the top-of-file comment for why this is timer-based
-  // rather than event-based: there's no "ended" event to trigger the next
-  // rotation from for a static cover-card feed.
+  // Rotates which of the (up to) 3 slides sits in the left/center/right slot,
+  // driven by the CENTER video's own "ended" event rather than a fixed timer
+  // -- only the center slide ever plays (and only it is ever unmuted; side
+  // slides are always paused and muted), so "this video finished" is exactly
+  // the moment to advance. A slide with no video (the still-image Graph API
+  // path) has nothing to end on, so PLAYBACK_FALLBACK_MS below covers that
+  // case with an ordinary timer instead.
   //
   // Direction matches the requested motion: the right slide moves to center,
   // the center slide moves to left, and the left slide moves to right
@@ -107,36 +116,121 @@ const items = (media ?? []).slice(0, 3);
   // transition) and finally animates into the normal dimmed right slot. The
   // other two legs (center->left, right->center) just swap classes directly
   // since both endpoints are visible the whole time.
-  const ROTATE_INTERVAL_MS = 15000;
+  const PLAYBACK_FALLBACK_MS = 8000; // only used for slides with no video to end on
   const EXIT_MS = 700; // matches the .ig-slide transition duration in style.css
   const SLOT_CLASSES = ['slot-left', 'slot-center', 'slot-right'];
 
-  // (Re)starts the "Now Playing" progress bar inside one slide, timed to
-  // land at 100% right as the next rotation fires. Restarting means forcing
-  // the bar back to 0 with transitions off, then re-enabling them on the
-  // next frame -- without the reflow in between, the browser would just see
-  // "width: 100%" set twice and skip straight to the end state.
-  function startProgress(slide: HTMLElement) {
-    const bar = slide.querySelector<HTMLElement>('.ig-progress > i');
-    if (!bar) return;
-    bar.style.transition = 'none';
-    bar.style.width = '0%';
-    void bar.offsetWidth; // force the reset to paint before re-enabling the transition
-    bar.style.transition = `width ${ROTATE_INTERVAL_MS}ms linear`;
-    bar.style.width = '100%';
+  function getVideo(slide: HTMLElement) {
+    return slide.querySelector<HTMLVideoElement>('video');
+  }
+
+  function getMuteBtn(slide: HTMLElement) {
+    return slide.querySelector<HTMLButtonElement>('[data-mute-btn]');
+  }
+
+  function getProgressBar(slide: HTMLElement) {
+    return slide.querySelector<HTMLElement>('.ig-progress > i');
+  }
+
+  function setBarWidth(slide: HTMLElement, pct: number) {
+    const bar = getProgressBar(slide);
+    if (bar) bar.style.width = `${Math.max(0, Math.min(100, pct))}%`;
+  }
+
+  // Only the slide currently in the center slot ever plays. Every other
+  // slide -- including one mid-exit -- gets paused and rewound, and its mute
+  // button (if any) reset, so a video never keeps running in the background
+  // slot or bleeds audio from a stale unmute.
+  function pauseSlide(slide: HTMLElement) {
+    const video = getVideo(slide);
+    if (video) {
+      video.pause();
+      video.currentTime = 0;
+      video.muted = true;
+    }
+    const btn = getMuteBtn(slide);
+    if (btn) {
+      btn.classList.remove('is-unmuted');
+      btn.setAttribute('aria-label', 'Unmute');
+      btn.setAttribute('aria-pressed', 'false');
+    }
+    setBarWidth(slide, 0);
+  }
+
+  // Always (re)starts center playback muted -- autoplay-with-sound is
+  // blocked by every major browser regardless of user gesture history, and
+  // resetting to muted on every rotation keeps that guarantee instead of
+  // depending on whichever mute state the video happened to be left in.
+  function playCenter(slide: HTMLElement) {
+    const video = getVideo(slide);
+    if (!video) return;
+    video.currentTime = 0;
+    video.muted = true;
+    setBarWidth(slide, 0);
+    video.play().catch(() => {
+      // Autoplay can still be refused (e.g. low-power mode) -- the poster
+      // frame stays visible and the fallback timer (wired below) still
+      // advances the carousel on schedule either way.
+    });
   }
 
   function initIgStage(stage: Element) {
     const slides = Array.from(stage.querySelectorAll<HTMLElement>('.ig-slide'));
+
+    // Unmuting is a per-slide toggle on whichever video is currently playing;
+    // wiring it once at init (rather than re-wiring per rotation) is simpler
+    // and the handler already no-ops harmlessly on a paused, backgrounded
+    // slide since nothing calls it there.
+    slides.forEach((slide) => {
+      const video = getVideo(slide);
+      const btn = getMuteBtn(slide);
+      if (!video || !btn) return;
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        video.muted = !video.muted;
+        btn.classList.toggle('is-unmuted', !video.muted);
+        btn.setAttribute('aria-label', video.muted ? 'Unmute' : 'Mute');
+        btn.setAttribute('aria-pressed', String(!video.muted));
+      });
+      video.addEventListener('timeupdate', () => {
+        if (!slide.classList.contains('is-active') || !video.duration) return;
+        setBarWidth(slide, (video.currentTime / video.duration) * 100);
+      });
+    });
+
     if (slides.length < 3) {
-      // Fewer than 3 items: nothing to rotate, just center whatever exists.
+      // Fewer than 3 items: nothing to rotate, just center whatever exists
+      // and let it loop on its own (there's no "next" slide to hand off to).
       slides.forEach((el) => el.classList.add('slot-center', 'slot-static', 'is-active'));
-      if (slides[0]) startProgress(slides[0]);
+      const only = slides[0];
+      if (only) {
+        const video = getVideo(only);
+        if (video) video.loop = true;
+        playCenter(only);
+      }
       return;
     }
 
     // order[0] = index of the item currently in the left slot, etc.
     let order = [2, 0, 1]; // left=3rd-newest, center=newest, right=2nd-newest
+    let fallbackTimeoutId: ReturnType<typeof setTimeout> | null = null;
+
+    function clearFallback() {
+      if (fallbackTimeoutId !== null) { clearTimeout(fallbackTimeoutId); fallbackTimeoutId = null; }
+    }
+
+    function armFallback(centerSlide: HTMLElement) {
+      clearFallback();
+      // A slide with a video advances on its own "ended" event (wired
+      // below); this timer is only the advance mechanism for a still-image
+      // slide, which has no natural end. Harmless if a video slide's
+      // "ended" fires first -- rotate() below always cancels it.
+      if (!getVideo(centerSlide)) {
+        fallbackTimeoutId = setTimeout(rotate, PLAYBACK_FALLBACK_MS);
+      }
+    }
+
     const applySlots = () => {
       slides.forEach((el, i) => {
         el.classList.remove(...SLOT_CLASSES, 'slot-exit', 'slot-enter-prep', 'is-active');
@@ -144,34 +238,18 @@ const items = (media ?? []).slice(0, 3);
         el.classList.add(SLOT_CLASSES[slot]);
         if (slot === 1) {
           el.classList.add('is-active');
-          startProgress(el);
+        } else {
+          pauseSlide(el);
         }
       });
     };
     applySlots(); // initial paint: all 3 slides visible at rest
-
-    // setInterval + a nested setTimeout is fine while the tab stays in the
-    // foreground, but browsers throttle/pause timers on a backgrounded tab
-    // (switching apps on a phone, switching browser tabs) and then fire the
-    // backlog in a burst once it's foregrounded again. When that happens, an
-    // old tick's still-pending 700ms exit-timeout can land *after* one or
-    // more newer ticks have already reassigned slots, unconditionally
-    // re-adding .slot-right to a slide a newer tick already moved elsewhere
-    // -- leaving two slides both classed .slot-right at once (the reported
-    // "two overlap on the right side" after the page has sat open a while).
-    // Self-scheduling via setTimeout (rather than setInterval), tracking the
-    // pending exit timeout so it can be cancelled, and resetting cleanly on
-    // visibilitychange instead of letting a burst of missed ticks fire all
-    // fixes that.
-    let exitTimeoutId: ReturnType<typeof setTimeout> | null = null;
-    let rotateTimeoutId: ReturnType<typeof setTimeout> | null = null;
-
-    function clearPending() {
-      if (exitTimeoutId !== null) { clearTimeout(exitTimeoutId); exitTimeoutId = null; }
-      if (rotateTimeoutId !== null) { clearTimeout(rotateTimeoutId); rotateTimeoutId = null; }
-    }
+    const initialCenter = slides[order[1]];
+    playCenter(initialCenter);
+    armFallback(initialCenter);
 
     function rotate() {
+      clearFallback();
       const [leftIdx, centerIdx, rightIdx] = order;
       const leftEl = slides[leftIdx];
       const centerEl = slides[centerIdx];
@@ -181,16 +259,17 @@ const items = (media ?? []).slice(0, 3);
       // stay visible throughout so the base .7s transition just crossfades.
       centerEl.classList.remove('slot-center', 'is-active');
       centerEl.classList.add('slot-left');
+      pauseSlide(centerEl);
 
       rightEl.classList.remove('slot-right');
       rightEl.classList.add('slot-center', 'is-active');
-      startProgress(rightEl);
+      playCenter(rightEl);
+      armFallback(rightEl);
 
       // left -> right: exit fully first, then reappear from the right.
       leftEl.classList.remove('slot-left');
       leftEl.classList.add('slot-exit');
-      exitTimeoutId = setTimeout(() => {
-        exitTimeoutId = null;
+      setTimeout(() => {
         leftEl.classList.remove('slot-exit');
         leftEl.classList.add('slot-enter-prep');
         void leftEl.offsetWidth; // force the instant off-right jump to paint
@@ -201,28 +280,30 @@ const items = (media ?? []).slice(0, 3);
       }, EXIT_MS);
 
       order = [centerIdx, rightIdx, leftIdx];
-      rotateTimeoutId = setTimeout(rotate, ROTATE_INTERVAL_MS);
     }
 
-    rotateTimeoutId = setTimeout(rotate, ROTATE_INTERVAL_MS);
+    // A video only advances the carousel while it's actually the one in the
+    // center slot -- checking is-active at fire time (rather than relying on
+    // element identity) means a stale "ended" from a slide that already got
+    // paused/rewound elsewhere can never double-trigger a rotation.
+    slides.forEach((slide) => {
+      const video = getVideo(slide);
+      if (!video) return;
+      video.addEventListener('ended', () => {
+        if (slide.classList.contains('is-active')) rotate();
+      });
+    });
 
     document.addEventListener('visibilitychange', () => {
+      const centerSlide = slides[order[1]];
+      const video = getVideo(centerSlide);
       if (document.hidden) {
-        // Freeze in place rather than let the browser queue up a burst of
-        // missed ticks to fire all at once when it comes back.
-        clearPending();
+        clearFallback();
+        video?.pause();
         return;
       }
-      // Snap anything mid-exit to its resting spot instead of resuming a
-      // stale animation, then restart the loop clean.
-      slides.forEach((el) => {
-        if (el.classList.contains('slot-exit') || el.classList.contains('slot-enter-prep')) {
-          el.classList.remove('slot-exit', 'slot-enter-prep');
-          el.classList.add('slot-right');
-        }
-      });
-      clearPending();
-      rotateTimeoutId = setTimeout(rotate, ROTATE_INTERVAL_MS);
+      video?.play().catch(() => {});
+      armFallback(centerSlide);
     });
   }
 
