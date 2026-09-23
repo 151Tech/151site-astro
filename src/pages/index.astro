@@ -9,64 +9,56 @@ import Editable from '../components/Editable.astro';
 import { getPage, getSettings, getLocations, unwrapSingletons, imageUrl, mediaUrl } from '../lib/storyblok';
 import JsonLd from '../components/JsonLd.astro';
 import { graph, organizationSchema, locationSchema } from '../lib/seo';
-import TikTokCarousel from '../components/TikTokCarousel.astro';
-import type { TikTokVideo } from '../lib/tiktok';
+import InstagramCarousel from '../components/InstagramCarousel.astro';
+import type { InstagramMedia } from '../lib/instagram';
 
-// The TikTok Display API needs a KV binding (TIKTOK_CACHE) that only exists
-// under the Cloudflare adapter Webflow Cloud injects in production -- it
-// isn't there in plain `astro dev`, and `cloudflare:workers` doesn't even
+// The Instagram Graph API needs a KV binding (INSTAGRAM_CACHE) that only
+// exists under the Cloudflare adapter Webflow Cloud injects in production --
+// it isn't there in plain `astro dev`, and `cloudflare:workers` doesn't even
 // exist as a module outside a Workers runtime. This dynamic import, gated on
 // DEV, is what keeps local dev working: Vite only resolves it if the line
 // actually runs, so a bare `astro dev` never touches it.
-//
-// No stand-in cards here: TikTok's real cover images are signed URLs with a
-// short expiry, so anything that looks like a real thumbnail (whether
-// hand-picked or pulled live via oEmbed) would bake an expiring URL into
-// this page's prerendered HTML and 403 within days -- the same failure mode
-// already hit once with a hardcoded fallback. TikTokCarousel already renders
-// nothing when `videos` is null/empty (see storyblok/tiktok-setup.md), which
-// is the only state that's safe to ship before the one-time, human-only
-// OAuth authorization as @151coffee is done.
-let tiktokVideos: TikTokVideo[] | null = null;
+let instagramMedia: InstagramMedia[] | null = null;
 if (!import.meta.env.DEV) {
   try {
-    const [{ env }, { getLatestTikToks }] = await Promise.all([
+    const [{ env }, { getLatestInstagramMedia }] = await Promise.all([
       import('cloudflare:workers'),
-      import('../lib/tiktok'),
+      import('../lib/instagram'),
     ]);
-    tiktokVideos = await getLatestTikToks(env as any);
+    instagramMedia = await getLatestInstagramMedia(env as any);
   } catch (err) {
-    console.error('[tiktok] unavailable on this request', err);
+    console.error('[instagram] unavailable on this request', err);
   }
 }
 
 // TEMPORARY: owner asked for the section back before the real OAuth/API
-// integration above is authorized. These are locally-hosted screenshots
-// (captured cover frames, not TikTok's own signed CDN URLs -- see the
-// no-expiring-URL note above), so they don't share that failure mode.
-// Remove this block once tiktokVideos above is reliably populated.
-if (!tiktokVideos) {
-  tiktokVideos = [
+// integration above is authorized. These 3 cards reuse existing locally-
+// hosted photography (not a live Instagram feed), all linking out to the
+// real @151coffee profile rather than fabricated individual post URLs/
+// captions. Remove this block once instagramMedia above is reliably
+// populated.
+if (!instagramMedia) {
+  instagramMedia = [
     {
-      id: '7685497467449773325',
-      embedLink: 'https://www.tiktok.com/@151coffee/video/7685497467449773325',
-      coverImageUrl: '/images/tiktok/tiktok-1.jpg',
-      title: 'Did we say your name? What names should we say next?',
-      createTime: 0,
+      id: 'temp-1',
+      permalink: 'https://www.instagram.com/151coffee',
+      mediaUrl: '/images/instagram/ig-1.jpg',
+      caption: 'Follow @151coffee on Instagram for our latest drinks and drops.',
+      timestamp: '',
     },
     {
-      id: '7684665451523149070',
-      embedLink: 'https://www.tiktok.com/@151coffee/video/7684665451523149070',
-      coverImageUrl: '/images/tiktok/tiktok-2.jpg',
-      title: 'Sticker drop alert! Free sticker with every drink Tuesday 9/15.',
-      createTime: 0,
+      id: 'temp-2',
+      permalink: 'https://www.instagram.com/151coffee',
+      mediaUrl: '/images/instagram/ig-2.jpg',
+      caption: 'Follow @151coffee on Instagram for our latest drinks and drops.',
+      timestamp: '',
     },
     {
-      id: '7684262533624089870',
-      embedLink: 'https://www.tiktok.com/@151coffee/video/7684262533624089870',
-      coverImageUrl: '/images/tiktok/tiktok-3.jpg',
-      title: 'Hey students! Fill-A-Tray for $16, every Friday in September.',
-      createTime: 0,
+      id: 'temp-3',
+      permalink: 'https://www.instagram.com/151coffee',
+      mediaUrl: '/images/instagram/ig-3.jpg',
+      caption: 'Follow @151coffee on Instagram for our latest drinks and drops.',
+      timestamp: '',
     },
   ];
 }
@@ -232,11 +224,11 @@ const storesJson = JSON.stringify(locations.map((l: any) => ({
     </section>
   )}
 
-  <!-- TikTok feed takes the Locations section's old slot and dark-grid
+  <!-- Instagram feed takes the Locations section's old slot and dark-grid
        background on the homepage; the full locator (search + map) still
        lives on its own page at /locations, linked from the nav and footer,
        so nothing here was the only way to find a store. -->
-  <TikTokCarousel videos={tiktokVideos} social={s.social} />
+  <InstagramCarousel media={instagramMedia} social={s.social} />
 
   <!-- Menu Section -->
   {(p.visibility?.menuGrid ?? true) && (

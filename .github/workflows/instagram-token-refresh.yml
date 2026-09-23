@@ -1,0 +1,27 @@
+name: Refresh Instagram token
+
+# Instagram's long-lived token is valid ~60 days but does NOT renew itself --
+# it has to be actively refreshed before it expires or the homepage carousel
+# falls back to static content until someone re-runs the one-time OAuth
+# authorization by hand. This hits the deployed site's own refresh endpoint
+# (src/pages/api/instagram-token-refresh.ts) well inside that window.
+#
+# Every-10-days is deliberately much tighter than the ~50-day cadence that
+# would technically be enough: see storyblok-rebuild.yml for why GitHub's
+# `schedule` trigger is unreliable under load (measured drift of 100+ minutes
+# on an hourly cron). A monthly-scale cadence has far more room to absorb a
+# dropped tick or two than an hourly one does, but there's no reason to cut
+# that margin close when the job itself is nearly free to run often.
+on:
+  schedule:
+    - cron: '0 6 */10 * *'
+  workflow_dispatch: {}
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call refresh endpoint
+        run: |
+          curl -sf -X POST "${{ secrets.INSTAGRAM_REFRESH_URL }}" \
+            -H "x-refresh-secret: ${{ secrets.INSTAGRAM_REFRESH_SECRET }}"

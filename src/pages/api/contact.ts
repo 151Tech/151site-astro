@@ -20,7 +20,7 @@
 // `.FOO` property access, never a computed one -- that always evaluated to
 // undefined. `env` from cloudflare:workers is a real per-request runtime
 // object, so both problems go away; this is the same accessor already proven
-// in src/pages/api/tiktok-oauth-callback.ts and src/lib/tiktok.ts.
+// in src/pages/api/instagram-oauth-callback.ts and src/lib/instagram.ts.
 import { env } from 'cloudflare:workers';
 
 export const prerender = false;
@@ -182,12 +182,12 @@ export async function POST({ request }: { request: Request }) {
 
   // Cheap per-IP volume cap so a scripted loop cannot flood the team inbox or
   // burn the Resend monthly quota (which would silently stop real leads from
-  // being delivered once exhausted). Reuses the TIKTOK_CACHE KV namespace
+  // being delivered once exhausted). Reuses the INSTAGRAM_CACHE KV namespace
   // under its own key prefix rather than provisioning a second binding.
   // Deliberately fails OPEN: if KV is unavailable or errors, the submission
   // still sends -- a rate limiter that blocks on infrastructure trouble would
   // be worse than no rate limiter at all for a form that real customers rely on.
-  const rateLimitKv = (env as any).TIKTOK_CACHE;
+  const rateLimitKv = (env as any).INSTAGRAM_CACHE;
   if (rateLimitKv) {
     try {
       const ip =

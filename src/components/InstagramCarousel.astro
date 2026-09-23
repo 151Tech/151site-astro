@@ -1,0 +1,219 @@
+---
+// The 3 most recent @151coffee Instagram posts/reels, shown as a 3-card
+// "coverflow": the newest sits larger in the center, the 2nd newest smaller
+// on the right, the 3rd smaller on the left. `media` is fetched server-side
+// via the Instagram Graph API (see src/lib/instagram.ts) and passed in as a
+// prop rather than fetched here, so this component stays a pure renderer --
+// easy to preview with fake data without needing live credentials.
+//
+// These render as static cover-image cards (not a live Instagram embed):
+// Instagram's oEmbed widget can't be styled/controlled enough to fit this
+// layout, and only exposes a single post at a time rather than a feed. A
+// static thumbnail that links out to the real post sidesteps that. What
+// still rotates is which slide sits in which slot, on a fixed timer
+// (ROTATE_INTERVAL_MS below) -- purely a visual "now featured" cue, not
+// actual playback.
+interface Media {
+  id: string;
+  permalink: string;
+  mediaUrl: string;
+  caption: string;
+}
+
+interface Props {
+  media: Media[] | null;
+  heading?: string;
+  social?: { tiktok?: string; instagram?: string; facebook?: string };
+}
+
+const { media, heading = 'Fresh Off Our Feed', social } = Astro.props;
+const socialLinks = {
+  tiktok: social?.tiktok || 'https://www.tiktok.com/@151coffee',
+  instagram: social?.instagram || 'https://www.instagram.com/151coffee',
+  facebook: social?.facebook || '#',
+};
+
+// null means the integration isn't connected yet (no KV/credentials) or the
+// Instagram call failed -- either way, the section just doesn't render
+// rather than showing a broken or empty carousel.
+const items = (media ?? []).slice(0, 3);
+---
+
+{items.length > 0 && (
+<section class="ig-feed" id="instagram">
+  <div class="container">
+    <div class="section-header">
+      <div class="ig-social-links">
+        <a href={socialLinks.tiktok} target="_blank" rel="noopener noreferrer" aria-label="151 Coffee on TikTok">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.6 5.82c-.8-.85-1.24-1.96-1.24-3.14h-3.06v13.44c0 1.53-1.24 2.77-2.77 2.77a2.77 2.77 0 0 1 0-5.54c.28 0 .55.04.8.12v-3.1a5.87 5.87 0 0 0-.8-.06 5.83 5.83 0 1 0 5.83 5.83V9.4a7.16 7.16 0 0 0 4.24 1.37V7.7a4.15 4.15 0 0 1-3-1.88z"/></svg>
+        </a>
+        <a href={socialLinks.instagram} target="_blank" rel="noopener noreferrer" aria-label="151 Coffee on Instagram">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+        </a>
+        <a href={socialLinks.facebook} target="_blank" rel="noopener noreferrer" aria-label="151 Coffee on Facebook">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 21v-7.6h2.55l.38-2.96h-2.93V8.55c0-.86.24-1.44 1.47-1.44h1.57V4.46A21 21 0 0 0 14.3 4.3c-2.24 0-3.78 1.37-3.78 3.87v2.16H7.95v2.96h2.57V21h3z"/></svg>
+        </a>
+      </div>
+      <h2>{heading}</h2>
+    </div>
+    <div class="ig-stage" data-ig-stage>
+      {items.map((m, i) => (
+        <div class="ig-slide" data-index={i}>
+          <div class="ig-now-playing">
+            <span class="ig-now-dot"></span>
+            Now Playing
+            <span class="ig-progress"><i></i></span>
+          </div>
+          <a class="ig-card-placeholder" href={m.permalink} target="_blank" rel="noopener noreferrer" aria-label={m.caption || 'View on Instagram'}>
+            {m.mediaUrl && <img src={m.mediaUrl} alt="" loading="lazy" />}
+            <span class="ig-play">&#9658;</span>
+          </a>
+        </div>
+      ))}
+    </div>
+    <a class="ig-cta" href={socialLinks.instagram} target="_blank" rel="noopener noreferrer">
+      New drinks, weird dance moves, and probably too much caffeine. Come hang with us on Instagram.
+    </a>
+  </div>
+</section>
+)}
+
+<script>
+  // Rotates which of the (up to) 3 slides sits in the left/center/right slot
+  // on a fixed timer. See the top-of-file comment for why this is timer-based
+  // rather than event-based: there's no "ended" event to trigger the next
+  // rotation from for a static cover-card feed.
+  //
+  // Direction matches the requested motion: the right slide moves to center,
+  // the center slide moves to left, and the left slide moves to right
+  // (wrapping around) -- a fixed rotation among exactly 3 positions, so with
+  // 3 items it cycles back to the starting arrangement every 3rd tick.
+  //
+  // The left->right leg is the odd one out: instead of just sliding straight
+  // across while staying visible, it fully exits (further left, fading to
+  // invisible -- see .slot-exit in style.css), then gets snapped to the
+  // mirror-image invisible spot on the right (.slot-enter-prep, no
+  // transition) and finally animates into the normal dimmed right slot. The
+  // other two legs (center->left, right->center) just swap classes directly
+  // since both endpoints are visible the whole time.
+  const ROTATE_INTERVAL_MS = 15000;
+  const EXIT_MS = 700; // matches the .ig-slide transition duration in style.css
+  const SLOT_CLASSES = ['slot-left', 'slot-center', 'slot-right'];
+
+  // (Re)starts the "Now Playing" progress bar inside one slide, timed to
+  // land at 100% right as the next rotation fires. Restarting means forcing
+  // the bar back to 0 with transitions off, then re-enabling them on the
+  // next frame -- without the reflow in between, the browser would just see
+  // "width: 100%" set twice and skip straight to the end state.
+  function startProgress(slide: HTMLElement) {
+    const bar = slide.querySelector<HTMLElement>('.ig-progress > i');
+    if (!bar) return;
+    bar.style.transition = 'none';
+    bar.style.width = '0%';
+    void bar.offsetWidth; // force the reset to paint before re-enabling the transition
+    bar.style.transition = `width ${ROTATE_INTERVAL_MS}ms linear`;
+    bar.style.width = '100%';
+  }
+
+  function initIgStage(stage: Element) {
+    const slides = Array.from(stage.querySelectorAll<HTMLElement>('.ig-slide'));
+    if (slides.length < 3) {
+      // Fewer than 3 items: nothing to rotate, just center whatever exists.
+      slides.forEach((el) => el.classList.add('slot-center', 'slot-static', 'is-active'));
+      if (slides[0]) startProgress(slides[0]);
+      return;
+    }
+
+    // order[0] = index of the item currently in the left slot, etc.
+    let order = [2, 0, 1]; // left=3rd-newest, center=newest, right=2nd-newest
+    const applySlots = () => {
+      slides.forEach((el, i) => {
+        el.classList.remove(...SLOT_CLASSES, 'slot-exit', 'slot-enter-prep', 'is-active');
+        const slot = order.indexOf(i);
+        el.classList.add(SLOT_CLASSES[slot]);
+        if (slot === 1) {
+          el.classList.add('is-active');
+          startProgress(el);
+        }
+      });
+    };
+    applySlots(); // initial paint: all 3 slides visible at rest
+
+    // setInterval + a nested setTimeout is fine while the tab stays in the
+    // foreground, but browsers throttle/pause timers on a backgrounded tab
+    // (switching apps on a phone, switching browser tabs) and then fire the
+    // backlog in a burst once it's foregrounded again. When that happens, an
+    // old tick's still-pending 700ms exit-timeout can land *after* one or
+    // more newer ticks have already reassigned slots, unconditionally
+    // re-adding .slot-right to a slide a newer tick already moved elsewhere
+    // -- leaving two slides both classed .slot-right at once (the reported
+    // "two overlap on the right side" after the page has sat open a while).
+    // Self-scheduling via setTimeout (rather than setInterval), tracking the
+    // pending exit timeout so it can be cancelled, and resetting cleanly on
+    // visibilitychange instead of letting a burst of missed ticks fire all
+    // fixes that.
+    let exitTimeoutId: ReturnType<typeof setTimeout> | null = null;
+    let rotateTimeoutId: ReturnType<typeof setTimeout> | null = null;
+
+    function clearPending() {
+      if (exitTimeoutId !== null) { clearTimeout(exitTimeoutId); exitTimeoutId = null; }
+      if (rotateTimeoutId !== null) { clearTimeout(rotateTimeoutId); rotateTimeoutId = null; }
+    }
+
+    function rotate() {
+      const [leftIdx, centerIdx, rightIdx] = order;
+      const leftEl = slides[leftIdx];
+      const centerEl = slides[centerIdx];
+      const rightEl = slides[rightIdx];
+
+      // center -> left and right -> center: ordinary swaps, both endpoints
+      // stay visible throughout so the base .7s transition just crossfades.
+      centerEl.classList.remove('slot-center', 'is-active');
+      centerEl.classList.add('slot-left');
+
+      rightEl.classList.remove('slot-right');
+      rightEl.classList.add('slot-center', 'is-active');
+      startProgress(rightEl);
+
+      // left -> right: exit fully first, then reappear from the right.
+      leftEl.classList.remove('slot-left');
+      leftEl.classList.add('slot-exit');
+      exitTimeoutId = setTimeout(() => {
+        exitTimeoutId = null;
+        leftEl.classList.remove('slot-exit');
+        leftEl.classList.add('slot-enter-prep');
+        void leftEl.offsetWidth; // force the instant off-right jump to paint
+        requestAnimationFrame(() => {
+          leftEl.classList.remove('slot-enter-prep');
+          leftEl.classList.add('slot-right');
+        });
+      }, EXIT_MS);
+
+      order = [centerIdx, rightIdx, leftIdx];
+      rotateTimeoutId = setTimeout(rotate, ROTATE_INTERVAL_MS);
+    }
+
+    rotateTimeoutId = setTimeout(rotate, ROTATE_INTERVAL_MS);
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        // Freeze in place rather than let the browser queue up a burst of
+        // missed ticks to fire all at once when it comes back.
+        clearPending();
+        return;
+      }
+      // Snap anything mid-exit to its resting spot instead of resuming a
+      // stale animation, then restart the loop clean.
+      slides.forEach((el) => {
+        if (el.classList.contains('slot-exit') || el.classList.contains('slot-enter-prep')) {
+          el.classList.remove('slot-exit', 'slot-enter-prep');
+          el.classList.add('slot-right');
+        }
+      });
+      clearPending();
+      rotateTimeoutId = setTimeout(rotate, ROTATE_INTERVAL_MS);
+    });
+  }
+
+  document.querySelectorAll('[data-ig-stage]').forEach(initIgStage);
+</script>

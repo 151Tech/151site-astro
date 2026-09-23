@@ -1548,8 +1548,8 @@ nav.nav-scrolled .nav-container {
 .locator-photo-card .locator__more-info:hover { gap: 0.55rem; }
 
 
-/* ─── TikTok Feed ─── */
-.tiktok-feed {
+/* ─── Instagram Reels Feed ─── */
+.ig-feed {
     /* Tighter than var(--section-pad) -- this section is already visually
        dense (dark background, edge-to-edge cards) so it doesn't need as
        much breathing room above/below as a typical section. */
@@ -1559,12 +1559,12 @@ nav.nav-scrolled .nav-container {
     overflow: hidden;
 }
 
-.tiktok-feed .section-header { margin-bottom: 1.75rem; }
+.ig-feed .section-header { margin-bottom: 1.75rem; }
 
 /* A soft, low-key spotlight behind the stage -- flat black everywhere else,
    as requested, but this keeps the center card from reading as a plain box
    floating on pure black. Purely decorative, sits behind everything. */
-.tiktok-feed::before {
+.ig-feed::before {
     content: '';
     position: absolute;
     top: 45%;
@@ -1577,18 +1577,18 @@ nav.nav-scrolled .nav-container {
     z-index: 0;
 }
 
-.tiktok-feed .container { position: relative; z-index: 1; text-align: center; }
+.ig-feed .container { position: relative; z-index: 1; text-align: center; }
 
-.tiktok-feed .section-header h2 { color: var(--white); }
+.ig-feed .section-header h2 { color: var(--white); }
 
-.tiktok-social-links {
+.ig-social-links {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 1.1rem;
     margin-bottom: 1rem;
 }
-.tiktok-social-links a {
+.ig-social-links a {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -1598,15 +1598,14 @@ nav.nav-scrolled .nav-container {
     opacity: 0.85;
     transition: opacity 0.2s ease, transform 0.2s ease;
 }
-.tiktok-social-links a:hover { opacity: 1; transform: translateY(-2px); }
-.tiktok-social-links svg { width: 100%; height: 100%; }
+.ig-social-links a:hover { opacity: 1; transform: translateY(-2px); }
+.ig-social-links svg { width: 100%; height: 100%; }
 
 /* Coverflow stage: a fixed-height stack where the 3 slides are positioned
    absolutely, centered, and then pushed apart by each .slot-* class. Using
-   transform (not layout width/position) to size and place them means a
-   TikTok embed's iframe, once TikTok's embed.js has hydrated it, never gets
-   resized or reflowed by the rotation -- only visually scaled/moved, so
-   nothing reloads or loses its state as slides swap slots.
+   transform (not layout width/position) to size and place them means the
+   rotation never resizes or reflows anything -- only visually scaled/moved,
+   so nothing reloads or loses its state as slides swap slots.
    --slide-w scales continuously with the viewport via clamp(), rather than
    jumping between a few hardcoded breakpoint widths, so there's no
    in-between viewport size where spacing looks off. --slide-gap (how far the
@@ -1615,26 +1614,24 @@ nav.nav-scrolled .nav-container {
    viewport itself becomes the binding constraint, not the card's own size,
    so it's tightened up in the narrow-screen override further down instead
    of scaling with --slide-w. */
-.tiktok-stage {
+.ig-stage {
     --slide-w: clamp(170px, 30vw, 380px);
     --slide-gap: 108%;
     position: relative;
-    /* Every slide is now a static 9:16 cover-image card (no live TikTok
-       embed chrome to leave headroom for). */
+    /* Every slide is a static 9:16 cover-image card. */
     height: calc(var(--slide-w) * 16 / 9);
     max-width: 1150px;
     margin: 0 auto;
 }
 
-.tiktok-slide {
+.ig-slide {
     position: absolute;
     top: 50%;
     left: 50%;
     width: var(--slide-w);
     /* Centered via transform's own -50%/-50%, not a hardcoded negative
        margin -- that works out to the correct offset no matter how tall the
-       content actually renders (a placeholder's fixed aspect-ratio box vs.
-       TikTok's real, taller embed chrome), instead of assuming one height. */
+       content actually renders. */
     border-radius: var(--radius);
     overflow: hidden;
     background: var(--concrete);
@@ -1643,7 +1640,7 @@ nav.nav-scrolled .nav-container {
     transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.7s ease;
 }
 
-.tiktok-slide.slot-center {
+.ig-slide.slot-center {
     transform: translate(-50%, -50%) translateX(0) scale(1);
     opacity: 1;
     z-index: 3;
@@ -1655,27 +1652,27 @@ nav.nav-scrolled .nav-container {
    bright center -- same as before. Only during a rotation does the outgoing
    left slide take the detour through .slot-exit / .slot-enter-prep below,
    driven from the script at the bottom of this component. */
-.tiktok-slide.slot-left {
+.ig-slide.slot-left {
     transform: translate(-50%, -50%) translateX(calc(var(--slide-gap) * -1)) scale(0.85);
     opacity: 0.55;
     z-index: 2;
 }
 
-.tiktok-slide.slot-right {
+.ig-slide.slot-right {
     transform: translate(-50%, -50%) translateX(var(--slide-gap)) scale(0.85);
     opacity: 0.55;
     z-index: 2;
 }
 
-.tiktok-slide.slot-left:hover,
-.tiktok-slide.slot-right:hover {
+.ig-slide.slot-left:hover,
+.ig-slide.slot-right:hover {
     opacity: 0.82;
 }
 
 /* Transient step 1 (on rotation): the slide leaving the left slot keeps
    going -- further left than the resting position, fading all the way to
    invisible -- instead of just staying parked as a dimmed thumbnail. */
-.tiktok-slide.slot-exit {
+.ig-slide.slot-exit {
     transform: translate(-50%, -50%) translateX(calc(var(--slide-gap) * -1.6)) scale(0.75);
     opacity: 0;
     z-index: 1;
@@ -1684,7 +1681,7 @@ nav.nav-scrolled .nav-container {
 /* Transient step 2: once fully exited, the same slide is snapped
    (transition disabled) to the mirror-image invisible position off the
    right, ready to animate into .slot-right immediately after. */
-.tiktok-slide.slot-enter-prep {
+.ig-slide.slot-enter-prep {
     transition: none;
     transform: translate(-50%, -50%) translateX(calc(var(--slide-gap) * 1.6)) scale(0.75);
     opacity: 0;
@@ -1693,8 +1690,8 @@ nav.nav-scrolled .nav-container {
 
 /* "Now Playing" chip + rotation-timer bar, only ever visible on the center
    card. Both are pointer-events: none so they never intercept a click meant
-   for the real TikTok embed or placeholder link underneath. */
-.tiktok-now-playing {
+   for the placeholder link underneath. */
+.ig-now-playing {
     position: absolute;
     top: 0;
     left: 0;
@@ -1715,18 +1712,18 @@ nav.nav-scrolled .nav-container {
     pointer-events: none;
 }
 
-.tiktok-slide.is-active .tiktok-now-playing { opacity: 1; }
+.ig-slide.is-active .ig-now-playing { opacity: 1; }
 
-.tiktok-now-dot {
+.ig-now-dot {
     width: 7px;
     height: 7px;
     flex-shrink: 0;
     border-radius: 50%;
     background: var(--red);
-    animation: tiktok-pulse 1.4s ease-in-out infinite;
+    animation: ig-pulse 1.4s ease-in-out infinite;
 }
 
-.tiktok-progress {
+.ig-progress {
     display: block;
     margin-left: auto;
     width: 40px;
@@ -1736,7 +1733,7 @@ nav.nav-scrolled .nav-container {
     overflow: hidden;
 }
 
-.tiktok-progress i {
+.ig-progress i {
     display: block;
     height: 100%;
     width: 0%;
@@ -1744,23 +1741,14 @@ nav.nav-scrolled .nav-container {
     border-radius: inherit;
 }
 
-@keyframes tiktok-pulse {
+@keyframes ig-pulse {
     0%, 100% { transform: scale(1); opacity: 1; }
     50% { transform: scale(1.5); opacity: 0.55; }
 }
 
-.tiktok-slide.slot-static {
+.ig-slide.slot-static {
     transform: translateX(0) scale(1);
     opacity: 1;
-}
-
-/* TikTok's own embed.js renders inside this blockquote and overrides most
-   inline styles once it hydrates; these rules mainly control the loading
-   state before that script has run. */
-.tiktok-slide .tiktok-embed {
-    margin: 0 !important;
-    width: 100% !important;
-    min-width: 100% !important;
 }
 
 /* Below ~480px the viewport itself, not the card's own size, is what limits
@@ -1768,10 +1756,10 @@ nav.nav-scrolled .nav-container {
    108% would push them mostly off-screen, so it's tightened here instead of
    trying to express it as one curve that covers every width. */
 @media (max-width: 480px) {
-    .tiktok-stage { --slide-gap: 64%; }
+    .ig-stage { --slide-gap: 64%; }
 }
 
-.tiktok-card-placeholder {
+.ig-card-placeholder {
     position: relative;
     display: flex;
     flex-direction: column;
@@ -1784,7 +1772,7 @@ nav.nav-scrolled .nav-container {
     overflow: hidden;
 }
 
-.tiktok-card-placeholder img {
+.ig-card-placeholder img {
     position: absolute;
     inset: 0;
     width: 100%;
@@ -1793,7 +1781,7 @@ nav.nav-scrolled .nav-container {
     opacity: 0.85;
 }
 
-.tiktok-play {
+.ig-play {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -1809,7 +1797,7 @@ nav.nav-scrolled .nav-container {
     font-size: 1.1rem;
 }
 
-.tiktok-cta {
+.ig-cta {
     display: block;
     max-width: 480px;
     margin: 1.75rem auto 0;
@@ -1821,12 +1809,12 @@ nav.nav-scrolled .nav-container {
     transition: color 0.2s ease;
 }
 
-.tiktok-cta:hover {
+.ig-cta:hover {
     color: var(--red-soft);
 }
 
 @media (max-width: 768px) {
-    .tiktok-feed { padding: 2.75rem 0; }
+    .ig-feed { padding: 2.75rem 0; }
 }
 
 /* ─── Reviews (Pricing) ─── */

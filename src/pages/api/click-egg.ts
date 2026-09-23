@@ -5,7 +5,7 @@
 // number, which needs a store every visitor's request can both read and
 // write -- import.meta.env can't do that (see src/pages/api/contact.ts for
 // why), so this reuses the cloudflare:workers `env` KV accessor already
-// proven there and in src/lib/tiktok.ts.
+// proven there and in src/lib/instagram.ts.
 import { env } from 'cloudflare:workers';
 
 export const prerender = false;
@@ -47,12 +47,12 @@ export async function POST({ request }: { request: Request }) {
     return new Response('Forbidden', { status: 403 });
   }
 
-  // Reuses the TIKTOK_CACHE KV namespace under its own key prefix rather than
-  // provisioning a binding just for a novelty counter (same call as the rate
-  // limiter in contact.ts). No KV bound (e.g. local `astro dev` without
+  // Reuses the INSTAGRAM_CACHE KV namespace under its own key prefix rather
+  // than provisioning a binding just for a novelty counter (same call as the
+  // rate limiter in contact.ts). No KV bound (e.g. local `astro dev` without
   // wrangler) just means the number can't be handed out -- the front end
   // already has a no-count fallback line for that.
-  const kv = (env as any).TIKTOK_CACHE;
+  const kv = (env as any).INSTAGRAM_CACHE;
   if (!kv) {
     return new Response(JSON.stringify({ count: null }), {
       status: 200,
