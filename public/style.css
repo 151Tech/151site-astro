@@ -3431,43 +3431,9 @@ html:has(.loc-fullpage), body:has(.loc-fullpage) { overflow: hidden; }
     }
 }
 
-/* Centred headings: plate the heading itself rather than its wrapper, so the
-   fill hugs the words instead of drawing a full-width band across the page. */
-.features .section-header h2,
-.pricing .section-header h2,
-.contact .section-header h2,
-.about-history .section-header h2,
-.re-ideal .section-header h2,
-.re-contact .section-header h2,
-.blk-testimonials .section-header h2,
-.blk-cardgrid .section-header h2,
-.page-hero .page-hero-content h1,
-.page-hero .page-hero-content p {
-    display: inline-block;
-    background: var(--plate-bg);
-    -webkit-backdrop-filter: blur(8px);
-    backdrop-filter: blur(8px);
-    border: var(--plate-ring);
-    border-radius: var(--radius);
-    box-shadow: var(--plate-shadow);
-    padding: 0.5rem 1.25rem;
-}
-
-/* inline-block above lets each plate hug its own text, but that also puts
-   the heading and subheading side by side on wide viewports instead of
-   stacked. Forcing them onto their own line keeps the hugging width while
-   still centering (width:fit-content + margin:auto) below the heading. */
-.page-hero .page-hero-content h1 {
-    display: block;
-    width: fit-content;
-    margin: 0 auto 0.75rem;
-}
-.page-hero .page-hero-content p {
-    display: block;
-    width: fit-content;
-    margin: 0 auto;
-}
-
+/* Headings on the quote ground read directly against the pattern now --
+   no plate. A heavier weight and a real drop-shadow (not just a soft
+   ambient one) does the legibility work the plate used to. */
 .features .section-header h2,
 .pricing .section-header h2,
 .contact .section-header h2,
@@ -3477,7 +3443,14 @@ html:has(.loc-fullpage), body:has(.loc-fullpage) { overflow: hidden; }
 .blk-testimonials .section-header h2,
 .blk-cardgrid .section-header h2 {
     font-weight: 700;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.10);
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.18), 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+.page-hero .page-hero-content p {
+    /* Darkened from the plate-era 0.6 opacity -- it now sits straight on
+       the quote pattern instead of a light plate, so it needs more of its
+       own contrast. */
+    color: rgba(20, 17, 14, 0.72);
 }
 
 /* The subpage hero stacks two plates, so they need to clear each other. */
