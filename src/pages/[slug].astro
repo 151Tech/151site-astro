@@ -2,7 +2,7 @@
 export const prerender = import.meta.env.STORYBLOK_DRAFT_MODE !== 'true';
 import Layout from '../layouts/Layout.astro';
 import Editable from '../components/Editable.astro';
-import { getLandingPages, getSettings, imageUrl } from '../lib/storyblok';
+import { getLandingPages, getSettings, getDrinks, getCategories, imageUrl } from '../lib/storyblok';
 
 // SMS/text-link discount landing pages -- every story under the
 // landing-pages/ folder gets a route here automatically (see
@@ -17,7 +17,12 @@ export async function getStaticPaths() {
 }
 
 const { slug } = Astro.params;
-const [pages, settingsData] = await Promise.all([getLandingPages(), getSettings()]);
+const [pages, settingsData, drinksEntries, categoryEntries] = await Promise.all([
+  getLandingPages(),
+  getSettings(),
+  getDrinks(),
+  getCategories(),
+]);
 const page = pages.find((p: any) => p.slug === slug);
 
 if (!page) return Astro.redirect('/');
@@ -32,6 +37,30 @@ const BACKGROUND_OVERRIDES: Record<string, string> = {
   'veterans-day': '/images/landing/veterans-day-bg.jpg',
 };
 const backgroundImage = BACKGROUND_OVERRIDES[slug as string];
+
+// At desktop widths the full-bleed photo background gives way to a small
+// framed image centered above the (now vertically centered) text -- same
+// per-slug override pattern as BACKGROUND_OVERRIDES above.
+const DESKTOP_HERO_OVERRIDES: Record<string, string> = {
+  'veterans-day': '/images/landing/veterans-day-desktop.jpg',
+};
+const desktopHeroImage = DESKTOP_HERO_OVERRIDES[slug as string];
+
+// Every other landing page (no bespoke art of its own) gets a square photo
+// above the offer text that lands on a different real drink on every page
+// load -- same eligible pool and exclusions as the "Help Me Decide" picker
+// on /menu (see catSlug()/DECIDE_EXCLUDED_CATS there): Hot Food, Treats, and
+// Kids drinks are excluded so it never lands on something that isn't an
+// actual drink someone would order on a whim.
+const REFID_TO_CAT_SLUG: Record<string, string> = Object.fromEntries(
+  categoryEntries.map((c: any) => [`categories/${c.slug}`, c.slug]),
+);
+const RANDOM_IMAGE_EXCLUDED_CATS = new Set(['hotfood', 'treats', 'kids']);
+const randomDrinkImages: string[] = drinksEntries
+  .filter((d: any) => !RANDOM_IMAGE_EXCLUDED_CATS.has(REFID_TO_CAT_SLUG[d.category] ?? ''))
+  .map((d: any) => imageUrl(d.image, { width: 500 }))
+  .filter(Boolean) as string[];
+const hasRandomImage = !backgroundImage && !desktopHeroImage && randomDrinkImages.length > 0;
 ---
 
 <Layout
@@ -42,12 +71,27 @@ const backgroundImage = BACKGROUND_OVERRIDES[slug as string];
   <Editable blok={page} />
 
   <main
-    class:list={['landing-page', { 'has-bg-image': !!backgroundImage }]}
+    class:list={[
+      'landing-page',
+      { 'has-bg-image': !!backgroundImage, 'has-desktop-hero': !!desktopHeroImage },
+    ]}
     style={backgroundImage ? `--landing-bg: url(${backgroundImage})` : undefined}
   >
     <a href="/" class="landing-logo" aria-label="151 Coffee home">
       {logoUrl ? <img src={logoUrl} alt="151 Coffee" /> : <span>151 Coffee</span>}
     </a>
+
+    {desktopHeroImage && (
+      <div class="landing-desktop-hero">
+        <img src={desktopHeroImage} alt="" loading="eager" />
+      </div>
+    )}
+
+    {hasRandomImage && (
+      <div class="landing-random-image" data-random-images={JSON.stringify(randomDrinkImages)}>
+        <img data-random-image-el alt="" loading="eager" />
+      </div>
+    )}
 
     <div class="landing-content">
       {page.eyebrow && <p class="landing-eyebrow">{page.eyebrow}</p>}
@@ -71,6 +115,19 @@ const backgroundImage = BACKGROUND_OVERRIDES[slug as string];
     </div>
   </main>
 </Layout>
+
+{hasRandomImage && (
+  <script>
+    const wrap = document.querySelector('[data-random-images]');
+    if (wrap) {
+      const images: string[] = JSON.parse(wrap.getAttribute('data-random-images') || '[]');
+      const img = wrap.querySelector('[data-random-image-el]') as HTMLImageElement | null;
+      if (img && images.length) {
+        img.src = images[Math.floor(Math.random() * images.length)];
+      }
+    }
+  </script>
+)}
 
 <style>
   /* Fixed, full-viewport, non-scrolling by design: these are opened straight
@@ -107,17 +164,41 @@ const backgroundImage = BACKGROUND_OVERRIDES[slug as string];
     background-image:
       linear-gradient(to bottom, rgba(17, 17, 17, 0.35) 0%, rgba(17, 17, 17, 0.7) 45%, rgba(17, 17, 17, 0.94) 100%),
       var(--landing-bg);
-    background-size: cover;
+    /* `auto 62vh` (not `cover`) on purpose: this photo is landscape-ish
+       while the viewport is a tall, narrow phone, so `cover` -- which
+       scales to whichever dimension needs it more -- ends up driven by
+       height and blows the flag up bigger (and further down) the taller
+       the screen gets. Pinning the image's own height to a fixed share of
+       the viewport keeps the flag the same size and position regardless of
+       how tall the phone is. */
+    background-size: auto 62vh;
     background-position: top center;
     background-repeat: no-repeat;
   }
 
   /* Push the text block toward the bottom half of the viewport instead of
      dead center, so it sits clear of the flag near the top -- paired with
-     the source photo itself being cropped tighter to the flag. */
+     the source photo itself being cropped tighter to the flag. Anchored
+     hard to the bottom on short (iPhone SE-class) screens; the media
+     queries below ease that back toward center as height grows, so the
+     text doesn't stay pinned to the bottom edge on a taller phone. */
   .landing-page.has-bg-image .landing-content {
     justify-content: flex-end;
     padding-bottom: 0.5rem;
+  }
+
+  @media (min-height: 700px) {
+    .landing-page.has-bg-image .landing-content {
+      justify-content: flex-end;
+      padding-bottom: 8vh;
+    }
+  }
+
+  @media (min-height: 850px) {
+    .landing-page.has-bg-image .landing-content {
+      justify-content: center;
+      padding-bottom: 0;
+    }
   }
 
   .landing-logo {
@@ -261,6 +342,72 @@ const backgroundImage = BACKGROUND_OVERRIDES[slug as string];
     .landing-cta {
       padding: 0.65rem 1.15rem;
       font-size: 0.9rem;
+    }
+  }
+
+  /* Hidden by default -- only relevant once the desktop layout below turns
+     it on for a slug that has one (see DESKTOP_HERO_OVERRIDES above). */
+  .landing-desktop-hero {
+    display: none;
+  }
+
+  /* Random drink photo for every page without its own bespoke art (see
+     hasRandomImage above). Sized off `vh` rather than a fixed px value or a
+     max-height media-query ladder like .landing-image uses, so it shrinks
+     continuously as the viewport gets shorter -- the rest of the offer
+     below it never needs a breakpoint to stay on screen. */
+  .landing-random-image {
+    flex: 0 0 auto;
+    width: clamp(90px, 30vh, 220px);
+    aspect-ratio: 1 / 1;
+    margin-bottom: 0.9rem;
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+    background: rgba(255, 255, 255, 0.04);
+  }
+  .landing-random-image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Wide viewport (desktop/tablet, not a phone held in a hand): the
+     full-bleed photo background stops making sense once the page is no
+     longer edge-to-edge in front of someone's face, so it's dropped back to
+     the plain gradient ground, and the same photo instead appears as a
+     normal framed image, centered above the now vertically-centered text. */
+  @media (min-width: 900px) {
+    .landing-content {
+      justify-content: center;
+    }
+
+    .landing-page.has-bg-image {
+      background-image: radial-gradient(circle at 50% 0%, rgba(230, 57, 70, 0.25) 0%, transparent 55%), var(--black);
+    }
+
+    .landing-page.has-bg-image .landing-content {
+      justify-content: center;
+      padding-bottom: 0;
+    }
+
+    .landing-page.has-desktop-hero .landing-desktop-hero {
+      display: block;
+      flex: 0 0 auto;
+      width: 100%;
+      max-width: 420px;
+      max-height: 32vh;
+      margin-bottom: 1.25rem;
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+    }
+    .landing-page.has-desktop-hero .landing-desktop-hero img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
   }
 </style>
