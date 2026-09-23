@@ -1772,7 +1772,8 @@ nav.nav-scrolled .nav-container {
     overflow: hidden;
 }
 
-.ig-card-placeholder img {
+.ig-card-placeholder img,
+.ig-card-placeholder video {
     position: absolute;
     inset: 0;
     width: 100%;

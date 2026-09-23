@@ -32,32 +32,36 @@ if (!import.meta.env.DEV) {
 }
 
 // TEMPORARY: owner asked for the section back before the real OAuth/API
-// integration above is authorized. These 3 cards reuse existing locally-
-// hosted photography (not a live Instagram feed), all linking out to the
-// real @151coffee profile rather than fabricated individual post URLs/
-// captions. Remove this block once instagramMedia above is reliably
-// populated.
+// integration above is authorized. These 3 cards are real, self-hosted
+// exports of actual recent @151coffee Instagram posts (locally-hosted mp4s,
+// not a live embed -- same reasoning as the old TikTok cards: no signed/
+// expiring CDN URLs baked into prerendered HTML). Each links out to its own
+// real permalink (derived from the post's shortcode), not the profile page.
+// Remove this block once instagramMedia above is reliably populated.
 if (!instagramMedia) {
   instagramMedia = [
     {
-      id: 'temp-1',
-      permalink: 'https://www.instagram.com/151coffee',
+      id: 'DdcFTR4ANIZ',
+      permalink: 'https://www.instagram.com/p/DdcFTR4ANIZ/',
       mediaUrl: '/images/instagram/ig-1.jpg',
-      caption: 'Follow @151coffee on Instagram for our latest drinks and drops.',
+      videoUrl: '/videos/instagram/ig-1.mp4',
+      caption: 'See this post on Instagram.',
       timestamp: '',
     },
     {
-      id: 'temp-2',
-      permalink: 'https://www.instagram.com/151coffee',
+      id: 'DdJeBs_xSy4',
+      permalink: 'https://www.instagram.com/p/DdJeBs_xSy4/',
       mediaUrl: '/images/instagram/ig-2.jpg',
-      caption: 'Follow @151coffee on Instagram for our latest drinks and drops.',
+      videoUrl: '/videos/instagram/ig-2.mp4',
+      caption: 'See this post on Instagram.',
       timestamp: '',
     },
     {
-      id: 'temp-3',
-      permalink: 'https://www.instagram.com/151coffee',
+      id: 'DdefzadkwAo',
+      permalink: 'https://www.instagram.com/p/DdefzadkwAo/',
       mediaUrl: '/images/instagram/ig-3.jpg',
-      caption: 'Follow @151coffee on Instagram for our latest drinks and drops.',
+      videoUrl: '/videos/instagram/ig-3.mp4',
+      caption: 'See this post on Instagram.',
       timestamp: '',
     },
   ];

@@ -6,17 +6,22 @@
 // prop rather than fetched here, so this component stays a pure renderer --
 // easy to preview with fake data without needing live credentials.
 //
-// These render as static cover-image cards (not a live Instagram embed):
+// These render as self-hosted <video> cards (not a live Instagram embed):
 // Instagram's oEmbed widget can't be styled/controlled enough to fit this
 // layout, and only exposes a single post at a time rather than a feed. A
-// static thumbnail that links out to the real post sidesteps that. What
-// still rotates is which slide sits in which slot, on a fixed timer
-// (ROTATE_INTERVAL_MS below) -- purely a visual "now featured" cue, not
-// actual playback.
+// muted, looping local video that links out to the real post sidesteps that.
+// `videoUrl` is optional -- the real Graph API integration (src/lib/
+// instagram.ts) only ever returns a still cover image, so that path still
+// renders a plain <img>; only the temporary hardcoded fallback in
+// src/pages/index.astro currently sets `videoUrl`. What still rotates is
+// which slide sits in which slot, on a fixed timer (ROTATE_INTERVAL_MS
+// below) -- purely a visual "now featured" cue, independent of each video's
+// own (unsynced, looping) playback.
 interface Media {
   id: string;
   permalink: string;
   mediaUrl: string;
+  videoUrl?: string;
   caption: string;
 }
 
@@ -65,8 +70,14 @@ const items = (media ?? []).slice(0, 3);
             <span class="ig-progress"><i></i></span>
           </div>
           <a class="ig-card-placeholder" href={m.permalink} target="_blank" rel="noopener noreferrer" aria-label={m.caption || 'View on Instagram'}>
-            {m.mediaUrl && <img src={m.mediaUrl} alt="" loading="lazy" />}
-            <span class="ig-play">&#9658;</span>
+            {m.videoUrl ? (
+              <video src={m.videoUrl} poster={m.mediaUrl || undefined} autoplay muted loop playsinline preload="metadata" />
+            ) : (
+              <>
+                {m.mediaUrl && <img src={m.mediaUrl} alt="" loading="lazy" />}
+                <span class="ig-play">&#9658;</span>
+              </>
+            )}
           </a>
         </div>
       ))}
