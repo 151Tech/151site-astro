@@ -40,6 +40,37 @@ if (!import.meta.env.DEV) {
   }
 }
 
+// TEMPORARY: owner asked for the section back before the real OAuth/API
+// integration above is authorized. These are locally-hosted screenshots
+// (captured cover frames, not TikTok's own signed CDN URLs -- see the
+// no-expiring-URL note above), so they don't share that failure mode.
+// Remove this block once tiktokVideos above is reliably populated.
+if (!tiktokVideos) {
+  tiktokVideos = [
+    {
+      id: '7685497467449773325',
+      embedLink: 'https://www.tiktok.com/@151coffee/video/7685497467449773325',
+      coverImageUrl: '/images/tiktok/tiktok-1.jpg',
+      title: 'Did we say your name? What names should we say next?',
+      createTime: 0,
+    },
+    {
+      id: '7684665451523149070',
+      embedLink: 'https://www.tiktok.com/@151coffee/video/7684665451523149070',
+      coverImageUrl: '/images/tiktok/tiktok-2.jpg',
+      title: 'Sticker drop alert! Free sticker with every drink Tuesday 9/15.',
+      createTime: 0,
+    },
+    {
+      id: '7684262533624089870',
+      embedLink: 'https://www.tiktok.com/@151coffee/video/7684262533624089870',
+      coverImageUrl: '/images/tiktok/tiktok-3.jpg',
+      title: 'Hey students! Fill-A-Tray for $16, every Friday in September.',
+      createTime: 0,
+    },
+  ];
+}
+
 const [homeData, settingsData, locationsEntries] = await Promise.all([
   getPage('home'),
   getSettings(),
@@ -62,7 +93,25 @@ const locations = locationsEntries
 // so this is for machine-readability rather than for a SERP treatment.
 // Built from the same Storyblok items the section renders, so an editor
 // adding a Q&A gets the structured data for free and the two can't drift.
-const faqItems: any[] = (p.faqs?.items ?? []).filter((f: any) => f.question && f.answer);
+// These two are code-level defaults rather than Storyblok content: they
+// replace the standalone /loyalty policy page (removed -- see git history),
+// and appending them here means they can't be lost to a snapshot rebuild
+// the way a hand-edit to storyblok-snapshot.json would be (see
+// storyblok/CLAUDE.md). A `pages/home` faqs.items edit in Storyblok can
+// still add, remove, or reorder around them like any other FAQ entry.
+const loyaltyFaqItems = [
+  {
+    question: 'Does 151 Coffee have discount days?',
+    answer:
+      "Yes, we do! Sign up for a loyalty account at your nearest store to stay up to date. Note: this isn't tied to birthdays or a set day of the week -- your discount day is personalized to your account.",
+  },
+  {
+    question: "It's my birthday! Does 151 do anything?",
+    answer:
+      "Unfortunately we don't offer free birthday drinks, but our baristas would love to celebrate you in line!",
+  },
+];
+const faqItems: any[] = [...(p.faqs?.items ?? []), ...loyaltyFaqItems].filter((f: any) => f.question && f.answer);
 const faqSchema = faqItems.length
   ? {
       "@type": "FAQPage",
@@ -282,7 +331,7 @@ const storesJson = JSON.stringify(locations.map((l: any) => ({
     <div class="container">
       <div class="section-header"><h2>{p.faqs?.heading ?? 'Frequently Asked Questions'}</h2></div>
       <div class="faq-list">
-        {(p.faqs?.items ?? []).map((faq: any, i: number) => (
+        {faqItems.map((faq: any, i: number) => (
           <details open={i===0}>
             <Editable blok={faq} />
             <summary>{faq.question}</summary>
