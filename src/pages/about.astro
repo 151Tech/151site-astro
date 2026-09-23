@@ -52,14 +52,29 @@ const p = unwrapSingletons((await getPage('about')) as any, [
     .timeline-content { padding-bottom: 0.5rem; }
     .timeline-content p { font-family: var(--font-inter), sans-serif; font-size: 0.92rem; line-height: 1.65; color: rgba(17,17,17,0.60); margin: 0; }
     .timeline-item:last-child .timeline-line { display: none; }
-    .about-founder { background: var(--black); position: relative; overflow: hidden; padding: 6.5rem 0; }
-    .about-founder > .container { display: flex; height: 100%; justify-content: center; }
-    .founder-left { position: relative; z-index: 1; display: flex; align-items: center; box-sizing: border-box; }
-    .founder-hero-img { position: absolute; inset: 0; left: 46%; width: 54%; }
+    /* Default (< 1700px): the portrait doesn't crop/frame well as the wide
+       masked half-bleed below, so it sits above the text in a contained,
+       roughly-square card instead. The absolute/mask treatment only kicks
+       back in once the viewport is wide enough to give it real room. */
+    .about-founder { background: var(--black); position: relative; overflow: hidden; padding: 5rem 0 var(--section-pad); }
+    .about-founder > .container { display: flex; flex-direction: column; align-items: center; height: auto; justify-content: center; }
+    .founder-left { position: relative; z-index: 1; display: flex; align-items: center; box-sizing: border-box; width: 100%; }
+    .founder-hero-img { position: relative; width: 100%; max-width: 380px; aspect-ratio: 1 / 1; margin: 0 auto 2.5rem; border-radius: 18px; overflow: hidden; }
     .founder-hero-img img {
       width: 100%; height: 100%; object-fit: cover; object-position: top; display: block;
-      -webkit-mask-image: linear-gradient(90deg, transparent 0%, transparent 34%, rgba(0,0,0,0.06) 42%, rgba(0,0,0,0.22) 50%, rgba(0,0,0,0.45) 58%, rgba(0,0,0,0.7) 66%, rgba(0,0,0,0.9) 74%, #000 82%);
-      mask-image: linear-gradient(90deg, transparent 0%, transparent 34%, rgba(0,0,0,0.06) 42%, rgba(0,0,0,0.22) 50%, rgba(0,0,0,0.45) 58%, rgba(0,0,0,0.7) 66%, rgba(0,0,0,0.9) 74%, #000 82%);
+    }
+    @media (min-width: 1700px) {
+      .about-founder { padding: 6.5rem 0; }
+      .about-founder > .container { flex-direction: row; height: 100%; }
+      .founder-left { width: auto; }
+      .founder-hero-img {
+        position: absolute; inset: 0; left: 46%; width: 54%; max-width: none;
+        aspect-ratio: auto; margin: 0; border-radius: 0;
+      }
+      .founder-hero-img img {
+        -webkit-mask-image: linear-gradient(90deg, transparent 0%, transparent 34%, rgba(0,0,0,0.06) 42%, rgba(0,0,0,0.22) 50%, rgba(0,0,0,0.45) 58%, rgba(0,0,0,0.7) 66%, rgba(0,0,0,0.9) 74%, #000 82%);
+        mask-image: linear-gradient(90deg, transparent 0%, transparent 34%, rgba(0,0,0,0.06) 42%, rgba(0,0,0,0.22) 50%, rgba(0,0,0,0.45) 58%, rgba(0,0,0,0.7) 66%, rgba(0,0,0,0.9) 74%, #000 82%);
+      }
     }
     .founder-inner { max-width: 680px; }
     .founder-text { max-width: 680px; }
@@ -81,30 +96,15 @@ const p = unwrapSingletons((await getPage('about')) as any, [
     .about-cta .btn-white:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,0,0,0.25); }
     .about-cta .btn-outline-white { background: transparent; color: #fff; padding: 0.85rem 2rem; border-radius: var(--radius-pill); border: 2px solid rgba(255,255,255,0.7); font-family: var(--font-inter), sans-serif; font-size: 0.88rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; text-decoration: none; transition: border-color 0.2s, background 0.2s; }
     .about-cta .btn-outline-white:hover { border-color: #fff; background: rgba(255,255,255,0.1); }
-    @media (max-width: 1200px) and (min-width: 901px) {
-      .founder-hero-img { left: 40%; width: 60%; }
-      .founder-hero-img img {
-        object-position: 30% top;
-        -webkit-mask-image: linear-gradient(90deg, transparent 0%, transparent 10%, rgba(0,0,0,0.35) 18%, rgba(0,0,0,0.7) 28%, #000 42%);
-        mask-image: linear-gradient(90deg, transparent 0%, transparent 10%, rgba(0,0,0,0.35) 18%, rgba(0,0,0,0.7) 28%, #000 42%);
-      }
-    }
     @media (max-width: 900px) {
       .about-intro-inner { grid-template-columns: 1fr; gap: 2.5rem; }
       .about-intro-text { aspect-ratio: auto; }
       .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 2rem; }
-      .founder-hero-img { position: relative; left: 0; width: 100%; height: 260px; }
-      .founder-hero-img img { -webkit-mask-image: none; mask-image: none; }
-      .founder-hero-img::before { display: none; }
-      .founder-hero-img img { mask-image: linear-gradient(180deg, transparent 0%, #000 25%, #000 75%, transparent 100%); -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 25%, #000 75%, transparent 100%); }
-      .about-founder { padding: 0 0 var(--section-pad); }
-      .about-founder > .container { flex-direction: column; height: auto; padding: 0; }
-      .founder-left { width: 100%; padding: 2.5rem 1.5rem 0; }
+      .founder-hero-img { max-width: 280px; margin-bottom: 2rem; }
+      .about-founder { padding: 3rem 0 var(--section-pad); }
+      .founder-left { padding: 0 1.5rem; }
       .founder-inner { max-width: 100%; }
       .founder-text { max-width: 100%; }
-    }
-    @media (max-width: 900px) and (min-width: 701px) {
-      .founder-hero-img { height: 340px; }
     }
     @media (max-width: 600px) {
       .stats-grid { grid-template-columns: repeat(2, 1fr); }
