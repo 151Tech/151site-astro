@@ -3393,7 +3393,6 @@ html:has(.loc-fullpage), body:has(.loc-fullpage) { overflow: hidden; }
 /* Prose blocks: full-width plates, since the text already fills the column. */
 .featured-drink .featured-text,
 .about-intro-text,
-.about-history .history-body,
 .re-overview-text,
 .about-history .history-timeline,
 .blk-split:not(.blk-split--dark) .blk-split-text {

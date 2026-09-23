@@ -41,8 +41,13 @@ const p = unwrapSingletons((await getPage('about')) as any, [
     .stat-label { font-family: var(--font-inter), sans-serif; font-size: 0.82rem; font-weight: 600; color: rgba(255,255,255,0.80); text-transform: uppercase; letter-spacing: 0.1em; }
     .about-history { background-color: #f4efe9; background-image: var(--bg-quote); background-size: 1250px auto; background-position: top center; background-repeat: repeat; padding: var(--section-pad); }
     .about-history .section-header h2 { color: var(--red); }
-    .history-body { max-width: 780px; margin: 2rem auto 0; font-family: var(--font-inter), sans-serif; font-size: 1rem; line-height: 1.78; color: rgba(17,17,17,0.62); }
+    .history-body {
+      max-width: 900px; margin: 2rem auto 0; padding-left: 1.75rem;
+      border-left: 3px solid var(--red);
+      font-family: var(--font-inter), sans-serif; font-size: 1.05rem; line-height: 1.78; color: rgba(17,17,17,0.62);
+    }
     .history-body p { margin-bottom: 1.25rem; }
+    .history-body p:first-of-type { color: rgba(17,17,17,0.78); font-weight: 500; }
     .history-timeline { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-top: 3rem; max-width: 900px; margin-left: auto; margin-right: auto; }
     .timeline-item {
       position: relative; display: flex; flex-direction: column; gap: 0.6rem;
