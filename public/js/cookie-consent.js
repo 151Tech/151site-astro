@@ -13,6 +13,24 @@
         if (document.getElementById('cookie-consent')) return; // already open
         const wasAccepted = consent.get()?.accepted === true;
 
+        // 1-in-1,000 easter egg: same banner, silly copy. Purely cosmetic --
+        // it still calls the same consent.set()/choose() below, so it has no
+        // effect on what's actually recorded.
+        const isCookieMonster = Math.random() < 1 / 1000;
+        const copy = isCookieMonster
+            ? {
+                  title: 'I got you cookie, man!',
+                  body: "You gave me a cookie, I gave you a cookie. You gave me a cookie, gave you cookie. Gave me cookie, got you cookie! You gave me cookie, I got you cookie, man! Gave me cookie, got you cookie!",
+                  decline: 'Give me cookie',
+                  accept: 'Got you cookie',
+              }
+            : {
+                  title: 'We use cookies 🍪',
+                  body: "Unlike our menu, these cookies won't give you a sugar rush, just a faster site and the traffic/ad insights that help us reach more coffee lovers. No crumbs, we promise.",
+                  decline: 'Necessary Only',
+                  accept: 'Accept All',
+              };
+
         const banner = document.createElement('div');
         banner.id = 'cookie-consent';
         banner.setAttribute('role', 'dialog');
@@ -21,13 +39,13 @@
             <div class="cc-inner">
                 <div class="cc-text">
                     <div>
-                        <strong>We use cookies 🍪</strong>
-                        <p>Unlike our menu, these cookies won't give you a sugar rush, just a faster site and the traffic/ad insights that help us reach more coffee lovers. No crumbs, we promise.</p>
+                        <strong>${copy.title}</strong>
+                        <p>${copy.body}</p>
                     </div>
                 </div>
                 <div class="cc-actions">
-                    <button class="cc-btn cc-decline" id="ccDecline">Necessary Only</button>
-                    <button class="cc-btn cc-accept" id="ccAccept">Accept All</button>
+                    <button class="cc-btn cc-decline" id="ccDecline">${copy.decline}</button>
+                    <button class="cc-btn cc-accept" id="ccAccept">${copy.accept}</button>
                 </div>
                 <button class="cc-close" id="ccClose" aria-label="Close">&times;</button>
             </div>
