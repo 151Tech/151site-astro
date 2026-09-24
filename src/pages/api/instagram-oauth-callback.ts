@@ -89,8 +89,21 @@ export async function GET({ request }: { request: Request }) {
     }
   }
 
+  // Must match the redirect_uri from the authorize step byte for byte, or
+  // Instagram rejects the code with a (misleadingly generic) "Error
+  // validating verification code" message.
+  //
+  // Deriving this from url.origin is not trustworthy here: Webflow Cloud
+  // proxies requests in a way that makes the incoming Host header unreliable
+  // (the same reason astro.config.mjs sets security.checkOrigin: false), so
+  // the Worker can see an internal hostname or http:// rather than the public
+  // https:// URL the browser actually used. INSTAGRAM_REDIRECT_URI pins it
+  // explicitly; url.origin stays as the fallback for local dev.
+  const redirectUri =
+    (env as any).INSTAGRAM_REDIRECT_URI || `${url.origin}/api/instagram-oauth-callback`;
+
   try {
-    console.error('[instagram-oauth-callback] starting short-lived token exchange');
+    console.error(`[instagram-oauth-callback] starting short-lived token exchange, redirect_uri=${redirectUri}`);
     const exchangeRes = await fetchWithTimeout(TOKEN_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -99,8 +112,7 @@ export async function GET({ request }: { request: Request }) {
         client_secret: clientSecret,
         grant_type: 'authorization_code',
         code,
-        // Must byte-for-byte match the redirect_uri used in the authorize step.
-        redirect_uri: `${url.origin}/api/instagram-oauth-callback`,
+        redirect_uri: redirectUri,
       }),
     });
     console.error(`[instagram-oauth-callback] short-lived exchange responded: ${exchangeRes.status}`);
@@ -111,9 +123,14 @@ export async function GET({ request }: { request: Request }) {
       // gateway" page, discarding the diagnostic text below -- which made
       // every failure here look like an unexplained platform crash. 4xx
       // bodies pass through untouched.
-      return new Response(`Instagram token exchange failed: ${exchangeRes.status} ${await exchangeRes.text()}`, {
-        status: 400,
-      });
+      return new Response(
+        `Instagram token exchange failed: ${exchangeRes.status} ${await exchangeRes.text()}\n\n` +
+          `redirect_uri sent: ${redirectUri}\n` +
+          `(url.origin seen by the Worker: ${url.origin})\n` +
+          `If those differ from the URI registered in the Meta app, set INSTAGRAM_REDIRECT_URI to the correct value.\n` +
+          `Note: Instagram returns this same error for an already-used or expired code, so retry with a fresh one before chasing a mismatch.`,
+        { status: 400 },
+      );
     }
 
     const shortLived = (await exchangeRes.json()) as { access_token: string };
