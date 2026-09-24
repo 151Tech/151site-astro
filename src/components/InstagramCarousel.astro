@@ -142,6 +142,31 @@ const items = (media ?? []).slice(0, 3);
     if (bar) bar.style.width = `${Math.max(0, Math.min(100, pct))}%`;
   }
 
+  // Drives the "Now Playing" progress bar off the same clock as the
+  // rotation timer (CLIP_PREVIEW_MS/PLAYBACK_FALLBACK_MS in armFallback)
+  // rather than the video's own currentTime/duration -- the video only ever
+  // plays a short preview of its full length, so a duration-based bar would
+  // crawl along far slower than the carousel actually advances. One shared
+  // rAF loop at a time is enough since only the center slide ever has a bar
+  // running; stopProgressBar() cancels it (see clearFallback below).
+  let progressRafId: number | null = null;
+  function stopProgressBar() {
+    if (progressRafId !== null) {
+      cancelAnimationFrame(progressRafId);
+      progressRafId = null;
+    }
+  }
+  function startProgressBar(slide: HTMLElement, durationMs: number) {
+    stopProgressBar();
+    const start = performance.now();
+    const tick = () => {
+      const elapsed = performance.now() - start;
+      setBarWidth(slide, (elapsed / durationMs) * 100);
+      if (elapsed < durationMs) progressRafId = requestAnimationFrame(tick);
+    };
+    progressRafId = requestAnimationFrame(tick);
+  }
+
   // Only the slide currently in the center slot ever plays. Every other
   // slide -- including one mid-exit -- gets paused and rewound, and its mute
   // button (if any) reset, so a video never keeps running in the background
@@ -198,10 +223,6 @@ const items = (media ?? []).slice(0, 3);
         btn.setAttribute('aria-label', video.muted ? 'Unmute' : 'Mute');
         btn.setAttribute('aria-pressed', String(!video.muted));
       });
-      video.addEventListener('timeupdate', () => {
-        if (!slide.classList.contains('is-active') || !video.duration) return;
-        setBarWidth(slide, (video.currentTime / video.duration) * 100);
-      });
     });
 
     if (slides.length < 3) {
@@ -223,6 +244,7 @@ const items = (media ?? []).slice(0, 3);
 
     function clearFallback() {
       if (fallbackTimeoutId !== null) { clearTimeout(fallbackTimeoutId); fallbackTimeoutId = null; }
+      stopProgressBar();
     }
 
     function armFallback(centerSlide: HTMLElement) {
@@ -232,9 +254,11 @@ const items = (media ?? []).slice(0, 3);
       // video to actually end. A still-image slide has no video to preview,
       // so it keeps the longer PLAYBACK_FALLBACK_MS instead. Harmless if a
       // short video's own "ended" event fires first -- rotate() below always
-      // cancels this timer.
+      // cancels this timer. The progress bar runs on the same delay so it
+      // always reads 100% right as the carousel actually advances.
       const delay = getVideo(centerSlide) ? CLIP_PREVIEW_MS : PLAYBACK_FALLBACK_MS;
       fallbackTimeoutId = setTimeout(rotate, delay);
+      startProgressBar(centerSlide, delay);
     }
 
     const applySlots = () => {
