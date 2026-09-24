@@ -22,6 +22,7 @@
 // object, so both problems go away; this is the same accessor already proven
 // in src/pages/api/instagram-oauth-callback.ts and src/lib/instagram.ts.
 import { env } from 'cloudflare:workers';
+import { appendRow } from '../../lib/google-sheets';
 
 export const prerender = false;
 
@@ -75,17 +76,11 @@ const FORMS = {
   },
   'invest-waitlist': {
     label: 'Investor Waitlist Signup',
-    toEnv: 'RESEND_TO_INVEST',
-    // No real inbox for this one yet -- until RESEND_TO_INVEST is set, refuse
-    // to send rather than silently falling back to DEFAULT_TO_ADDRESS, which
-    // would misdeliver investor leads to the general tech inbox.
-    requireToEnv: true,
-    // This form (invest banner popup) only collects email + phone.
-    requireIdentity: false,
-    // Matches the subject/preview convention from the old Wix waitlist
-    // form's own notification email, not tied to any particular field.
-    subject: () => 'Investor Waitlist Signup got a new submission',
-    previewText: 'A site visitor just submitted your form Investor Waitlist Signup',
+    // Mirrors how the old Wix site handled this form: submissions land in a
+    // spreadsheet, nobody gets emailed. Handled entirely separately below
+    // (see the early return in POST) -- it never reaches the Resend send
+    // path, so it has no toEnv/requireIdentity/subject of its own.
+    sheetOnly: true,
   },
 } as const;
 
@@ -164,12 +159,6 @@ function escapeHtml(value: string): string {
 }
 
 export async function POST({ request }: { request: Request }) {
-  const apiKey = (env as any).RESEND_API_KEY;
-  if (!apiKey) {
-    console.error('[contact] RESEND_API_KEY is not set');
-    return new Response('Server misconfigured', { status: 500 });
-  }
-
   if (!originAllowed(request)) {
     console.warn('[contact] rejected submission from origin', request.headers.get('origin'));
     return new Response('Forbidden', { status: 403 });
@@ -225,6 +214,35 @@ export async function POST({ request }: { request: Request }) {
   }
   const form = FORMS[requested as FormName];
 
+  // Investor waitlist: mirrors the old Wix site (rows land in a sheet, no
+  // email goes out) instead of joining the Resend flow below, so it has its
+  // own validation and its own early return.
+  if ('sheetOnly' in form && form.sheetOnly) {
+    const waitlistEmailRaw = fields.get('email')?.trim();
+    const waitlistPhoneRaw = fields.get('phone')?.trim();
+    const waitlistEmailValid =
+      !!waitlistEmailRaw && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(waitlistEmailRaw);
+    if (!waitlistEmailValid) {
+      return new Response('Missing or invalid email', { status: 400 });
+    }
+    if (!waitlistPhoneRaw) {
+      return new Response('Missing phone', { status: 400 });
+    }
+
+    try {
+      await appendRow(
+        env,
+        [new Date().toISOString(), waitlistEmailRaw, waitlistPhoneRaw],
+        { spreadsheetIdEnv: 'GOOGLE_SHEETS_INVEST_SPREADSHEET_ID', range: 'Waitlist' },
+      );
+    } catch (err) {
+      console.error('[contact] invest-waitlist sheet append failed', err);
+      return new Response('Failed to record submission', { status: 502 });
+    }
+
+    return new Response('ok', { status: 200 });
+  }
+
   // Forms that collect a name + email (contact) enforce it server-side too --
   // the client-side `required` attribute is not a security boundary. Forms
   // that don't collect either (realestate-inquiry) skip this entirely.
@@ -233,7 +251,7 @@ export async function POST({ request }: { request: Request }) {
   const submitterEmailRaw = fields.get('email')?.trim();
   const emailLooksValid =
     !!submitterEmailRaw && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(submitterEmailRaw);
-  if (form.requireIdentity) {
+  if ((form as any).requireIdentity) {
     if (!firstName && !lastName) {
       return new Response('Missing name', { status: 400 });
     }
@@ -254,10 +272,20 @@ export async function POST({ request }: { request: Request }) {
     return new Response('Empty submission', { status: 400 });
   }
 
+  // Only the email-sending forms (contact, realestate-inquiry) reach this
+  // point -- invest-waitlist already returned above. Gate on RESEND_API_KEY
+  // here rather than at the top of POST so the sheet-only form never depends
+  // on Resend being configured at all.
+  const apiKey = (env as any).RESEND_API_KEY;
+  if (!apiKey) {
+    console.error('[contact] RESEND_API_KEY is not set');
+    return new Response('Server misconfigured', { status: 500 });
+  }
+
   const fromAddress = (env as any).RESEND_FROM_ADDRESS || DEFAULT_FROM_ADDRESS;
-  const configuredToAddress = (env as any)[form.toEnv];
-  if ('requireToEnv' in form && form.requireToEnv && !configuredToAddress) {
-    console.warn(`[contact] ${form.toEnv} not set, refusing to send ${requested} submission`);
+  const configuredToAddress = (env as any)[(form as any).toEnv];
+  if ('requireToEnv' in form && (form as any).requireToEnv && !configuredToAddress) {
+    console.warn(`[contact] ${(form as any).toEnv} not set, refusing to send ${requested} submission`);
     return new Response('Form not yet accepting submissions', { status: 503 });
   }
   const toAddress = configuredToAddress || DEFAULT_TO_ADDRESS;
@@ -299,7 +327,7 @@ export async function POST({ request }: { request: Request }) {
       from: `${FROM_NAME} <${fromAddress}>`,
       to: [toAddress],
       ...(replyTo ? { reply_to: replyTo } : {}),
-      subject: form.subject(fields),
+      subject: (form as any).subject(fields),
       html,
       text,
     }),
