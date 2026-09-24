@@ -57,11 +57,23 @@ const REFID_TO_CAT_SLUG: Record<string, string> = Object.fromEntries(
   categoryEntries.map((c: any) => [`categories/${c.slug}`, c.slug]),
 );
 const RANDOM_IMAGE_ALLOWED_CATS = new Set(['dirtypop', 'energy', 'teas', 'refreshers']);
+// Requested at tablet-band resolution/quality (not the old phone-band 500px)
+// since the same image now has to fill a much larger, more visible band on
+// iPad/Surface-class screens (see the large-tablet tier in <style>) as well
+// as the smaller phone one -- one larger, sharper asset covers both rather
+// than serving a soft upscale on the bigger screens.
 const randomDrinkImages: string[] = drinksEntries
   .filter((d: any) => RANDOM_IMAGE_ALLOWED_CATS.has(REFID_TO_CAT_SLUG[d.category] ?? ''))
-  .map((d: any) => imageUrl(d.image, { width: 500 }))
+  .map((d: any) => imageUrl(d.image, { width: 1200, quality: 90 }))
   .filter(Boolean) as string[];
 const hasRandomImage = !backgroundImage && !desktopHeroImage && randomDrinkImages.length > 0;
+
+// veterans-day's own flag photo gets the same angled band treatment as the
+// random-drink pages below, on mobile/tablet -- it just shows a fixed image
+// instead of a random one. Desktop (>=900px, see the has-desktop-hero
+// override further down) is unaffected: that already swaps to its own
+// framed hero image and this flag band is hidden there.
+const showDiagPhoto = hasRandomImage || !!backgroundImage;
 
 function escapeHtml(s: string): string {
   return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -91,6 +103,7 @@ function highlight(text: string): string {
         'has-bg-image': !!backgroundImage,
         'has-desktop-hero': !!desktopHeroImage,
         'has-random-image': hasRandomImage,
+        'has-diag-photo': showDiagPhoto,
       },
     ]}
     style={backgroundImage ? `--landing-bg: url(${backgroundImage})` : undefined}
@@ -107,14 +120,18 @@ function highlight(text: string): string {
       </div>
     )}
 
-    {hasRandomImage && (
+    {showDiagPhoto && (
       <a
         href="/"
         class="landing-diag-photo"
         aria-label="151 Coffee home"
-        data-random-images={JSON.stringify(randomDrinkImages)}
+        data-random-images={hasRandomImage ? JSON.stringify(randomDrinkImages) : undefined}
       >
-        <img data-random-image-el alt="" loading="eager" />
+        {hasRandomImage ? (
+          <img data-random-image-el alt="" loading="eager" />
+        ) : (
+          <img src={backgroundImage} alt="" loading="eager" class="landing-diag-photo-img--top" />
+        )}
       </a>
     )}
 
@@ -179,52 +196,11 @@ function highlight(text: string): string {
     overflow: hidden;
   }
 
-  /* Per-slug background photo (see BACKGROUND_OVERRIDES above). `top center`
-     is deliberate: the source image has its subject (a flag) in the upper
-     portion with plain sky below, and `cover` on a phone's tall/narrow
-     viewport crops the sides rather than the top, so the subject stays
-     visible above the text at every viewport height. The scrim keeps the
-     text block legible without hiding the subject near the top. */
-  .landing-page.has-bg-image {
-    background-image:
-      linear-gradient(to bottom, rgba(17, 17, 17, 0.35) 0%, rgba(17, 17, 17, 0.7) 45%, rgba(17, 17, 17, 0.94) 100%),
-      var(--landing-bg);
-    /* `auto 62vh` (not `cover`) on purpose: this photo is landscape-ish
-       while the viewport is a tall, narrow phone, so `cover` -- which
-       scales to whichever dimension needs it more -- ends up driven by
-       height and blows the flag up bigger (and further down) the taller
-       the screen gets. Pinning the image's own height to a fixed share of
-       the viewport keeps the flag the same size and position regardless of
-       how tall the phone is. */
-    background-size: auto 62vh;
-    background-position: top center;
-    background-repeat: no-repeat;
-  }
-
-  /* Push the text block toward the bottom half of the viewport instead of
-     dead center, so it sits clear of the flag near the top -- paired with
-     the source photo itself being cropped tighter to the flag. Anchored
-     hard to the bottom on short (iPhone SE-class) screens; the media
-     queries below ease that back toward center as height grows, so the
-     text doesn't stay pinned to the bottom edge on a taller phone. */
-  .landing-page.has-bg-image .landing-content {
-    justify-content: flex-end;
-    padding-bottom: 0.5rem;
-  }
-
-  @media (min-height: 700px) {
-    .landing-page.has-bg-image .landing-content {
-      justify-content: flex-end;
-      padding-bottom: 8vh;
-    }
-  }
-
-  @media (min-height: 850px) {
-    .landing-page.has-bg-image .landing-content {
-      justify-content: center;
-      padding-bottom: 0;
-    }
-  }
+  /* Mobile/tablet no longer uses a full-bleed background photo at all --
+     veterans-day's flag image now runs through the same angled
+     .landing-diag-photo band as the random-drink pages (see showDiagPhoto
+     above). `.has-bg-image` only still matters at the >=900px desktop tier
+     below, where it swaps to a framed hero image instead. */
 
   .landing-logo {
     flex: 0 0 auto;
@@ -389,16 +365,25 @@ function highlight(text: string): string {
     display: none;
   }
 
-  /* Random drink photo for every page without its own bespoke art (see
-     hasRandomImage above) -- an angled, edge-to-edge banner instead of a
-     framed card. `.has-random-image` drops the page's own side/top padding
-     so the photo can run flush to every edge; `.landing-content` (below)
-     puts that padding back for the text, plus the negative margin that
-     lets it overlap the diagonal cut instead of leaving a hard seam. No
-     separate logo mark on this layout -- the drink photo itself already
-     has the 151 logo printed on the cup. */
+  /* Angled, edge-to-edge photo banner shared by every page that shows one
+     above its text (see showDiagPhoto above): pages with no bespoke art get
+     a random drink photo, veterans-day gets its own fixed flag photo.
+     `.has-diag-photo` drops the page's own side padding so the band can run
+     flush to both edges; `.landing-content` (below) puts side padding back
+     for the text, plus the negative margin that lets it overlap the
+     diagonal cut instead of leaving a hard seam. */
+  .landing-page.has-diag-photo {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  /* The random-drink variant has no logo above the band (the drink photo
+     already has the 151 logo printed on the cup), so it also runs flush to
+     the very top. veterans-day keeps its logo above the band (the flag
+     photo doesn't carry a logo), so it keeps the page's normal top padding,
+     set on the shared .landing-page rule. */
   .landing-page.has-random-image {
-    padding: 0 0 max(1.1rem, env(safe-area-inset-bottom));
+    padding-top: 0;
   }
 
   .landing-diag-photo {
@@ -416,6 +401,12 @@ function highlight(text: string): string {
     height: 100%;
     object-fit: cover;
   }
+  /* veterans-day's flag sits in the upper portion of its source photo with
+     plain sky below -- cover's default center crop pushes the flag out of
+     frame on a tall band, so it's pinned to the top instead. */
+  .landing-diag-photo img.landing-diag-photo-img--top {
+    object-position: top center;
+  }
   .landing-diag-photo::after {
     content: '';
     position: absolute;
@@ -429,7 +420,7 @@ function highlight(text: string): string {
      both) drives the scale, so type and spacing shrink to fit a cramped
      screen and grow to actually fill a roomy one, continuously, instead of
      jumping between a handful of hand-tuned device tiers. */
-  .landing-page.has-random-image .landing-content {
+  .landing-page.has-diag-photo .landing-content {
     padding: 0 1.25rem;
     /* Pulls the text up snug against the diagonal cut instead of leaving a
        gap -- constant rather than fluid, since the photo band above it is
@@ -439,39 +430,74 @@ function highlight(text: string): string {
     gap: clamp(0.55rem, 2.4vh, 1.15rem);
   }
 
-  .landing-page.has-random-image .landing-eyebrow {
+  .landing-page.has-diag-photo .landing-eyebrow {
     font-size: clamp(0.62rem, min(3.2vw, 1.7vh), 0.9rem);
   }
-  .landing-page.has-random-image .landing-headline {
+  .landing-page.has-diag-photo .landing-headline {
     font-size: clamp(1.7rem, min(9.5vw, 7.5vh), 3.8rem);
   }
-  .landing-page.has-random-image .landing-offer {
+  .landing-page.has-diag-photo .landing-offer {
     font-size: clamp(0.88rem, min(4.4vw, 3.1vh), 1.4rem);
   }
-  .landing-page.has-random-image .landing-instructions {
+  .landing-page.has-diag-photo .landing-instructions {
     font-size: clamp(0.68rem, min(3.2vw, 2.1vh), 1.02rem);
   }
-  .landing-page.has-random-image .landing-terms {
+  .landing-page.has-diag-photo .landing-terms {
     font-size: clamp(0.58rem, min(2.7vw, 1.7vh), 0.8rem);
   }
-  .landing-page.has-random-image .landing-cta {
+  .landing-page.has-diag-photo .landing-cta {
     margin-top: 0;
     padding: clamp(0.55rem, 1.9vh, 0.85rem) clamp(1.1rem, 4vw, 2rem);
     font-size: clamp(0.78rem, min(4vw, 1.9vh), 1.02rem);
   }
 
-  /* Wide viewport (desktop/tablet, not a phone held in a hand): the
-     full-bleed photo background stops making sense once the page is no
-     longer edge-to-edge in front of someone's face, so it's dropped back to
-     the plain gradient ground, and the same photo instead appears as a
-     normal framed image, centered above the now vertically-centered text. */
+  /* Large tablets (iPad Pro 13", Surface Pro 10, and sizes around them --
+     roughly 1000-1400px wide) have room the phone-tuned clamp maxes above
+     don't use: those caps were sized for phones and an iPad mini, so on a
+     bigger tablet the type ends up looking small relative to all the extra
+     space. This tier only raises the ceiling (min() picks the smaller of
+     vw/vh either way, so a smaller tablet in this range still gets a
+     smaller value) and only applies to pages without their own bespoke
+     desktop layout -- has-desktop-hero pages switch away from this entirely
+     at 900px (see below). */
+  @media (min-width: 900px) {
+    .landing-page.has-diag-photo:not(.has-desktop-hero) .landing-diag-photo {
+      height: clamp(320px, 42vh, 560px);
+      /* Brings the cut lower (was 78%/100%) so more of the photo shows
+         through on the extra room a tablet has, rather than just stretching
+         a thin band taller. */
+      clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
+    }
+    .landing-page.has-diag-photo:not(.has-desktop-hero) .landing-eyebrow {
+      font-size: clamp(0.9rem, min(2vw, 2.2vh), 1.3rem);
+    }
+    .landing-page.has-diag-photo:not(.has-desktop-hero) .landing-headline {
+      font-size: clamp(3rem, min(6.5vw, 9vh), 5.5rem);
+    }
+    .landing-page.has-diag-photo:not(.has-desktop-hero) .landing-offer {
+      font-size: clamp(1.3rem, min(2.6vw, 3.6vh), 1.9rem);
+    }
+    .landing-page.has-diag-photo:not(.has-desktop-hero) .landing-instructions {
+      font-size: clamp(1rem, min(1.8vw, 2.4vh), 1.3rem);
+    }
+    .landing-page.has-diag-photo:not(.has-desktop-hero) .landing-terms {
+      font-size: clamp(0.8rem, min(1.5vw, 1.9vh), 1rem);
+    }
+    .landing-page.has-diag-photo:not(.has-desktop-hero) .landing-cta {
+      padding: clamp(0.85rem, 2vh, 1.15rem) clamp(2rem, 3vw, 2.75rem);
+      font-size: clamp(1.02rem, min(2vw, 2.2vh), 1.25rem);
+    }
+  }
+
+  /* Wide desktop viewport (not a phone/tablet held in a hand): a page with
+     its own bespoke desktop art (has-desktop-hero, currently veterans-day
+     only) drops the angled band entirely and shows a normal framed image,
+     centered above the now vertically-centered text. Pages with no bespoke
+     desktop art of their own just keep using .has-diag-photo, tuned further
+     above for the large-tablet tier. */
   @media (min-width: 900px) {
     .landing-content {
       justify-content: center;
-    }
-
-    .landing-page.has-bg-image {
-      background-image: radial-gradient(circle at 50% 0%, rgba(230, 57, 70, 0.25) 0%, transparent 55%), var(--black);
     }
 
     .landing-page.has-bg-image .landing-content {
@@ -495,6 +521,37 @@ function highlight(text: string): string {
       width: 100%;
       height: 100%;
       object-fit: cover;
+    }
+
+    /* veterans-day is the one page with both has-desktop-hero and
+       has-diag-photo -- undo the mobile/tablet angled-band treatment here so
+       it falls back to the framed-hero layout above instead of showing both. */
+    .landing-page.has-desktop-hero.has-diag-photo {
+      padding-left: 1.25rem;
+      padding-right: 1.25rem;
+    }
+    .landing-page.has-desktop-hero.has-diag-photo .landing-diag-photo {
+      display: none;
+    }
+    .landing-page.has-desktop-hero.has-diag-photo .landing-content {
+      padding: 0 1.25rem;
+      margin-top: 0;
+      gap: 0.8rem;
+    }
+    .landing-page.has-desktop-hero.has-diag-photo .landing-eyebrow {
+      font-size: 0.8rem;
+    }
+    .landing-page.has-desktop-hero.has-diag-photo .landing-headline {
+      font-size: clamp(1.9rem, 9vw, 3rem);
+    }
+    .landing-page.has-desktop-hero.has-diag-photo .landing-offer {
+      font-size: clamp(1rem, 4vw, 1.2rem);
+    }
+    .landing-page.has-desktop-hero.has-diag-photo .landing-instructions {
+      font-size: 0.85rem;
+    }
+    .landing-page.has-desktop-hero.has-diag-photo .landing-terms {
+      font-size: 0.7rem;
     }
   }
 </style>
