@@ -55,47 +55,59 @@ export async function GET({ request }: { request: Request }) {
     );
   }
 
-  const exchangeRes = await fetch(TOKEN_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: new URLSearchParams({
-      client_id: clientId,
-      client_secret: clientSecret,
-      grant_type: 'authorization_code',
-      code,
-      // Must byte-for-byte match the redirect_uri used in the authorize step.
-      redirect_uri: `${url.origin}/api/instagram-oauth-callback`,
-    }),
-  });
+  // Wrapped in try/catch so a network-level failure (fetch throwing rather
+  // than resolving with a non-OK status) or a KV error surfaces as a real
+  // message instead of an unhandled exception -- which Cloudflare's edge
+  // reports as a bare 502 with no detail at all, impossible to debug from
+  // the browser alone.
+  try {
+    const exchangeRes = await fetch(TOKEN_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({
+        client_id: clientId,
+        client_secret: clientSecret,
+        grant_type: 'authorization_code',
+        code,
+        // Must byte-for-byte match the redirect_uri used in the authorize step.
+        redirect_uri: `${url.origin}/api/instagram-oauth-callback`,
+      }),
+    });
 
-  if (!exchangeRes.ok) {
-    return new Response(`Instagram token exchange failed: ${exchangeRes.status} ${await exchangeRes.text()}`, {
+    if (!exchangeRes.ok) {
+      return new Response(`Instagram token exchange failed: ${exchangeRes.status} ${await exchangeRes.text()}`, {
+        status: 502,
+      });
+    }
+
+    const shortLived = (await exchangeRes.json()) as { access_token: string };
+
+    // The short-lived token from the step above is only valid ~1 hour. This
+    // second exchange trades it for the long-lived (~60 day) token that
+    // src/lib/instagram.ts and the scheduled refresh job actually use.
+    const longLivedUrl = new URL(LONG_LIVED_URL);
+    longLivedUrl.searchParams.set('grant_type', 'ig_exchange_token');
+    longLivedUrl.searchParams.set('client_secret', clientSecret);
+    longLivedUrl.searchParams.set('access_token', shortLived.access_token);
+
+    const longLivedRes = await fetch(longLivedUrl);
+    if (!longLivedRes.ok) {
+      return new Response(
+        `Instagram long-lived token exchange failed: ${longLivedRes.status} ${await longLivedRes.text()}`,
+        { status: 502 },
+      );
+    }
+    const longLived = (await longLivedRes.json()) as { access_token: string };
+
+    await kv.put('access_token', longLived.access_token);
+    return new Response(
+      'Instagram connected. The homepage carousel will start showing real posts on its next request (may take up to an hour to clear any stale cache).',
+      { status: 200, headers: { 'Content-Type': 'text/plain' } },
+    );
+  } catch (err) {
+    console.error('[instagram-oauth-callback] unhandled error', err);
+    return new Response(`Instagram OAuth callback threw: ${err instanceof Error ? err.message : String(err)}`, {
       status: 502,
     });
   }
-
-  const shortLived = (await exchangeRes.json()) as { access_token: string };
-
-  // The short-lived token from the step above is only valid ~1 hour. This
-  // second exchange trades it for the long-lived (~60 day) token that
-  // src/lib/instagram.ts and the scheduled refresh job actually use.
-  const longLivedUrl = new URL(LONG_LIVED_URL);
-  longLivedUrl.searchParams.set('grant_type', 'ig_exchange_token');
-  longLivedUrl.searchParams.set('client_secret', clientSecret);
-  longLivedUrl.searchParams.set('access_token', shortLived.access_token);
-
-  const longLivedRes = await fetch(longLivedUrl);
-  if (!longLivedRes.ok) {
-    return new Response(
-      `Instagram long-lived token exchange failed: ${longLivedRes.status} ${await longLivedRes.text()}`,
-      { status: 502 },
-    );
-  }
-  const longLived = (await longLivedRes.json()) as { access_token: string };
-
-  await kv.put('access_token', longLived.access_token);
-  return new Response(
-    'Instagram connected. The homepage carousel will start showing real posts on its next request (may take up to an hour to clear any stale cache).',
-    { status: 200, headers: { 'Content-Type': 'text/plain' } },
-  );
 }
