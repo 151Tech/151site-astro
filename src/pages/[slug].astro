@@ -34,15 +34,17 @@ const bonusImage = imageUrl(page.image, { width: 700 });
 // request -- rather than a new generic CMS field for a one-off ask (same
 // pattern as LOCATION_COORD_OVERRIDES in src/lib/storyblok.ts).
 const BACKGROUND_OVERRIDES: Record<string, string> = {
-  'veterans-day': '/images/landing/veterans-day-bg.jpg',
+  vets6: '/images/landing/veterans-day-bg.png',
 };
 const backgroundImage = BACKGROUND_OVERRIDES[slug as string];
 
 // At desktop widths the full-bleed photo background gives way to a small
 // framed image centered above the (now vertically centered) text -- same
-// per-slug override pattern as BACKGROUND_OVERRIDES above.
+// per-slug override pattern as BACKGROUND_OVERRIDES above. Same source photo
+// as the mobile/tablet background -- there's only the one flag-and-drink
+// shot for this page across every size.
 const DESKTOP_HERO_OVERRIDES: Record<string, string> = {
-  'veterans-day': '/images/landing/veterans-day-desktop.jpg',
+  vets6: '/images/landing/veterans-day-bg.png',
 };
 const desktopHeroImage = DESKTOP_HERO_OVERRIDES[slug as string];
 
@@ -56,16 +58,23 @@ const desktopHeroImage = DESKTOP_HERO_OVERRIDES[slug as string];
 const REFID_TO_CAT_SLUG: Record<string, string> = Object.fromEntries(
   categoryEntries.map((c: any) => [`categories/${c.slug}`, c.slug]),
 );
+const CAT_SLUG_TO_NAME: Record<string, string> = Object.fromEntries(
+  categoryEntries.map((c: any) => [c.slug, c.title]),
+);
 const RANDOM_IMAGE_ALLOWED_CATS = new Set(['dirtypop', 'energy', 'teas', 'refreshers']);
 // Requested at tablet-band resolution/quality (not the old phone-band 500px)
 // since the same image now has to fill a much larger, more visible band on
 // iPad/Surface-class screens (see the large-tablet tier in <style>) as well
 // as the smaller phone one -- one larger, sharper asset covers both rather
 // than serving a soft upscale on the bigger screens.
-const randomDrinkImages: string[] = drinksEntries
+const randomDrinkImages: { src: string; name: string; category: string }[] = drinksEntries
   .filter((d: any) => RANDOM_IMAGE_ALLOWED_CATS.has(REFID_TO_CAT_SLUG[d.category] ?? ''))
-  .map((d: any) => imageUrl(d.image, { width: 1200, quality: 90 }))
-  .filter(Boolean) as string[];
+  .map((d: any) => ({
+    src: imageUrl(d.image, { width: 1200, quality: 90 }),
+    name: d.name,
+    category: CAT_SLUG_TO_NAME[REFID_TO_CAT_SLUG[d.category]] ?? '',
+  }))
+  .filter((d: any) => d.src);
 const hasRandomImage = !backgroundImage && !desktopHeroImage && randomDrinkImages.length > 0;
 
 // veterans-day's own flag photo gets the same angled band treatment as the
@@ -108,7 +117,7 @@ function highlight(text: string): string {
     ]}
     style={backgroundImage ? `--landing-bg: url(${backgroundImage})` : undefined}
   >
-    {!hasRandomImage && (
+    {!hasRandomImage && !backgroundImage && (
       <a href="/" class="landing-logo" aria-label="151 Coffee home">
         {logoUrl ? <img src={logoUrl} alt="151 Coffee" /> : <span>151 Coffee</span>}
       </a>
@@ -128,7 +137,13 @@ function highlight(text: string): string {
         data-random-images={hasRandomImage ? JSON.stringify(randomDrinkImages) : undefined}
       >
         {hasRandomImage ? (
-          <img data-random-image-el alt="" loading="eager" />
+          <>
+            <img data-random-image-el alt="" loading="eager" />
+            <span class="drink-label" data-random-image-label>
+              <span class="drink-label-name" data-random-image-name></span>
+              <span class="drink-label-category" data-random-image-category></span>
+            </span>
+          </>
         ) : (
           <img src={backgroundImage} alt="" loading="eager" class="landing-diag-photo-img--top" />
         )}
@@ -162,10 +177,17 @@ function highlight(text: string): string {
   <script>
     const wrap = document.querySelector('[data-random-images]');
     if (wrap) {
-      const images: string[] = JSON.parse(wrap.getAttribute('data-random-images') || '[]');
+      const drinks: { src: string; name: string; category: string }[] = JSON.parse(
+        wrap.getAttribute('data-random-images') || '[]',
+      );
       const img = wrap.querySelector('[data-random-image-el]') as HTMLImageElement | null;
-      if (img && images.length) {
-        img.src = images[Math.floor(Math.random() * images.length)];
+      const categoryEl = wrap.querySelector('[data-random-image-category]') as HTMLElement | null;
+      const nameEl = wrap.querySelector('[data-random-image-name]') as HTMLElement | null;
+      if (img && drinks.length) {
+        const pick = drinks[Math.floor(Math.random() * drinks.length)];
+        img.src = pick.src;
+        if (categoryEl) categoryEl.textContent = pick.category;
+        if (nameEl) nameEl.textContent = pick.name;
       }
     }
   </script>
@@ -406,6 +428,78 @@ function highlight(text: string): string {
     object-position: top center;
   }
 
+  /* Random-drink pages only: names the featured drink, running along the
+     same slope as the band's own diagonal cut (100% 78% -> 0 100% below).
+     The fade runs the full width of the band rather than just behind the
+     letters -- since the band is clipped to that diagonal, a plain
+     bottom-to-top gradient automatically follows the slope of the cut
+     without needing its own angle. */
+  .landing-page.has-random-image .landing-diag-photo::after {
+    content: '';
+    position: absolute;
+    inset: auto 0 0 0;
+    height: 36%;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0) 100%);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Sits above the ::after slice-vignette (both are absolutely positioned
+     children of the same anchor). Pinned to the top-right instead of
+     following the diagonal cut. The scrim lives on its own ::before sized
+     independently of the text (rather than as this element's own
+     background) because .drink-label's box is only as tall as its two
+     lines of text -- a background painted on it gets its radial gradient
+     clipped/flattened right where that short box ends, instead of fading
+     out cleanly over a much larger area. */
+  .drink-label {
+    position: absolute;
+    z-index: 2;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    text-align: right;
+    gap: 0;
+    white-space: nowrap;
+    padding: 0.85rem 1.1rem 1.6rem;
+  }
+  .drink-label::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: min(70%, 26rem);
+    height: 210%;
+    background: radial-gradient(
+      ellipse 100% 100% at top right,
+      rgba(0, 0, 0, 0.68) 0%,
+      rgba(0, 0, 0, 0.5) 35%,
+      rgba(0, 0, 0, 0) 72%
+    );
+    z-index: -1;
+    pointer-events: none;
+  }
+  .drink-label-category {
+    font-family: var(--font-inter), sans-serif;
+    font-size: clamp(0.72rem, 2.9vw, 0.88rem);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #f4efe9;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  }
+  .drink-label-name {
+    font-family: var(--font-bebas-neue), 'Impact', sans-serif;
+    font-size: clamp(1.7rem, 8vw, 2.3rem);
+    line-height: 0.95;
+    letter-spacing: 0.02em;
+    color: var(--white);
+  }
+
   /* Large phones (iPhone Pro Max-class and similar, still under the
      900px tablet tier) have more width than the 260px mobile cap assumes --
      let the band grow a bit further so it makes better use of the extra
@@ -470,6 +564,15 @@ function highlight(text: string): string {
          a thin band taller. */
       clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
     }
+    .drink-label {
+      padding: 1rem 1.6rem;
+    }
+    .drink-label-category {
+      font-size: clamp(0.8rem, 1.6vw, 1rem);
+    }
+    .drink-label-name {
+      font-size: clamp(2.1rem, 4vw, 2.9rem);
+    }
     .landing-page.has-diag-photo .landing-eyebrow {
       font-size: clamp(0.9rem, min(2vw, 2.2vh), 1.3rem);
     }
@@ -491,71 +594,120 @@ function highlight(text: string): string {
     }
   }
 
-  /* True desktop viewport, wider than any tablet (a page with its own
-     bespoke desktop art -- has-desktop-hero, currently veterans-day only --
-     drops the angled band entirely here and shows a normal framed image,
-     centered above the now vertically-centered text. Pages with no bespoke
-     desktop art of their own just keep using .has-diag-photo indefinitely,
-     tuned above for the large-tablet tier. */
+  /* True desktop viewport, wider than any tablet. Two bespoke layouts from
+     here, chosen per-page by the same has-desktop-hero flag used above:
+     - has-desktop-hero (veterans-day only): "Option 2" -- the flag/drink
+       photo goes full-bleed behind everything, with a left-to-right scrim
+       and the text sitting directly on top of it, lower-left.
+     - every other has-diag-photo page (the random-drink pages): "Option 1"
+       -- a vertical split, text on the left half, the angled photo band
+       promoted to a full-height panel filling the right half.
+     Pages with neither flag (plain offer pages, no photo at all) just get
+     centered text, same as tablet. */
   @media (min-width: 1400px) {
     .landing-content {
       justify-content: center;
     }
 
-    .landing-page.has-bg-image .landing-content {
-      justify-content: center;
-      padding-bottom: 0;
+    /* ---- Option 2: full-bleed photo + scrim (veterans-day) ---- */
+    .landing-page.has-desktop-hero {
+      padding: max(1.1rem, env(safe-area-inset-top)) 0 max(1.1rem, env(safe-area-inset-bottom));
+      align-items: stretch;
     }
-
+    .landing-page.has-desktop-hero .landing-diag-photo {
+      display: none;
+    }
     .landing-page.has-desktop-hero .landing-desktop-hero {
       display: block;
-      flex: 0 0 auto;
-      width: 100%;
-      max-width: 420px;
-      max-height: 32vh;
-      margin-bottom: 1.25rem;
-      border-radius: var(--radius);
-      overflow: hidden;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+      position: absolute;
+      inset: 0;
+      margin-bottom: 0;
+      max-width: none;
+      max-height: none;
+      box-shadow: none;
+      border-radius: 0;
     }
     .landing-page.has-desktop-hero .landing-desktop-hero img {
-      display: block;
       width: 100%;
       height: 100%;
       object-fit: cover;
     }
+    .landing-page.has-desktop-hero .landing-desktop-hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        100deg,
+        rgba(10, 10, 10, 0.92) 0%,
+        rgba(10, 10, 10, 0.72) 32%,
+        rgba(10, 10, 10, 0.15) 58%,
+        rgba(10, 10, 10, 0) 72%
+      );
+    }
+    .landing-page.has-desktop-hero .landing-content {
+      position: relative;
+      z-index: 2;
+      align-items: flex-start;
+      justify-content: flex-end;
+      text-align: left;
+      max-width: 34rem;
+      margin: 0 0 4rem 4rem;
+      padding: 0;
+      gap: 1rem;
+    }
+    .landing-page.has-desktop-hero .landing-offer,
+    .landing-page.has-desktop-hero .landing-instructions,
+    .landing-page.has-desktop-hero .landing-terms {
+      max-width: 40ch;
+    }
+    .landing-page.has-desktop-hero .landing-eyebrow {
+      font-size: 0.9rem;
+    }
+    .landing-page.has-desktop-hero .landing-headline {
+      font-size: clamp(2.4rem, 4.5vw, 3.6rem);
+    }
+    .landing-page.has-desktop-hero .landing-offer {
+      font-size: 1.15rem;
+    }
+    .landing-page.has-desktop-hero .landing-instructions {
+      font-size: 0.9rem;
+    }
+    .landing-page.has-desktop-hero .landing-terms {
+      font-size: 0.72rem;
+    }
 
-    /* veterans-day is the one page with both has-desktop-hero and
-       has-diag-photo -- undo the tablet angled-band treatment here so it
-       falls back to the framed-hero layout above instead of showing both. */
-    .landing-page.has-desktop-hero.has-diag-photo {
-      padding: max(1.1rem, env(safe-area-inset-top)) 1.25rem max(1.1rem, env(safe-area-inset-bottom));
+    /* ---- Option 1: vertical split (every other angled-photo page) ---- */
+    .landing-page.has-diag-photo:not(.has-desktop-hero) {
+      flex-direction: row;
+      align-items: stretch;
+      padding: 0;
     }
-    .landing-page.has-desktop-hero.has-diag-photo .landing-logo {
-      display: block;
-    }
-    .landing-page.has-desktop-hero.has-diag-photo .landing-diag-photo {
-      display: none;
-    }
-    .landing-page.has-desktop-hero.has-diag-photo .landing-content {
-      padding: 0 1.25rem;
+    .landing-page.has-diag-photo:not(.has-desktop-hero) .landing-content {
+      order: 1;
+      flex: 0 0 46%;
+      max-width: none;
+      align-items: flex-start;
+      text-align: left;
+      padding: 0 4rem;
       margin-top: 0;
-      gap: 0.8rem;
     }
-    .landing-page.has-desktop-hero.has-diag-photo .landing-eyebrow {
-      font-size: 0.8rem;
+    .landing-page.has-diag-photo:not(.has-desktop-hero) .landing-offer,
+    .landing-page.has-diag-photo:not(.has-desktop-hero) .landing-instructions,
+    .landing-page.has-desktop-hero .landing-terms {
+      max-width: 38ch;
     }
-    .landing-page.has-desktop-hero.has-diag-photo .landing-headline {
-      font-size: clamp(1.9rem, 9vw, 3rem);
+    .landing-page.has-diag-photo:not(.has-desktop-hero) .landing-headline {
+      font-size: clamp(2.2rem, 4vw, 3.2rem);
     }
-    .landing-page.has-desktop-hero.has-diag-photo .landing-offer {
-      font-size: clamp(1rem, 4vw, 1.2rem);
+    .landing-page.has-diag-photo:not(.has-desktop-hero) .landing-diag-photo {
+      order: 2;
+      flex: 0 0 54%;
+      width: auto;
+      height: 100%;
+      clip-path: polygon(10% 0, 100% 0, 100% 100%, 0 100%);
     }
-    .landing-page.has-desktop-hero.has-diag-photo .landing-instructions {
-      font-size: 0.85rem;
-    }
-    .landing-page.has-desktop-hero.has-diag-photo .landing-terms {
-      font-size: 0.7rem;
+    .landing-page.has-random-image .landing-diag-photo::after {
+      height: 45%;
     }
   }
 </style>
