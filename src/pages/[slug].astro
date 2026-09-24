@@ -405,6 +405,17 @@ function highlight(text: string): string {
   .landing-diag-photo img.landing-diag-photo-img--top {
     object-position: top center;
   }
+
+  /* Large phones (iPhone Pro Max-class and similar, still under the
+     900px tablet tier) have more width than the 260px mobile cap assumes --
+     let the band grow a bit further so it makes better use of the extra
+     screen instead of leaving it to the text below. */
+  @media (min-width: 400px) and (max-width: 899px) {
+    .landing-diag-photo {
+      height: clamp(150px, 34vh, 320px);
+    }
+  }
+
   /* Everything below is sized off `min(vw, vh)` rather than fixed
      breakpoints: whichever dimension is tighter (a short SE-class phone's
      height, or a portrait tablet's... nothing, tablets are generous in
