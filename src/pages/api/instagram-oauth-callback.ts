@@ -105,8 +105,14 @@ export async function GET({ request }: { request: Request }) {
       { status: 200, headers: { 'Content-Type': 'text/plain' } },
     );
   } catch (err) {
-    console.error('[instagram-oauth-callback] unhandled error', err);
-    return new Response(`Instagram OAuth callback threw: ${err instanceof Error ? err.message : String(err)}`, {
+    // Log only a plain string, never the raw error object -- passing a
+    // complex Error (with nested fetch/cause diagnostics) to console.error
+    // has been observed to throw during serialization on this platform,
+    // which would escape this catch and crash the handler anyway, hiding
+    // the real failure behind a bare edge 502 with zero log output.
+    const message = err instanceof Error ? err.message : String(err);
+    console.error(`[instagram-oauth-callback] unhandled error: ${message}`);
+    return new Response(`Instagram OAuth callback threw: ${message}`, {
       status: 502,
     });
   }
