@@ -42,7 +42,18 @@ export async function GET({ request }: { request: Request }) {
   // authorize URL.
   const expectedState = (env as any).INSTAGRAM_OAUTH_STATE;
   if (!expectedState || state !== expectedState) {
-    return new Response('Invalid or missing state parameter', { status: 403 });
+    // TEMPORARY DEBUG (remove once the state mismatch is diagnosed): reveals
+    // only lengths and first/last characters, never the full secret, so we
+    // can tell a whitespace/truncation issue apart from a genuinely wrong
+    // value without ever printing either value in full.
+    const describe = (s: string | null | undefined) =>
+      s == null
+        ? 'undefined'
+        : `len=${s.length} first=${JSON.stringify(s[0])} last=${JSON.stringify(s[s.length - 1])}`;
+    return new Response(
+      `Invalid or missing state parameter\nreceived: ${describe(state)}\nexpected: ${describe(expectedState)}`,
+      { status: 403 },
+    );
   }
 
   const clientId = (env as any).INSTAGRAM_CLIENT_ID;
