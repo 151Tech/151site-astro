@@ -71,8 +71,27 @@ export async function GET({ request }: { request: Request }) {
   // message instead of an unhandled exception -- which Cloudflare's edge
   // reports as a bare 502 with no detail at all, impossible to debug from
   // the browser alone.
+  //
+  // TEMPORARY: each fetch also gets its own AbortController timeout. A hung
+  // fetch (one that never resolves OR rejects) can't be caught by try/catch
+  // at all -- if the platform kills the whole isolate for exceeding some
+  // resource/time limit before the promise ever settles, that happens
+  // completely outside JS's control, so nothing here ever runs, which is
+  // consistent with the zero-log-output 502s seen so far. Forcing our own
+  // timeout turns that silent kill into a normal, catchable AbortError.
+  async function fetchWithTimeout(input: RequestInfo | URL, init: RequestInit = {}, ms = 8000): Promise<Response> {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), ms);
+    try {
+      return await fetch(input, { ...init, signal: controller.signal });
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+
   try {
-    const exchangeRes = await fetch(TOKEN_URL, {
+    console.error('[instagram-oauth-callback] starting short-lived token exchange');
+    const exchangeRes = await fetchWithTimeout(TOKEN_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: new URLSearchParams({
@@ -84,6 +103,7 @@ export async function GET({ request }: { request: Request }) {
         redirect_uri: `${url.origin}/api/instagram-oauth-callback`,
       }),
     });
+    console.error(`[instagram-oauth-callback] short-lived exchange responded: ${exchangeRes.status}`);
 
     if (!exchangeRes.ok) {
       return new Response(`Instagram token exchange failed: ${exchangeRes.status} ${await exchangeRes.text()}`, {
@@ -101,7 +121,9 @@ export async function GET({ request }: { request: Request }) {
     longLivedUrl.searchParams.set('client_secret', clientSecret);
     longLivedUrl.searchParams.set('access_token', shortLived.access_token);
 
-    const longLivedRes = await fetch(longLivedUrl);
+    console.error('[instagram-oauth-callback] starting long-lived token exchange');
+    const longLivedRes = await fetchWithTimeout(longLivedUrl);
+    console.error(`[instagram-oauth-callback] long-lived exchange responded: ${longLivedRes.status}`);
     if (!longLivedRes.ok) {
       return new Response(
         `Instagram long-lived token exchange failed: ${longLivedRes.status} ${await longLivedRes.text()}`,
@@ -122,9 +144,15 @@ export async function GET({ request }: { request: Request }) {
     // which would escape this catch and crash the handler anyway, hiding
     // the real failure behind a bare edge 502 with zero log output.
     const message = err instanceof Error ? err.message : String(err);
-    console.error(`[instagram-oauth-callback] unhandled error: ${message}`);
-    return new Response(`Instagram OAuth callback threw: ${message}`, {
-      status: 502,
-    });
+    const timedOut = err instanceof Error && err.name === 'AbortError';
+    console.error(
+      `[instagram-oauth-callback] unhandled error${timedOut ? ' (timed out)' : ''}: ${message}`,
+    );
+    return new Response(
+      timedOut
+        ? 'Instagram OAuth callback: a fetch to Instagram/Meta timed out after 8s (no response at all -- likely a network-level block, not a bad request).'
+        : `Instagram OAuth callback threw: ${message}`,
+      { status: 502 },
+    );
   }
 }
