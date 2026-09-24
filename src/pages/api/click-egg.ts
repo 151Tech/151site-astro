@@ -60,6 +60,35 @@ export async function POST({ request }: { request: Request }) {
     });
   }
 
+  // Same per-IP-per-hour cap as the contact form's rate limiter (src/pages/
+  // api/contact.ts), applied here for a different reason: this endpoint has
+  // no honeypot or form fields to slow a scripted loop down, and it shares
+  // this KV namespace with the contact-form rate limiter and the Instagram
+  // cache -- Cloudflare KV's free tier caps writes per day, so an unthrottled
+  // loop here could burn through that quota and break those other features
+  // too. Fails open on KV errors, same reasoning as contact.ts: a broken
+  // rate limiter should never be worse than no rate limiter for a feature
+  // this low-stakes.
+  try {
+    const ip =
+      request.headers.get('cf-connecting-ip') ||
+      request.headers.get('x-forwarded-for')?.split(',')[0]?.trim();
+    if (ip) {
+      const hourBucket = Math.floor(Date.now() / 3_600_000);
+      const rlKey = `rl:click-egg:${ip}:${hourBucket}`;
+      const rlCurrent = parseInt((await kv.get(rlKey)) ?? '0', 10) || 0;
+      if (rlCurrent >= 20) {
+        return new Response(JSON.stringify({ count: null }), {
+          status: 429,
+          headers: { 'Content-Type': 'application/json', 'Retry-After': '3600' },
+        });
+      }
+      await kv.put(rlKey, String(rlCurrent + 1), { expirationTtl: 3600 });
+    }
+  } catch (err) {
+    console.error('[click-egg] rate-limit check failed, continuing (fail open)', err);
+  }
+
   try {
     // KV has no atomic increment, so two visitors hitting 20 clicks in the
     // same instant could both read the same number before either writes --

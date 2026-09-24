@@ -16,6 +16,13 @@
     // Store hours + phone come from global settings (editable), same for
     // every location today; swap to per-location fields or the Google
     // Places API later if that's ever needed.
+    // Easter egg: searching one of these exactly (trimmed, case-insensitive)
+    // hides every card without touching the map, so the searcher's own
+    // location stays put instead of re-fitting to "all stores". Re-checked
+    // on every keystroke via the same input handler as the real search, so
+    // it only shows while the exact term is still in the box.
+    const COMPETITOR_TERMS = new Set(["7brew", "dutch bros", "dutchbros", "starbucks"]);
+
     const HOURS = (window.COFFEE151_LOCATOR && window.COFFEE151_LOCATOR.hours) || "Open daily 6 AM - 8 PM";
     const PHONE = (window.COFFEE151_LOCATOR && window.COFFEE151_LOCATOR.phone) || "(682) 325-2124";
     const PHONE_TEL = PHONE.replace(/\D/g, "");
@@ -266,6 +273,19 @@
 
         // Text search by name / address / city / state / partial zip.
         const q = raw.toLowerCase();
+
+        if (COMPETITOR_TERMS.has(q)) {
+            if (listEl) {
+                listEl.innerHTML = `
+                    <div class="locator__competitor-egg">
+                        <p class="locator__competitor-egg-title">NOT COOL, BRO.</p>
+                        <p class="locator__competitor-egg-sub">Couldn't find any of those.</p>
+                    </div>
+                `;
+            }
+            return; // map stays exactly where it was
+        }
+
         const filtered = STORES.filter(s =>
             !q ||
             s.name.toLowerCase().includes(q) ||
