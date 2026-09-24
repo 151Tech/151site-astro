@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-24T14:02:31.978Z",
+  "generatedAt": "2026-09-24T14:11:20.241Z",
   "stories": {
     "settings/global": {
       "nav": [
@@ -4757,17 +4757,17 @@
           "name": "151 Coffee Lawrence",
           "hours": "6am-8pm",
           "image": {
-            "id": 223233169017230,
+            "id": 223515843591026,
             "alt": "",
             "name": "",
             "focus": "",
             "title": "",
             "source": "",
-            "filename": "https://a.storyblok.com/f/294671107081428/3024x3024/71b4b25070/lw.jpg",
+            "filename": "https://a.storyblok.com/f/294671107081428/2236x2236/7bf5aac3dd/lawrence.png",
             "copyright": "",
             "fieldtype": "asset",
             "meta_data": {
-              "size": "3024x3024"
+              "size": "2236x2236"
             },
             "is_external_url": false
           },
