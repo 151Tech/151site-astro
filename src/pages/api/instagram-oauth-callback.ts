@@ -106,8 +106,13 @@ export async function GET({ request }: { request: Request }) {
     console.error(`[instagram-oauth-callback] short-lived exchange responded: ${exchangeRes.status}`);
 
     if (!exchangeRes.ok) {
+      // Deliberately NOT a 5xx: Webflow Cloud's edge intercepts any 5xx this
+      // Worker returns and replaces the body with its own branded "502 Bad
+      // gateway" page, discarding the diagnostic text below -- which made
+      // every failure here look like an unexplained platform crash. 4xx
+      // bodies pass through untouched.
       return new Response(`Instagram token exchange failed: ${exchangeRes.status} ${await exchangeRes.text()}`, {
-        status: 502,
+        status: 400,
       });
     }
 
@@ -127,7 +132,7 @@ export async function GET({ request }: { request: Request }) {
     if (!longLivedRes.ok) {
       return new Response(
         `Instagram long-lived token exchange failed: ${longLivedRes.status} ${await longLivedRes.text()}`,
-        { status: 502 },
+        { status: 400 },
       );
     }
     const longLived = (await longLivedRes.json()) as { access_token: string };
@@ -152,7 +157,7 @@ export async function GET({ request }: { request: Request }) {
       timedOut
         ? 'Instagram OAuth callback: a fetch to Instagram/Meta timed out after 8s (no response at all -- likely a network-level block, not a bad request).'
         : `Instagram OAuth callback threw: ${message}`,
-      { status: 502 },
+      { status: 400 },
     );
   }
 }
