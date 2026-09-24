@@ -372,18 +372,16 @@ function highlight(text: string): string {
      flush to both edges; `.landing-content` (below) puts side padding back
      for the text, plus the negative margin that lets it overlap the
      diagonal cut instead of leaving a hard seam. */
+  /* No separate logo mark on any angled-photo page -- the random drink
+     photos already have the 151 logo printed on the cup, and veterans-day's
+     own photo band now runs the same way, flush to every edge including the
+     top (has-desktop-hero restores the logo at the 900px+ tier below, where
+     this band is hidden again in favor of the framed hero layout). */
   .landing-page.has-diag-photo {
-    padding-left: 0;
-    padding-right: 0;
+    padding: 0 0 max(1.1rem, env(safe-area-inset-bottom));
   }
-
-  /* The random-drink variant has no logo above the band (the drink photo
-     already has the 151 logo printed on the cup), so it also runs flush to
-     the very top. veterans-day keeps its logo above the band (the flag
-     photo doesn't carry a logo), so it keeps the page's normal top padding,
-     set on the shared .landing-page rule. */
-  .landing-page.has-random-image {
-    padding-top: 0;
+  .landing-page.has-diag-photo .landing-logo {
+    display: none;
   }
 
   .landing-diag-photo {
@@ -407,13 +405,6 @@ function highlight(text: string): string {
   .landing-diag-photo img.landing-diag-photo-img--top {
     object-position: top center;
   }
-  .landing-diag-photo::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(160deg, rgba(230, 57, 70, 0.18) 0%, rgba(17, 17, 17, 0.55) 100%);
-  }
-
   /* Everything below is sized off `min(vw, vh)` rather than fixed
      breakpoints: whichever dimension is tighter (a short SE-class phone's
      height, or a portrait tablet's... nothing, tablets are generous in
@@ -527,8 +518,10 @@ function highlight(text: string): string {
        has-diag-photo -- undo the mobile/tablet angled-band treatment here so
        it falls back to the framed-hero layout above instead of showing both. */
     .landing-page.has-desktop-hero.has-diag-photo {
-      padding-left: 1.25rem;
-      padding-right: 1.25rem;
+      padding: max(1.1rem, env(safe-area-inset-top)) 1.25rem max(1.1rem, env(safe-area-inset-bottom));
+    }
+    .landing-page.has-desktop-hero.has-diag-photo .landing-logo {
+      display: block;
     }
     .landing-page.has-desktop-hero.has-diag-photo .landing-diag-photo {
       display: none;
