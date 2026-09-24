@@ -96,13 +96,17 @@ const items = (media ?? []).slice(0, 3);
 )}
 
 <script>
-  // Rotates which of the (up to) 3 slides sits in the left/center/right slot,
-  // driven by the CENTER video's own "ended" event rather than a fixed timer
-  // -- only the center slide ever plays (and only it is ever unmuted; side
-  // slides are always paused and muted), so "this video finished" is exactly
-  // the moment to advance. A slide with no video (the still-image Graph API
-  // path) has nothing to end on, so PLAYBACK_FALLBACK_MS below covers that
-  // case with an ordinary timer instead.
+  // Rotates which of the (up to) 3 slides sits in the left/center/right slot.
+  // Only the center slide ever plays (and only it is ever unmuted; side
+  // slides are always paused and muted). Rather than playing each source
+  // video to the end -- these are full-length TikTok/Reel clips, often
+  // 30s+ -- the center slide advances after a short CLIP_PREVIEW_MS preview
+  // instead, so the carousel keeps a brisk, consistent pace regardless of
+  // how long the underlying video actually is. A slide with no video (the
+  // still-image Graph API path) has nothing to preview, so it keeps the
+  // longer PLAYBACK_FALLBACK_MS timer instead. A video shorter than the
+  // preview window can still end naturally first (wired further below) --
+  // either path calls the same rotate().
   //
   // Direction matches the requested motion: the right slide moves to center,
   // the center slide moves to left, and the left slide moves to right
@@ -116,6 +120,7 @@ const items = (media ?? []).slice(0, 3);
   // transition) and finally animates into the normal dimmed right slot. The
   // other two legs (center->left, right->center) just swap classes directly
   // since both endpoints are visible the whole time.
+  const CLIP_PREVIEW_MS = 5000; // how much of each video plays before advancing
   const PLAYBACK_FALLBACK_MS = 8000; // only used for slides with no video to end on
   const EXIT_MS = 700; // matches the .ig-slide transition duration in style.css
   const SLOT_CLASSES = ['slot-left', 'slot-center', 'slot-right'];
@@ -222,13 +227,14 @@ const items = (media ?? []).slice(0, 3);
 
     function armFallback(centerSlide: HTMLElement) {
       clearFallback();
-      // A slide with a video advances on its own "ended" event (wired
-      // below); this timer is only the advance mechanism for a still-image
-      // slide, which has no natural end. Harmless if a video slide's
-      // "ended" fires first -- rotate() below always cancels it.
-      if (!getVideo(centerSlide)) {
-        fallbackTimeoutId = setTimeout(rotate, PLAYBACK_FALLBACK_MS);
-      }
+      // A video slide only ever plays a short preview clip -- advance after
+      // CLIP_PREVIEW_MS rather than waiting for the (much longer) source
+      // video to actually end. A still-image slide has no video to preview,
+      // so it keeps the longer PLAYBACK_FALLBACK_MS instead. Harmless if a
+      // short video's own "ended" event fires first -- rotate() below always
+      // cancels this timer.
+      const delay = getVideo(centerSlide) ? CLIP_PREVIEW_MS : PLAYBACK_FALLBACK_MS;
+      fallbackTimeoutId = setTimeout(rotate, delay);
     }
 
     const applySlots = () => {
