@@ -69,10 +69,10 @@ const randomDrinkImages: string[] = drinksEntries
 const hasRandomImage = !backgroundImage && !desktopHeroImage && randomDrinkImages.length > 0;
 
 // veterans-day's own flag photo gets the same angled band treatment as the
-// random-drink pages below, on mobile/tablet -- it just shows a fixed image
-// instead of a random one. Desktop (>=900px, see the has-desktop-hero
-// override further down) is unaffected: that already swaps to its own
-// framed hero image and this flag band is hidden there.
+// random-drink pages below, on mobile and tablet -- it just shows a fixed
+// image instead of a random one. Only a true desktop width (>=1400px, see
+// the has-desktop-hero override further down) is unaffected: that already
+// swaps to its own framed hero image and this flag band is hidden there.
 const showDiagPhoto = hasRandomImage || !!backgroundImage;
 
 function escapeHtml(s: string): string {
@@ -459,45 +459,45 @@ function highlight(text: string): string {
      bigger tablet the type ends up looking small relative to all the extra
      space. This tier only raises the ceiling (min() picks the smaller of
      vw/vh either way, so a smaller tablet in this range still gets a
-     smaller value) and only applies to pages without their own bespoke
-     desktop layout -- has-desktop-hero pages switch away from this entirely
-     at 900px (see below). */
+     smaller value) and applies to every angled-photo page, veterans-day
+     included -- it only switches to its own bespoke desktop layout at a
+     true desktop width (see the 1400px tier below). */
   @media (min-width: 900px) {
-    .landing-page.has-diag-photo:not(.has-desktop-hero) .landing-diag-photo {
+    .landing-page.has-diag-photo .landing-diag-photo {
       height: clamp(320px, 42vh, 560px);
       /* Brings the cut lower (was 78%/100%) so more of the photo shows
          through on the extra room a tablet has, rather than just stretching
          a thin band taller. */
       clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
     }
-    .landing-page.has-diag-photo:not(.has-desktop-hero) .landing-eyebrow {
+    .landing-page.has-diag-photo .landing-eyebrow {
       font-size: clamp(0.9rem, min(2vw, 2.2vh), 1.3rem);
     }
-    .landing-page.has-diag-photo:not(.has-desktop-hero) .landing-headline {
+    .landing-page.has-diag-photo .landing-headline {
       font-size: clamp(3rem, min(6.5vw, 9vh), 5.5rem);
     }
-    .landing-page.has-diag-photo:not(.has-desktop-hero) .landing-offer {
+    .landing-page.has-diag-photo .landing-offer {
       font-size: clamp(1.3rem, min(2.6vw, 3.6vh), 1.9rem);
     }
-    .landing-page.has-diag-photo:not(.has-desktop-hero) .landing-instructions {
+    .landing-page.has-diag-photo .landing-instructions {
       font-size: clamp(1rem, min(1.8vw, 2.4vh), 1.3rem);
     }
-    .landing-page.has-diag-photo:not(.has-desktop-hero) .landing-terms {
+    .landing-page.has-diag-photo .landing-terms {
       font-size: clamp(0.8rem, min(1.5vw, 1.9vh), 1rem);
     }
-    .landing-page.has-diag-photo:not(.has-desktop-hero) .landing-cta {
+    .landing-page.has-diag-photo .landing-cta {
       padding: clamp(0.85rem, 2vh, 1.15rem) clamp(2rem, 3vw, 2.75rem);
       font-size: clamp(1.02rem, min(2vw, 2.2vh), 1.25rem);
     }
   }
 
-  /* Wide desktop viewport (not a phone/tablet held in a hand): a page with
-     its own bespoke desktop art (has-desktop-hero, currently veterans-day
-     only) drops the angled band entirely and shows a normal framed image,
+  /* True desktop viewport, wider than any tablet (a page with its own
+     bespoke desktop art -- has-desktop-hero, currently veterans-day only --
+     drops the angled band entirely here and shows a normal framed image,
      centered above the now vertically-centered text. Pages with no bespoke
-     desktop art of their own just keep using .has-diag-photo, tuned further
-     above for the large-tablet tier. */
-  @media (min-width: 900px) {
+     desktop art of their own just keep using .has-diag-photo indefinitely,
+     tuned above for the large-tablet tier. */
+  @media (min-width: 1400px) {
     .landing-content {
       justify-content: center;
     }
@@ -526,8 +526,8 @@ function highlight(text: string): string {
     }
 
     /* veterans-day is the one page with both has-desktop-hero and
-       has-diag-photo -- undo the mobile/tablet angled-band treatment here so
-       it falls back to the framed-hero layout above instead of showing both. */
+       has-diag-photo -- undo the tablet angled-band treatment here so it
+       falls back to the framed-hero layout above instead of showing both. */
     .landing-page.has-desktop-hero.has-diag-photo {
       padding: max(1.1rem, env(safe-area-inset-top)) 1.25rem max(1.1rem, env(safe-area-inset-bottom));
     }
