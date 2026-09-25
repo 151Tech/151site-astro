@@ -93,6 +93,11 @@ const isDraftPreview = import.meta.env.STORYBLOK_DRAFT_MODE === 'true';
   <meta name="twitter:description" content={description} />
   {socialImage && <meta name="twitter:image" content={socialImage} />}
 
+  <!-- Every image and video on the site is served from Storyblok's CDN, so
+       the connection is worth opening while the HTML is still parsing
+       rather than when the first <img> is discovered. -->
+  <link rel="preconnect" href="https://a.storyblok.com" crossorigin />
+
   <link rel="icon" href={favicon} />
   <link rel="stylesheet" href="/style.css" />
   <link rel="stylesheet" href="/blocks.css" />

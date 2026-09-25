@@ -79,6 +79,11 @@ const p = unwrapSingletons(homeData as any, [
   'cta', 'reviews', 'investment', 'faqs', 'contact', 'investBanner',
 ]);
 const s = (settingsData as any) ?? {};
+// `social` is a singleton nested blok, so Storyblok returns it as a one-item
+// array. Passing it through unwrapped left every link in the Instagram
+// section on its hardcoded fallback: tiktok and instagram happened to match
+// the real accounts, so only Facebook (fallback "#") showed the breakage.
+const socialLinks = Array.isArray(s.social) ? s.social[0] : s.social;
 const locations = locationsEntries
   .sort((a: any, b: any) => (Number(a.displayOrder) || 99) - (Number(b.displayOrder) || 99));
 
@@ -233,7 +238,7 @@ const storesJson = JSON.stringify(locations.map((l: any) => ({
        background on the homepage; the full locator (search + map) still
        lives on its own page at /locations, linked from the nav and footer,
        so nothing here was the only way to find a store. -->
-  <InstagramCarousel media={instagramMedia} social={s.social} />
+  <InstagramCarousel media={instagramMedia} social={socialLinks} />
 
   <!-- Menu Section -->
   {(p.visibility?.menuGrid ?? true) && (
