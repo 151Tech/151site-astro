@@ -102,7 +102,7 @@
     }, 1500);
   });
 
-  // ── Count-up for stat numbers (e.g. "$15 Million", "500 Stores", "16+") ──
+  // Count-up for stat numbers (e.g. "$15 Million", "500 Stores", "16+") 
   const counters = document.querySelectorAll('.stat-number');
 
   function animateCount(el) {

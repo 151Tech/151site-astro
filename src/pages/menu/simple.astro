@@ -3,14 +3,14 @@ export const prerender = true;
 import Layout from '../../layouts/Layout.astro';
 
 // A real page (its own URL, real back-button/history support) rather than
-// the old in-page overlay -- desktop visitors who want the compact,
+// the old in-page overlay - desktop visitors who want the compact,
 // small-card view now navigate here instead of a popup sitting on top of
 // /menu. Still the same underlying idea, though: rather than maintaining a
 // second template, this loads /menu itself in a full-width/height iframe
 // with ?simple=1, which /menu's own inline script reads to switch into the
 // same compact-card layout mobile visitors already get (see
 // .menu-simple-mode in menu.css and the isMobile() override in menu.astro)
-// -- just with a small-card grid wide enough to use the whole screen,
+// - just with a small-card grid wide enough to use the whole screen,
 // instead of the real mobile page's fixed 2-up split.
 ---
 <Layout title="Simple Menu | 151 Coffee" description="A compact, small-card view of the 151 Coffee menu.">

@@ -77,7 +77,7 @@ for (const name of COLLECTIONS) {
 // internal_stories (see storyblok/collections-schema.mjs). Values written by
 // the old migration script are literal "categories/{slug}" strings, but
 // values picked through Storyblok's own UI save the target story's UUID
-// instead -- that mismatch is exactly what caused newly-added drinks to
+// instead - that mismatch is exactly what caused newly-added drinks to
 // silently not match any category tab in menu.astro. Normalize every
 // UUID-shaped category value back to "categories/{slug}" here so both
 // authoring paths resolve the same way downstream.

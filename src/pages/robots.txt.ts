@@ -1,6 +1,6 @@
 // A static /public/robots.txt is shared byte-for-byte between production
 // and the draft-preview deployment (the `preview` branch fast-forwards
-// from this one -- see .github/workflows/sync-preview.yml), so it can't
+// from this one - see .github/workflows/sync-preview.yml), so it can't
 // carry different content per environment. Serving it from a route instead
 // lets it read STORYBLOK_DRAFT_MODE and disallow the preview domain
 // entirely, while production keeps the real, fully-open file.

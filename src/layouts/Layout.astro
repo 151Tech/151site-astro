@@ -21,7 +21,7 @@ const {
   // Text-message/SMS discount landing pages (src/pages/[slug].astro) pass
   // this: they're meant to be reachable only by whoever was sent the exact
   // link, not something anyone should be able to find by searching the
-  // offer name -- same "noindex + left out of the sitemap" treatment as the
+  // offer name - same "noindex + left out of the sitemap" treatment as the
   // /menu/<store> QR-code stubs below, just via a Layout prop instead of a
   // one-off <meta> tag since these pages already render through Layout.
   noindex = false,
@@ -38,14 +38,14 @@ const canonicalUrl = canonical ?? new URL(Astro.url.pathname, 'https://www.151co
 const settingsData = (await getSettings()) as any;
 const favicon = imageUrl(settingsData?.favicon) ?? '/favicon.ico';
 // Small round mark reused inside the locator map's pin icons (see
-// maplibre-map-helpers.js) -- resized here rather than in that plain JS file,
+// maplibre-map-helpers.js) - resized here rather than in that plain JS file,
 // which has no access to Storyblok's image service.
 const logoMarkUrl = imageUrl(settingsData?.logo, { width: 64 });
 
 // 74 of 88 indexable pages were shipping no og:image at all. The per-page
 // seo.ogImage fields are populated in Storyblok, but every one of them points
 // at a pre-migration /images/splash1.jpg path that no longer exists and is
-// (correctly) rejected by imageUrl's Storyblok-only rule -- so the tag simply
+// (correctly) rejected by imageUrl's Storyblok-only rule - so the tag simply
 // vanished. Rather than leave social and AI preview cards blank, fall back
 // site-wide: settings_global > ogImage when an editor uploads a proper
 // 1200x630 card, else the logo, which is square and not ideal but is a real
@@ -55,7 +55,7 @@ const socialImage = ogImage ?? ogImageUrl(settingsData);
 // The draft-preview deployment (STORYBLOK_DRAFT_MODE=true, see
 // src/lib/storyblok.ts) renders live unpublished content and shares this
 // same codebase with production, on its own *.webflow.io domain. Nothing
-// there should ever be indexed or credited as canonical -- it would put
+// there should ever be indexed or credited as canonical - it would put
 // draft copy in search results and risk being read as duplicate content
 // against the real site. See also src/pages/robots.txt.ts, which disallows
 // the whole preview domain outright, and astro.config.mjs, which skips
@@ -107,11 +107,11 @@ const isDraftPreview = import.meta.env.STORYBLOK_DRAFT_MODE === 'true';
 
   <!--
     Cookie/tracking stack, in load order:
-      1. consent.js         -- read/write/subscribe API for the stored choice
-      2. tracking IDs        -- GA/Meta IDs from env, blank until real ones exist
-      3. analytics-loader.js -- loads GA + Meta Pixel, but only once consent.js
+      1. consent.js         - read/write/subscribe API for the stored choice
+      2. tracking IDs        - GA/Meta IDs from env, blank until real ones exist
+      3. analytics-loader.js - loads GA + Meta Pixel, but only once consent.js
                                  reports the visitor clicked "Accept All"
-      4. cookie-consent.js   -- the banner UI; calls consent.set() on a click,
+      4. cookie-consent.js   - the banner UI; calls consent.set() on a click,
                                  which analytics-loader.js is already listening for
     Order matters: each of these is a `defer` script, which the browser runs
     in document order once parsing finishes, so a later file can safely

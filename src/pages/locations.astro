@@ -74,8 +74,8 @@ const locationsJsonLd = graph(
     <link rel="preconnect" href="https://unpkg.com" crossorigin />
     <!-- The map fills the entire initial viewport on this page (it's never
          actually offscreen for locator-loader.js's IntersectionObserver to
-         defer), so starting these fetches immediately -- in parallel with
-         HTML parsing, instead of waiting on JS to inject them -- shaves a
+         defer), so starting these fetches immediately - in parallel with
+         HTML parsing, instead of waiting on JS to inject them - shaves a
          full request's worth of latency off when the map becomes usable. -->
     <link rel="preload" as="style" href="https://unpkg.com/maplibre-gl@5.6.1/dist/maplibre-gl.css" crossorigin />
     <link rel="preload" as="script" href="https://unpkg.com/maplibre-gl@5.6.1/dist/maplibre-gl.js" crossorigin />
@@ -128,7 +128,7 @@ const locationsJsonLd = graph(
   </section>
   )}
 
-  <!-- Every location as plain crawlable links, grouped by state -- the
+  <!-- Every location as plain crawlable links, grouped by state - the
        sidebar list above is populated client-side by locator.js, so this is
        what keeps every store page reachable without JS and gives crawlers a
        real link per location (on top of the ItemList JSON-LD below). Visually

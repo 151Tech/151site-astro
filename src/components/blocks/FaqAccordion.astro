@@ -1,4 +1,6 @@
 ---
+import { faqAnswerHtml } from '../../lib/faq';
+
 interface Item { question: string; answer: string; }
 interface Props {
   heading?: string;
@@ -13,7 +15,7 @@ const { heading, items = [], ...rest } = Astro.props as Props & Record<string, a
       {items.map((item, i) => (
         <details open={i === 0}>
           <summary>{item.question}</summary>
-          <p>{item.answer}</p>
+          <p set:html={faqAnswerHtml(item.answer)} />
         </details>
       ))}
     </div>

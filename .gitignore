@@ -27,8 +27,12 @@ pnpm-debug.log*
 # jetbrains setting folder
 .idea/
 
-# local Claude Code config (dev-server launch config, etc.)
+# local editor/agent config (dev-server launch config, etc.)
 .claude/
 
 # wrangler local state, created when testing with the Cloudflare adapter
 .wrangler/
+
+# local agent/editor instructions, kept out of the repo
+CLAUDE.md
+AGENTS.md

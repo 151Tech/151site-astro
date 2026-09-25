@@ -8,6 +8,7 @@ import BlockRenderer from '../components/blocks/BlockRenderer.astro';
 import Editable from '../components/Editable.astro';
 import { getPage, getSettings, getLocations, unwrapSingletons, imageUrl, mediaUrl } from '../lib/storyblok';
 import JsonLd from '../components/JsonLd.astro';
+import { faqAnswerHtml } from '../lib/faq';
 import { graph, organizationSchema, locationSchema } from '../lib/seo';
 import InstagramCarousel from '../components/InstagramCarousel.astro';
 import type { InstagramMedia } from '../lib/instagram';
@@ -34,7 +35,7 @@ if (!import.meta.env.DEV) {
 // TEMPORARY: owner asked for the section back before the real OAuth/API
 // integration above is authorized. These 3 cards are real, self-hosted
 // exports of actual recent @151coffee Instagram posts (locally-hosted mp4s,
-// not a live embed -- same reasoning as the old TikTok cards: no signed/
+// not a live embed - same reasoning as the old TikTok cards: no signed/
 // expiring CDN URLs baked into prerendered HTML). Each links out to its own
 // real permalink (derived from the post's shortcode), not the profile page.
 // Remove this block once instagramMedia above is reliably populated.
@@ -90,16 +91,16 @@ const locations = locationsEntries
 // Built from the same Storyblok items the section renders, so an editor
 // adding a Q&A gets the structured data for free and the two can't drift.
 // These two are code-level defaults rather than Storyblok content: they
-// replace the standalone /loyalty policy page (removed -- see git history),
+// replace the standalone /loyalty policy page (removed - see git history),
 // and appending them here means they can't be lost to a snapshot rebuild
-// the way a hand-edit to storyblok-snapshot.json would be (see
-// storyblok/CLAUDE.md). A `pages/home` faqs.items edit in Storyblok can
+// the way a hand-edit to storyblok-snapshot.json would be. A
+// `pages/home` faqs.items edit in Storyblok can
 // still add, remove, or reorder around them like any other FAQ entry.
 const loyaltyFaqItems = [
   {
     question: 'Does 151 Coffee have discount days?',
     answer:
-      "Yes, we do! Sign up for a loyalty account at your nearest store to stay up to date. Note: this isn't tied to birthdays or a set day of the week -- your discount day is personalized to your account.",
+      "Yes, we do! Sign up for a loyalty account at your nearest store to stay up to date. Note: this isn't tied to birthdays or a set day of the week. Your discount day is personalized to your account.",
   },
   {
     question: "It's my birthday! Does 151 do anything?",
@@ -331,7 +332,7 @@ const storesJson = JSON.stringify(locations.map((l: any) => ({
           <details open={i===0}>
             <Editable blok={faq} />
             <summary>{faq.question}</summary>
-            <p>{faq.answer}</p>
+            <p set:html={faqAnswerHtml(faq.answer)} />
           </details>
         ))}
       </div>

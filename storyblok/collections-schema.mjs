@@ -52,7 +52,7 @@ export const COMPONENTS = {
         description: 'Which menu section this drink belongs under (Coffee, Cold Brew, Energy, etc.). Controls where it appears on the menu.',
         // Sourced live from the `category` stories under categories/ instead of
         // a hand-maintained list, so a new category shows up here as soon as
-        // it's created in Storyblok -- no schema push required.
+        // it's created in Storyblok - no schema push required.
         source: 'internal_stories',
         filter_content_type: ['category'],
         folder_slug: 'categories',
@@ -83,7 +83,7 @@ export const COMPONENTS = {
       hiddenByDefault: {
         type: 'boolean',
         display_name: "Hide (on = won't show on the menu at all)",
-        description: "Hides this category everywhere, for every location, no exceptions -- use this for a fully retired or empty seasonal category. For a category that's just missing at a few stores, use Unavailable At below instead.",
+        description: "Hides this category everywhere, for every location, no exceptions - use this for a fully retired or empty seasonal category. For a category that's just missing at a few stores, use Unavailable At below instead.",
       },
     },
   },
@@ -126,7 +126,7 @@ export const COMPONENTS = {
   },
   // One shared, reusable schema for every SMS/text-link discount landing
   // page (see storyblok/push-landing-pages.mjs), instead of a bespoke
-  // component per page like the hand-built site pages get -- the whole
+  // component per page like the hand-built site pages get - the whole
   // point is that a non-developer can duplicate the "template" story in
   // Storyblok and have a new page with zero schema changes. Deliberately
   // flat, single-offer fields (not a generic "sections" bloks array like
@@ -146,7 +146,7 @@ export const COMPONENTS = {
       headline: {
         type: 'text',
         display_name: 'Headline',
-        description: 'The big, bold line -- keep this short, it is the first thing read on a phone.',
+        description: 'The big, bold line - keep this short, it is the first thing read on a phone.',
       },
       offer: {
         type: 'textarea',
@@ -174,7 +174,7 @@ export const COMPONENTS = {
         type: 'asset',
         filetypes: ['images'],
         display_name: 'Photo (optional)',
-        description: 'A bonus image below the offer card. Only shows if it fits after the required text on that phone -- never pushes the offer itself below the fold.',
+        description: 'A bonus image below the offer card. Only shows if it fits after the required text on that phone - never pushes the offer itself below the fold.',
       },
     },
   },

@@ -15,7 +15,7 @@
 // (src/lib/instagram.ts) filters to videos/reels, so it always sets one.
 // What still rotates is
 // which slide sits in which slot, on a fixed timer (ROTATE_INTERVAL_MS
-// below) -- purely a visual "now featured" cue, independent of each video's
+// below) - purely a visual "now featured" cue, independent of each video's
 // own (unsynced, looping) playback.
 interface Media {
   id: string;
@@ -39,7 +39,7 @@ const socialLinks = {
 };
 
 // null means the integration isn't connected yet (no KV/credentials) or the
-// Instagram call failed -- either way, the section just doesn't render
+// Instagram call failed - either way, the section just doesn't render
 // rather than showing a broken or empty carousel.
 const items = (media ?? []).slice(0, 3);
 ---
@@ -99,8 +99,8 @@ const items = (media ?? []).slice(0, 3);
   // Rotates which of the (up to) 3 slides sits in the left/center/right slot.
   // Only the center slide ever plays (and only it is ever unmuted; side
   // slides are always paused and muted). Rather than playing each source
-  // video to the end -- these are full-length TikTok/Reel clips, often
-  // 30s+ -- the center slide advances after a short CLIP_PREVIEW_MS preview
+  // video to the end - these are full-length TikTok/Reel clips, often
+  // 30s+ - the center slide advances after a short CLIP_PREVIEW_MS preview
   // instead, so the carousel keeps a brisk, consistent pace regardless of
   // how long the underlying video actually is. A slide with no video (the
   // still-image Graph API path) has nothing to preview, so it keeps the
@@ -110,12 +110,12 @@ const items = (media ?? []).slice(0, 3);
   //
   // Direction matches the requested motion: the right slide moves to center,
   // the center slide moves to left, and the left slide moves to right
-  // (wrapping around) -- a fixed rotation among exactly 3 positions, so with
+  // (wrapping around) - a fixed rotation among exactly 3 positions, so with
   // 3 items it cycles back to the starting arrangement every 3rd tick.
   //
   // The left->right leg is the odd one out: instead of just sliding straight
   // across while staying visible, it fully exits (further left, fading to
-  // invisible -- see .slot-exit in style.css), then gets snapped to the
+  // invisible - see .slot-exit in style.css), then gets snapped to the
   // mirror-image invisible spot on the right (.slot-enter-prep, no
   // transition) and finally animates into the normal dimmed right slot. The
   // other two legs (center->left, right->center) just swap classes directly
@@ -144,7 +144,7 @@ const items = (media ?? []).slice(0, 3);
 
   // Drives the "Now Playing" progress bar off the same clock as the
   // rotation timer (CLIP_PREVIEW_MS/PLAYBACK_FALLBACK_MS in armFallback)
-  // rather than the video's own currentTime/duration -- the video only ever
+  // rather than the video's own currentTime/duration - the video only ever
   // plays a short preview of its full length, so a duration-based bar would
   // crawl along far slower than the carousel actually advances. One shared
   // rAF loop at a time is enough since only the center slide ever has a bar
@@ -168,7 +168,7 @@ const items = (media ?? []).slice(0, 3);
   }
 
   // Only the slide currently in the center slot ever plays. Every other
-  // slide -- including one mid-exit -- gets paused and rewound, and its mute
+  // slide - including one mid-exit - gets paused and rewound, and its mute
   // button (if any) reset, so a video never keeps running in the background
   // slot or bleeds audio from a stale unmute.
   function pauseSlide(slide: HTMLElement) {
@@ -187,7 +187,7 @@ const items = (media ?? []).slice(0, 3);
     setBarWidth(slide, 0);
   }
 
-  // Always (re)starts center playback muted -- autoplay-with-sound is
+  // Always (re)starts center playback muted - autoplay-with-sound is
   // blocked by every major browser regardless of user gesture history, and
   // resetting to muted on every rotation keeps that guarantee instead of
   // depending on whichever mute state the video happened to be left in.
@@ -198,7 +198,7 @@ const items = (media ?? []).slice(0, 3);
     video.muted = true;
     setBarWidth(slide, 0);
     video.play().catch(() => {
-      // Autoplay can still be refused (e.g. low-power mode) -- the poster
+      // Autoplay can still be refused (e.g. low-power mode) - the poster
       // frame stays visible and the fallback timer (wired below) still
       // advances the carousel on schedule either way.
     });
@@ -249,11 +249,11 @@ const items = (media ?? []).slice(0, 3);
 
     function armFallback(centerSlide: HTMLElement) {
       clearFallback();
-      // A video slide only ever plays a short preview clip -- advance after
+      // A video slide only ever plays a short preview clip - advance after
       // CLIP_PREVIEW_MS rather than waiting for the (much longer) source
       // video to actually end. A still-image slide has no video to preview,
       // so it keeps the longer PLAYBACK_FALLBACK_MS instead. Harmless if a
-      // short video's own "ended" event fires first -- rotate() below always
+      // short video's own "ended" event fires first - rotate() below always
       // cancels this timer. The progress bar runs on the same delay so it
       // always reads 100% right as the carousel actually advances.
       const delay = getVideo(centerSlide) ? CLIP_PREVIEW_MS : PLAYBACK_FALLBACK_MS;
@@ -313,7 +313,7 @@ const items = (media ?? []).slice(0, 3);
     }
 
     // A video only advances the carousel while it's actually the one in the
-    // center slot -- checking is-active at fire time (rather than relying on
+    // center slot - checking is-active at fire time (rather than relying on
     // element identity) means a stale "ended" from a slide that already got
     // paused/rewound elsewhere can never double-trigger a rotation.
     slides.forEach((slide) => {

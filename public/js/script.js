@@ -73,7 +73,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-// ── Mobile drawer nav ──
+// Mobile drawer nav 
 (function () {
     const toggle = document.querySelector('.menu-toggle');
     if (!toggle) return;
@@ -222,6 +222,16 @@ if (giftCardFooterSupportBtn) {
     });
 }
 
+// Delegated, unlike the named buttons above: the FAQ's inline "here" opener
+// is generated from CMS answer text (see FaqAccordion.astro), so there's no
+// fixed id to bind to and there may be none, one, or several of them.
+document.addEventListener('click', function(e) {
+    var trigger = e.target.closest && e.target.closest('[data-open-giftcard]');
+    if (!trigger) return;
+    e.preventDefault();
+    openGiftCardModal();
+});
+
 if (closeGiftCardModal) {
     closeGiftCardModal.addEventListener('click', function() {
         giftCardModal.classList.remove('active');
@@ -274,12 +284,12 @@ if (investModal) {
     });
 }
 
-// ── Contact forms (AJAX submit, no page reload) ──
+// Contact forms (AJAX submit, no page reload) 
 // Shared by every form marked data-netlify="true" (home contact + real
 // estate inquiry). The data-netlify/form-name/bot-field attributes are
 // leftover from an earlier Netlify-hosted version of this site; they aren't
 // used by any Netlify backend anymore (this deployment is Webflow Cloud /
-// Cloudflare Workers, not Netlify) -- form-name still tells our own
+// Cloudflare Workers, not Netlify) - form-name still tells our own
 // /api/contact endpoint which form fired and doubles as the honeypot field
 // name, so the markup stayed as-is.
 // Keyed by each form's `name` attribute, which is also what tells
@@ -348,7 +358,7 @@ document.querySelectorAll('form[data-netlify]').forEach(function (form) {
     });
 });
 
-// ── Social links: open the native app on mobile instead of the web page ──
+// Social links: open the native app on mobile instead of the web page 
 // A plain https:// link to instagram.com opens the profile inside whatever
 // browser/webview the visitor is already in. On a phone with the Instagram
 // app installed, jumping to its app:// URI scheme instead opens the app

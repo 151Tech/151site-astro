@@ -9,7 +9,7 @@
     // why that's worth guarding). Checked here rather than after loading,
     // so a visitor who can't render the map doesn't pay for the library
     // either. The store list beside it is a complete answer on its own, so
-    // the map's slot simply closes up -- see .locator.is-map-unavailable.
+    // the map's slot simply closes up - see .locator.is-map-unavailable.
     function hasWebGL() {
         try {
             var c = document.createElement('canvas');
@@ -52,7 +52,7 @@
         script.onload = function () {
             var helpersScript = document.createElement('script');
             // Versioned so a change to this file's content bypasses any
-            // browser/CDN cache of the unfingerprinted /js/ path -- static
+            // browser/CDN cache of the unfingerprinted /js/ path - static
             // files in public/ don't get Astro's build-hash cache-busting,
             // which is what let stale tile-provider code linger in the
             // wild across deploys with no way to force a refetch.

@@ -1,4 +1,4 @@
-/* ─── Drink Detail Page ─── */
+/* Drink Detail Page */
 
 /* Hero */
 .dk-hero {
@@ -149,7 +149,7 @@
     align-items: stretch;
 }
 
-/* Image column -- stretches to match the detail card's full height */
+/* Image column - stretches to match the detail card's full height */
 .dk-img-col {
     display: flex;
 }
@@ -269,7 +269,7 @@
     box-shadow: 0 8px 24px rgba(230,57,70,0.35);
 }
 
-/* Customize card -- full-width card below the image/detail row.
+/* Customize card - full-width card below the image/detail row.
    Flavors and Sugar Free rows sit side by side so the tag clouds
    have room to wrap across the full card width. */
 .dk-customize-wrap {
@@ -358,7 +358,7 @@
     }
 
     /* Below the two-column layout the photo is no longer sized against the
-       detail card, so it needs its own cap -- full container width made it
+       detail card, so it needs its own cap - full container width made it
        balloon toward 900px and crowd the edges toward 431px alike. */
     .dk-img-col {
         max-width: min(420px, 100%);

@@ -12,7 +12,7 @@
 //      keeps the markup valid today and is superseded the moment an editor
 //      fills the field in. Defaults are only used for facts already published
 //      in the site's own copy (founder, founding year); anything that would be
-//      a guess is omitted instead -- absent markup is fine, wrong markup is a
+// a guess is omitted instead - absent markup is fine, wrong markup is a
 //      factual claim to Google.
 //   2. Undefined-valued keys are stripped before serialising (see `prune`), so
 //      a missing Storyblok field never ships as `"telephone": null` or an
@@ -56,7 +56,7 @@ export const ORG_ID = `${SITE}/#organization`;
 // human copy, not data, so it is parsed conservatively: a confident match
 // becomes openingHoursSpecification, and anything else yields nothing rather
 // than a guessed schedule. Per-day or holiday hours can't be expressed in a
-// single string at all -- that needs a real field per day, which is flagged
+// single string at all - that needs a real field per day, which is flagged
 // as a content-model change rather than worked around here.
 const TIME = /(\d{1,2})(?::(\d{2}))?\s*(am|pm)/i;
 
@@ -162,7 +162,7 @@ export function locationSchema(loc: any, s: any, opts: { menuUrl?: string } = {}
     image: imageUrl(loc.image, { width: 1200, height: 900 }),
     // Per-store number when Storyblok has one, else the brand line. All 15
     // stores share the corporate number, which is correct and expected for a
-    // chain -- NAP consistency is about one location's details conflicting
+    // chain - NAP consistency is about one location's details conflicting
     // between sources, not about locations sharing a central line. The
     // per-store override exists only for stores that ever get their own.
     telephone: loc.phone ?? s?.phone,
@@ -201,7 +201,7 @@ export function menuItemSchema(drink: any) {
 
 export function menuSchema(drinks: any[], categories: any[]) {
   // A drink whose category has no matching category story can't be placed in
-  // any MenuSection and would vanish from the menu silently -- which is how
+  // any MenuSection and would vanish from the menu silently - which is how
   // "Boston" (category `categories/desserts`, a category that doesn't exist)
   // went unnoticed. Same reasoning as the loud snapshot warnings in
   // storyblok.ts: a content gap should be visible in the build log, because
@@ -210,7 +210,7 @@ export function menuSchema(drinks: any[], categories: any[]) {
   for (const d of drinks) {
     if (!known.has(d.category)) {
       console.warn(
-        `[seo] drink "${d.name ?? d.slug}" has category ${JSON.stringify(d.category)}, which has no matching category story -- omitted from Menu schema`,
+        `[seo] drink "${d.name ?? d.slug}" has category ${JSON.stringify(d.category)}, which has no matching category story - omitted from Menu schema`,
       );
     }
   }

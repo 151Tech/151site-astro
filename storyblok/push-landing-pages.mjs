@@ -2,8 +2,8 @@
 // One-off push for the initial batch of SMS/text-link discount landing
 // pages (see src/pages/[slug].astro, src/lib/storyblok.ts's
 // getLandingPages()/getLandingPage(), and the `landing_page` component in
-// collections-schema.mjs). Re-running this is safe -- the component is
-// upserted by name and each story by slug, same as migrate.mjs -- but it's
+// collections-schema.mjs). Re-running this is safe - the component is
+// upserted by name and each story by slug, same as migrate.mjs - but it's
 // meant as a one-time seed: after this, new landing pages are created by
 // duplicating the "template" story directly in Storyblok, not by editing
 // this file.
@@ -23,7 +23,7 @@ if (!spaceId || !oauthToken) {
 // Plain fetch against the Management API instead of storyblok-js-client:
 // the client's own request wrapper here was throwing a bare, bodyless 422
 // ("Unprocessable Content", no `response`) on story updates that a raw PUT
-// with the exact same payload completed successfully -- some quirk in how
+// with the exact same payload completed successfully - some quirk in how
 // it serializes/dedupes the call, not a real validation failure. Same
 // distrust of this SDK's runtime behavior already documented in
 // src/lib/storyblok.ts for the CDN side; this is the Management API side of
@@ -97,8 +97,8 @@ async function upsertStory(slug, content, displayName) {
     console.log(`  created story: ${slug}`);
   }
 
-  // The CDN API's "published" version -- what production's snapshot pull
-  // (storyblok/snapshot.mjs) reads -- is empty for a story that only has a
+  // The CDN API's "published" version - what production's snapshot pull
+  // (storyblok/snapshot.mjs) reads - is empty for a story that only has a
   // draft. Publishing immediately means this seed script alone is enough to
   // make a new landing page live; an editor who duplicates the template
   // story later still publishes normally through the Storyblok UI.
@@ -186,7 +186,7 @@ const PAGES = [
   },
   {
     slug: 'template',
-    displayName: '🧩 TEMPLATE — duplicate me, do not link to this one',
+    displayName: 'TEMPLATE - duplicate me, do not link to this one',
     content: {
       eyebrow: 'YOUR EYEBROW HERE',
       headline: 'Your Headline Here',

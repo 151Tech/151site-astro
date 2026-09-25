@@ -23,7 +23,7 @@ const p = unwrapSingletons(menuData as any, [
 const heroVideoSrc = mediaUrl(p.heroVideo);
 
 // Hard-coded content for the "All Sodas Available" descriptor card (simple
-// menu) -- not sourced from Storyblok, since this exact brand lineup/layout
+// menu) - not sourced from Storyblok, since this exact brand lineup/layout
 // doesn't need to be editable there. Two explicit rows so Diet Coke can sit
 // right next to Coca-Cola without needing to pair 1:1 with a bottom-row item.
 const SODA_TOP_ROW = [
@@ -44,7 +44,7 @@ const SODA_BOTTOM_ROW = [
 ];
 
 // Same "labeled" descriptor-card treatment as the soda card, but with plain
-// text (no logos) for the "Hot Teas Available" card -- hard-coded so the
+// text (no logos) for the "Hot Teas Available" card - hard-coded so the
 // two-row order doesn't depend on Storyblok's item order.
 const TEA_TOP_ROW = ['Paris', 'Earl Grey', 'Sencha'];
 const TEA_BOTTOM_ROW = ['Mint', 'Cinnamon Spice'];
@@ -78,9 +78,20 @@ const LOCATIONS = locationEntries
 const LOCATION_REFID_TO_SLUG: Record<string, string> = Object.fromEntries(
   LOCATIONS.map((loc: any) => [loc.refId, loc.slug])
 );
+const LOCATION_UUID_TO_SLUG: Record<string, string> = Object.fromEntries(
+  locationEntries.filter((e: any) => e.uuid).map((e: any) => [e.uuid, e.slug])
+);
 
+// `unavailableAt` is a multi-select sourced from the locations folder, so
+// Storyblok stores each pick as that location story's UUID. The snapshot
+// build rewrites those to "locations/{slug}" (see storyblok/snapshot.mjs),
+// but the live API hands them over raw - so both forms have to resolve
+// here or the filter silently does nothing in `astro dev` and on the
+// draft-preview deployment while working fine in production.
 function toLocationSlugs(refs: string[] | undefined): string[] {
-  return (refs ?? []).map((r) => LOCATION_REFID_TO_SLUG[r]).filter(Boolean);
+  return (refs ?? [])
+    .map((r) => LOCATION_REFID_TO_SLUG[r] ?? LOCATION_UUID_TO_SLUG[r])
+    .filter(Boolean);
 }
 
 // Categories are their own content collection (add / remove / edit in the Visual Editor).
@@ -103,9 +114,15 @@ const CATEGORIES = categoryEntries
 const REFID_TO_SLUG: Record<string, string> = Object.fromEntries(
   CATEGORIES.map((cat: any) => [cat.refId, cat.tab])
 );
+// Same UUID-vs-slug split as LOCATION_UUID_TO_SLUG above: a category picked
+// in the Visual Editor is stored as a UUID, and only the snapshot build
+// rewrites it to "categories/{slug}".
+const CATEGORY_UUID_TO_SLUG: Record<string, string> = Object.fromEntries(
+  categoryEntries.filter((e: any) => e.uuid).map((e: any) => [e.uuid, e.slug])
+);
 
 function catSlug(drink: any): string {
-  return REFID_TO_SLUG[drink.category] ?? '';
+  return REFID_TO_SLUG[drink.category] ?? CATEGORY_UUID_TO_SLUG[drink.category] ?? '';
 }
 
 // Build DRINKS data object for the flavor + location filter JS
@@ -149,7 +166,7 @@ const flavorsInUse: string[] = allDrinks
   .flatMap((d: any) => d.tags ?? []);
 const FLAVORS_WITH_DRINKS = new Set(flavorsInUse);
 
-// Pills show automatically for any tag actually used on a drink -- adding a
+// Pills show automatically for any tag actually used on a drink - adding a
 // flavor tag in Storyblok (e.g. "Pumpkin") is enough, no separate list to
 // maintain. customize.flavors only controls display ORDER for flavors it
 // already lists; anything new gets appended in first-appearance order.
@@ -159,10 +176,10 @@ const flavors: { value: string; index: number }[] = orderedFlavors
   .map((f: string, index: number) => ({ value: f, index }))
   .filter(({ value }: any) => FLAVORS_WITH_DRINKS.has(value));
 
-// Slim drink list for the "Help Me Decide" popup -- only what the card
+// Slim drink list for the "Help Me Decide" popup - only what the card
 // needs to render (name/subtitle/image). Hot Food, Treats, and Kids are
 // excluded so the randomizer only ever lands on an actual drink someone
-// would order on a whim -- a wider exclusion than FOOD_CATS above (which
+// would order on a whim - a wider exclusion than FOOD_CATS above (which
 // only needs to keep non-drink tags out of the flavor filter, not keep
 // Kids drinks out of a "surprise me" pick).
 const DECIDE_EXCLUDED_CATS = new Set(['hotfood', 'treats', 'kids']);
@@ -201,10 +218,10 @@ const decideDrinksJson = JSON.stringify(decideDrinksArr);
         </button>
         <!--
           Desktop-only shortcut to the same compact layout mobile visitors
-          already get -- one drink per glance instead of the wide horizontal
+          already get - one drink per glance instead of the wide horizontal
           timeline. Hidden below 768px in menu.css (mobile IS that view
           already, there's nothing to switch to). Real navigation to its own
-          page (/menu/simple) rather than a popup -- see that page for how
+          page (/menu/simple) rather than a popup - see that page for how
           it actually renders the compact view without a second template.
         -->
         <a href="/menu/simple" class="simple-menu-trigger">
@@ -219,7 +236,7 @@ const decideDrinksJson = JSON.stringify(decideDrinksArr);
         Third trigger for the same "Help Me Decide" popup as the two further
         down the page (see the openBtns array in the script below). Those two
         only turn up after you've scrolled past the drinks, which is exactly
-        when someone who can't decide has already done the deciding -- this
+        when someone who can't decide has already done the deciding - this
         one offers it up front, worded as the thing it does rather than as a
         feature name.
       -->
@@ -335,7 +352,7 @@ const decideDrinksJson = JSON.stringify(decideDrinksArr);
                 <div class={`descriptor-card${isWide ? ' descriptor-card--wide' : ''}`} data-cat={cat.tab}
                   data-visible={cat.hiddenByDefault ? 'false' : undefined}
 >
-                  {/* Plain label + chip list -- the normal /menu view always
+                  {/* Plain label + chip list - the normal /menu view always
                       uses this (unchanged from before the simple-menu logo
                       treatment existed). Hidden via CSS in simple mode. */}
                   <div class="descriptor-plain-view">
@@ -344,7 +361,7 @@ const decideDrinksJson = JSON.stringify(decideDrinksArr);
                       {items.map((item: string) => <span>{item}</span>)}
                     </div>
                   </div>
-                  {/* Logo/text row treatment -- only shown in simple mode
+                  {/* Logo/text row treatment - only shown in simple mode
                       (see .menu-simple-mode .descriptor-simple-view in
                       menu.css); hardcoded rather than sourced from
                       card.items/card.label, see SODA_TOP_ROW etc. above. */}
@@ -446,16 +463,17 @@ const decideDrinksJson = JSON.stringify(decideDrinksArr);
 
   <Footer />
 
-  <script define:vars={{ drinksJson, categoriesMetaJson, locationsMetaJson, decideDrinksJson, locationTriggerDefault: p.locationPicker?.triggerLabel ?? 'Select Your Location' }} is:inline>
+  <script define:vars={{ drinksJson, categoriesMetaJson, locationsMetaJson, decideDrinksJson, locationTriggerDefault: p.locationPicker?.triggerLabel ?? 'Select Your Location', locationAllLabel: p.locationPicker?.allLabel ?? 'All Locations' }} is:inline>
     window.DRINKS = JSON.parse(drinksJson);
     window.CATEGORIES_META = JSON.parse(categoriesMetaJson);
     window.LOCATIONS_META = JSON.parse(locationsMetaJson);
     window.DECIDE_DRINKS = JSON.parse(decideDrinksJson);
     window.LOCATION_TRIGGER_DEFAULT = locationTriggerDefault;
+    window.LOCATION_ALL_LABEL = locationAllLabel;
   </script>
   <script is:inline>
   (function () {
-    // ── "Help Me Decide" random drink popup ──
+    // "Help Me Decide" random drink popup 
     // Reveal is two beats: the drinks scroll past like a carousel reel,
     // decelerating to a stop on the winner, then it's announced with a
     // spotlight bloom + sparkle burst.
@@ -480,7 +498,7 @@ const decideDrinksJson = JSON.stringify(decideDrinksArr);
     var spinToken = 0; // invalidates a still-running spin's transitionend if re-triggered
 
     // Warm the browser's image cache up front so the reel never stalls on a
-    // network fetch mid-scroll -- every frame is already built into the
+    // network fetch mid-scroll - every frame is already built into the
     // track before the animation starts (see play() below), so a cold
     // cache would otherwise show blank frames sliding past.
     drinks.forEach(function (d) { var pre = new Image(); pre.src = d.image; });
@@ -592,14 +610,14 @@ const decideDrinksJson = JSON.stringify(decideDrinksArr);
 
     // /menu/simple loads this same page in a full-width iframe with
     // ?simple=1 so it can reuse this exact markup/script for its compact,
-    // small-card grid view instead of maintaining a second template --
+    // small-card grid view instead of maintaining a second template -
     // see .menu-simple-mode in menu.css. isMobile() covers that case too,
     // so every branch below (autoscroll, equalizeCards, scroll direction,
     // wheel handling) treats it exactly like a real narrow viewport.
     var forceSimple = new URLSearchParams(window.location.search).get('simple') === '1';
     if (forceSimple) {
       document.body.classList.add('menu-simple-mode');
-      // Loaded inside /menu/simple's iframe -- flip the trigger into a way
+      // Loaded inside /menu/simple's iframe - flip the trigger into a way
       // back to the real menu instead of a link to the page we're already
       // (functionally) showing. target="_parent" so it navigates the
       // top-level /menu/simple document out of the iframe, not the frame
@@ -612,8 +630,8 @@ const decideDrinksJson = JSON.stringify(decideDrinksArr);
         if (label) label.textContent = 'Standard Menu';
       }
       // This whole page (Nav, Footer, everything) is rendered a second time
-      // inside /menu/simple's iframe. Every real link on it -- nav items,
-      // footer links, drink cards, gift card, etc -- would otherwise
+      // inside /menu/simple's iframe. Every real link on it - nav items,
+      // footer links, drink cards, gift card, etc - would otherwise
       // navigate the iframe itself, leaving the top-level tab stuck on the
       // /menu/simple URL/title forever (and a refresh there reloads the
       // iframe back to this same page). Force every non-fragment link to
@@ -738,7 +756,7 @@ const decideDrinksJson = JSON.stringify(decideDrinksArr);
       window.addEventListener('scroll', schedule, { passive: true });
       window.addEventListener('resize', schedule);
       // The navbar's own scroll handler runs in a separate rAF, so reading
-      // .nav-hidden on scroll alone can be one frame stale -- observing the
+      // .nav-hidden on scroll alone can be one frame stale - observing the
       // class directly is what keeps the two bars in step.
       if (siteNav) {
         new MutationObserver(schedule).observe(siteNav, {
@@ -828,7 +846,7 @@ const decideDrinksJson = JSON.stringify(decideDrinksArr);
       return true;
     }
 
-    // ── Combined flavor + location filtering ──
+    // Combined flavor + location filtering 
     var activeFilter = null;   // flavor string, or null
     var selectedStore = null;  // location slug, or null (= no location picked)
 
@@ -836,11 +854,11 @@ const decideDrinksJson = JSON.stringify(decideDrinksArr);
       var meta = CATEGORIES_META[tab];
       if (!meta) return true;
       // hiddenByDefault is an absolute "nothing is in this section right now"
-      // switch -- it must win even after a location is picked, otherwise
+      // switch - it must win even after a location is picked, otherwise
       // picking a store re-reveals a category (e.g. an empty seasonal
       // lineup) that unavailableAt was never asked to hide per-location.
       if (meta.hiddenByDefault) return false;
-      // "All Stores" (no location picked) means "available everywhere" --
+      // "All Stores" (no location picked) means "available everywhere" -
       // anything with an unavailableAt list isn't, so it hides here too.
       // Picking one of the stores NOT on that list still shows it.
       if (!selectedStore) return meta.unavailableAt.length === 0;
@@ -933,17 +951,28 @@ const decideDrinksJson = JSON.stringify(decideDrinksArr);
       });
     });
 
-    // ── "Select Your Location" popup ──
+    // "Select Your Location" popup 
     var LOCATION_KEY = '151_selected_location';
     var locationModal = document.getElementById('locationModal');
     var locationTrigger = document.getElementById('locationTrigger');
     var locationTriggerLabel = document.getElementById('locationTriggerLabel');
     var closeLocationModal = document.getElementById('closeLocationModal');
 
+    // "All locations" and "hasn't picked yet" are the same filter (no filter)
+    // but shouldn't read the same on the trigger: once they've answered the
+    // question - including by dismissing the popup with its X - the button
+    // should say what's showing, not keep asking.
+    var ALL_VALUE = 'all';
+    var choseAll = false;
+
     function updateTriggerUI() {
       var loc = selectedStore && LOCATIONS_META[selectedStore];
-      locationTriggerLabel.textContent = loc ? loc.shortName : (window.LOCATION_TRIGGER_DEFAULT || 'Select Your Location');
-      locationTrigger.classList.toggle('has-location', !!loc);
+      locationTriggerLabel.textContent = loc
+        ? loc.shortName
+        : choseAll
+          ? (window.LOCATION_ALL_LABEL || 'All Locations')
+          : (window.LOCATION_TRIGGER_DEFAULT || 'Select Your Location');
+      locationTrigger.classList.toggle('has-location', !!loc || choseAll);
       document.querySelectorAll('.loc-modal-item').forEach(function(btn) {
         btn.classList.toggle('active', (btn.dataset.store || '') === (selectedStore || ''));
       });
@@ -953,9 +982,9 @@ const decideDrinksJson = JSON.stringify(decideDrinksArr);
 
     function selectStore(slug) {
       selectedStore = (slug && LOCATIONS_META[slug]) ? slug : null;
+      choseAll = !selectedStore;
       try {
-        if (selectedStore) localStorage.setItem(LOCATION_KEY, selectedStore);
-        else localStorage.removeItem(LOCATION_KEY);
+        localStorage.setItem(LOCATION_KEY, selectedStore || ALL_VALUE);
       } catch (e) {}
       updateTriggerUI();
       refresh();
@@ -963,8 +992,15 @@ const decideDrinksJson = JSON.stringify(decideDrinksArr);
     }
 
     locationTrigger.addEventListener('click', openLocationModal);
-    closeLocationModal.addEventListener('click', closeModal);
-    locationModal.addEventListener('click', function(e) { if (e.target === locationModal) closeModal(); });
+    // Dismissing the popup is an answer too: "just show me everything". Only
+    // when there's nothing chosen yet, though - someone who opened the
+    // picker to look around and backed out keeps the store they had.
+    function dismissModal() {
+      if (selectedStore) closeModal();
+      else selectStore('');
+    }
+    closeLocationModal.addEventListener('click', dismissModal);
+    locationModal.addEventListener('click', function(e) { if (e.target === locationModal) dismissModal(); });
     document.querySelectorAll('.loc-modal-item').forEach(function(btn) {
       btn.addEventListener('click', function() { selectStore(btn.dataset.store); });
     });
@@ -979,6 +1015,12 @@ const decideDrinksJson = JSON.stringify(decideDrinksArr);
       selectStore(queryStore);
     } else if (storedStore && LOCATIONS_META[storedStore]) {
       selectedStore = storedStore;
+      updateTriggerUI();
+      refresh();
+    } else if (storedStore === ALL_VALUE) {
+      // They've already said "all locations" on a previous visit - don't
+      // re-open the popup at them, just show the trigger in that state.
+      choseAll = true;
       updateTriggerUI();
       refresh();
     } else {

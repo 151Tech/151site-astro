@@ -12,8 +12,8 @@ import { checkPreviewAccess, gateDeniedResponse } from './lib/preview-gate';
 // a live visitor wait on it.
 // Guarded on exactly the same env var every other draft-mode switch reads
 // (src/lib/storyblok.ts, Layout.astro, robots.txt.ts, astro.config.mjs).
-// Deliberately compared to the literal 'true' so any other value -- unset,
-// empty, "false", "1" -- lands on production behaviour: the failure mode of
+// Deliberately compared to the literal 'true' so any other value - unset,
+// empty, "false", "1" - lands on production behaviour: the failure mode of
 // getting this backwards is noindexing the real site.
 const IS_DRAFT_PREVIEW = import.meta.env.STORYBLOK_DRAFT_MODE === 'true';
 
@@ -41,7 +41,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
     // import.meta.env, NOT locals.runtime.env: the latter was removed in
     // Astro v6 and its getter now *throws* ("Astro.locals.runtime.env has
     // been removed... use cloudflare:workers"), which optional chaining does
-    // not protect against -- it 500s the whole request. This is the same
+    // not protect against - it 500s the whole request. This is the same
     // accessor src/lib/storyblok.ts uses for this exact variable, and that
     // path demonstrably works on the deployed preview app.
     const previewToken = import.meta.env.STORYBLOK_TOKEN;
@@ -72,7 +72,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
 
   if (context.request.method === 'GET' && response.status === 200) {
     // Draft-preview responses carry unpublished Storyblok content behind the
-    // access gate above -- marking them publicly cacheable would let a shared
+    // access gate above - marking them publicly cacheable would let a shared
     // intermediary cache them outside the gate's control, and would also mean
     // the Visual Editor's save-and-reload can be served stale draft HTML for
     // up to 5 minutes. Only the real (non-draft) deployment gets the shared

@@ -2,7 +2,7 @@ name: Rebuild on Storyblok publish
 
 # Webflow Cloud only redeploys this site on a git push to the tracked
 # branch: it has no deploy-hook / webhook-triggered rebuild. So this
-# workflow is the bridge -- it refreshes the content snapshot and pushes a
+# workflow is the bridge - it refreshes the content snapshot and pushes a
 # commit, and that push is what actually triggers the redeploy.
 #
 # `repository_dispatch` is the real trigger: a Storyblok webhook POSTs

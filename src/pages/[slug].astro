@@ -4,7 +4,7 @@ import Layout from '../layouts/Layout.astro';
 import Editable from '../components/Editable.astro';
 import { getLandingPages, getSettings, getDrinks, getCategories, imageUrl } from '../lib/storyblok';
 
-// SMS/text-link discount landing pages -- every story under the
+// SMS/text-link discount landing pages - every story under the
 // landing-pages/ folder gets a route here automatically (see
 // storyblok/push-landing-pages.mjs to seed new ones, or duplicate the
 // "template" story directly in Storyblok, no code change needed either way).
@@ -30,8 +30,8 @@ if (!page) return Astro.redirect('/');
 const logoUrl = imageUrl((settingsData as any)?.logo, { width: 120 });
 const bonusImage = imageUrl(page.image, { width: 700 });
 
-// Per-slug background override -- veterans-day only, per the owner's
-// request -- rather than a new generic CMS field for a one-off ask (same
+// Per-slug background override - veterans-day only, per the owner's
+// request - rather than a new generic CMS field for a one-off ask (same
 // pattern as LOCATION_COORD_OVERRIDES in src/lib/storyblok.ts).
 const BACKGROUND_OVERRIDES: Record<string, string> = {
   vets26: '/images/landing/veterans-day-bg.png',
@@ -39,9 +39,9 @@ const BACKGROUND_OVERRIDES: Record<string, string> = {
 const backgroundImage = BACKGROUND_OVERRIDES[slug as string];
 
 // At desktop widths the full-bleed photo background gives way to a small
-// framed image centered above the (now vertically centered) text -- same
+// framed image centered above the (now vertically centered) text - same
 // per-slug override pattern as BACKGROUND_OVERRIDES above. Same source photo
-// as the mobile/tablet background -- there's only the one flag-and-drink
+// as the mobile/tablet background - there's only the one flag-and-drink
 // shot for this page across every size.
 const DESKTOP_HERO_OVERRIDES: Record<string, string> = {
   vets26: '/images/landing/veterans-day-bg.png',
@@ -53,7 +53,7 @@ const desktopHeroImage = DESKTOP_HERO_OVERRIDES[slug as string];
 // Deliberately a narrower, curated pool rather than the "Help Me Decide"
 // picker's broad exclusion list on /menu (see catSlug()/DECIDE_EXCLUDED_CATS
 // there): these should only ever show off Dirty Pop, Energy, Teas, or
-// Refreshers -- the colorful, photogenic drinks -- not coffee/espresso/cold
+// Refreshers - the colorful, photogenic drinks - not coffee/espresso/cold
 // brew shots that look near-identical in a small photo.
 const REFID_TO_CAT_SLUG: Record<string, string> = Object.fromEntries(
   categoryEntries.map((c: any) => [`categories/${c.slug}`, c.slug]),
@@ -65,7 +65,7 @@ const RANDOM_IMAGE_ALLOWED_CATS = new Set(['dirtypop', 'energy', 'teas', 'refres
 // Requested at tablet-band resolution/quality (not the old phone-band 500px)
 // since the same image now has to fill a much larger, more visible band on
 // iPad/Surface-class screens (see the large-tablet tier in <style>) as well
-// as the smaller phone one -- one larger, sharper asset covers both rather
+// as the smaller phone one - one larger, sharper asset covers both rather
 // than serving a soft upscale on the bigger screens.
 const randomDrinkImages: { src: string; name: string; category: string }[] = drinksEntries
   .filter((d: any) => RANDOM_IMAGE_ALLOWED_CATS.has(REFID_TO_CAT_SLUG[d.category] ?? ''))
@@ -78,7 +78,7 @@ const randomDrinkImages: { src: string; name: string; category: string }[] = dri
 const hasRandomImage = !backgroundImage && !desktopHeroImage && randomDrinkImages.length > 0;
 
 // veterans-day's own flag photo gets the same angled band treatment as the
-// random-drink pages below, on mobile and tablet -- it just shows a fixed
+// random-drink pages below, on mobile and tablet - it just shows a fixed
 // image instead of a random one. Only a true desktop width (>=1400px, see
 // the has-desktop-hero override further down) is unaffected: that already
 // swaps to its own framed hero image and this flag band is hidden there.
@@ -88,8 +88,8 @@ function escapeHtml(s: string): string {
   return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 // CMS copy is plain text, so rather than asking editors to hand-mark spans
-// in Storyblok, the punchy words -- dollar amounts, percentages, and a
-// short list of promo keywords -- get pulled out and colored automatically
+// in Storyblok, the punchy words - dollar amounts, percentages, and a
+// short list of promo keywords - get pulled out and colored automatically
 // wherever they appear in the headline or offer line.
 const KEYWORD_PATTERN = /(\$\d+(?:\.\d+)?|\d+%|\bFREE\b|\bOFF\b)/gi;
 function highlight(text: string): string {
@@ -195,8 +195,8 @@ function highlight(text: string): string {
 
 <style>
   /* Fixed, full-viewport, non-scrolling by design: these are opened straight
-     from a text message, often one-handed, and the entire offer -- not just
-     a hint of it above a scroll indicator -- has to be readable the instant
+     from a text message, often one-handed, and the entire offer - not just
+     a hint of it above a scroll indicator - has to be readable the instant
      the page paints. `100dvh` (not `100vh`) accounts for a mobile browser's
      collapsing address bar, which `vh` overshoots on first paint. The bonus
      photo is the one thing allowed to disappear first: it's real content on
@@ -218,7 +218,7 @@ function highlight(text: string): string {
     overflow: hidden;
   }
 
-  /* Mobile/tablet no longer uses a full-bleed background photo at all --
+  /* Mobile/tablet no longer uses a full-bleed background photo at all -
      veterans-day's flag image now runs through the same angled
      .landing-diag-photo band as the random-drink pages (see showDiagPhoto
      above). `.has-bg-image` only still matters at the >=900px desktop tier
@@ -306,7 +306,7 @@ function highlight(text: string): string {
   }
 
   /* Allowed to shrink (and get clipped by its own overflow:hidden) before
-     any text block does -- see the top-of-file comment. */
+     any text block does - see the top-of-file comment. */
   .landing-image {
     flex: 1 1 auto;
     min-height: 0;
@@ -349,8 +349,8 @@ function highlight(text: string): string {
     max-width: 38ch;
   }
 
-  /* Drop the bonus photo first -- it was already the one thing explicitly
-     allowed to go (see the top-of-file comment) -- to guarantee every text
+  /* Drop the bonus photo first - it was already the one thing explicitly
+     allowed to go (see the top-of-file comment) - to guarantee every text
      block still fits above the fold on a short/older phone (iPhone SE-class,
      ~667px tall, minus browser chrome). */
   @media (max-height: 700px) {
@@ -362,7 +362,7 @@ function highlight(text: string): string {
   }
 
   /* Below that, tighten spacing and type size further rather than drop
-     anything else -- the offer, redemption steps, and CTA are the whole
+     anything else - the offer, redemption steps, and CTA are the whole
      point of the page and are never allowed to require scrolling. */
   @media (max-height: 580px) {
     .landing-content { gap: 0.35rem; }
@@ -371,7 +371,7 @@ function highlight(text: string): string {
     .landing-instructions, .landing-terms { font-size: 0.75rem; }
   }
 
-  /* Narrower than the shared .btn-primary/.gc-btn padding on phones -- this
+  /* Narrower than the shared .btn-primary/.gc-btn padding on phones - this
      targets .landing-cta only, so other buttons on the site keep their
      normal width. */
   @media (max-width: 480px) {
@@ -381,7 +381,7 @@ function highlight(text: string): string {
     }
   }
 
-  /* Hidden by default -- only relevant once the desktop layout below turns
+  /* Hidden by default - only relevant once the desktop layout below turns
      it on for a slug that has one (see DESKTOP_HERO_OVERRIDES above). */
   .landing-desktop-hero {
     display: none;
@@ -394,7 +394,7 @@ function highlight(text: string): string {
      flush to both edges; `.landing-content` (below) puts side padding back
      for the text, plus the negative margin that lets it overlap the
      diagonal cut instead of leaving a hard seam. */
-  /* No separate logo mark on any angled-photo page -- the random drink
+  /* No separate logo mark on any angled-photo page - the random drink
      photos already have the 151 logo printed on the cup, and veterans-day's
      own photo band now runs the same way, flush to every edge including the
      top (has-desktop-hero restores the logo at the 900px+ tier below, where
@@ -422,7 +422,7 @@ function highlight(text: string): string {
     object-fit: cover;
   }
   /* veterans-day's flag sits in the upper portion of its source photo with
-     plain sky below -- cover's default center crop pushes the flag out of
+     plain sky below - cover's default center crop pushes the flag out of
      frame on a tall band, so it's pinned to the top instead. */
   .landing-diag-photo img.landing-diag-photo-img--top {
     object-position: top center;
@@ -431,7 +431,7 @@ function highlight(text: string): string {
   /* Random-drink pages only: names the featured drink, running along the
      same slope as the band's own diagonal cut (100% 78% -> 0 100% below).
      The fade runs the full width of the band rather than just behind the
-     letters -- since the band is clipped to that diagonal, a plain
+     letters - since the band is clipped to that diagonal, a plain
      bottom-to-top gradient automatically follows the slope of the cut
      without needing its own angle. */
   .landing-page.has-random-image .landing-diag-photo::after {
@@ -449,7 +449,7 @@ function highlight(text: string): string {
      following the diagonal cut. The scrim lives on its own ::before sized
      independently of the text (rather than as this element's own
      background) because .drink-label's box is only as tall as its two
-     lines of text -- a background painted on it gets its radial gradient
+     lines of text - a background painted on it gets its radial gradient
      clipped/flattened right where that short box ends, instead of fading
      out cleanly over a much larger area. */
   .drink-label {
@@ -501,7 +501,7 @@ function highlight(text: string): string {
   }
 
   /* Large phones (iPhone Pro Max-class and similar, still under the
-     900px tablet tier) have more width than the 260px mobile cap assumes --
+     900px tablet tier) have more width than the 260px mobile cap assumes -
      let the band grow a bit further so it makes better use of the extra
      screen instead of leaving it to the text below. */
   @media (min-width: 400px) and (max-width: 899px) {
@@ -519,7 +519,7 @@ function highlight(text: string): string {
   .landing-page.has-diag-photo .landing-content {
     padding: 0 1.25rem;
     /* Pulls the text up snug against the diagonal cut instead of leaving a
-       gap -- constant rather than fluid, since the photo band above it is
+       gap - constant rather than fluid, since the photo band above it is
        already vh-clamped and the text sizing below now shrinks to fit on
        its own. */
     margin-top: -1.35rem;
@@ -547,14 +547,14 @@ function highlight(text: string): string {
     font-size: clamp(0.78rem, min(4vw, 1.9vh), 1.02rem);
   }
 
-  /* Large tablets (iPad Pro 13", Surface Pro 10, and sizes around them --
+  /* Large tablets (iPad Pro 13", Surface Pro 10, and sizes around them -
      roughly 1000-1400px wide) have room the phone-tuned clamp maxes above
      don't use: those caps were sized for phones and an iPad mini, so on a
      bigger tablet the type ends up looking small relative to all the extra
      space. This tier only raises the ceiling (min() picks the smaller of
      vw/vh either way, so a smaller tablet in this range still gets a
      smaller value) and applies to every angled-photo page, veterans-day
-     included -- it only switches to its own bespoke desktop layout at a
+     included - it only switches to its own bespoke desktop layout at a
      true desktop width (see the 1400px tier below). */
   @media (min-width: 900px) {
     .landing-page.has-diag-photo .landing-diag-photo {
@@ -596,11 +596,11 @@ function highlight(text: string): string {
 
   /* True desktop viewport, wider than any tablet. Two bespoke layouts from
      here, chosen per-page by the same has-desktop-hero flag used above:
-     - has-desktop-hero (veterans-day only): "Option 2" -- the flag/drink
+     - has-desktop-hero (veterans-day only): "Option 2" - the flag/drink
        photo goes full-bleed behind everything, with a left-to-right scrim
        and the text sitting directly on top of it, lower-left.
      - every other has-diag-photo page (the random-drink pages): "Option 1"
-       -- a vertical split, text on the left half, the angled photo band
+       - a vertical split, text on the left half, the angled photo band
        promoted to a full-height panel filling the right half.
      Pages with neither flag (plain offer pages, no photo at all) just get
      centered text, same as tablet. */

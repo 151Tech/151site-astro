@@ -3,7 +3,7 @@
 // storyblok/instagram-setup.md for the full walkthrough). This exchanges the
 // authorization code Instagram hands back for a short-lived token, then
 // immediately exchanges THAT for a long-lived (~60 day) token, and saves it
-// to the INSTAGRAM_CACHE KV namespace -- after that, src/lib/instagram.ts
+// to the INSTAGRAM_CACHE KV namespace - after that, src/lib/instagram.ts
 // reads it directly and src/pages/api/instagram-token-refresh.ts keeps it
 // alive on a schedule, so this route is never hit again.
 //
@@ -32,7 +32,7 @@ export async function GET({ request }: { request: Request }) {
   }
 
   // Instagram echoes back whatever `state` value the authorize URL was built
-  // with, verbatim -- so a shared secret here works like a CSRF token without
+  // with, verbatim - so a shared secret here works like a CSRF token without
   // needing a separate pre-redirect KV write. Without this check, anyone who
   // completes their own authorize flow against our public client id could hit
   // this callback directly and overwrite the stored token, pointing the
@@ -87,7 +87,7 @@ export async function GET({ request }: { request: Request }) {
     if (!exchangeRes.ok) {
       // Deliberately NOT a 5xx: Webflow Cloud's edge intercepts any 5xx this
       // Worker returns and replaces the body with its own branded "502 Bad
-      // gateway" page, discarding the message below -- which makes an
+      // gateway" page, discarding the message below - which makes an
       // ordinary handled error look like an unexplained platform crash. 4xx
       // bodies pass through untouched.
       //
@@ -128,7 +128,7 @@ export async function GET({ request }: { request: Request }) {
       { status: 200, headers: { 'Content-Type': 'text/plain' } },
     );
   } catch (err) {
-    // Log only a plain string, never the raw error object -- passing a
+    // Log only a plain string, never the raw error object - passing a
     // complex Error (with nested fetch/cause diagnostics) to console.error
     // has been observed to throw during serialization on this platform,
     // which would escape this catch and crash the handler anyway, hiding

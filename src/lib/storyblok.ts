@@ -31,7 +31,7 @@ const FIELD_CASE_MAP: Record<string, string> = fieldCaseMap;
 //   1. It throttles to 5 requests/second using a setTimeout queue. Workers
 //      only advance timers while I/O is pending, so a request parked in
 //      that queue behind the rate limit can wait forever. Our busiest page
-//      (menu) issues 4 calls, which sits right on the limit -- exactly why
+// (menu) issues 4 calls, which sits right on the limit - exactly why
 //      this failed intermittently rather than every time.
 //   2. Its request timeout is opt-in (`this.timeout && setTimeout(...)`)
 //      and we never set it, so a stalled connection had nothing to abort it.
@@ -77,7 +77,7 @@ async function sbFetch(path: string, params: Record<string, string | number> = {
 // DRAFT_MODE: the two names are close enough to copy across by mistake, and
 // a stray STORYBLOK_DRAFT=false on the preview app would otherwise serve
 // published content from a deployment whose entire purpose is showing
-// unpublished edits -- a failure that looks like nothing being wrong at all.
+// unpublished edits - a failure that looks like nothing being wrong at all.
 const version = DRAFT_MODE
   ? 'draft'
   : import.meta.env.STORYBLOK_DRAFT != null
@@ -132,9 +132,9 @@ function denormalize(node: any): any {
 // Every image on the site comes from Storyblok, by policy: no media is
 // hardcoded in the templates or CSS any more. So this deliberately only
 // honours real Storyblok assets and returns undefined for anything else.
-// Pre-migration content still holds a lot of legacy strings -- local
+// Pre-migration content still holds a lot of legacy strings - local
 // `/images/foo.webp` paths and absolute `https://www.151coffee.com/images/...`
-// URLs -- and none of those files exist in this repo, so passing them
+// URLs - and none of those files exist in this repo, so passing them
 // through only ever produced a broken <img>. Dropping them instead means a
 // drink with no Storyblok photo renders no image element at all, and it
 // stays that way through the content rebuilds that regenerate
@@ -234,22 +234,29 @@ export async function getStories(startsWith: string) {
       console.error(`[storyblok] getStories(${startsWith}) missing from snapshot, rendering with empty list`);
       return [];
     }
-    return entries.map((story: any) => ({ slug: story.slug, ...denormalize(story.content) }));
+    return entries.map((story: any) => ({ slug: story.slug, uuid: story.uuid, ...denormalize(story.content) }));
   }
   try {
     const data = await sbFetch('stories', {
       starts_with: `${startsWith}/`,
       per_page: 100,
     });
+    // uuid comes along because Storyblok reference fields (a drink's
+    // `category`, `unavailableAt` on drinks and categories) store the target
+    // story's UUID, and callers need a uuid -> slug map to resolve them.
+    // storyblok/snapshot.mjs rewrites those to "folder/slug" when it builds
+    // the snapshot, so without this the live API path (astro dev and the
+    // draft-preview deployment) is the only one that can't resolve them.
     return data.stories.map((story: any) => ({
       slug: story.slug,
+      uuid: story.uuid,
       ...denormalize(story.content),
     }));
   } catch (err) {
     const fallback = (snapshot.collections as Record<string, any[]>)[startsWith];
     if (fallback) {
       console.error(`[storyblok] getStories(${startsWith}) failed, serving STALE snapshot list:`, err);
-      return fallback.map((story: any) => ({ slug: story.slug, ...denormalize(story.content) }));
+      return fallback.map((story: any) => ({ slug: story.slug, uuid: story.uuid, ...denormalize(story.content) }));
     }
     console.error(`[storyblok] getStories(${startsWith}) failed with no snapshot fallback, rendering empty:`, err);
     return [];
@@ -257,7 +264,7 @@ export async function getStories(startsWith: string) {
 }
 
 // Storyblok's own lat/lng fields for these two stores are wrong (each was
-// verified against the real street address's rooftop-level geocode -- see
+// verified against the real street address's rooftop-level geocode - see
 // git history) and editing them in the CMS hasn't stuck across two publish
 // attempts. Coordinates for a physical store don't change once it's open,
 // so this overrides them at read time rather than fighting the CMS again.
@@ -276,7 +283,7 @@ function withCoordOverride<T>(slug: string, location: T): T {
 export const getPage = (slug: string) => getStory(`pages/${slug}`);
 export const getSettings = () => getStory('settings/global');
 // Storyblok folder is "products" (renamed from "drinks" since it holds food
-// items too, not just drinks) -- these wrapper names stay as-is since every
+// items too, not just drinks) - these wrapper names stay as-is since every
 // call site already reads getDrinks()/getDrink() and the public /drinks/
 // site URL is unaffected.
 export const getDrinks = () => getStories('products');
@@ -287,7 +294,7 @@ export const getDrink = (slug: string) => getStory(`products/${slug}`);
 export const getLocation = async (slug: string) => withCoordOverride(slug, await getStory(`locations/${slug}`));
 export const getCategoryBySlug = (slug: string) => getStory(`categories/${slug}`);
 // SMS/text-link discount landing pages (see storyblok/push-landing-pages.mjs
-// and src/pages/[slug].astro) -- one flat, reusable "landing_page" component
+// and src/pages/[slug].astro) - one flat, reusable "landing_page" component
 // per story, same folder-of-stories pattern as products/categories/locations
 // above, so a new page is just a new story, no code change required.
 export const getLandingPages = () => getStories('landing-pages');

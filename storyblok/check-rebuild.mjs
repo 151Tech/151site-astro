@@ -45,7 +45,7 @@ if (fs.existsSync(markerPath)) {
 
 // Storyblok fires its publish webhook essentially the moment the publish
 // lands, which can beat the Management API's own read-side by a few
-// seconds -- so a webhook-triggered run can otherwise look at a stale
+// seconds - so a webhook-triggered run can otherwise look at a stale
 // published_at, conclude nothing changed, and silently skip the rebuild
 // the webhook existed to cause. Only retry on webhook runs; the hourly
 // backstop has no such race and should stay a single cheap request.

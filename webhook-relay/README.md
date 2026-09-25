@@ -10,7 +10,7 @@ endpoint requires both, so the two can't be wired together directly.
 
 ## Setup (one time)
 
-1. **GitHub token** — create a fine-grained PAT scoped to
+1. **GitHub token** - create a fine-grained PAT scoped to
    `151Tech/151coffee-storyblok` with **Contents: read and write**.
    Nothing else is needed.
 
@@ -27,7 +27,7 @@ endpoint requires both, so the two can't be wired together directly.
    Note the deployed URL, e.g.
    `https://storyblok-rebuild-relay.<subdomain>.workers.dev`.
 
-3. **Storyblok** — Settings -> Webhooks -> New Webhook:
+3. **Storyblok** - Settings -> Webhooks -> New Webhook:
    - Endpoint: `https://storyblok-rebuild-relay.<subdomain>.workers.dev/?token=<STORYBLOK_SECRET>`
    - Events: `story.published` and `story.unpublished`
 

@@ -2,8 +2,8 @@
 //
 // The preview app serves unpublished Storyblok content on a public
 // *.webflow.io URL. Webflow Cloud has no password protection or IP
-// allowlisting for Cloud apps -- its own docs say "anyone with access to your
-// deployed mount path can view the environment" -- so noindex keeps the
+// allowlisting for Cloud apps - its own docs say "anyone with access to your
+// deployed mount path can view the environment" - so noindex keeps the
 // preview out of search results but does nothing about someone holding the
 // link. This closes that gap in the app itself.
 //
@@ -27,8 +27,8 @@
 const MAX_AGE_SECONDS = 3600;
 
 function timingSafeEqual(a: string, b: string): boolean {
-  // Not strictly necessary -- remote timing attacks against a hash comparison
-  // over HTTP are impractical -- but it costs nothing and avoids leaking a
+  // Not strictly necessary - remote timing attacks against a hash comparison
+  // over HTTP are impractical - but it costs nothing and avoids leaking a
   // prefix match through response timing.
   if (a.length !== b.length) return false;
   let diff = 0;
@@ -82,7 +82,7 @@ export async function checkPreviewAccess(url: URL, previewToken: string | undefi
 //
 // It explains itself because the most likely person to see this is a
 // colleague who clicked an internal link inside the preview (which drops the
-// editor's query params) -- not an intruder. A bare 404 there reads as "the
+// editor's query params) - not an intruder. A bare 404 there reads as "the
 // preview is broken", which is the report I do not want marketing filing.
 export function gateDeniedResponse(reason: string): Response {
   const html = `<!doctype html>

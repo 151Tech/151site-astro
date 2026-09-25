@@ -1,6 +1,6 @@
 // Single source of truth for cookie-consent state. Kept separate from
 // cookie-consent.js (which only builds the banner UI) so any other script --
-// analytics-loader.js today, anything gated on consent later -- can read/
+// analytics-loader.js today, anything gated on consent later - can read/
 // write/subscribe to the decision without depending on the banner code at
 // all. Load this before both.
 (function () {
@@ -10,7 +10,7 @@
     const listeners = [];
 
     // Only ever set by an explicit click on the banner (see cookie-consent.js)
-    // -- there is no "implied" or partial state. Anything else (never
+    // - there is no "implied" or partial state. Anything else (never
     // visited, left without choosing, an older CONSENT_VERSION) reads back
     // as null, which is what tells the banner to keep showing on every page
     // until the visitor actually picks one of the two buttons.

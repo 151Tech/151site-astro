@@ -15,7 +15,7 @@
     if (!mapEl || !searchEl || !STORES.length) return;
     // MapLibre absent means the loader deliberately skipped it because this
     // device has no WebGL (see locator-loader.js). Everything except the map
-    // -- search, ZIP distance sorting, state filters, the store list -- works
+    // - search, ZIP distance sorting, state filters, the store list - works
     // without it, so this file still runs; `map` just stays null.
     const mapSupported = typeof maplibregl !== "undefined";
 
@@ -27,7 +27,19 @@
     // location stays put instead of re-fitting to "all stores". Re-checked
     // on every keystroke via the same input handler as the real search, so
     // it only shows while the exact term is still in the box.
-    const COMPETITOR_TERMS = new Set(["7brew", "dutch bros", "dutchbros", "starbucks"]);
+    //
+    // Matched on a squashed form (lowercase, letters and digits only) so the
+    // spacing and punctuation someone actually types doesn't decide whether
+    // the joke lands: "7brew", "7 brew" and "7-brew" are all the same brand
+    // to the person typing them.
+    const COMPETITOR_TERMS = new Set([
+        "7brew",
+        "sevenbrew",
+        "dutchbros",
+        "dutchbrothers",
+        "starbucks",
+    ]);
+    const squash = (s) => s.toLowerCase().replace(/[^a-z0-9]/g, "");
 
     const HOURS = (window.COFFEE151_LOCATOR && window.COFFEE151_LOCATOR.hours) || "Open daily 6 AM - 8 PM";
     const PHONE = (window.COFFEE151_LOCATOR && window.COFFEE151_LOCATOR.phone) || "(682) 325-2124";
@@ -44,7 +56,7 @@
     // because Leaflet's raster tiles turned to unreadable mush when a fit
     // zoomed out far enough. It had to go: on a phone-sized map the fit that
     // frames every Texas store lands around zoom 7, so forcing 10 afterwards
-    // zoomed straight past the stores it had just framed -- an iPhone SE
+    // zoomed straight past the stores it had just framed - an iPhone SE
     // opened the page, and every state filter click landed, on an empty patch
     // of map. Vector tiles stay sharp at any zoom, so there's nothing left to
     // protect against; maxZoom on the individual calls below is what keeps a
@@ -78,7 +90,7 @@
     }
 
     // Locations page has state-narrowing buttons ("Texas" / "Kansas", one
-    // marked up as .active -- see locations.astro); the homepage locator
+    // marked up as .active - see locations.astro); the homepage locator
     // has neither, so it always starts from every store. Read whichever
     // button starts active rather than hardcoding a state here, so the
     // default stays in sync with the markup instead of two places having
@@ -90,7 +102,7 @@
     // The map opens already framed on the real store bounds rather than on a
     // throwaway view it then corrects: `bounds` in the constructor means the
     // very first tile request is for the zoom it actually settles on. (Under
-    // Leaflet's raster tiles that mattered even more -- a throwaway view sent
+    // Leaflet's raster tiles that mattered even more - a throwaway view sent
     // a whole zoom level's worth of PNGs that were immediately abandoned.)
     const initialPoints = initialStores.map(s => [s.lat, s.lng]);
     let map = null;
@@ -205,14 +217,14 @@
             const shortStoreName = store.name.replace("151 Coffee ", "");
             // Mobile-only card: photo + non-truncating name/hours/phone, so
             // the row reads at a glance without cutting anything off. No
-            // address here by design -- the row itself now opens the
+            // address here by design - the row itself now opens the
             // store's More Info page (which has the full address), and
             // Directions doesn't need it repeated either. Hidden on
             // desktop; the stacked elements above are hidden on mobile
             // instead (see the max-width: 902px rules in style.css).
             // The Directions link lives here (under the name/hours/phone
             // text) rather than in .locator__item-actions below, which is
-            // hidden on mobile -- see the max-width: 902px rules in
+            // hidden on mobile - see the max-width: 902px rules in
             // style.css. Desktop keeps its own copy in .locator__item-actions.
             const mobileCard = `
                 <div class="locator__mobile-card">
@@ -249,7 +261,7 @@
                 if (e.target.closest(".locator__directions, .locator__phone, .locator__more-info")) return;
                 // Compact rows (mobile + the shared tablet breakpoint, see
                 // the max-width: 902px rules in style.css) drop the visible
-                // "More Info" button -- tapping the row itself takes its
+                // "More Info" button - tapping the row itself takes its
                 // place. Desktop keeps its old behavior: highlight + fly the
                 // map to it, since More Info is still its own button there.
                 if (store.slug && window.matchMedia("(max-width: 902px)").matches) {
@@ -265,7 +277,7 @@
 
     // Sizes each mobile-card photo (inline, in px) to exactly match its own
     // row's text-column height, so it's a true square flush with the card's
-    // padding on every side -- see the comment on .locator__mobile-card in
+    // padding on every side - see the comment on .locator__mobile-card in
     // style.css for why this has to happen in JS rather than pure CSS.
     function squareMobilePhotos() {
         if (!listEl || !window.matchMedia("(max-width: 902px)").matches) return;
@@ -325,7 +337,7 @@
             const item = listEl.querySelector(`.locator__item[data-index="${index}"]`);
             if (item) {
                 item.classList.add("active");
-                // Scroll the sidebar to the picked location either way -- a
+                // Scroll the sidebar to the picked location either way - a
                 // marker click should surface it in the list just as much as
                 // clicking the list itself flies the map to it.
                 item.scrollIntoView({ behavior: "smooth", block: "nearest" });
@@ -352,7 +364,7 @@
         // Text search by name / address / city / state / partial zip.
         const q = raw.toLowerCase();
 
-        if (COMPETITOR_TERMS.has(q)) {
+        if (COMPETITOR_TERMS.has(squash(q))) {
             if (listEl) {
                 listEl.innerHTML = `
                     <div class="locator__competitor-egg">
@@ -378,7 +390,7 @@
         fitTo(list);
     });
 
-    // Optional state-narrowing buttons (locations page only -- "Texas" /
+    // Optional state-narrowing buttons (locations page only - "Texas" /
     // "Kansas"). Clears whatever's in the search box so the two filters
     // don't fight each other over what the list shows.
     const stateButtons = document.querySelectorAll("[data-state-filter]");

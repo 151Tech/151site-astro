@@ -243,8 +243,8 @@
 
   // --- Layout -----------------------------------------------------------------
   // Peggle-style board: a field of small fixed pegs the ball ricochets through.
-  // Two flavors share one array -- 'target' pegs (red, must all be cleared to
-  // win) and 'bumper' pegs (grey, pure pinball chaos + score, never cleared) --
+  // Two flavors share one array - 'target' pegs (red, must all be cleared to
+  // win) and 'bumper' pegs (grey, pure pinball chaos + score, never cleared) -
   // rather than a brick grid, so the ball's path is genuinely unpredictable
   // instead of settling into a repeating grid bounce.
   const BALL_R = 18;
@@ -253,7 +253,7 @@
   let launcherX = W / 2;
 
   const pegs = []; // {body, type: 'target'|'bumper', hitFlash, alive}
-  let catcher = null; // {x, width, dir} -- moving tray at the bottom, Peggle's "free ball" bucket
+  let catcher = null; // {x, width, dir} - moving tray at the bottom, Peggle's "free ball" bucket
 
   function addPeg(x, y, type) {
     const body = Bodies.circle(x, y, PEG_R, {
@@ -301,8 +301,8 @@
 
   // "1": a flag stroke, the vertical spine, and a base serif.
   const DIGIT_ONE = [[0.30, 0.16], [0.52, 0.0], [0.52, 1.0], [0.24, 1.0], [0.80, 1.0]];
-  // "5": traced like a seven-segment digit -- top, upper-left, middle,
-  // lower-right, bottom -- drawn as one continuous polyline.
+  // "5": traced like a seven-segment digit - top, upper-left, middle,
+  // lower-right, bottom - drawn as one continuous polyline.
   const DIGIT_FIVE = [
     [0.95, 0.02], [0.05, 0.02], [0.05, 0.52], [0.95, 0.52], [0.95, 0.98], [0.05, 0.98],
   ];
@@ -374,7 +374,7 @@
       if (farEnough(x, y, minGap)) { addPeg(x, y, 'bumper'); placed++; }
     }
 
-    // Big fixed side bumpers, like Peggle's wall-mounted bumpers -- rare but
+    // Big fixed side bumpers, like Peggle's wall-mounted bumpers - rare but
     // punchy deflections back into play.
     addPeg(70, H * 0.4, 'bumper');
     addPeg(W - 70, H * 0.4, 'bumper');
@@ -425,7 +425,7 @@
     trail = [];
   }
 
-  let recoil = 0;    // 0..1, eases back after firing -- kicks the barrel back
+  let recoil = 0;    // 0..1, eases back after firing - kicks the barrel back
   let muzzleFlash = 0; // 0..1, a bright flash at the muzzle right on fire
 
   function fire() {
@@ -542,7 +542,7 @@
     if (recoil > 0) recoil = Math.max(0, recoil - 0.06);
     if (muzzleFlash > 0) muzzleFlash = Math.max(0, muzzleFlash - 0.12);
 
-    // The catcher tray drifts back and forth along the bottom -- Peggle's
+    // The catcher tray drifts back and forth along the bottom - Peggle's
     // "free ball" bucket. Position updates even with no ball in flight so it
     // reads as alive/ambient rather than only moving mid-shot.
     if (catcher) {
@@ -599,7 +599,7 @@
     gameOver = true;
     overlayTitle.textContent = won ? 'Level Clear' : 'Out of Balls';
     overlaySub.textContent = won
-      ? `Every target cleared — final score ${score.toLocaleString()}.`
+      ? `Every target cleared! Final score ${score.toLocaleString()}.`
       : `${pegs.filter((p) => p.type === 'target' && p.alive).length} targets left standing. Final score ${score.toLocaleString()}.`;
     setTimeout(() => overlay.classList.add('show'), 350);
   }
@@ -626,7 +626,7 @@
   function drawLauncher() {
     const pulse = 0.5 + 0.5 * Math.sin(performance.now() / 260);
 
-    // Fixed mount plate under the turret -- a hex pad that doesn't rotate,
+    // Fixed mount plate under the turret - a hex pad that doesn't rotate,
     // so the turret head reads as sitting on something rather than floating.
     ctx.save();
     ctx.translate(launcherX, launcherY);
@@ -651,7 +651,7 @@
     ctx.translate(launcherX, launcherY);
     // Canvas rotate() is clockwise for a positive angle, which is the
     // opposite sense from the vx = sin(aimAngle) used for the fired ball
-    // (and from aim-left/aim-right decreasing/increasing aimAngle) -- negate
+    // (and from aim-left/aim-right decreasing/increasing aimAngle) - negate
     // it here so the turret visibly points the same way the ball actually
     // goes instead of mirrored.
     ctx.rotate(-aimAngle);

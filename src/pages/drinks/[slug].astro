@@ -40,7 +40,7 @@ const ogImage = drinkImage
 // Marks the drink up as the MenuItem it is, so a question like "does 151
 // Coffee have nitro cold brew" can be answered from our own page rather than
 // from a third party. The breadcrumb supplies the Menu > Category > Drink
-// trail these pages have never expressed -- they only ever had a Back link.
+// trail these pages have never expressed - they only ever had a Back link.
 const drinkSchema = graph(
   menuItemSchema({ ...drink, slug }),
   breadcrumbSchema([

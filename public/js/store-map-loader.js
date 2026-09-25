@@ -6,7 +6,7 @@
     var store = window.STORE_MAP;
     if (!mapEl || !store) return;
 
-    // WebGL guard, same as locator-loader.js -- see hasWebGL in
+    // WebGL guard, same as locator-loader.js - see hasWebGL in
     // maplibre-map-helpers.js. This page has no store list to fall back on,
     // so the empty map box becomes a card with the address and a link out to
     // Google Maps, which is where "Get Directions" above it goes anyway.
@@ -51,7 +51,7 @@
         script.onload = function () {
             var helpersScript = document.createElement('script');
             // Versioned so a change to this file's content bypasses any
-            // browser/CDN cache of the unfingerprinted /js/ path -- see the
+            // browser/CDN cache of the unfingerprinted /js/ path - see the
             // matching note in locator-loader.js.
             helpersScript.src = '/js/maplibre-map-helpers.js?v=1';
             helpersScript.onload = initMap;
@@ -67,7 +67,7 @@
             center: [store.lng, store.lat],
             zoom: 15,
             // The map is one element in a scrolling page here, not the page
-            // itself -- a wheel over it should keep scrolling past it rather
+            // itself - a wheel over it should keep scrolling past it rather
             // than trapping the scroll and zooming.
             scrollZoom: false,
             attributionControl: false,

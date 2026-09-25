@@ -1,4 +1,4 @@
-/* ─── Menu Hero ─── */
+/* Menu Hero */
 .menu-hero {
     min-height: 40vh;
     display: flex;
@@ -66,7 +66,7 @@
     margin: 0;
 }
 
-/* ─── Category Nav ─── */
+/* Category Nav */
 .cat-nav {
     position: absolute;
     bottom: 0;
@@ -77,7 +77,18 @@
     overflow-x: auto;
     scrollbar-width: none;
     padding-top: 3rem;
+    /* This bar stretches up over the hero's bottom third - the top 3rem is
+       pure transparent padding, and it was swallowing clicks meant for the
+       hero's "Pick My Drink" button underneath. Raising the button's
+       z-index can't win: .menu-hero-content makes its own stacking context
+       at z-index 2, below this. So the gap simply stops taking pointer
+       events and the pills take them back. Scrolling still works - a drag
+       starting on .cat-nav-inner scrolls this ancestor either way. */
+    pointer-events: none;
 }
+
+.cat-nav-inner,
+.cat-link { pointer-events: auto; }
 
 .cat-nav::-webkit-scrollbar { display: none; }
 
@@ -115,9 +126,9 @@
     border-color: var(--red);
 }
 
-/* ═══ V5: GALLERY OVERHAUL — drinks as the hero, everything else quiet ═══ */
+/* V5: GALLERY OVERHAUL - drinks as the hero, everything else quiet */
 
-/* ─── Timeline Wrap ─── */
+/* Timeline Wrap */
 /* Light studio backdrop: same idea as before (photo texture pushed way
    down so it reads as ambience, not competition) but bright/warm instead
    of near-black. */
@@ -145,7 +156,7 @@
     pointer-events: none;
 }
 
-/* ─── Timeline Scroll ─── */
+/* Timeline Scroll */
 .timeline-scroll {
     display: flex;
     flex-direction: row;
@@ -182,7 +193,7 @@
 
 /* Wraps each category's title card + its drinks/descriptor cards so the
    simple-menu grid (see .menu-simple-mode below) can lay a category's own
-   cards out in their own indented, wrapping row -- transparent on the real
+   cards out in their own indented, wrapping row - transparent on the real
    desktop rail and mobile 2-up grid, where the category's cards still need
    to sit as plain flex siblings of every other category's cards. */
 .cat-group,
@@ -190,8 +201,8 @@
     display: contents;
 }
 
-/* ─── Category Title Card ─── */
-/* No box at all — just a slim red rule and big quiet typography, so it
+/* Category Title Card */
+/* No box at all - just a slim red rule and big quiet typography, so it
    reads as a chapter marker rather than another product tile. */
 .cat-title-card {
     position: relative;
@@ -270,7 +281,7 @@
     transition: color 0.3s ease, transform 0.3s ease;
 }
 
-/* Active state — title card + all cards in that category */
+/* Active state - title card + all cards in that category */
 .cat-title-card.cat-active {
     border-left-color: #1a1512;
 }
@@ -279,8 +290,8 @@
     color: var(--red);
 }
 
-/* ─── Drink Card ─── */
-/* No container at all — the photo floats on its own soft ground-shadow,
+/* Drink Card */
+/* No container at all - the photo floats on its own soft ground-shadow,
    like a studio product shot. Name sits large and confident underneath. */
 .drink-card {
     position: relative;
@@ -297,7 +308,7 @@
     color: inherit;
 }
 
-/* ─── Drink Image ─── */
+/* Drink Image */
 /* A clean white container, future product shots will come with their
    own backgrounds, so this masks them into a consistent, tidy tile
    instead of relying on transparent cutouts. */
@@ -355,9 +366,9 @@
     }
 }
 
-/* ─── Drink Info ─── */
+/* Drink Info */
 /* A fixed reserved height (sized for the longest realistic case: a 2-line
-   name plus a 2-line description) instead of hugging the actual text --
+   name plus a 2-line description) instead of hugging the actual text -
    otherwise a card with a longer name/description is simply taller, and
    since the whole card is vertically centered in the row, that pushes its
    photo up relative to shorter neighbors. Reserving the space up front
@@ -393,7 +404,7 @@
     letter-spacing: 0.02em;
 }
 
-/* ─── Descriptor Card ─── */
+/* Descriptor Card */
 /* A free-form "also available: ..." style list card. Any category can have
    any number of these (see the category's extraCards field, editable in the
    Visual Editor), the soda list on Dirty Pop is just the first example. */
@@ -447,7 +458,7 @@
     white-space: nowrap;
 }
 
-/* ─── Customize Section ─── */
+/* Customize Section */
 /* The timeline above is the light studio backdrop; this section goes dark
    again (matching the rest of the site) instead of stacking two bright
    sections back to back. */
@@ -547,7 +558,7 @@
 
 .cz-pills--flavors { gap: 0.4rem; }
 
-/* ─── Flavor filter ─── */
+/* Flavor filter */
 .cpill--filter {
     cursor: pointer;
     transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease, transform 0.15s ease, box-shadow 0.18s ease;
@@ -634,7 +645,7 @@
     font-style: italic;
 }
 
-/* ─── Responsive ─── */
+/* Responsive */
 @media (max-width: 768px) {
     /* Just a still photo on mobile (no video to size around). Sized to the
        photo's own 16:9 aspect ratio so object-fit:cover shows nearly the
@@ -700,7 +711,7 @@
         scroll-behavior: auto;
     }
 
-    /* Category header — full width, compact banner */
+    /* Category header - full width, compact banner */
     .cat-title-card {
         flex: 0 0 100%;
         width: 100% !important;
@@ -708,7 +719,7 @@
         min-height: 0;
         margin-left: 0;
         margin-top: 0.75rem;
-        /* Clear the fixed site nav AND the sticky category bar on jump --
+        /* Clear the fixed site nav AND the sticky category bar on jump -
            the bar is what you just tapped, so landing underneath it would
            hide the heading you asked for. */
         scroll-margin-top: 86px;
@@ -731,7 +742,7 @@
     .cat-title-text { font-size: clamp(2rem, 8vw, 3rem); }
     .cat-title-desc { max-width: none; }
 
-    /* Drinks — two per row */
+    /* Drinks - two per row */
     .drink-card {
         flex: 0 0 calc(50% - 0.4375rem);
         width: calc(50% - 0.4375rem) !important;
@@ -764,7 +775,7 @@
        vertically for hundreds of drinks, so once you're deep in it there's
        no way back to a category without scrolling all the way up. It stays
        transparent and click-through until the page has scrolled past the
-       hero, then fades in -- the script adds .cat-bar-stuck to <body>.
+       hero, then fades in - the script adds .cat-bar-stuck to <body>.
 
        It's the inverse of the navbar rather than a second bar beside it:
        it shows exactly while the navbar is auto-hidden (scrolling down,
@@ -805,7 +816,7 @@
         /* The delay waits out the navbar's own 0.35s slide-up. The navbar is
            opaque and sits above this (z-index 1000 vs 990), so fading in the
            instant .nav-hidden lands would show the bar with its top half
-           still covered by the navbar mid-slide -- which reads as a bar
+           still covered by the navbar mid-slide - which reads as a bar
            that's cut off, not one that's behind something. */
         transition: opacity 0.2s ease 0.36s;
         pointer-events: auto;
@@ -815,6 +826,14 @@
         min-width: 100%;
         gap: 0.5rem;
     }
+    /* The base rule hands the pills their own pointer events back (so the
+       desktop bar's transparent top gap can stay click-through). Here the
+       whole bar is hidden until it's stuck, so the pills have to go with it
+       or an invisible bar would keep taking taps across the top of the page. */
+    .cat-nav-inner,
+    .cat-link { pointer-events: none; }
+    body.cat-bar-stuck .cat-nav-inner,
+    body.cat-bar-stuck .cat-link { pointer-events: auto; }
     /* Desktop divides the bar evenly between categories (flex: 1); here the
        bar scrolls horizontally instead, so each pill keeps its own width.
        The base rule's 0.75rem bottom margin also goes: it's what made the
@@ -833,7 +852,7 @@
 
 /* /menu/simple: the "Simple Menu" page loads THIS page in an iframe at
    full desktop width with ?simple=1, which the inline script below reads
-   to add this class (see the isMobile() override next to it) -- same
+   to add this class (see the isMobile() override next to it) - same
    idea as the mobile block above (vertical, wrapping cards instead of the
    horizontal timeline) but full-viewport-wide, so instead of the mobile
    block's fixed 2-up split (which at desktop width would just mean two
@@ -841,7 +860,7 @@
    fit as the screen allows. */
 .menu-simple-mode .menu-hero {
     /* The mobile block's aspect-ratio: 16/9 is sized for a phone-width
-       hero -- at full desktop width that same ratio comes out ~700px
+       hero - at full desktop width that same ratio comes out ~700px
        tall, which is most of the screen wasted on the video/still behind
        "Our Menu". Capped instead, since this page is about the drink grid
        below, not the hero. */
@@ -870,7 +889,7 @@
 /* "Compact two-up cards": category collapses to a small dark label strip
    (name only, no desc/arrow) that sits above its own drinks instead of
    beside them, and each drink becomes a small photo+text row instead of
-   the desktop's big photo-on-top plate card -- two (or more, depending on
+   the desktop's big photo-on-top plate card - two (or more, depending on
    width) per line, so far more of the menu is visible without scrolling
    than either the desktop rail or the earlier "same cards, smaller" pass. */
 .menu-simple-mode .timeline-scroll {
@@ -913,7 +932,7 @@
     gap: 0;
 }
 /* Original display font and size, just the dark strip's background swapped
-   in place of the card's own -- kept large since it's still the thing that
+   in place of the card's own - kept large since it's still the thing that
    identifies the section, everything else here is in support of it. */
 .menu-simple-mode .cat-title-text {
     font-size: clamp(1.9rem, 3.9vw, 3.3rem) !important;
@@ -922,7 +941,7 @@
     white-space: nowrap;
     flex: 0 0 auto;
 }
-/* Same line as the title -- a red dot stands in for the punctuation a
+/* Same line as the title - a red dot stands in for the punctuation a
    divider/rule would add, without needing a second element in the
    markup. */
 .menu-simple-mode .cat-title-desc {
@@ -952,7 +971,7 @@
     background: var(--red);
 }
 .menu-simple-mode .cat-arrow { display: none; }
-/* Exactly 5 tracks, not auto-fill -- cards stretch to fill whatever width
+/* Exactly 5 tracks, not auto-fill - cards stretch to fill whatever width
    the row has (never wider than 5 up), and a 6th+ drink simply starts the
    grid's next row instead of the row growing past 5. */
 .menu-simple-mode .cat-drinks-wrap {
@@ -1019,7 +1038,7 @@
     text-overflow: clip;
 }
 /* Same footprint as a single drink card (one grid column, same fixed
-   height) instead of spanning two -- the label + wrapped chip list take
+   height) instead of spanning two - the label + wrapped chip list take
    the place of a photo, so it reads as "one more tile in the row" rather
    than a wide strip that breaks the row's rhythm. */
 .menu-simple-mode .descriptor-card {
@@ -1047,7 +1066,7 @@
     white-space: normal;
     color: rgba(20, 17, 14, 0.6) !important;
 }
-/* Wrapping chips instead of a fixed 6-row column grid -- at one card's
+/* Wrapping chips instead of a fixed 6-row column grid - at one card's
    width there isn't room for even two of the old columns side by side. */
 .menu-simple-mode .descriptor-list {
     display: grid;
@@ -1081,7 +1100,7 @@
 .descriptor-simple-view { display: none; }
 .menu-simple-mode .descriptor-plain-view { display: none; }
 /* Label in its own column on the left, logos in two independent horizontal
-   rows (not a paired grid) to the right -- so a brand's diet/zero variant
+   rows (not a paired grid) to the right - so a brand's diet/zero variant
    can sit directly beside it without needing a same-column partner in the
    other row. */
 .menu-simple-mode .descriptor-list--labeled {
@@ -1157,7 +1176,7 @@
    to a single column on the narrowest phones. Thresholds are set by how
    much width a drink card needs to hold its longest real title (e.g.
    "White Chocolate Macadamia") on two lines without the text overflowing
-   the card's fixed height -- not round device-width numbers -- so a title
+   the card's fixed height - not round device-width numbers - so a title
    never breaks out the top/bottom of its card at any width. */
 @media (min-width: 1920px) {
     .menu-simple-mode .cat-drinks-wrap { grid-template-columns: repeat(6, minmax(0, 1fr)); }
@@ -1205,7 +1224,7 @@
         padding: 0.35rem 0.8rem;
     }
     /* .cz-row stacks to a single column above, which left-aligns every
-       child by default (align-items: flex-start) -- fine for the heading
+       child by default (align-items: flex-start) - fine for the heading
        and pills, but it left the button hugging the left edge on its own
        line instead of reading as an intentional, separate call to action.
        Give it its own centered row, set off with a divider like the
@@ -1219,7 +1238,7 @@
     }
 }
 
-/* ─── Location filtering ─── */
+/* Location filtering */
 /* Elements start with data-visible="false" server-side when their category
    is hidden-by-default (Hot Food, Treats), so there's no flash of content
    that then disappears. The location-filter script keeps this attribute in
@@ -1263,7 +1282,7 @@
     .location-trigger.has-location:hover { background: var(--red-soft); }
 }
 
-/* ─── "Select Your Location" modal ─── */
+/* "Select Your Location" modal */
 .loc-modal-content {
     max-width: 700px;
     padding: 2.5rem 2rem;
@@ -1355,7 +1374,7 @@
     .loc-modal-item { font-size: 0.8rem; padding: 0.45rem 1rem; }
 }
 
-/* ─── "Simple Menu" desktop toggle ─── */
+/* "Simple Menu" desktop toggle */
 .menu-hero-actions {
     display: flex;
     flex-wrap: wrap;
@@ -1376,7 +1395,7 @@
     margin-top: 0.9rem;
 }
 /* /menu/simple caps the hero at 240px, which isn't enough room for a third
-   row of controls -- and its own compact grid is the point of that page. */
+   row of controls - and its own compact grid is the point of that page. */
 .menu-simple-mode .menu-hero-decide { display: none; }
 
 .simple-menu-trigger {
@@ -1407,13 +1426,13 @@
 }
 
 /* Mobile visitors are already looking at the compact view this button
-   switches desktop visitors into -- nothing to toggle. */
+   switches desktop visitors into - nothing to toggle. */
 @media (max-width: 768px) {
     .simple-menu-trigger { display: none; }
 }
 
 /* /menu/simple: a real page (own URL, real back button) rather than an
-   overlay -- the iframe fills the whole viewport so /menu's own
+   overlay - the iframe fills the whole viewport so /menu's own
    .menu-simple-mode grid (see below) gets the full width to lay small
    cards out across, instead of being boxed into a phone-sized frame. */
 .simple-menu-page {
@@ -1430,13 +1449,13 @@
     background: var(--white, #fff);
 }
 
-/* ─── Gallery cards on the quote ground ─── */
+/* Gallery cards on the quote ground */
 /* The gallery sits on the celebrity-quote watermark, so everything that
    floats directly on it needs a settled surface underneath. See the "Text
    plates on the quote ground" block in style.css for the shared tokens.
 
-   Three card shapes share one silhouette here -- same width, same height,
-   same corner radius -- so the row scans as a single rail rather than a
+   Three card shapes share one silhouette here - same width, same height,
+   same corner radius - so the row scans as a single rail rather than a
    line of mismatched boxes:
 
      drink card      light plate, photo on top
@@ -1453,7 +1472,7 @@
     --gallery-overlap: 34px;
 }
 
-/* ── Drink card: photo and caption as one object ── */
+/* Drink card: photo and caption as one object */
 
 /* The caption plate is the full width of the photo and slides up behind it,
    so the white tile reads as the top of a single container rather than as a
@@ -1486,7 +1505,7 @@
     z-index: 2;
 }
 
-/* ── Category and descriptor cards: dark chapter panels ── */
+/* Category and descriptor cards: dark chapter panels */
 
 /* Inverted against the light product tiles so a chapter marker is never
    mistaken for something orderable, and so the rail keeps the site's
@@ -1585,7 +1604,7 @@
     gap: 0.15rem 1.1rem;
 }
 
-/* ── Mobile: the gallery becomes a 2-up grid, not a rail ── */
+/* Mobile: the gallery becomes a 2-up grid, not a rail */
 /* These carry the same `.timeline-wrap` prefix as the desktop rules above
    deliberately: the original mobile block at the 768px breakpoint styles the
    bare classes, so without the matching specificity here the desktop rail
@@ -1623,7 +1642,7 @@
     }
 }
 
-/* ─── "Help Me Decide" button ─── */
+/* "Help Me Decide" button */
 .decide-btn {
     display: inline-flex;
     align-items: center;
@@ -1664,7 +1683,7 @@
 /* Mobile trigger renders right after the last category in the timeline;
    desktop already has the one in .cz-row, so hide this one there. A
    dedicated full-width wrapper centers the (intrinsically-sized) pill
-   instead of letting the button itself stretch edge to edge -- a
+   instead of letting the button itself stretch edge to edge - a
    full-width pill read as an oversized, misaligned control rather than a
    normal centered button. */
 .decide-btn-mobile-wrap {
@@ -1673,7 +1692,7 @@
 
 @media (max-width: 768px) {
     /* The desktop button's home (.cz-row) stacks to full width at 900px,
-       but stays visible there too -- on a touch device that scrolled all
+       but stays visible there too - on a touch device that scrolled all
        the way down it's a fine second chance to use it. This mobile trigger
        is the one meant to be seen right away, directly under the drinks. */
     .decide-btn-mobile-wrap {
@@ -1684,11 +1703,11 @@
     }
 }
 
-/* ─── "Help Me Decide" popup ─── */
+/* "Help Me Decide" popup */
 .decide-modal-content {
     max-width: 460px;
     /* Two soft red blooms in opposite corners, a faint dot-grid for texture,
-       over the same dark ground as .customize-section -- lively without
+       over the same dark ground as .customize-section - lively without
        competing with the reel itself. */
     background:
         radial-gradient(circle at 12% -8%, rgba(230,57,70,0.4) 0%, transparent 45%),
@@ -1726,7 +1745,7 @@
     align-items: center;
 }
 
-/* The visible window onto the reel -- same rounded-corner treatment as a
+/* The visible window onto the reel - same rounded-corner treatment as a
    menu drink card, clipping the scrolling track to a single frame's worth
    at a time so nothing outside it is ever visible mid-scroll. */
 .decide-img-wrap {
@@ -1836,7 +1855,7 @@
     100% { opacity: 0; transform: translate(-50%, -50%) rotate(var(--a)) translateX(var(--d)) scale(0.4); }
 }
 
-/* While the reel scrolls, a faint ring pulses around the frame -- reads as
+/* While the reel scrolls, a faint ring pulses around the frame - reads as
    "still picking" independent of the carousel motion itself. */
 @keyframes decide-cycling-ring {
     0%, 100% { box-shadow: inset 0 0 0 3px rgba(230,57,70,0.18); }

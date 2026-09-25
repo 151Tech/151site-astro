@@ -158,7 +158,7 @@
       }, 260);
     }
 
-    // You've earned this one -- make people actually sit with it for a beat
+    // You've earned this one - make people actually sit with it for a beat
     // before they can click (or Escape/X) their way out.
     var DISMISS_DELAY_MS = 2000;
     var canDismiss = false;

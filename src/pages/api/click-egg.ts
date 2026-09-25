@@ -3,7 +3,7 @@
 // front-end owns the click-counting entirely client-side; this endpoint's
 // only job is handing back a shared, ever-increasing "you're the Nth person"
 // number, which needs a store every visitor's request can both read and
-// write -- import.meta.env can't do that (see src/pages/api/contact.ts for
+// write - import.meta.env can't do that (see src/pages/api/contact.ts for
 // why), so this reuses the cloudflare:workers `env` KV accessor already
 // proven there and in src/lib/instagram.ts.
 import { env } from 'cloudflare:workers';
@@ -50,7 +50,7 @@ export async function POST({ request }: { request: Request }) {
   // Reuses the INSTAGRAM_CACHE KV namespace under its own key prefix rather
   // than provisioning a binding just for a novelty counter (same call as the
   // rate limiter in contact.ts). No KV bound (e.g. local `astro dev` without
-  // wrangler) just means the number can't be handed out -- the front end
+  // wrangler) just means the number can't be handed out - the front end
   // already has a no-count fallback line for that.
   const kv = (env as any).INSTAGRAM_CACHE;
   if (!kv) {
@@ -64,7 +64,7 @@ export async function POST({ request }: { request: Request }) {
   // api/contact.ts), applied here for a different reason: this endpoint has
   // no honeypot or form fields to slow a scripted loop down, and it shares
   // this KV namespace with the contact-form rate limiter and the Instagram
-  // cache -- Cloudflare KV's free tier caps writes per day, so an unthrottled
+  // cache - Cloudflare KV's free tier caps writes per day, so an unthrottled
   // loop here could burn through that quota and break those other features
   // too. Fails open on KV errors, same reasoning as contact.ts: a broken
   // rate limiter should never be worse than no rate limiter for a feature

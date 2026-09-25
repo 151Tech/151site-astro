@@ -1,16 +1,16 @@
 // Loads Google Analytics (GA4) and the Meta/Facebook Pixel, but ONLY once
 // the visitor has actively clicked "Accept All" on the cookie banner
-// (cookie-consent.js, via consent.js) -- never on page load by default, and
+// (cookie-consent.js, via consent.js) - never on page load by default, and
 // never after a decline or an implied non-answer. IDs come from
 // window.COFFEE151_TRACKING_IDS, injected server-side in Layout.astro from
 // the PUBLIC_GA_MEASUREMENT_ID / PUBLIC_META_PIXEL_ID env vars. Either one
-// left blank just skips that vendor -- so this file is safe to ship now,
+// left blank just skips that vendor - so this file is safe to ship now,
 // before those IDs exist, and "activates" itself the moment they're set in
 // Webflow Cloud with no further code change.
 //
 // No <noscript> pixel fallback: Meta's standard snippet includes one, but it
 // fires unconditionally for visitors with JS disabled, bypassing consent
-// entirely. Skipped on purpose -- that audience is negligible next to the
+// entirely. Skipped on purpose - that audience is negligible next to the
 // privacy cost of a tracker that can't be gated.
 (() => {
     const consent = window.COFFEE151_CONSENT;
@@ -63,7 +63,7 @@
         loadMetaPixel();
     }
 
-    // Consent already granted on a previous visit/page -- load immediately.
+    // Consent already granted on a previous visit/page - load immediately.
     if (consent.get()?.accepted === true) {
         loadAll();
     }

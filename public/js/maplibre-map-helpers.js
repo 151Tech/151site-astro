@@ -8,9 +8,9 @@
 // *vector* tiles on the GPU instead: geometry and labels are already in
 // memory, so zooming is a continuous transform rather than an image swap.
 // That's the same technique behind the maps that feel smooth in Amazon's and
-// Google's apps -- it's the rendering approach, not the data provider.
+// Google's apps - it's the rendering approach, not the data provider.
 window.COFFEE151_MAP = {
-    // CARTO's Voyager style as vector tiles -- the same cartography the
+    // CARTO's Voyager style as vector tiles - the same cartography the
     // raster version used, so the map still looks like itself. Free and
     // key-less for the public basemap styles (the key in the old raster URL
     // was only ever a quota identifier, never a secret).
@@ -24,7 +24,7 @@ window.COFFEE151_MAP = {
     markerElement: function (label) {
         // Logo URL comes from Layout.astro (Storyblok's image service isn't
         // reachable from this plain, no-build JS file), so it's absent until
-        // an editor sets settings/global -> Logo -- the pin still works fine
+        // an editor sets settings/global -> Logo - the pin still works fine
         // with no inner mark in that case.
         var logoUrl = window.COFFEE151_LOGO_URL;
         var el = document.createElement('div');
@@ -43,7 +43,7 @@ window.COFFEE151_MAP = {
     // blocklist, WebGL disabled by policy, some low-power modes) the map is
     // a blank box rather than a slower map. Leaflet's image tiles used to
     // render anywhere, so this is the one capability the switch to vector
-    // rendering actually costs us -- hence checking for it up front, before
+    // rendering actually costs us - hence checking for it up front, before
     // 200KB of library gets fetched to run something that can't run.
     //
     // Duplicated as a small inline copy in locator-loader.js and

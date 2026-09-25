@@ -7,7 +7,7 @@ name: Sync preview branch
 # publish, because what drifts between the two branches is *code*, and a
 # publish doesn't change code. `preview` reads the live Storyblok API and
 # never touches the committed snapshot, so content publishes have nothing
-# to sync into it -- it shows drafts the moment they're saved, with no
+# to sync into it - it shows drafts the moment they're saved, with no
 # rebuild at all.
 #
 # Snapshot-only commits are ignored for that same reason: they're what the

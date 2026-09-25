@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url';
 
 // SMS/text-link discount landing pages (src/pages/[slug].astro) are meant
 // to be reachable only via the exact link they were sent, not discoverable
-// by searching the offer name -- see the `noindex` prop on their Layout
+// by searching the offer name - see the `noindex` prop on their Layout
 // call. Advertising them in the sitemap would defeat that, the same
 // contradiction the /menu/<store> QR-stub filter below already guards
 // against. Read straight out of the committed snapshot (rather than
@@ -84,7 +84,7 @@ export default defineConfig({
   // two. This is the only route in the app that accepts a POST.
   security: { checkOrigin: false },
   // Prefetches a linked page's HTML on hover/touchstart, so most in-site
-  // navigation feels instant -- pairs well with the edge-cache headers set
+  // navigation feels instant - pairs well with the edge-cache headers set
   // in src/middleware.ts, since a prefetch often just warms (or hits) that
   // same cache before the click ever happens.
   prefetch: true,
@@ -114,7 +114,7 @@ export default defineConfig({
   ],
   // This file runs under Node at build time (not the Vite-transformed app
   // code), so the draft-preview switch reads process.env here rather than
-  // import.meta.env -- same variable, same value, different runtime.
+  // import.meta.env - same variable, same value, different runtime.
   integrations: [
     // A sitemap advertising draft/unpublished URLs is exactly the kind of
     // leak the noindex + disallowed robots.txt on this deployment (see
@@ -129,7 +129,7 @@ export default defineConfig({
             // carry meta refresh + noindex + a canonical to /menu?store=...
             // (see src/pages/menu/[store].astro). Advertising a noindex URL in
             // the sitemap is a contradiction Search Console reports as
-            // "Submitted URL marked 'noindex'" -- 30 of 117 URLs were doing
+            // "Submitted URL marked 'noindex'" - 30 of 117 URLs were doing
             // exactly that. The stubs still work for the printed QR codes;
             // they just aren't offered to crawlers as content.
             filter: (page) => {

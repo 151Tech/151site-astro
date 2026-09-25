@@ -1,6 +1,6 @@
 // Fetches the 3 most recent public @151coffee Instagram videos/reels via
 // Meta's Instagram API with Instagram Login (the current Graph API surface
-// for a single business account) -- not scraping. See the setup checklist in
+// for a single business account) - not scraping. See the setup checklist in
 // storyblok/instagram-setup.md for the one-time, human-only steps this
 // depends on: converting @151coffee to a Business/Creator account, creating
 // a Meta developer app, adding @151coffee as an Instagram tester, and
@@ -9,13 +9,13 @@
 // Two things make this stateful in a way most of this codebase isn't:
 //
 // 1. The access token is long-lived (~60 days) but still expires, and has to
-//    be refreshed before it does -- via a scheduled job (see
+// be refreshed before it does - via a scheduled job (see
 //    src/pages/api/instagram-token-refresh.ts), not on every request. So the
 //    current token has to be persisted somewhere the Worker can both read
 //    and write, which rules out a plain env var (Webflow Cloud env vars are
 //    read-only at runtime). It's kept in the INSTAGRAM_CACHE KV namespace
 //    (see wrangler.json) under the key "access_token".
-// 2. KV bindings are not available on import.meta.env -- that only carries
+// 2. KV bindings are not available on import.meta.env - that only carries
 //    build-time/wrangler vars. They're reached via `cloudflare:workers`'s
 //    `env`, which is why this file (unlike the rest of the codebase) does
 //    NOT use import.meta.env for its secrets.
@@ -26,7 +26,7 @@
 const MEDIA_URL = 'https://graph.instagram.com/me/media';
 // Short enough that a new reel shows up while it's still news. The edge
 // cache (see src/middleware.ts) absorbs the actual homepage traffic, so this
-// only governs how often one Worker request goes out to Instagram -- roughly
+// only governs how often one Worker request goes out to Instagram - roughly
 // 288 calls/day, nowhere near any rate limit.
 const CACHE_TTL_SECONDS = 5 * 60; // 5 minutes
 // Versioned so a deploy that changes what gets cached retires the old
@@ -35,7 +35,7 @@ const CACHE_TTL_SECONDS = 5 * 60; // 5 minutes
 const MEDIA_CACHE_KEY = 'media_cache_v3';
 const MEDIA_FIELDS = 'id,caption,media_type,media_url,thumbnail_url,permalink,timestamp';
 // How many recent posts to scan when looking for videos/reels (see
-// fetchLatestMedia). One page, one API call -- the account would have to post
+// fetchLatestMedia). One page, one API call - the account would have to post
 // 25 non-video items in a row before the carousel came up short.
 const SCAN_LIMIT = 25;
 
@@ -60,7 +60,7 @@ interface InstagramEnv {
 }
 
 async function fetchLatestMedia(accessToken: string, count: number): Promise<InstagramMedia[]> {
-  // The carousel is a video feature -- a photo post there renders as a static
+  // The carousel is a video feature - a photo post there renders as a static
   // card with a play triangle that does nothing. So rather than asking for the
   // newest `count` posts of any kind, ask for a larger recent window and keep
   // only the videos/reels from it. The window is what caps how far back a
@@ -98,7 +98,7 @@ async function fetchLatestMedia(accessToken: string, count: number): Promise<Ins
 }
 
 // Returns null (never throws) when the integration isn't configured yet, or
-// when Instagram's API is unreachable -- a broken Instagram call should
+// when Instagram's API is unreachable - a broken Instagram call should
 // never take the homepage down with it. Callers render a static fallback in
 // that case.
 export async function getLatestInstagramMedia(env: InstagramEnv, count = 3): Promise<InstagramMedia[] | null> {
@@ -112,7 +112,7 @@ export async function getLatestInstagramMedia(env: InstagramEnv, count = 3): Pro
 
     const accessToken = await env.INSTAGRAM_CACHE.get('access_token');
     if (!accessToken) {
-      console.error('[instagram] no access_token in KV -- integration needs the one-time OAuth authorization run');
+      console.error('[instagram] no access_token in KV - integration needs the one-time OAuth authorization run');
       return null;
     }
 

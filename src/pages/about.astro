@@ -28,7 +28,7 @@ const p = unwrapSingletons((await getPage('about')) as any, [
     .about-intro-text { display: flex; flex-direction: column; justify-content: center; aspect-ratio: 1 / 1; box-sizing: border-box; }
     .about-intro-text h2 { font-size: clamp(1.8rem, 3.5vw, 2.8rem); color: var(--black); line-height: 1.12; margin-bottom: 1.25rem; }
     .about-intro-text h2 span { color: var(--red); }
-    .about-intro-text .about-intro-tagline { font-family: var(--font-bebas-neue), sans-serif; font-size: clamp(1.8rem, 3.5vw, 2.8rem); color: var(--black); line-height: 1.12; letter-spacing: 0.04em; text-transform: uppercase; font-weight: 400; margin-top: 1.75rem; }
+    .about-intro-text .about-intro-tagline { font-family: var(--font-bebas-neue), sans-serif; font-size: clamp(1.8rem, 3.5vw, 2.8rem); color: var(--red); line-height: 1.12; letter-spacing: 0.04em; text-transform: uppercase; font-weight: 400; margin-top: 1.75rem; }
     .about-intro-text p { font-family: var(--font-inter), sans-serif; font-size: 1rem; line-height: 1.75; color: rgba(17,17,17,0.62); }
     .about-intro-img { border-radius: var(--radius); overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.22); position: relative; aspect-ratio: 1 / 1; }
     .about-intro-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
@@ -76,15 +76,23 @@ const p = unwrapSingletons((await getPage('about')) as any, [
       .history-timeline { grid-template-columns: 1fr; }
     }
     /* Portrait sits pinned in its own column alongside the bio instead of
-       stacked above it -- the old single centered column read as one long,
+       stacked above it - the old single centered column read as one long,
        narrow scroll of alternating centered/left-aligned blocks. */
     .about-founder { background: var(--black); position: relative; overflow: hidden; padding: 5rem 0 var(--section-pad); }
     .founder-header { text-align: center; margin-bottom: 3rem; }
+    /* Red accents through this section: the founder's name was the only
+       warm thing on an otherwise all-black panel. Same gradient-bar idiom
+       as .founder-closing::before, so it reads as one family of marks. */
+    .founder-header::after {
+      content: ''; display: block; margin: 1rem auto 0;
+      width: 4.5rem; height: 3px; border-radius: var(--radius-pill);
+      background: linear-gradient(90deg, transparent, var(--red), transparent);
+    }
     .founder-header h2 { font-size: clamp(1.8rem, 3vw, 2.6rem); color: #fff; line-height: 1.1; margin-bottom: 0.35rem; }
     .founder-title { font-family: var(--font-inter), sans-serif; font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--red); }
     .founder-grid { display: grid; grid-template-columns: minmax(260px, 340px) 1fr; gap: 3.5rem; align-items: center; }
     .founder-media { display: flex; justify-content: center; }
-    .founder-hero-img { position: sticky; top: 110px; width: 100%; max-width: 340px; aspect-ratio: 1 / 1; border-radius: 18px; overflow: hidden; }
+    .founder-hero-img { position: sticky; top: 110px; width: 100%; max-width: 340px; aspect-ratio: 1 / 1; border-radius: 18px; overflow: hidden; border: 1px solid rgba(230,57,70,0.45); box-shadow: 0 18px 44px rgba(230,57,70,0.16); }
     .founder-hero-img img {
       width: 100%; height: 100%; object-fit: cover; object-position: top; display: block;
     }
@@ -147,7 +155,7 @@ const p = unwrapSingletons((await getPage('about')) as any, [
           <h2><span style="color:inherit">{p.intro?.heading ?? 'Not Your Typical'}</span><br><span>{p.intro?.headingSpan ?? 'Coffee Shop.'}</span></h2>
           {(p.intro?.paragraphs ?? [
             '151 Coffee is not your typical coffee shop. Fun and happiness drive our culture and music drives our speed, that\'s why we live by the 151 motto "It\'s a good day to have a good day."',
-            "Each of our drive-thru stores serves the best tasting coffee and blended energy drinks faster than anyone. If you're thirsty and looking for a tasty beverage to buzz your day, swing through our drive thru, say hi, and drive with the 151 vibe.",
+            "Each of our drive-thru stores serves the best tasting coffee and energy drinks faster than anyone. If you're thirsty and looking for a tasty beverage to buzz your day, swing through our drive thru, say hi, and drive with the 151 vibe.",
           ]).map((para: string, i: number) => (
             <p>{para}</p>
           ))}

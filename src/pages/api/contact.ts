@@ -1,23 +1,23 @@
 // Receives both website forms and relays them to the team over Resend.
 //
-// Handles the two forms marked data-netlify="true" -- the home page contact
+// Handles the two forms marked data-netlify="true" - the home page contact
 // form (index.astro, form-name="contact") and the real estate inquiry form
 // (ourfuture.astro, form-name="realestate-inquiry"). script.js POSTs them here
 // as url-encoded form data and only expects a 2xx back.
 //
 // Netlify's own attributes (data-netlify, form-name, bot-field) are left on the
-// markup even though nothing about this deployment is Netlify -- form-name
+// markup even though nothing about this deployment is Netlify - form-name
 // still tells this endpoint which form fired, and bot-field is the honeypot, so
 // removing them isn't worth the churn.
 //
 // Secrets come from the Cloudflare Workers runtime binding, NOT import.meta.env:
 // Vite/Astro inline import.meta.env.* by static text substitution at BUILD time,
 // so import.meta.env.RESEND_API_KEY would bake the live key as a plaintext
-// string into the deployed Worker bundle (verified in dist/server/chunks/) --
+// string into the deployed Worker bundle (verified in dist/server/chunks/) -
 // unrotatable without a rebuild, and readable by anyone with access to the
 // build artifact. It also silently breaks the dynamic `import.meta.env[key]`
 // lookup used for per-form recipients below, since Vite only rewrites literal
-// `.FOO` property access, never a computed one -- that always evaluated to
+// `.FOO` property access, never a computed one - that always evaluated to
 // undefined. `env` from cloudflare:workers is a real per-request runtime
 // object, so both problems go away; this is the same accessor already proven
 // in src/pages/api/instagram-oauth-callback.ts and src/lib/instagram.ts.
@@ -32,14 +32,14 @@ export const config = { runtime: 'edge' };
 
 // The visitor's own address is never used as the sender. Resend will only send
 // as an address on a domain you have verified, so putting a visitor's address
-// in `from` gets the send rejected outright -- and even where it works it is a
+// in `from` gets the send rejected outright - and even where it works it is a
 // spoof that lands the mail in spam and burns the domain's reputation. The
 // sender is always us; the visitor's address goes in reply_to instead, so
 // hitting Reply in the inbox still answers the right person.
 const FROM_NAME = '151 Coffee Website Contact';
 
 // Sandbox default. onboarding@resend.dev works without any DNS setup but will
-// ONLY deliver to the Resend account owner's own address -- fine for testing,
+// ONLY deliver to the Resend account owner's own address - fine for testing,
 // useless in production. Once 151coffee.com is verified in Resend (needs DNS
 // records added at the registrar), set RESEND_FROM_ADDRESS to something like
 // website@151coffee.com and delivery to any recipient starts working.
@@ -56,7 +56,7 @@ const FORMS = {
     label: 'Contact Form Submission',
     toEnv: 'RESEND_TO_CONTACT',
     // This form's markup (index.astro) collects firstName/lastName/email as
-    // required fields -- enforce that server-side too, since the client-side
+    // required fields - enforce that server-side too, since the client-side
     // `required` attribute is not a security boundary.
     requireIdentity: true,
     subject: (f: URLSearchParams) => {
@@ -68,7 +68,7 @@ const FORMS = {
     label: 'Real Estate Inquiry',
     toEnv: 'RESEND_TO_REALESTATE',
     // This form (ourfuture.astro) only collects property + message, no name
-    // or email field at all -- requiring them here would reject every
+    // or email field at all - requiring them here would reject every
     // legitimate submission.
     requireIdentity: false,
     subject: (f: URLSearchParams) =>
@@ -78,7 +78,7 @@ const FORMS = {
     label: 'Investor Waitlist Signup',
     // Mirrors how the old Wix site handled this form: submissions land in a
     // spreadsheet, nobody gets emailed. Handled entirely separately below
-    // (see the early return in POST) -- it never reaches the Resend send
+    // (see the early return in POST) - it never reaches the Resend send
     // path, so it has no toEnv/requireIdentity/subject of its own.
     sheetOnly: true,
   },
@@ -112,7 +112,7 @@ function originAllowed(request: Request): boolean {
   }
   if (ALLOWED_ORIGIN_HOSTS.has(host)) return true;
   // *.webflow.io is a shared hosting domain handed out to every Webflow
-  // customer, not just us -- an endsWith() wildcard would let any other
+  // customer, not just us - an endsWith() wildcard would let any other
   // Webflow site's page POST here cross-origin. Pin the exact preview host
   // instead of trusting the whole subdomain.
   if (host === '151coffee-storyblok-f09994.webflow.io') return true;
@@ -174,7 +174,7 @@ export async function POST({ request }: { request: Request }) {
   // being delivered once exhausted). Reuses the INSTAGRAM_CACHE KV namespace
   // under its own key prefix rather than provisioning a second binding.
   // Deliberately fails OPEN: if KV is unavailable or errors, the submission
-  // still sends -- a rate limiter that blocks on infrastructure trouble would
+  // still sends - a rate limiter that blocks on infrastructure trouble would
   // be worse than no rate limiter at all for a form that real customers rely on.
   const rateLimitKv = (env as any).INSTAGRAM_CACHE;
   if (rateLimitKv) {
@@ -218,7 +218,7 @@ export async function POST({ request }: { request: Request }) {
   // the formatting of the list carried over from the old Wix waitlist.
   //
   // Anything the visitor punctuated themselves (dashes or parens) is left
-  // exactly as typed -- they've already expressed a format, and rewriting it
+  // exactly as typed - they've already expressed a format, and rewriting it
   // risks mangling an extension or a grouping we don't understand. Likewise,
   // any digit count that isn't a US number falls through untouched, which is
   // what keeps international numbers intact rather than forcing a wrong +1
@@ -260,7 +260,7 @@ export async function POST({ request }: { request: Request }) {
     return new Response('ok', { status: 200 });
   }
 
-  // Forms that collect a name + email (contact) enforce it server-side too --
+  // Forms that collect a name + email (contact) enforce it server-side too -
   // the client-side `required` attribute is not a security boundary. Forms
   // that don't collect either (realestate-inquiry) skip this entirely.
   const firstName = fields.get('firstName')?.trim();
@@ -290,7 +290,7 @@ export async function POST({ request }: { request: Request }) {
   }
 
   // Only the email-sending forms (contact, realestate-inquiry) reach this
-  // point -- invest-waitlist already returned above. Gate on RESEND_API_KEY
+  // point - invest-waitlist already returned above. Gate on RESEND_API_KEY
   // here rather than at the top of POST so the sheet-only form never depends
   // on Resend being configured at all.
   const apiKey = (env as any).RESEND_API_KEY;
@@ -313,7 +313,7 @@ export async function POST({ request }: { request: Request }) {
   const replyTo = emailLooksValid ? submitterEmailRaw : undefined;
 
   // A preheader: invisible in the rendered email itself, but inbox list
-  // views (Gmail, Outlook, etc.) show it right after the subject line --
+  // views (Gmail, Outlook, etc.) show it right after the subject line -
   // matching the "preview text" field the old Wix notification email had.
   const previewText = 'previewText' in form ? (form as { previewText: string }).previewText : undefined;
   const preheader = previewText

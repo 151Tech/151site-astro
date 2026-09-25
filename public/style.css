@@ -33,7 +33,7 @@
     input, textarea, select { font-size: 16px !important; }
 }
 
-/* ─── Base ─── */
+/* Base */
 body {
     font-family: var(--font-inter), -apple-system, BlinkMacSystemFont, sans-serif;
     background-color: var(--black);
@@ -66,7 +66,7 @@ p {
     padding: 0 2rem;
 }
 
-/* ─── Navigation ─── */
+/* Navigation */
 nav {
     display: flex;
     background-color: #f4efe9;
@@ -171,7 +171,7 @@ nav.nav-scrolled .nav-container {
     }
 }
 
-/* ─── Buttons (unified) ─── */
+/* Buttons (unified) */
 .main-menu-btn,
 .main-menu-btn2,
 .menu-btn,
@@ -242,7 +242,7 @@ nav.nav-scrolled .nav-container {
     transform: translateY(-3px);
 }
 
-/* ─── Mobile Menu Toggle (hamburger) ─── */
+/* Mobile Menu Toggle (hamburger) */
 .menu-toggle {
     display: none;
     flex-direction: column;
@@ -269,7 +269,7 @@ nav.nav-scrolled .nav-container {
                 background 0.2s ease;
 }
 
-/* ─── Mobile Drawer Overlay ─── */
+/* Mobile Drawer Overlay */
 .mobile-nav-overlay {
     display: none;
     position: fixed;
@@ -288,7 +288,7 @@ nav.nav-scrolled .nav-container {
     opacity: 1;
 }
 
-/* ─── Mobile Drawer Panel ─── */
+/* Mobile Drawer Panel */
 .mobile-nav-drawer {
     position: fixed;
     top: 0;
@@ -384,7 +384,7 @@ nav.nav-scrolled .nav-container {
     transform: translateX(0);
 }
 
-/* Hamburger → X when open */
+/* Hamburger to X when open */
 @media (max-width: 915px) {
     /* The full desktop nav (6 links + logo + gift-card button) gets cramped
        well before phone widths, switch to the hamburger drawer here too
@@ -395,7 +395,7 @@ nav.nav-scrolled .nav-container {
     .main-menu-btn { display: none; }
 
     /* The drawer's own gift card button reuses .main-menu-btn for its
-       look, so it gets hidden by the rule above too — restore it here
+       look, so it gets hidden by the rule above too - restore it here
        with higher specificity. */
     .mobile-nav-drawer .drawer-gc-btn .main-menu-btn { display: inline-flex; }
 
@@ -418,7 +418,7 @@ nav.nav-scrolled .nav-container {
     }
 }
 
-/* ─── Loading Bar ─── */
+/* Loading Bar */
 .loading-bar {
     position: fixed;
     top: 0;
@@ -436,7 +436,7 @@ nav.nav-scrolled .nav-container {
     to { transform: scaleX(1); }
 }
 
-/* ─── Hero ─── */
+/* Hero */
 .hero {
     height: 58vh;
     display: flex;
@@ -450,7 +450,7 @@ nav.nav-scrolled .nav-container {
 
 /* Desktop/tablet: the featured-drink card height and padding are both
    expressed with the same --fd-pad/--fd-img-h viewport-relative values
-   used below, and the hero subtracts those same expressions from 100vh --
+   used below, and the hero subtracts those same expressions from 100vh -
    so hero + navbar(58px) + featured-drink always sum to exactly one
    viewport, whatever those clamps resolve to on a given screen. */
 @media (min-width: 769px) {
@@ -528,7 +528,7 @@ nav.nav-scrolled .nav-container {
     }
 }
 
-/* ─── Featured Drink ─── */
+/* Featured Drink */
 .featured-drink {
     width: 100%;
     padding: 4rem 0;
@@ -557,7 +557,7 @@ nav.nav-scrolled .nav-container {
         --fd-pad: clamp(1.5rem, 4vh, 4rem);
         /* Capped by vh on short/desktop windows, but also by vw so the two
            square columns below (image + text, each --fd-img-h wide) plus
-           their gap and padding always fit -- otherwise a viewport in the
+           their gap and padding always fit - otherwise a viewport in the
            tablet range (tall enough for a big vh-driven square, not wide
            enough for two of them side by side) clips the cards at the
            edges. */
@@ -578,7 +578,7 @@ nav.nav-scrolled .nav-container {
     gap: 3rem;
 }
 
-/* ── Visual side ── */
+/* Visual side */
 .featured-visual {
     position: relative;
     display: flex;
@@ -593,7 +593,7 @@ nav.nav-scrolled .nav-container {
    where the name already reads naturally in .featured-text beside it. */
 .featured-mobile-name { display: none; }
 
-/* ── Text side ── */
+/* Text side */
 .featured-text { color: var(--black); }
 
 .featured-badge {
@@ -629,8 +629,8 @@ nav.nav-scrolled .nav-container {
 
 /* The text column is pinned to the same square as the image (--fd-img-h,
    both directions) so the two read as a matched pair. A hard height alone
-   broke this before -- long copy pushed the badge above the box and the
-   CTA below it -- so the paragraph is also line-clamped here as the actual
+   broke this before - long copy pushed the badge above the box and the
+   CTA below it - so the paragraph is also line-clamped here as the actual
    fix: whatever the copy's length, it's truncated with an ellipsis rather
    than spilling out of the square. */
 @media (min-width: 769px) {
@@ -640,7 +640,7 @@ nav.nav-scrolled .nav-container {
        Now that --fd-img-h can also be capped by vw (so the two columns fit
        side by side at tablet widths), a narrow-but-tall viewport can pin
        the box to a small square via its width while these vh-only rules
-       stayed large -- the text no longer fit the box it was centered in
+       stayed large - the text no longer fit the box it was centered in
        and spilled above/below it. Deriving every size from --fd-img-h
        itself (at the same ratio the old vh value had to 40vh, its
        unclamped value) keeps text and box shrinking together whichever
@@ -655,7 +655,7 @@ nav.nav-scrolled .nav-container {
     .featured-text p {
         font-size: clamp(0.9rem, calc(var(--fd-img-h) * 0.04), 1.08rem);
         margin-bottom: clamp(0.5rem, calc(var(--fd-img-h) * 0.0375), 1rem);
-        /* Truncate rather than push the CTA below the square -- see the
+        /* Truncate rather than push the CTA below the square - see the
            note above this block. */
         display: -webkit-box;
         -webkit-box-orient: vertical;
@@ -739,13 +739,13 @@ nav.nav-scrolled .nav-container {
         text-align: center;
     }
     .featured-mobile-name span { color: var(--red); }
-    /* The full-size heading duplicates .featured-mobile-name on mobile --
+    /* The full-size heading duplicates .featured-mobile-name on mobile -
        hide it rather than deleting it, since it's still the one shown
        on desktop where .featured-mobile-name is hidden instead. */
     .featured-text h2 { display: none; }
     .featured-card { order: 3; }
     /* .featured-text is un-boxed to `display: contents` above so its
-       children can join the mobile column directly -- but that also
+       children can join the mobile column directly - but that also
        strips the paragraph of any container, leaving it floating directly
        on the section background. Give it its own card so it reads as a
        distinct blurb instead of loose text. */
@@ -780,7 +780,7 @@ nav.nav-scrolled .nav-container {
     text-shadow: 0 1px 0 rgba(0,0,0,0.06);
 }
 
-/* A short centered accent bar under the title -- the same touch the
+/* A short centered accent bar under the title - the same touch the
    premium /ourfuture hero and featured-drink badge already use, brought
    to every generic section title instead of leaving it a bare heading. */
 .section-header h1::after,
@@ -803,7 +803,7 @@ nav.nav-scrolled .nav-container {
     line-height: 1.7;
 }
 
-/* ─── CTA (Hiring) ─── */
+/* CTA (Hiring) */
 .cta {
     padding: var(--section-pad);
     text-align: left;
@@ -924,7 +924,7 @@ nav.nav-scrolled .nav-container {
     transform: translateX(-50%) rotate(-6deg);
 }
 
-/* The one signature that's secretly a link (see index.astro) -- looks
+/* The one signature that's secretly a link (see index.astro) - looks
    identical to the rest so it reads as a found-it moment, not a button. */
 .cta-signature--link {
     text-decoration: none;
@@ -982,7 +982,7 @@ nav.nav-scrolled .nav-container {
     filter: none;
 }
 
-/* ─── Menu / Features ─── */
+/* Menu / Features */
 .features {
     padding: var(--section-pad);
     background-color: #f4efe9;
@@ -1056,7 +1056,7 @@ nav.nav-scrolled .nav-container {
 .feature-card-subtitle { display: block; color: var(--red-soft); font-family: var(--font-inter), sans-serif; font-size: 0.86rem; font-weight: 400; text-transform: none; letter-spacing: normal; margin-top: 0.2rem; }
 .feature-card .menu-btn { flex-shrink: 0; padding: 0.6rem 1.1rem; font-size: 0.72rem; }
 
-/* ─── Locations ─── */
+/* Locations */
 .spaces {
     padding: var(--section-pad);
     position: relative;
@@ -1186,7 +1186,7 @@ nav.nav-scrolled .nav-container {
 .locator__item-info p { font-size: 0.82rem; line-height: 1.4; color: #6B6B6B; }
 
 /* Bottom half: hours + phone on the left, Directions on the right of them
-   -- same left-text/right-button pairing as the top half's address and
+   - same left-text/right-button pairing as the top half's address and
    photo, instead of Directions stacking below as its own separate row. */
 .locator__item-bottom {
     display: flex;
@@ -1212,24 +1212,24 @@ nav.nav-scrolled .nav-container {
     flex-shrink: 0;
 }
 
-/* Mobile-only condensed single-line summary (name, address, hours, phone) --
+/* Mobile-only condensed single-line summary (name, address, hours, phone) -
    hidden on desktop, where the stacked layout above already reads fine.
    See the max-width: 900px rules below for the flip: this line shows and
    the stacked elements hide instead. */
 /* Mobile-only card: photo + non-truncating name/hours/phone. Hidden on
-   desktop, where the stacked layout above already reads fine -- see the
+   desktop, where the stacked layout above already reads fine - see the
    max-width: 902px rules below for the flip. */
 .locator__mobile-card {
     display: none;
     /* Sizes name/hours/phone/Directions off the CARD's own width (cqi),
-       not a fixed rem -- on a narrow phone they stay small and compact,
+       not a fixed rem - on a narrow phone they stay small and compact,
        but on anything wider (a big phone, or a tablet's 2-up grid cell)
        they scale up with the card instead of staying pinned to a small
        fixed size and leaving a wide gap of empty space to the right. */
     container-type: inline-size;
     /* Neither CSS grid nor flex reliably derives a square photo's size
        from its sibling's stretched height (aspect-ratio + stretch is
-       inconsistent across browsers for this) -- so locator.js measures
+       inconsistent across browsers for this) - so locator.js measures
        the rendered .locator__mobile-info height and sets this photo's
        width/height (inline) to match exactly. That's what keeps the
        photo flush top-to-bottom with the text column and square, with
@@ -1237,7 +1237,7 @@ nav.nav-scrolled .nav-container {
        fallback for the first paint. */
     align-items: flex-start;
     /* The info column no longer grows to fill the card (see its flex
-       below) -- centering the whole photo+text group here means whatever
+       below) - centering the whole photo+text group here means whatever
        empty width is left over gets split evenly on both sides instead of
        all piling up to the right of a short name/hours/phone block. */
     justify-content: center;
@@ -1252,7 +1252,7 @@ nav.nav-scrolled .nav-container {
 }
 .locator__mobile-info {
     /* Sized to its own content (name/hours/phone/Directions), not
-       stretched to fill the rest of the card -- that's what lets the
+       stretched to fill the rest of the card - that's what lets the
        card's justify-content: center above actually center the group
        instead of the text column eating all the slack on its own. */
     flex: 0 1 auto;
@@ -1268,7 +1268,7 @@ nav.nav-scrolled .nav-container {
        establishing for the row. */
     justify-content: center;
 }
-/* A soft-edged red rule instead of a flat border -- fades in/out at the
+/* A soft-edged red rule instead of a flat border - fades in/out at the
    top and bottom rather than hard-stopping flush with the photo's corners,
    which reads as a more deliberate divider than a plain 2px line. */
 .locator__mobile-info::before {
@@ -1364,7 +1364,7 @@ nav.nav-scrolled .nav-container {
     box-shadow: 0 6px 18px rgba(230,57,70,0.42);
 }
 
-/* Base "More Info" link -- covers a location with no photo, which falls
+/* Base "More Info" link - covers a location with no photo, which falls
    back to the plain (non-.locator-photo-card) item markup but still gets a
    real store page to link to. The photo-card variant further down overrides
    this to sit compactly next to Directions in its tighter grid layout. */
@@ -1409,7 +1409,7 @@ nav.nav-scrolled .nav-container {
 }
 
 .locator__marker-logo {
-    /* Pin is 38px with a 3px border on each side -- 32px is the full inner
+    /* Pin is 38px with a 3px border on each side - 32px is the full inner
        diameter, so the logo's white ring touches the pin's white border
        instead of floating with a red gap around it. */
     width: 32px;
@@ -1454,6 +1454,11 @@ nav.nav-scrolled .nav-container {
     font-size: 0.85rem;
     line-height: 1.5;
     box-shadow: 0 6px 24px rgba(0,0,0,0.18);
+    /* The popup's white card inherits page text color otherwise, which on
+       the locations page is the light-on-dark body color - white text on a
+       white bubble. The address lines are plain text nodes, so the color has
+       to land on the container itself, not just the <strong>/<a> children. */
+    color: var(--black);
 }
 .maplibregl-popup-content strong { color: var(--black); }
 .maplibregl-popup-content a strong { color: var(--red); }
@@ -1462,7 +1467,7 @@ nav.nav-scrolled .nav-container {
 /* MapLibre needs WebGL and has no software fallback, so on a device that
    can't give it a context there's nothing to show in the map's half (see
    hasWebGL in maplibre-map-helpers.js). Rather than leave a blank rectangle,
-   the slot closes and the store list takes the full width -- it already
+   the slot closes and the store list takes the full width - it already
    carries every address, phone number, and Directions link, so nothing is
    actually lost but the picture. */
 .locator.is-map-unavailable .locator__map-wrap,
@@ -1521,7 +1526,7 @@ nav.nav-scrolled .nav-container {
     .locator:not(.locator--full) .locator__map { flex: none; height: 320px; }
 
     /* Collapse name/address/hours/phone to a single truncating line on
-       mobile/tablet -- Directions and More Info move in beside it instead
+       mobile/tablet - Directions and More Info move in beside it instead
        of stacking below, so each list item is one compact row rather than
        a line of text plus a separate block of buttons. */
     .locator__item-name,
@@ -1543,7 +1548,7 @@ nav.nav-scrolled .nav-container {
     }
 
     /* The Directions button now lives inside .locator__mobile-card (under
-       the name/hours/phone text) -- this standalone row would just
+       the name/hours/phone text) - this standalone row would just
        duplicate it, and More Info's row-tap replacement, so both are
        hidden here entirely. */
     .locator__item-actions {
@@ -1552,7 +1557,7 @@ nav.nav-scrolled .nav-container {
 
     /* Right-anchored badge sits under a right-handed user's thumb on a
        one-handed phone grip, right where they'd naturally scroll/tap the
-       list -- move it to the left on mobile/tablet instead. */
+       list - move it to the left on mobile/tablet instead. */
     .loc-count-wrap { left: 1.5rem; right: auto; }
     .loc-count-number { transform: translate(-18%, 0); }
 }
@@ -1569,7 +1574,7 @@ nav.nav-scrolled .nav-container {
     .locator--full .locator__list .locator__item {
         margin-bottom: 0;
     }
-    /* One row of two-up cards is roughly this tall -- trimming it back off
+    /* One row of two-up cards is roughly this tall - trimming it back off
        the list gives it to the map instead, so the map reads as more than
        a strip above the list on a tablet-sized screen. */
     .locator--full .locator__map-wrap {
@@ -1578,11 +1583,11 @@ nav.nav-scrolled .nav-container {
 }
 
 /* Two-half card: top half is the square thumbnail (left) next to the store
-   name/address (right); bottom half is every other detail -- hours, phone,
-   Directions, More Info -- stacked as separate left-aligned lines. */
+   name/address (right); bottom half is every other detail - hours, phone,
+   Directions, More Info - stacked as separate left-aligned lines. */
 .locator-photo-card { padding: 0.85rem; }
 
-/* The photo and address sit side by side inside the "top" row -- the photo
+/* The photo and address sit side by side inside the "top" row - the photo
    is a fixed-width column, the address takes the rest and never grows past
    it (min-width: 0 lets the flex item actually shrink instead of forcing
    the row to overflow). */
@@ -1645,9 +1650,9 @@ nav.nav-scrolled .nav-container {
 .locator-photo-card .locator__more-info:hover { gap: 0.55rem; }
 
 
-/* ─── Instagram Reels Feed ─── */
+/* Instagram Reels Feed */
 .ig-feed {
-    /* Tighter than var(--section-pad) -- this section is already visually
+    /* Tighter than var(--section-pad) - this section is already visually
        dense (dark background, edge-to-edge cards) so it doesn't need as
        much breathing room above/below as a typical section. */
     padding: 3.5rem 0;
@@ -1658,7 +1663,7 @@ nav.nav-scrolled .nav-container {
 
 .ig-feed .section-header { margin-bottom: 1.75rem; }
 
-/* A soft, low-key spotlight behind the stage -- flat black everywhere else,
+/* A soft, low-key spotlight behind the stage - flat black everywhere else,
    as requested, but this keeps the center card from reading as a plain box
    floating on pure black. Purely decorative, sits behind everything. */
 .ig-feed::before {
@@ -1701,7 +1706,7 @@ nav.nav-scrolled .nav-container {
 /* Coverflow stage: a fixed-height stack where the 3 slides are positioned
    absolutely, centered, and then pushed apart by each .slot-* class. Using
    transform (not layout width/position) to size and place them means the
-   rotation never resizes or reflows anything -- only visually scaled/moved,
+   rotation never resizes or reflows anything - only visually scaled/moved,
    so nothing reloads or loses its state as slides swap slots.
    --slide-w scales continuously with the viewport via clamp(), rather than
    jumping between a few hardcoded breakpoint widths, so there's no
@@ -1727,7 +1732,7 @@ nav.nav-scrolled .nav-container {
     left: 50%;
     width: var(--slide-w);
     /* Centered via transform's own -50%/-50%, not a hardcoded negative
-       margin -- that works out to the correct offset no matter how tall the
+       margin - that works out to the correct offset no matter how tall the
        content actually renders. */
     border-radius: var(--radius);
     overflow: hidden;
@@ -1746,7 +1751,7 @@ nav.nav-scrolled .nav-container {
 }
 
 /* Resting state: all 3 slides visible, left/right dimmed either side of a
-   bright center -- same as before. Only during a rotation does the outgoing
+   bright center - same as before. Only during a rotation does the outgoing
    left slide take the detour through .slot-exit / .slot-enter-prep below,
    driven from the script at the bottom of this component. */
 .ig-slide.slot-left {
@@ -1767,8 +1772,8 @@ nav.nav-scrolled .nav-container {
 }
 
 /* Transient step 1 (on rotation): the slide leaving the left slot keeps
-   going -- further left than the resting position, fading all the way to
-   invisible -- instead of just staying parked as a dimmed thumbnail. */
+   going - further left than the resting position, fading all the way to
+   invisible - instead of just staying parked as a dimmed thumbnail. */
 .ig-slide.slot-exit {
     transform: translate(-50%, -50%) translateX(calc(var(--slide-gap) * -1.6)) scale(0.75);
     opacity: 0;
@@ -1838,13 +1843,13 @@ nav.nav-scrolled .nav-container {
     border-radius: inherit;
     /* Driven directly from the video's own playback position (see the
        `timeupdate` handler in InstagramCarousel.astro), not a fixed-duration
-       CSS transition -- a short transition here just smooths over the
+       CSS transition - a short transition here just smooths over the
        browser's own timeupdate tick rate (roughly every 250ms) instead of
        visibly stepping. */
     transition: width 0.25s linear;
 }
 
-/* Only ever shown on the center slide -- side slides are always paused and
+/* Only ever shown on the center slide - side slides are always paused and
    muted, so there is nothing to unmute there. */
 .ig-mute-btn {
     position: absolute;
@@ -1897,7 +1902,7 @@ nav.nav-scrolled .nav-container {
 }
 
 /* Below ~480px the viewport itself, not the card's own size, is what limits
-   how far the side cards can sit from center -- at that width --slide-gap's
+   how far the side cards can sit from center - at that width --slide-gap's
    108% would push them mostly off-screen, so it's tightened here instead of
    trying to express it as one curve that covers every width. */
 @media (max-width: 480px) {
@@ -1963,7 +1968,7 @@ nav.nav-scrolled .nav-container {
     .ig-feed { padding: 2.75rem 0; }
 }
 
-/* ─── Reviews (Pricing) ─── */
+/* Reviews (Pricing) */
 .pricing {
     padding: var(--section-pad);
     background-color: #f4efe9;
@@ -2067,11 +2072,11 @@ nav.nav-scrolled .nav-container {
     color: rgba(245,245,245,0.5);
 }
 
-/* ─── Amenities / Invest ─── */
+/* Amenities / Invest */
 /* No background-image: splash1.jpg was never carried into this repo, so the
    rule only ever resolved to a 404 and the section has always rendered as the
    flat --black below its own 82% scrim. Media is Storyblok-only now, so
-   there's nothing to re-point it at -- if this band should carry a photo
+   there's nothing to re-point it at - if this band should carry a photo
    again it needs to come from a Storyblok field on the page. */
 .amenities {
     padding: var(--section-pad);
@@ -2136,7 +2141,7 @@ nav.nav-scrolled .nav-container {
     margin-bottom: 0.2rem;
 }
 
-/* ─── Contact ─── */
+/* Contact */
 .contact {
     padding: var(--section-pad);
     background-color: #f4efe9;
@@ -2145,7 +2150,7 @@ nav.nav-scrolled .nav-container {
     overflow: hidden;
 }
 
-/* ─── Ambient red glow (replaces the old background1.webp parallax texture) ─── */
+/* Ambient red glow (replaces the old background1.webp parallax texture) */
 .features::before,
 .pricing::before,
 .contact::before {
@@ -2392,7 +2397,7 @@ form[data-netlify] { position: relative; }
     .form-group.full-width { grid-column: span 1; }
 }
 
-/* ─── Footer ─── */
+/* Footer */
 footer {
     background: var(--black);
     border-top: 1px solid var(--border);
@@ -2548,7 +2553,7 @@ footer {
     transform: translateY(-3px);
 }
 
-/* ─── Modal ─── */
+/* Modal */
 .modal {
     display: none;
     position: fixed;
@@ -2663,7 +2668,7 @@ footer {
     .crisp-loader::after { animation: none; }
 }
 
-/* ─── Invest Banner ─── */
+/* Invest Banner */
 .invest-banner {
     width: 100%;
     background-color: #161616;
@@ -2806,7 +2811,7 @@ footer {
     .pricing-grid { grid-template-columns: 1fr; gap: 0.85rem; }
     .special-pricing { padding: 2rem; }
 
-    /* Reviews stack one-per-row on mobile -- with several cards that adds
+    /* Reviews stack one-per-row on mobile - with several cards that adds
        up fast, so each card is trimmed down to just the quote + byline
        instead of the roomy desktop padding/quote-mark treatment. */
     .pricing-card { padding: 1.15rem 1.25rem 1rem; }
@@ -2821,7 +2826,7 @@ footer {
     .contact-form { padding: 2rem 1.5rem; }
 
     /* Roomier footer nav on touch: bigger tap area, less cramped stacking.
-       Social is hidden above, leaving just Company + Support -- put them
+       Social is hidden above, leaving just Company + Support - put them
        side by side instead of stacked to save a whole row of vertical
        space, since two short lists comfortably share a mobile-width row. */
     .footer-content { grid-template-columns: 1fr 1fr; gap: 2rem 1.25rem; padding: 2rem 1.5rem; }
@@ -2838,7 +2843,7 @@ footer {
     .marquee-track { animation: none; }
 }
 
-/* ── Cookie Consent Banner ────────────────────────────────── */
+/* Cookie Consent Banner */
 #cookie-consent {
     position: fixed;
     bottom: 1.5rem;
@@ -2938,11 +2943,9 @@ footer {
     .cc-btn { width: 100%; text-align: center; }
 }
 
-/* ──────────────────────────────────────────────────────────────
-   Locations page
-   ────────────────────────────────────────────────────────────── */
+/* Locations page */
 /* Full-page locator, at every size: this section IS the viewport, with no
-   page scroll at all -- the sidebar list and the map each scroll/pan
+   page scroll at all - the sidebar list and the map each scroll/pan
    independently inside their own box. There's nothing else on this page
    worth showing alongside the map and the picker bar, so the sitemap/footer
    tail never renders here (see .loc-page-tail below). */
@@ -2968,7 +2971,7 @@ html:has(.loc-fullpage), body:has(.loc-fullpage) { overflow: hidden; }
 }
 .loc-count-inline strong { color: var(--red-soft); font-size: 0.95rem; }
 
-/* Full-bleed: no outer padding, no radius, no shadow -- the panel and map
+/* Full-bleed: no outer padding, no radius, no shadow - the panel and map
    run flush to the browser's edges (and to the nav above, and the bottom of
    the screen), rather than floating as a card with a visible gutter. */
 .locator--full {
@@ -2986,12 +2989,12 @@ html:has(.loc-fullpage), body:has(.loc-fullpage) { overflow: hidden; }
 .locator--full .locator__list { padding: 0.35rem 1rem 1rem; }
 
 /* Sits at the top of the sidebar panel, which now itself runs up under the
-   fixed nav -- the top padding clears the nav's own height so the heading
+   fixed nav - the top padding clears the nav's own height so the heading
    isn't hidden behind it. */
 .locator__panel-header {
     /* Top padding is the fixed nav's own height plus the same 1.25rem gap
        used on every other side, so the heading sits in a box with equal
-       breathing room all around -- matches .locator__search's own side
+       breathing room all around - matches .locator__search's own side
        padding too, so "Find Your 151" spans the same width as the search
        bar below it instead of a wider (or narrower) block of its own. */
     padding: 4.6rem 1.25rem 1.25rem;
@@ -3005,14 +3008,14 @@ html:has(.loc-fullpage), body:has(.loc-fullpage) { overflow: hidden; }
     color: var(--black);
     margin: 0;
 }
-/* "X Locations Open" already shows on the map's own badge -- no need to
+/* "X Locations Open" already shows on the map's own badge - no need to
    repeat it here too. */
 .locator__panel-header .loc-count-inline {
     display: none;
 }
 
 @media (max-width: 902px) {
-    /* The badge on the map already shows the count -- no need to repeat
+    /* The badge on the map already shows the count - no need to repeat
        "Find Your 151" / "Locations Open" above the search bar too, and
        dropping it gives the list more of the limited screen height. */
     .locator__panel-header { display: none; }
@@ -3083,7 +3086,7 @@ html:has(.loc-fullpage), body:has(.loc-fullpage) { overflow: hidden; }
     box-shadow: 0 3px 10px rgba(230,57,70,0.3);
 }
 
-/* Count "badge", hanging off the map's bottom-right corner like a sticker --
+/* Count "badge", hanging off the map's bottom-right corner like a sticker -
    the big number is a true sibling behind the pill (not nested inside it)
    so the pill's own background fully covers the number where they overlap,
    instead of just its label. Restored from the original stacked-layout
@@ -3159,7 +3162,7 @@ html:has(.loc-fullpage), body:has(.loc-fullpage) { overflow: hidden; }
     .locator--full { display: flex; flex-direction: column; gap: 0; background: #f4efe9; }
     /* The panel itself no longer draws a box (search/filters/list need to
        become direct flex items of .locator--full so `order` can interleave
-       them with the map) -- its old background moved up onto .locator--full
+       them with the map) - its old background moved up onto .locator--full
        above, since display:contents removes the panel's own paintable box. */
     .locator--full .locator__panel {
         display: contents;
@@ -3180,7 +3183,7 @@ html:has(.loc-fullpage), body:has(.loc-fullpage) { overflow: hidden; }
     }
     .locator--full .locator__map-wrap { flex: none; height: 40vh; order: -1; }
     /* Texas/Kansas now sit at the top of the listings themselves (below
-       the map), not bundled under the search bar -- their own small header
+       the map), not bundled under the search bar - their own small header
        bar for the list, visually separated from the map above. */
     .locator--full .locator__state-filters {
         order: 0;
@@ -3204,7 +3207,7 @@ html:has(.loc-fullpage), body:has(.loc-fullpage) { overflow: hidden; }
 }
 
 /* Below tablet width the map box is only a few hundred pixels tall, and the
-   giant outlined store count sits right on top of it -- covering a corner of
+   giant outlined store count sits right on top of it - covering a corner of
    the very thing it's advertising. The count is already stated twice in the
    panel header above ("15 Locations Open"), so the decoration is what goes.
    768px is an iPad mini in portrait, which keeps it. */
@@ -3212,7 +3215,7 @@ html:has(.loc-fullpage), body:has(.loc-fullpage) { overflow: hidden; }
     .loc-count-wrap { display: none; }
 }
 
-/* Plain crawlable links to every location, grouped by state -- visually
+/* Plain crawlable links to every location, grouped by state - visually
    minimal since the locator above is the real interface; this exists so
    every store page has a real link on this page without depending on JS. */
 .loc-sitemap {
@@ -3244,9 +3247,7 @@ html:has(.loc-fullpage), body:has(.loc-fullpage) { overflow: hidden; }
 }
 .loc-sitemap a:hover { color: #fff; text-decoration: underline; }
 
-/* ──────────────────────────────────────────────────────────────
-   FAQ section
-   ────────────────────────────────────────────────────────────── */
+/* FAQ section */
 .faq {
     padding: var(--section-pad);
     position: relative;
@@ -3313,11 +3314,9 @@ html:has(.loc-fullpage), body:has(.loc-fullpage) { overflow: hidden; }
     margin: 0.9rem 0 0;
 }
 
-/* ──────────────────────────────────────────────────────────────
-   Scroll-reveal animations — home page + subpages. `js-anim` is
+/* Scroll-reveal animations - home page + subpages. `js-anim` is
    set in <head> before paint (skipped under reduced motion), so
-   the hidden state applies with no flash and JS adds `.in`.
-   ────────────────────────────────────────────────────────────── */
+   the hidden state applies with no flash and JS adds `.in`. */
 
 /* Home page targets */
 .js-anim :where(
@@ -3453,7 +3452,7 @@ html:has(.loc-fullpage), body:has(.loc-fullpage) { overflow: hidden; }
 .legal-content a { color: var(--red); text-decoration: none; }
 .legal-content a:hover { text-decoration: underline; }
 
-/* ─── Featured Drink Card (matches menu timeline drink-card) ─── */
+/* Featured Drink Card (matches menu timeline drink-card) */
 .featured-card {
     position: relative;
     width: 100%;
@@ -3543,7 +3542,7 @@ html:has(.loc-fullpage), body:has(.loc-fullpage) { overflow: hidden; }
     letter-spacing: 0.02em;
 }
 
-/* ─── Drink Badge (menu card + drink detail page) ─── */
+/* Drink Badge (menu card + drink detail page) */
 .drink-badge {
     position: absolute;
     top: 0.75rem;
@@ -3565,15 +3564,13 @@ html:has(.loc-fullpage), body:has(.loc-fullpage) { overflow: hidden; }
     pointer-events: none;
 }
 
-/* ──────────────────────────────────────────────────────────────
-   Section grounds (site-wide)
-   ────────────────────────────────────────────────────────────── */
+/* Section grounds (site-wide) */
 
 /* Two recipes cover every full-width band on the site.
 
    --bg-quote is the light ground: the celebrity-quote banner as a watermark
    under a cream veil. The artwork is dense black line art, so the veil pulls
-   its contrast down far enough for body copy to stay readable -- tune the
+   its contrast down far enough for body copy to stay readable - tune the
    whole site from --quote-veil, where higher = fainter artwork. The artwork
    has no true seamless period, but it is dense and irregular enough that a
    plain repeat at a fixed 1250px width hides its seams while keeping the
@@ -3619,14 +3616,12 @@ html:has(.loc-fullpage), body:has(.loc-fullpage) { overflow: hidden; }
     background-size: auto, auto, 26px 26px;
 }
 
-/* ──────────────────────────────────────────────────────────────
-   Text plates on the quote ground
-   ────────────────────────────────────────────────────────────── */
+/* Text plates on the quote ground */
 
 /* The quote artwork is line art, so glyph edges land right behind body copy
    and cost it contrast even under the veil. Anything that sits directly on
-   the ground -- as opposed to inside a card, which already has its own fill
-   -- gets a translucent cream plate so the type reads against a settled
+   the ground - as opposed to inside a card, which already has its own fill
+   - gets a translucent cream plate so the type reads against a settled
    surface. The plate stays semi-transparent and blurred rather than opaque
    so the artwork still shows through and the sections keep reading as one
    textured band instead of a stack of boxes. */
@@ -3676,7 +3671,7 @@ html:has(.loc-fullpage), body:has(.loc-fullpage) { overflow: hidden; }
     }
 }
 
-/* Headings on the quote ground read directly against the pattern now --
+/* Headings on the quote ground read directly against the pattern now -
    no plate. A heavier weight and a real drop-shadow (not just a soft
    ambient one) does the legibility work the plate used to. */
 .features .section-header h2,
@@ -3693,7 +3688,7 @@ html:has(.loc-fullpage), body:has(.loc-fullpage) { overflow: hidden; }
 }
 
 .page-hero .page-hero-content p {
-    /* Darkened from the plate-era 0.6 opacity -- it now sits straight on
+    /* Darkened from the plate-era 0.6 opacity - it now sits straight on
        the quote pattern instead of a light plate, so it needs more of its
        own contrast. */
     color: rgba(20, 17, 14, 0.72);

@@ -1,15 +1,13 @@
-/* ─────────────────────────────────────────────────────────────
-   Reusable content blocks -- editor-insertable sections.
+/* Reusable content blocks - editor-insertable sections.
    Every block reuses the site's established visual language:
    light sections = #f4efe9, dark cards = the gradient-card recipe
    (radial-gradient red glow + #202020->#141414), red sections =
    var(--red) + the polka-dot pattern, alternating rhythm so no two
-   adjacent blocks land on the same tone.
-   ───────────────────────────────────────────────────────────── */
+   adjacent blocks land on the same tone. */
 
 .blk { position: relative; }
 
-/* ─── Image Banner: full-width photo with overlay + centered text ─── */
+/* Image Banner: full-width photo with overlay + centered text */
 .blk-imgbanner {
     min-height: 380px;
     display: flex;
@@ -52,7 +50,7 @@
 }
 .blk-imgbanner-cta:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(230,57,70,0.4); }
 
-/* ─── Promo Banner: full-width red announcement strip ─── */
+/* Promo Banner: full-width red announcement strip */
 .blk-promo {
     padding: 3rem 0;
     background-color: #161616;
@@ -98,7 +96,7 @@
 }
 .blk-promo .btn-white:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.25); }
 
-/* ─── Split Feature: image one side, text the other (alternating) ─── */
+/* Split Feature: image one side, text the other (alternating) */
 .blk-split {
     padding: var(--section-pad);
     background-color: #f4efe9;
@@ -130,7 +128,7 @@
 }
 .blk-split-cta:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(230,57,70,0.35); }
 
-/* ─── CTA Section: centered heading/body/buttons on red bg ─── */
+/* CTA Section: centered heading/body/buttons on red bg */
 .blk-cta {
     padding: var(--section-pad);
     background-color: #161616;
@@ -168,7 +166,7 @@
 }
 .blk-cta .btn-outline:hover { border-color: #fff; background: rgba(255,255,255,0.1); }
 
-/* ─── Testimonial Grid: quote cards on light bg ─── */
+/* Testimonial Grid: quote cards on light bg */
 .blk-testimonials {
     padding: var(--section-pad);
     background-color: #f4efe9;
@@ -207,7 +205,7 @@
 .blk-testimonial-name { font-family: var(--font-inter), sans-serif; font-size: 0.85rem; font-weight: 700; color: #fff; text-transform: uppercase; letter-spacing: 0.1em; }
 .blk-testimonial-location { font-family: var(--font-inter), sans-serif; font-size: 0.78rem; color: rgba(245,245,245,0.5); }
 
-/* ─── Stat Strip: red bg number/label grid ─── */
+/* Stat Strip: red bg number/label grid */
 .blk-stats {
     padding: 4rem 0;
     background-color: #161616;
@@ -231,7 +229,7 @@
 .blk-stat-label { font-family: var(--font-inter), sans-serif; font-size: 0.82rem; font-weight: 600; color: rgba(255,255,255,0.85); text-transform: uppercase; letter-spacing: 0.1em; }
 @media (max-width: 700px) { .blk-stats-grid { grid-template-columns: repeat(2, 1fr); } }
 
-/* ─── FAQ Accordion: red polka-dot bg with dark gradient detail items ─── */
+/* FAQ Accordion: red polka-dot bg with dark gradient detail items */
 .blk-faq {
     padding: var(--section-pad);
     background-color: #161616;
@@ -270,8 +268,18 @@
 .blk-faq-list summary::after { content: '+'; font-size: 1.3rem; color: rgba(255,255,255,0.6); margin-left: 1rem; flex-shrink: 0; }
 .blk-faq-list details[open] summary::after { content: '\2212'; }
 .blk-faq-list p { font-family: var(--font-inter), sans-serif; font-size: 0.92rem; line-height: 1.65; color: rgba(255,255,255,0.7); margin: 0.85rem 0 0; }
+/* "...by clicking here..." in a gift-card answer becomes a real control (see
+   FaqAccordion.astro). A <button> so it's keyboard-reachable and announced
+   as an action, stripped back to look like the inline link it reads as. */
+.faq-inline-link {
+    background: none; border: 0; padding: 0;
+    font: inherit; color: var(--red); font-weight: 600;
+    text-decoration: underline; text-underline-offset: 2px;
+    cursor: pointer;
+}
+.faq-inline-link:hover { color: #fff; }
 
-/* ─── Card Grid: image/title/subtitle/link cards ─── */
+/* Card Grid: image/title/subtitle/link cards */
 .blk-cardgrid {
     padding: var(--section-pad);
     background-color: #f4efe9;
