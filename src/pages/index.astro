@@ -288,7 +288,7 @@ const storesJson = JSON.stringify(locations.map((l: any) => ({
             <div class={`cta-photo cta-photo--c${i}`}>
               <Editable blok={photo} />
               {imageUrl(photo.image, { width: 600 }) && (
-                <img loading="lazy" decoding="async" src={imageUrl(photo.image, { width: 600 })} alt={photo.alt ?? ''} />
+                <img loading="lazy" decoding="async" src={imageUrl(photo.image, { width: 600 })} alt={photo.alt ?? ''} width="600" height="600" />
               )}
               {photo.signature === 'Plano Team' ? (
                 <a href="/151-bounce.html" class="cta-signature cta-signature--link">{photo.signature}</a>

@@ -31,7 +31,10 @@ const dl = lp.storeDetail ?? {};
 const hours = loc.hours || s.hours || 'Open daily 6 AM - 8 PM';
 const phone = s.phone || '(682) 325-2124';
 const phoneTel = phone.replace(/\D/g, '');
-const locImage = imageUrl(loc.image, { width: 1600 });
+// The slot is a square (.ld-photo is aspect-ratio 1/1, object-fit cover) that
+// tops out around 584px wide, so 1200 is already a 2x source - 1600 was just
+// extra bytes.
+const locImage = imageUrl(loc.image, { width: 1200 });
 const image = locImage
   ? (locImage.startsWith('http') || locImage.startsWith('/') ? locImage : '/' + locImage)
   : undefined;
@@ -89,7 +92,7 @@ const storeSchema = graph(
   <section class="ld-body">
     <div class="ld-body-inner">
       <div class="ld-img-col">
-        {image && <img class="ld-photo" src={image} alt={`151 Coffee ${shortName}`} width="1200" height="900" decoding="async" />}
+        {image && <img class="ld-photo" src={image} alt={`151 Coffee ${shortName}`} width="1200" height="1200" decoding="async" fetchpriority="high" />}
       </div>
 
       <div class="ld-detail-col">

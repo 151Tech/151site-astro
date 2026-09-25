@@ -100,7 +100,7 @@ const drinkSchema = graph(
               {drink.badge && <span class="drink-badge">{drink.badge}</span>}
               {drinkImage && (() => {
                 const src = drinkImage.startsWith('http') || drinkImage.startsWith('/') ? drinkImage : '/' + drinkImage;
-                return <img src={src} alt={drink.name} />;
+                return <img src={src} alt={drink.name} width="1040" height="1040" decoding="async" fetchpriority="high" />;
               })()}
             </div>
           </div>

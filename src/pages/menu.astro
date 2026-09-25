@@ -334,7 +334,7 @@ const decideDrinksJson = JSON.stringify(decideDrinksArr);
                 {drink.badge && <span class="drink-badge">{drink.badge}</span>}
                 <div class="drink-img-wrap">
                   {imageUrl(drink.image, { width: 480 }) && (
-                    <img loading="lazy" decoding="async" src={imageUrl(drink.image, { width: 480 })} alt={drink.name} />
+                    <img loading="lazy" decoding="async" src={imageUrl(drink.image, { width: 480 })} alt={drink.name} width="480" height="480" />
                   )}
                 </div>
                 <div class="drink-info">
