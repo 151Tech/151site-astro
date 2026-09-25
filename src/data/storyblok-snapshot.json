@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-25T16:55:09.027Z",
+  "generatedAt": "2026-09-25T18:10:02.270Z",
   "stories": {
     "settings/global": {
       "nav": [
@@ -245,7 +245,17 @@
           "_uid": "ef330c98-9339-4866-9cc0-ee8a50bb12e1",
           "title": "151 Coffee | Drive-Thru Coffee, Cold Brew & Energy Drinks",
           "ogimage": {
-            "filename": "https://www.151coffee.com/images/splash1.jpg"
+            "id": 220401257686619,
+            "alt": "",
+            "name": "",
+            "focus": "",
+            "title": "",
+            "source": "",
+            "filename": "https://a.storyblok.com/f/294671107081428/1200x630/06b59a6781/og-image-1200x630-v2.png",
+            "copyright": "",
+            "fieldtype": "asset",
+            "meta_data": {},
+            "is_external_url": false
           },
           "component": "page_home_seo",
           "description": "151 Coffee is a fast drive-thru coffee shop serving handcrafted espresso, cold brew, energy drinks, smoothies, teas and breakfast across Texas and Kansas."
@@ -282,7 +292,7 @@
             },
             {
               "_uid": "0a085621-921a-41ea-be71-3ba5d031c4ea",
-              "answer": "Yes! You can purchase check gift cards in-store, and check gift card balances by clicking here or by using the Gift Card button at the bottom of the page.",
+              "answer": "Yes! You can purchase gift cards in-store, and check gift card balances by clicking here or by using the Gift Card button at the bottom of the page.",
               "question": "Does 151 Coffee sell gift cards?",
               "component": "page_home_faqs_items_item"
             },
@@ -539,10 +549,20 @@
           "_uid": "4f344bcb-b5e6-4328-8519-2c0213be971c",
           "title": "About 151 Coffee | Our Story & Founder Mark Wattles",
           "ogimage": {
-            "filename": "https://www.151coffee.com/images/splash1.jpg"
+            "id": 220401257686619,
+            "alt": "",
+            "name": "",
+            "focus": "",
+            "title": "",
+            "source": "",
+            "filename": "https://a.storyblok.com/f/294671107081428/1200x630/06b59a6781/og-image-1200x630-v2.png",
+            "copyright": "",
+            "fieldtype": "asset",
+            "meta_data": {},
+            "is_external_url": false
           },
           "component": "page_about_seo",
-          "description": "151 Coffee is not your typical coffee shop. Founded in 2017 by entrepreneur Mark Wattles, we serve the best-tasting coffee and blended energy drinks fast."
+          "description": "151 Coffee is not your typical coffee shop. Founded in 2017 by entrepreneur Mark Wattles, we serve the best-tasting coffee and energy drinks fast."
         }
       ],
       "_uid": "4c2c3525-4fb0-4054-ab9d-e3ec8e8bc16f",
@@ -600,7 +620,7 @@
             },
             {
               "_uid": "b3ce9358-d463-47fa-9189-9c0ec8f99962",
-              "value": "Each of our drive-thru stores serves the best tasting coffee and blended energy drinks faster than anyone. If you're thirsty and looking for a tasty beverage to buzz your day, swing through our drive thru, say hi, and drive with the 151 vibe.",
+              "value": "Each of our drive-thru stores serves the best tasting coffee and energy drinks faster than anyone. If you're thirsty and looking for a tasty beverage to buzz your day, swing through our drive thru, say hi, and drive with the 151 vibe.",
               "component": "text_item"
             }
           ],
@@ -763,7 +783,17 @@
           "_uid": "36734574-73af-45ad-9007-1842443f49f9",
           "title": "Careers at 151 Coffee | Join Our Team",
           "ogimage": {
-            "filename": "https://www.151coffee.com/images/splash1.jpg"
+            "id": 220401257686619,
+            "alt": "",
+            "name": "",
+            "focus": "",
+            "title": "",
+            "source": "",
+            "filename": "https://a.storyblok.com/f/294671107081428/1200x630/06b59a6781/og-image-1200x630-v2.png",
+            "copyright": "",
+            "fieldtype": "asset",
+            "meta_data": {},
+            "is_external_url": false
           },
           "component": "page_careers_seo",
           "description": "Join the 151 Coffee team. Fun, fast, and built on good vibes. See what's open and apply today."
@@ -828,7 +858,17 @@
           "_uid": "3cfd8d0f-ed0b-44a9-9932-7940717cd3e8",
           "title": "151 Coffee Locations | Find a Drive-Thru Near You",
           "ogimage": {
-            "filename": "https://www.151coffee.com/images/store1.jpg"
+            "id": 220401257686619,
+            "alt": "",
+            "name": "",
+            "focus": "",
+            "title": "",
+            "source": "",
+            "filename": "https://a.storyblok.com/f/294671107081428/1200x630/06b59a6781/og-image-1200x630-v2.png",
+            "copyright": "",
+            "fieldtype": "asset",
+            "meta_data": {},
+            "is_external_url": false
           },
           "component": "page_locations_seo",
           "description": "Find your nearest 151 Coffee drive-thru. 15+ locations across Texas and Kansas with more opening soon."
@@ -901,10 +941,20 @@
           "_uid": "758bbe27-ae14-4245-81fa-d83232e24489",
           "title": "Menu | 151 Coffee - Coffee, Cold Brew, Energy & Dirty Pop",
           "ogimage": {
-            "filename": "https://www.151coffee.com/images/splash1.jpg"
+            "id": 220401257686619,
+            "alt": "",
+            "name": "",
+            "focus": "",
+            "title": "",
+            "source": "",
+            "filename": "https://a.storyblok.com/f/294671107081428/1200x630/06b59a6781/og-image-1200x630-v2.png",
+            "copyright": "",
+            "fieldtype": "asset",
+            "meta_data": {},
+            "is_external_url": false
           },
           "component": "page_menu_seo",
-          "description": "Explore the full 151 Coffee menu. Signature espresso drinks, cold brew, blended energy, Dirty Pop sodas, refreshers, smoothies, teas, and more."
+          "description": "Explore the full 151 Coffee menu. Signature espresso drinks, cold brew, energy, Dirty Pop sodas, refreshers, smoothies, teas, and more."
         }
       ],
       "_uid": "7c767013-4186-490e-b1cc-f1941ba1b834",
@@ -1317,7 +1367,17 @@
           "_uid": "e909f809-3d30-4bca-98b5-f6f64d65e316",
           "title": "Real Estate & Site Development | 151 Coffee Drive-Thru Expansion",
           "ogimage": {
-            "filename": "https://www.151coffee.com/images/store1.jpg"
+            "id": 220401257686619,
+            "alt": "",
+            "name": "",
+            "focus": "",
+            "title": "",
+            "source": "",
+            "filename": "https://a.storyblok.com/f/294671107081428/1200x630/06b59a6781/og-image-1200x630-v2.png",
+            "copyright": "",
+            "fieldtype": "asset",
+            "meta_data": {},
+            "is_external_url": false
           },
           "component": "page_ourfuture_seo",
           "description": "151 Coffee is expanding across Texas and Kansas. Seeking drive-thru pad sites of 25,000+ sq ft with 30,000+ VPD. See our site criteria and submit your property."
@@ -1546,17 +1606,17 @@
             {
               "_uid": "975b8bb0-33b8-4a0c-b77a-6db4e32b69f5",
               "image": {
-                "id": 213246706952540,
+                "id": 223515843591026,
                 "alt": "",
                 "name": "",
                 "focus": "",
                 "title": "",
                 "source": "",
-                "filename": "https://a.storyblok.com/f/294671107081428/893x893/d33ee0401d/151-coffee-keller.png",
+                "filename": "https://a.storyblok.com/f/294671107081428/2236x2236/7bf5aac3dd/lawrence.png",
                 "copyright": "",
                 "fieldtype": "asset",
                 "meta_data": {
-                  "size": "893x893"
+                  "size": "2236x2236"
                 },
                 "is_external_url": false
               },
