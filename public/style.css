@@ -1420,9 +1420,21 @@ nav.nav-scrolled .nav-container {
     transform: rotate(45deg);
 }
 
+/* The pin and its name are one element now (MapLibre markers are plain DOM,
+   so the label can just live inside the marker) rather than a pin plus a
+   separately-positioned tooltip layer. Anchored by its bottom edge, so this
+   column puts the bubble above the pin's point. */
+.locator__marker {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    cursor: pointer;
+}
+
 /* Small bubble above each pin naming that store, always visible while
    panning/zooming, not just on hover, so the map reads clearly at a glance. */
-.leaflet-tooltip.locator__marker-tooltip {
+.locator__marker-tooltip {
     background: #fff;
     color: var(--black);
     border: 1px solid rgba(0,0,0,0.1);
@@ -1435,12 +1447,73 @@ nav.nav-scrolled .nav-container {
     white-space: nowrap;
 }
 
-.leaflet-tooltip.locator__marker-tooltip::before {
-    border-top-color: #fff;
+.maplibregl-popup-content {
+    border-radius: var(--radius);
+    padding: 0.85rem 1.1rem;
+    font-family: var(--font-inter), sans-serif;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.18);
+}
+.maplibregl-popup-content strong { color: var(--black); }
+.maplibregl-popup-content a strong { color: var(--red); }
+.maplibregl-popup-content a { color: var(--red); }
+
+/* MapLibre needs WebGL and has no software fallback, so on a device that
+   can't give it a context there's nothing to show in the map's half (see
+   hasWebGL in maplibre-map-helpers.js). Rather than leave a blank rectangle,
+   the slot closes and the store list takes the full width -- it already
+   carries every address, phone number, and Directions link, so nothing is
+   actually lost but the picture. */
+.locator.is-map-unavailable .locator__map-wrap,
+.locator.is-map-unavailable .locator__map,
+.locator.is-map-unavailable .locator__zoom {
+    display: none;
+}
+/* Centered and capped rather than stretched edge to edge: the panel is a
+   column of cards, and at full desktop width the search field and state
+   buttons would run several thousand pixels wide. */
+.locator.is-map-unavailable { justify-content: center; }
+.locator.is-map-unavailable .locator__panel {
+    width: 100%;
+    max-width: 720px;
+    margin: 0 auto;
+    flex-shrink: 1;
 }
 
-.leaflet-popup-content strong { color: var(--black); }
-.leaflet-popup-content a strong { color: var(--red); }
+/* Store detail page has no list to fall back to, so its map box becomes a
+   card with the address and a way out to Google Maps. */
+.ld-map--fallback {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    text-align: center;
+    padding: 2rem 1.25rem;
+    background: #f4efe9;
+}
+.ld-map-fallback-name {
+    margin: 0;
+    font-family: var(--font-bebas-neue), 'Impact', sans-serif;
+    font-size: 1.6rem;
+    letter-spacing: 0.03em;
+    color: var(--black);
+}
+.ld-map-fallback-address {
+    margin: 0 0 0.4rem;
+    max-width: 34ch;
+    color: var(--black);
+    opacity: 0.75;
+    font-size: 0.9rem;
+}
+
+/* The default control chrome is square and grey; these two sit on a map
+   that's otherwise all soft corners. */
+.maplibregl-ctrl-group {
+    border-radius: var(--radius-pill) !important;
+    overflow: hidden;
+}
 
 @media (max-width: 902px) {
     .locator:not(.locator--full) { flex-direction: column; height: auto; }
@@ -3128,6 +3201,15 @@ html:has(.loc-fullpage), body:has(.loc-fullpage) { overflow: hidden; }
     .loc-count-wrap { left: 0.85rem; right: auto; bottom: 0.85rem; }
     .loc-count.loc-count--badge { padding: 0.45rem 1.1rem; }
     .loc-count-number { font-size: 6.5rem; bottom: 0.5rem; -webkit-text-stroke-width: 2.5px; }
+}
+
+/* Below tablet width the map box is only a few hundred pixels tall, and the
+   giant outlined store count sits right on top of it -- covering a corner of
+   the very thing it's advertising. The count is already stated twice in the
+   panel header above ("15 Locations Open"), so the decoration is what goes.
+   768px is an iPad mini in portrait, which keeps it. */
+@media (max-width: 767px) {
+    .loc-count-wrap { display: none; }
 }
 
 /* Plain crawlable links to every location, grouped by state -- visually

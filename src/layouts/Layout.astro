@@ -38,7 +38,7 @@ const canonicalUrl = canonical ?? new URL(Astro.url.pathname, 'https://www.151co
 const settingsData = (await getSettings()) as any;
 const favicon = imageUrl(settingsData?.favicon) ?? '/favicon.ico';
 // Small round mark reused inside the locator map's pin icons (see
-// leaflet-map-helpers.js) -- resized here rather than in that plain JS file,
+// maplibre-map-helpers.js) -- resized here rather than in that plain JS file,
 // which has no access to Storyblok's image service.
 const logoMarkUrl = imageUrl(settingsData?.logo, { width: 64 });
 

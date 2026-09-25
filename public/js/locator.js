@@ -1,4 +1,5 @@
-// 151 Coffee store locator - Leaflet + OpenStreetMap, no API key required.
+// 151 Coffee store locator - MapLibre GL + CARTO vector tiles, no API key
+// required. See maplibre-map-helpers.js for why this isn't Leaflet anymore.
 // Store data comes from window.COFFEE151_STORES, populated on each page from
 // the editable Location content collection (see index.astro / locations.astro),
 // so adding, removing, or correcting a location in the Visual Editor is
@@ -11,7 +12,12 @@
     const listEl = document.getElementById("locator-list");
     const searchEl = document.getElementById("locator-search");
     const STORES = window.COFFEE151_STORES || [];
-    if (!mapEl || !searchEl || typeof L === "undefined" || !STORES.length) return;
+    if (!mapEl || !searchEl || !STORES.length) return;
+    // MapLibre absent means the loader deliberately skipped it because this
+    // device has no WebGL (see locator-loader.js). Everything except the map
+    // -- search, ZIP distance sorting, state filters, the store list -- works
+    // without it, so this file still runs; `map` just stays null.
+    const mapSupported = typeof maplibregl !== "undefined";
 
     // Store hours + phone come from global settings (editable), same for
     // every location today; swap to per-location fields or the Google
@@ -27,41 +33,48 @@
     const PHONE = (window.COFFEE151_LOCATOR && window.COFFEE151_LOCATOR.phone) || "(682) 325-2124";
     const PHONE_TEL = PHONE.replace(/\D/g, "");
 
-    const redIcon = window.COFFEE151_LEAFLET.redIcon(L);
-
     // The locations page supplies its own zoom buttons in a toolbar above
-    // the map (a cleaner look than Leaflet's default on-map control); the
-    // homepage locator has no such toolbar, so it keeps Leaflet's default.
+    // the map (a cleaner look than the library's default on-map control);
+    // the homepage locator has no such toolbar, so it keeps the default.
     const zoomInEl = document.getElementById("locator-zoom-in");
     const zoomOutEl = document.getElementById("locator-zoom-out");
     const hasCustomZoom = !!(zoomInEl && zoomOutEl);
 
-    const map = L.map(mapEl, { scrollWheelZoom: true, attributionControl: false, zoomControl: !hasCustomZoom });
-
-    if (hasCustomZoom) {
-        zoomInEl.addEventListener("click", () => map.zoomIn());
-        zoomOutEl.addEventListener("click", () => map.zoomOut());
-    }
-
-    // fitBounds can zoom out much further than the actual store spread
-    // needs -- the map box is shorter on mobile (40vh vs. a full-height
-    // desktop panel) so it naturally zooms out further there, and on any
-    // viewport it can be thrown off by the container not having its final
-    // size yet on first layout (map.invalidateSize() below guards against
-    // that, but the floor is a hard backstop either way). Below that floor
-    // road lines and labels shrink to unreadable, so clamp the zoom level
-    // after every fitBounds call; stores that fall outside the frame are
-    // still just a pan away, and every store is one tap away via the list.
+    // There used to be a minimum-zoom floor here (10 on mobile, 6 on desktop)
+    // because Leaflet's raster tiles turned to unreadable mush when a fit
+    // zoomed out far enough. It had to go: on a phone-sized map the fit that
+    // frames every Texas store lands around zoom 7, so forcing 10 afterwards
+    // zoomed straight past the stores it had just framed -- an iPhone SE
+    // opened the page, and every state filter click landed, on an empty patch
+    // of map. Vector tiles stay sharp at any zoom, so there's nothing left to
+    // protect against; maxZoom on the individual calls below is what keeps a
+    // single-store fit from diving to street level.
     const isMobileViewport = () => window.matchMedia("(max-width: 902px)").matches;
-    const MOBILE_MIN_ZOOM = 10;
-    const DESKTOP_MIN_ZOOM = 6;
+
+    // Points are [lat, lng] everywhere in this file (and in the store data);
+    // MapLibre wants [lng, lat]. Converting in one named place beats flipping
+    // pairs inline at a dozen call sites.
+    const toLngLat = (p) => [p[1], p[0]];
+    function boundsOf(latlngs) {
+        return latlngs.reduce(
+            (b, p) => b.extend(toLngLat(p)),
+            new maplibregl.LngLatBounds(toLngLat(latlngs[0]), toLngLat(latlngs[0])),
+        );
+    }
     function fitBoundsLegibly(latlngs, opts) {
-        map.invalidateSize();
-        map.fitBounds(L.latLngBounds(latlngs), opts);
-        const floor = isMobileViewport() ? MOBILE_MIN_ZOOM : DESKTOP_MIN_ZOOM;
-        if (map.getZoom() < floor) {
-            map.setZoom(floor);
-        }
+        // No map (see the buildMap try/catch below) is a supported state, not
+        // an error: the list is the fallback and it doesn't need framing.
+        if (!map || !latlngs.length) return;
+        // resize() first: a fit computed against a stale container size is
+        // what put stores outside the frame on first load.
+        map.resize();
+        map.fitBounds(
+            boundsOf(latlngs),
+            // A phone's map box is much shorter than the desktop panel, so it
+            // needs proportionally less padding before the padding itself
+            // starts squeezing the stores out of frame.
+            Object.assign({ duration: 0, padding: isMobileViewport() ? 24 : 40, maxZoom: 13 }, opts),
+        );
     }
 
     // Locations page has state-narrowing buttons ("Texas" / "Kansas", one
@@ -74,31 +87,94 @@
     const initialState = initialStateBtn ? initialStateBtn.dataset.stateFilter : "";
     const initialStores = initialState ? STORES.filter((s) => s.state === initialState) : STORES;
 
-    // Fit to the real store bounds before the tile layer is added, so
-    // Leaflet only ever requests tiles for the zoom level it actually
-    // settles on. Setting a throwaway initial view (e.g. a hardcoded
-    // zoom 6) here would make it fetch that zoom's tiles first, then
-    // immediately abort/replace them once fitBounds below changes the
-    // view -- wasted requests that the tile server was rejecting outright
-    // (503s) rather than just canceling client-side.
-    fitBoundsLegibly(initialStores.map(s => [s.lat, s.lng]), { padding: [30, 30] });
+    // The map opens already framed on the real store bounds rather than on a
+    // throwaway view it then corrects: `bounds` in the constructor means the
+    // very first tile request is for the zoom it actually settles on. (Under
+    // Leaflet's raster tiles that mattered even more -- a throwaway view sent
+    // a whole zoom level's worth of PNGs that were immediately abandoned.)
+    const initialPoints = initialStores.map(s => [s.lat, s.lng]);
+    let map = null;
+    try {
+        if (mapSupported) map = buildMap();
+    } catch (err) {
+        // The loader already screened for WebGL, so reaching here means the
+        // context existed but MapLibre still couldn't start (a lost context,
+        // a driver the browser gives up on mid-init). Everything below this
+        // point is guarded by `map &&`, so the panel, search, and store list
+        // carry on working with the map's slot closed up.
+        console.warn("[locator] map unavailable, falling back to the list", err);
+        const locator = mapEl.closest(".locator");
+        if (locator) locator.classList.add("is-map-unavailable");
+    }
 
-    window.COFFEE151_LEAFLET.addTileLayer(L, map);
-
-    const markers = STORES.map((store, i) => {
-        const shortName = store.name.replace("151 Coffee ", "");
-        const marker = L.marker([store.lat, store.lng], { icon: redIcon }).addTo(map);
-        marker.bindTooltip(shortName, {
-            permanent: true,
-            direction: "top",
-            offset: [0, -38],
-            className: "locator__marker-tooltip"
+    function buildMap() {
+        const m = new maplibregl.Map({
+            container: mapEl,
+            style: window.COFFEE151_MAP.STYLE_URL,
+            bounds: boundsOf(initialPoints.length ? initialPoints : [[32.75, -97.33]]),
+            fitBoundsOptions: { padding: isMobileViewport() ? 24 : 40, maxZoom: 13 },
+            scrollZoom: true,
+            // The locations page has its own zoom buttons in a toolbar; only
+            // the homepage locator needs the on-map control.
+            attributionControl: false,
+            dragRotate: false,
         });
+        window.COFFEE151_MAP.lockRotation(m);
+        // Kept even with attributionControl off in the constructor: CARTO and
+        // OpenStreetMap both require credit, and compact mode is a single "i"
+        // that expands on tap rather than a line of text across the map.
+        m.addControl(new maplibregl.AttributionControl({ compact: true }), "bottom-right");
+        if (!hasCustomZoom) {
+            m.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
+        }
+
+        if (hasCustomZoom) {
+            zoomInEl.addEventListener("click", () => m.zoomIn());
+            zoomOutEl.addEventListener("click", () => m.zoomOut());
+        }
+
+        // The constructor's fit runs against whatever size the container
+        // reported at that instant, which on a phone is routinely before the
+        // map box has its final height. Re-fit once the style is up and the
+        // real size is known, or the stores end up outside the frame.
+        m.once("load", () => {
+            m.resize();
+            if (initialPoints.length) {
+                m.fitBounds(boundsOf(initialPoints), {
+                    duration: 0,
+                    padding: isMobileViewport() ? 24 : 40,
+                    maxZoom: 13,
+                });
+            }
+        });
+
+        // A context lost after a clean start (the browser reclaiming GPU
+        // memory, a driver reset) leaves a blank canvas behind with no error
+        // thrown. Close the slot the same way the never-started case does.
+        m.getCanvas().addEventListener("webglcontextlost", () => {
+            const locator = mapEl.closest(".locator");
+            if (locator) locator.classList.add("is-map-unavailable");
+        });
+
+        return m;
+    }
+
+    const markers = !map ? [] : STORES.map((store, i) => {
+        const shortName = store.name.replace("151 Coffee ", "");
         const nameHtml = store.slug
             ? `<a href="/locations/${store.slug}"><strong>${store.name}</strong></a>`
             : `<strong>${store.name}</strong>`;
-        marker.bindPopup(`${nameHtml}<br>${store.address}<br>${store.city}, ${store.state} ${store.zip}<br>${HOURS}<br><a href="tel:+1${PHONE_TEL}">${PHONE}</a>`);
-        marker.on("click", () => setActive(i));
+        const popup = new maplibregl.Popup({ offset: 46, closeButton: true, maxWidth: "260px" }).setHTML(
+            `${nameHtml}<br>${store.address}<br>${store.city}, ${store.state} ${store.zip}<br>${HOURS}<br><a href="tel:+1${PHONE_TEL}">${PHONE}</a>`
+        );
+        // The store's name rides inside the marker element (see
+        // markerElement) instead of being a separate always-on tooltip layer,
+        // so the label moves with the pin for free.
+        const marker = new maplibregl.Marker({ element: window.COFFEE151_MAP.markerElement(shortName), anchor: "bottom" })
+            .setLngLat([store.lng, store.lat])
+            .setPopup(popup)
+            .addTo(map);
+        marker.getElement().addEventListener("click", () => setActive(i));
         return marker;
     });
 
@@ -222,7 +298,7 @@
 
     function fitTo(stores) {
         if (!stores.length) return;
-        fitBoundsLegibly(stores.map(s => [s.lat, s.lng]), { padding: [30, 30], maxZoom: 13 });
+        fitBoundsLegibly(stores.map(s => [s.lat, s.lng]), { maxZoom: 13 });
     }
 
     // Geocode a US ZIP (free OpenStreetMap Nominatim) and order stores by distance.
@@ -238,7 +314,7 @@
                 renderList(sorted, [olat, olon]);
                 // Frame the searched ZIP plus the nearest few stores.
                 const pts = [[olat, olon]].concat(sorted.slice(0, 4).map(s => [s.lat, s.lng]));
-                fitBoundsLegibly(pts, { padding: [40, 40], maxZoom: 12 });
+                fitBoundsLegibly(pts, { maxZoom: 12 });
             })
             .catch(() => { renderList(STORES); fitTo(STORES); }); // on any failure, show all
     }
@@ -256,8 +332,10 @@
             }
         }
         const store = STORES[index];
-        map.flyTo([store.lat, store.lng], 13, { duration: 0.6 });
-        markers[index].openPopup();
+        if (!map) return;
+        map.flyTo({ center: [store.lng, store.lat], zoom: 13, duration: 600 });
+        const popup = markers[index].getPopup();
+        if (popup && !popup.isOpen()) markers[index].togglePopup();
     }
 
     let geoTimer;

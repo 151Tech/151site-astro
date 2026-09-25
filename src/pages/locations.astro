@@ -77,9 +77,12 @@ const locationsJsonLd = graph(
          defer), so starting these fetches immediately -- in parallel with
          HTML parsing, instead of waiting on JS to inject them -- shaves a
          full request's worth of latency off when the map becomes usable. -->
-    <link rel="preload" as="style" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin />
-    <link rel="preload" as="script" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin />
-    <link rel="preload" as="script" href="/js/leaflet-map-helpers.js?v=2" />
+    <link rel="preload" as="style" href="https://unpkg.com/maplibre-gl@5.6.1/dist/maplibre-gl.css" crossorigin />
+    <link rel="preload" as="script" href="https://unpkg.com/maplibre-gl@5.6.1/dist/maplibre-gl.js" crossorigin />
+    <link rel="preload" as="script" href="/js/maplibre-map-helpers.js?v=1" />
+    <!-- The vector basemap style and its tiles come from CARTO, so the
+         connection to that origin is worth opening before the map asks. -->
+    <link rel="preconnect" href="https://basemaps.cartocdn.com" crossorigin />
     <link rel="preload" as="script" href="/js/locator.js" />
     <JsonLd schema={locationsJsonLd} />
   </fragment>
