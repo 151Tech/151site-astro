@@ -24,7 +24,11 @@
 // CACHE_TTL_SECONDS so a burst of homepage traffic doesn't spend a Graph API
 // call on every request.
 const MEDIA_URL = 'https://graph.instagram.com/me/media';
-const CACHE_TTL_SECONDS = 60 * 60; // 1 hour
+// Short enough that a new reel shows up while it's still news. The edge
+// cache (see src/middleware.ts) absorbs the actual homepage traffic, so this
+// only governs how often one Worker request goes out to Instagram -- roughly
+// 288 calls/day, nowhere near any rate limit.
+const CACHE_TTL_SECONDS = 5 * 60; // 5 minutes
 // Versioned so a deploy that changes what gets cached retires the old
 // entries immediately, rather than serving them for up to an hour. v2 added
 // videoUrl; v3 narrowed the list to videos/reels only.
