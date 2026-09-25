@@ -640,9 +640,14 @@
        photo's own 16:9 aspect ratio so object-fit:cover shows nearly the
        whole frame instead of cropping big chunks off the sides. */
     .menu-hero {
-        aspect-ratio: 16 / 9;
+        /* 56.25vw IS 16:9 against the viewport width, expressed as a height
+           instead of an aspect-ratio. With `aspect-ratio: 16/9` the 220px
+           floor resolved the other way below ~391px wide: the box kept the
+           ratio by growing its WIDTH to 391px, pushing the whole page into
+           a horizontal scroll with a black band down the side. A height can
+           only ever change the height. */
         height: auto;
-        min-height: 220px;
+        min-height: max(220px, 56.25vw);
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -703,7 +708,10 @@
         min-height: 0;
         margin-left: 0;
         margin-top: 0.75rem;
-        scroll-margin-top: 70px;    /* clear the fixed site nav on jump */
+        /* Clear the fixed site nav AND the sticky category bar on jump --
+           the bar is what you just tapped, so landing underneath it would
+           hide the heading you asked for. */
+        scroll-margin-top: 86px;
     }
     .cat-title-card:first-child { margin-top: 0; }
 
@@ -751,11 +759,76 @@
     .timeline-empty-state { width: 100%; min-width: 0; }
     .timeline-end-spacer { display: none; }
 
-    /* Category nav is hidden on mobile, the vertical timeline below already
-       lets you scroll straight through every category. */
+    /* On mobile the category nav leaves the hero entirely and becomes a
+       sticky bar pinned to the top of the viewport: the timeline below runs
+       vertically for hundreds of drinks, so once you're deep in it there's
+       no way back to a category without scrolling all the way up. It stays
+       transparent and click-through until the page has scrolled past the
+       hero, then fades in -- the script adds .cat-bar-stuck to <body>.
+
+       It's the inverse of the navbar rather than a second bar beside it:
+       it shows exactly while the navbar is auto-hidden (scrolling down,
+       which is when you're moving through drinks and most likely to want
+       another category) and fades out as soon as the navbar comes back.
+       So there's only ever one bar at the top of the screen. */
     .cat-nav {
-        display: none;
+        position: fixed;
+        /* Always flush to the top: the bar only ever shows while the navbar
+           is away (see stickyCatBar in menu.astro), so it takes the navbar's
+           place rather than stacking under it. The inset keeps it clear of a
+           notch / status bar on iOS. */
+        top: env(safe-area-inset-top, 0px);
+        left: 0;
+        right: 0;
+        bottom: auto;
+        /* Under the navbar's z-index: 1000 so the navbar slides back over it
+           rather than out from behind it. */
+        z-index: 990;
+        padding: 0.5rem 0.75rem;
+        background: rgba(17, 17, 17, 0.94);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        /* Fades rather than sliding down from above. A slide spends its
+           whole animation with the bar hanging half off the top of the
+           screen, and since the navbar it's tied to can flip state mid-flick,
+           that half-clipped frame is easy to catch and land on. Opacity has
+           no partly-off-screen state to catch. */
+        opacity: 0;
+        /* No delay on the way out: the navbar is on its way back in and will
+           be sitting on top of this within a frame or two. */
+        transition: opacity 0.18s ease;
+        pointer-events: none;
     }
+    body.cat-bar-stuck .cat-nav {
+        opacity: 1;
+        /* The delay waits out the navbar's own 0.35s slide-up. The navbar is
+           opaque and sits above this (z-index 1000 vs 990), so fading in the
+           instant .nav-hidden lands would show the bar with its top half
+           still covered by the navbar mid-slide -- which reads as a bar
+           that's cut off, not one that's behind something. */
+        transition: opacity 0.2s ease 0.36s;
+        pointer-events: auto;
+    }
+    .cat-nav-inner {
+        width: max-content;
+        min-width: 100%;
+        gap: 0.5rem;
+    }
+    /* Desktop divides the bar evenly between categories (flex: 1); here the
+       bar scrolls horizontally instead, so each pill keeps its own width.
+       The base rule's 0.75rem bottom margin also goes: it's what made the
+       gap under the pills read as much deeper than the one above them. */
+    .cat-link {
+        flex: 0 0 auto;
+        margin: 0;
+        font-size: 0.78rem;
+        padding: 0.5rem 0.95rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .cat-nav { transition: none; }
 }
 
 /* /menu/simple: the "Simple Menu" page loads THIS page in an iframe at
@@ -1292,6 +1365,19 @@
 }
 
 .menu-hero-actions .location-trigger { margin-top: 0; }
+
+/* "Pick My Drink" sits on its own row under the location/simple-menu pair
+   rather than joining that flex row: those two are quiet outline controls
+   and this is the hero's one solid red call to action, so putting them
+   shoulder to shoulder would make the row read as three equal choices. */
+.menu-hero-decide {
+    display: flex;
+    justify-content: center;
+    margin-top: 0.9rem;
+}
+/* /menu/simple caps the hero at 240px, which isn't enough room for a third
+   row of controls -- and its own compact grid is the point of that page. */
+.menu-simple-mode .menu-hero-decide { display: none; }
 
 .simple-menu-trigger {
     display: inline-flex;

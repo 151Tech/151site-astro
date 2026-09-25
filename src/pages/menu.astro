@@ -215,6 +215,19 @@ const decideDrinksJson = JSON.stringify(decideDrinksArr);
           <span>Simple Menu</span>
         </a>
       </div>
+      <!--
+        Third trigger for the same "Help Me Decide" popup as the two further
+        down the page (see the openBtns array in the script below). Those two
+        only turn up after you've scrolled past the drinks, which is exactly
+        when someone who can't decide has already done the deciding -- this
+        one offers it up front, worded as the thing it does rather than as a
+        feature name.
+      -->
+      <div class="menu-hero-decide">
+        <button type="button" class="decide-btn decide-btn--hero" id="pickMyDrinkBtn">
+          Pick My Drink
+        </button>
+      </div>
     </div>
     <div class="cat-nav" id="catNav">
       <div class="cat-nav-inner">
@@ -456,7 +469,11 @@ const decideDrinksJson = JSON.stringify(decideDrinksArr);
     var sparkles = document.getElementById('decideSparkles');
     var closeBtn = document.getElementById('closeDecideModal');
     var againBtn = document.getElementById('decideAgainBtn');
-    var openBtns = [document.getElementById('helpMeDecideBtn'), document.getElementById('helpMeDecideBtnMobile')];
+    var openBtns = [
+      document.getElementById('helpMeDecideBtn'),
+      document.getElementById('helpMeDecideBtnMobile'),
+      document.getElementById('pickMyDrinkBtn'),
+    ];
     if (!modal || !drinks.length) return;
 
     var spinning = false;
@@ -682,6 +699,55 @@ const decideDrinksJson = JSON.stringify(decideDrinksArr);
         applyActiveCat(btn.dataset.tab);
       });
     });
+
+    // Mobile sticky category bar. .cat-nav lives at the bottom of the hero;
+    // on mobile menu.css re-anchors it to the top of the viewport and keeps
+    // it transparent until this adds .cat-bar-stuck, which happens once the
+    // hero has scrolled away AND the navbar is auto-hidden.
+    //
+    // Tying it to the navbar's own state (public/js/script.js toggles
+    // .nav-hidden on <nav>) is deliberate: the two take turns in the same
+    // strip of screen instead of stacking. Scrolling down through the drinks
+    // hides the navbar and brings this up, which is exactly when you'd want
+    // to jump to another category; scrolling up brings the navbar back and
+    // this goes away.
+    (function stickyCatBar() {
+      var hero = document.querySelector('.menu-hero');
+      var siteNav = document.querySelector('nav');
+      var catNav = document.getElementById('catNav');
+      if (!hero || !catNav) return;
+
+      var stuck = false;
+      function update() {
+        var navAway = !!siteNav && siteNav.classList.contains('nav-hidden');
+        // The hero carries its own copy of these categories, so the bar has
+        // nothing to add until the hero is off screen.
+        var shouldStick = isMobile() && navAway && hero.getBoundingClientRect().bottom <= 0;
+        if (shouldStick !== stuck) {
+          stuck = shouldStick;
+          document.body.classList.toggle('cat-bar-stuck', stuck);
+        }
+      }
+
+      var pending = false;
+      function schedule() {
+        if (pending) return;
+        pending = true;
+        requestAnimationFrame(function () { pending = false; update(); });
+      }
+      window.addEventListener('scroll', schedule, { passive: true });
+      window.addEventListener('resize', schedule);
+      // The navbar's own scroll handler runs in a separate rAF, so reading
+      // .nav-hidden on scroll alone can be one frame stale -- observing the
+      // class directly is what keeps the two bars in step.
+      if (siteNav) {
+        new MutationObserver(schedule).observe(siteNav, {
+          attributes: true,
+          attributeFilter: ['class'],
+        });
+      }
+      update();
+    })();
 
     var rafId = null;
     var autoScrollStopped = false;
