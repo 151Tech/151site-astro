@@ -1,0 +1,49 @@
+# Cloudflare Workers Assets reads this file (Astro copies public/ into dist
+# verbatim) and applies it to every response it serves directly - which, on
+# this deployment, is nearly everything: Webflow's build forces
+# output:'server', but prerendered pages and everything under public/ are
+# served by the asset layer and never reach the Worker, so the Cache-Control
+# that src/middleware.ts sets applies to almost nothing.
+#
+# The measured symptom, on the deployed site, was every single response -
+# HTML, CSS, JS, fonts - coming back `Cache-Control: private, no-cache` with
+# `CF-Cache-Status: BYPASS`. Nothing was cached at the edge or in the
+# browser, so a repeat visitor re-downloaded roughly 3.4 MB of assets that
+# had not changed.
+#
+# Webflow Cloud owns the platform config and may override these; if the
+# headers below don't show up after a deploy, that's a Webflow-side setting,
+# not a mistake here.
+
+# Astro's own build output is content-hashed - a change to the file produces
+# a new filename - so it can be cached permanently and never revalidated.
+# This covers the self-hosted fonts too: they are emitted to
+# /_astro/fonts/<hash>.woff2 (see the `fonts` block in astro.config.mjs).
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Hand-maintained CSS and JS in public/ keep their filenames across deploys,
+# so they get a short browser TTL and a longer shared/edge one, with
+# stale-while-revalidate so a visitor never waits on the refetch.
+/*.css
+  Cache-Control: public, max-age=300, s-maxage=86400, stale-while-revalidate=604800
+
+/js/*
+  Cache-Control: public, max-age=300, s-maxage=86400, stale-while-revalidate=604800
+
+/images/*
+  Cache-Control: public, max-age=86400, s-maxage=604800, stale-while-revalidate=604800
+
+/videos/*
+  Cache-Control: public, max-age=86400, s-maxage=604800, stale-while-revalidate=604800
+
+# Pages. Mirrors the values src/middleware.ts already sets for the routes
+# that do reach the Worker, so both paths cache identically: a minute in the
+# browser, five at the edge, and up to ten more minutes served stale while
+# the refresh happens in the background. A Storyblok publish triggers a full
+# rebuild and deploy, which invalidates these anyway.
+/*
+  Cache-Control: public, max-age=60, s-maxage=300, stale-while-revalidate=600
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Strict-Transport-Security: max-age=31536000; includeSubDomains

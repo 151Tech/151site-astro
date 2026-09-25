@@ -4,6 +4,8 @@ import { readdirSync, copyFileSync, rmSync, existsSync, readFileSync } from 'nod
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+const SITE_URL = 'https://www.151coffee.com';
+
 // SMS/text-link discount landing pages (src/pages/[slug].astro) are meant
 // to be reachable only via the exact link they were sent, not discoverable
 // by searching the offer name - see the `noindex` prop on their Layout
@@ -14,10 +16,27 @@ import { fileURLToPath } from 'node:url';
 // safe to import from this plain-Node config file) since the sitemap only
 // needs slugs, and the snapshot is already the source of truth for
 // everything this build renders.
-const landingPageSlugs = new Set(
-  JSON.parse(readFileSync(new URL('./src/data/storyblok-snapshot.json', import.meta.url), 'utf-8'))
-    .collections?.['landing-pages']?.map((s) => s.slug) ?? [],
+const snapshot = JSON.parse(
+  readFileSync(new URL('./src/data/storyblok-snapshot.json', import.meta.url), 'utf-8'),
 );
+const landingPageSlugs = new Set(
+  snapshot.collections?.['landing-pages']?.map((s) => s.slug) ?? [],
+);
+
+// @astrojs/sitemap enumerates the routes the build emitted, and under the
+// output:'server' mode Webflow forces on us that enumeration only ever
+// contained the eight non-dynamic pages: every getStaticPaths route - all 15
+// store pages and all 65 drink pages - was silently left out, despite being
+// prerendered, indexable and live. Those are exactly the long-tail pages
+// ("151 Coffee Keller", each drink by name) that a sitemap is most useful
+// for, so the URLs are supplied explicitly instead of being discovered.
+//
+// The slugs come from the same committed snapshot the two [slug].astro
+// routes build their getStaticPaths from, so the sitemap cannot drift from
+// what actually got built - a drink unpublished in Storyblok disappears from
+// both at the same rebuild.
+const collectionUrls = (collection, prefix) =>
+  (snapshot.collections?.[collection] ?? []).map((entry) => `${SITE_URL}${prefix}/${entry.slug}`);
 
 // Webflow Cloud builds this project with its own platform configuration: it
 // injects the Cloudflare adapter, server output mode, and the mount path, and
@@ -74,7 +93,7 @@ function flattenRoutes() {
 
 export default defineConfig({
   output: 'static',
-  site: 'https://www.151coffee.com',
+  site: SITE_URL,
   // Astro's cross-site-forgery guard compares the Origin header against the
   // request's own host, and behind Webflow Cloud's proxy that host is not
   // reliably ours, so a legitimate form POST gets a 403. Webflow's own docs
@@ -137,8 +156,18 @@ export default defineConfig({
               if (/\/menu\/[^/]+\/?$/.test(pathname)) return false;
               const slug = pathname.replace(/^\/|\/$/g, '');
               if (landingPageSlugs.has(slug)) return false;
+              // /loyalty is a 301 to /#faq (src/pages/loyalty.astro): the
+              // standalone page was folded into the homepage FAQ and the route
+              // only survives to keep old inbound links working. Submitting a
+              // redirect is what Search Console reports as "Submitted URL has
+              // redirect"; the destination is already in the sitemap as /.
+              if (slug === 'loyalty') return false;
               return true;
             },
+            customPages: [
+              ...collectionUrls('locations', '/locations'),
+              ...collectionUrls('products', '/drinks'),
+            ],
             // flattenRoutes rewrites every page to a flat .html, making the
             // canonical URL slash-less, but sitemap runs before that hook and
             // would otherwise advertise /menu/ for every page: URLs that all
