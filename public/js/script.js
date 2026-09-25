@@ -255,19 +255,22 @@ if (investBannerBtn) {
     });
 }
 
+// Dismisses the modal and drops any "Sent!" panel with it, so reopening
+// offers a usable form rather than a stale confirmation from last time.
+function closeInvestModalNow() {
+    investModal.classList.remove('active');
+    investModal.style.display = '';
+    const sent = investModal.querySelector('.form-sent');
+    if (sent) sent.remove();
+}
+
 if (closeInvestModal) {
-    closeInvestModal.addEventListener('click', function() {
-        investModal.classList.remove('active');
-        investModal.style.display = '';
-    });
+    closeInvestModal.addEventListener('click', closeInvestModalNow);
 }
 
 if (investModal) {
     investModal.addEventListener('click', function(e) {
-        if (e.target === investModal) {
-            investModal.classList.remove('active');
-            investModal.style.display = '';
-        }
+        if (e.target === investModal) closeInvestModalNow();
     });
 }
 
@@ -279,6 +282,41 @@ if (investModal) {
 // Cloudflare Workers, not Netlify) -- form-name still tells our own
 // /api/contact endpoint which form fired and doubles as the honeypot field
 // name, so the markup stayed as-is.
+// Keyed by each form's `name` attribute, which is also what tells
+// /api/contact which form fired. The waitlist gets a longer line because
+// there's a real wait involved: nothing happens until the round opens.
+const FORM_SENT_MESSAGES = {
+    'invest-waitlist': "Thanks for submitting! We'll reach out to you when we go live.",
+    'contact': "Thanks for reaching out! We'll get back to you soon.",
+    'realestate-inquiry': "Thanks for reaching out! We'll be in touch soon.",
+};
+
+// Covers the whole form rather than just relabelling the button, so a
+// submission reads as finished at a glance. The form keeps its own height
+// underneath, which is what the overlay sizes itself against.
+function showFormSent(form) {
+    if (form.querySelector('.form-sent')) return; // already showing
+    const message = FORM_SENT_MESSAGES[form.getAttribute('name')] || FORM_SENT_MESSAGES.contact;
+    const overlay = document.createElement('div');
+    overlay.className = 'form-sent';
+    // role=status announces this to a screen reader without stealing focus,
+    // which matters because the visible confirmation is otherwise purely
+    // visual.
+    overlay.setAttribute('role', 'status');
+    overlay.innerHTML =
+        '<p class="form-sent__title">Sent!</p>' +
+        '<svg class="form-sent__check" viewBox="0 0 52 52" aria-hidden="true">' +
+        '<circle cx="26" cy="26" r="24"></circle>' +
+        '<path d="M14 27l8 8 16-16"></path>' +
+        '</svg>' +
+        '<p class="form-sent__msg"></p>';
+    // textContent, not innerHTML: these strings are ours today, but this keeps
+    // a future message containing an apostrophe or angle bracket from
+    // breaking (or injecting into) the markup above.
+    overlay.querySelector('.form-sent__msg').textContent = message;
+    form.appendChild(overlay);
+}
+
 document.querySelectorAll('form[data-netlify]').forEach(function (form) {
     form.addEventListener('submit', function (e) {
         e.preventDefault();
@@ -294,17 +332,17 @@ document.querySelectorAll('form[data-netlify]').forEach(function (form) {
         })
             .then(function (res) {
                 if (!res.ok) throw new Error('Form submission failed');
-                if (label) label.textContent = 'Sent!';
-                if (btn) btn.style.background = '#2a9d5c';
                 form.reset();
+                showFormSent(form);
             })
             .catch(function () {
-                if (label) label.textContent = 'Error - please try again';
-            })
-            .finally(function () {
+                // Failure stays on the button: the form is still usable, and
+                // covering it with a full-panel error would hide the details
+                // the visitor needs to retry.
+                if (label) label.textContent = 'Error, please try again';
+                if (btn) btn.style.background = '';
                 setTimeout(function () {
                     if (label) label.textContent = originalText;
-                    if (btn) btn.style.background = '';
                 }, 3000);
             });
     });

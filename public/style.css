@@ -2184,6 +2184,109 @@ nav.nav-scrolled .nav-container {
 
 .form-group textarea { min-height: 120px; resize: vertical; }
 
+/* Confirmation panel shown in place of a submitted form (see showFormSent in
+   public/js/script.js). It covers the form rather than replacing it, so the
+   form's own height defines the panel's size and the page never reflows on
+   submit. */
+form[data-netlify] { position: relative; }
+
+.form-sent {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.1rem;
+    padding: 2rem 1.5rem;
+    min-height: 240px;
+    text-align: center;
+    /* Matches the dark panel the contact forms sit on; the investor modal
+       overrides both of these below, since it sits on a light card. */
+    background: var(--concrete);
+    color: var(--white);
+    animation: form-sent-in 0.3s ease both;
+}
+
+.invest-modal-form .form-sent {
+    background: var(--white);
+    color: var(--black);
+}
+
+/* color: inherit is load-bearing on both of these. There's a global
+   `p { color: var(--light-gray) }`, and a rule matching the element directly
+   always beats a value inherited from .form-sent, whatever the specificity.
+   Without it the text renders mid-gray on the dark panel and all but
+   disappears. */
+.form-sent__title {
+    margin: 0;
+    color: inherit;
+    font-family: var(--font-bebas-neue), 'Impact', sans-serif;
+    font-size: clamp(2.2rem, 6vw, 3rem);
+    line-height: 1;
+    letter-spacing: 0.03em;
+}
+
+.form-sent__msg {
+    margin: 0;
+    color: inherit;
+    max-width: 32ch;
+    font-size: 0.98rem;
+    line-height: 1.5;
+    opacity: 0.8;
+}
+
+.form-sent__check {
+    width: clamp(68px, 18vw, 92px);
+    height: clamp(68px, 18vw, 92px);
+}
+
+/* Both strokes are drawn on rather than faded in: the ring sweeps around,
+   then the tick draws through it. dasharray equals each path's own length so
+   the offset can start fully hidden. */
+.form-sent__check circle,
+.form-sent__check path {
+    fill: none;
+    stroke: #2a9d5c;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.form-sent__check circle {
+    stroke-width: 3;
+    stroke-dasharray: 151; /* 2 * pi * r, r = 24 */
+    stroke-dashoffset: 151;
+    animation: form-sent-ring 0.5s cubic-bezier(0.65, 0, 0.45, 1) 0.1s forwards;
+    transform: rotate(-90deg);
+    transform-origin: 50% 50%;
+}
+
+.form-sent__check path {
+    stroke-width: 4;
+    stroke-dasharray: 36;
+    stroke-dashoffset: 36;
+    animation: form-sent-tick 0.28s cubic-bezier(0.65, 0, 0.45, 1) 0.52s forwards;
+}
+
+@keyframes form-sent-in {
+    from { opacity: 0; transform: scale(0.98); }
+    to   { opacity: 1; transform: none; }
+}
+@keyframes form-sent-ring { to { stroke-dashoffset: 0; } }
+@keyframes form-sent-tick { to { stroke-dashoffset: 0; } }
+
+/* The confirmation still has to read as confirmed without the drawing
+   motion, so the strokes resolve immediately rather than never arriving. */
+@media (prefers-reduced-motion: reduce) {
+    .form-sent { animation: none; }
+    .form-sent__check circle,
+    .form-sent__check path {
+        animation: none;
+        stroke-dashoffset: 0;
+    }
+}
+
 .form-submit {
     background: linear-gradient(135deg, var(--red) 0%, var(--red-soft) 100%);
     color: var(--white);
