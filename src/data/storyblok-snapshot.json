@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-24T18:13:12.589Z",
+  "generatedAt": "2026-09-25T13:21:51.671Z",
   "stories": {
     "settings/global": {
       "nav": [
@@ -84,6 +84,12 @@
               "_uid": "4ad467f3-f22b-4aac-8fab-0451bdb7c54f",
               "href": "/privacy-policy",
               "label": "Privacy Policy",
+              "component": "nav_link"
+            },
+            {
+              "_uid": "5a12835c-5231-43a6-ae3a-c44902fc7042",
+              "href": "/ourfuture",
+              "label": "Our Future",
               "component": "nav_link"
             }
           ],
