@@ -10,9 +10,10 @@
 // Instagram's oEmbed widget can't be styled/controlled enough to fit this
 // layout, and only exposes a single post at a time rather than a feed. A
 // muted, looping local video that links out to the real post sidesteps that.
-// `videoUrl` is optional: it's set for videos and reels (from the Graph
-// API's media_url, with the cover frame as `mediaUrl`), and absent for photo
-// posts, which render a plain <img> instead. What still rotates is
+// `videoUrl` stays optional so the temporary still-image fallback in
+// src/pages/index.astro can omit it, but the live Graph API path
+// (src/lib/instagram.ts) filters to videos/reels, so it always sets one.
+// What still rotates is
 // which slide sits in which slot, on a fixed timer (ROTATE_INTERVAL_MS
 // below) -- purely a visual "now featured" cue, independent of each video's
 // own (unsynced, looping) playback.

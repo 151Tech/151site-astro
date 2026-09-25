@@ -1,4 +1,4 @@
-// Fetches the 3 most recent public @151coffee Instagram posts/reels via
+// Fetches the 3 most recent public @151coffee Instagram videos/reels via
 // Meta's Instagram API with Instagram Login (the current Graph API surface
 // for a single business account) -- not scraping. See the setup checklist in
 // storyblok/instagram-setup.md for the one-time, human-only steps this
@@ -25,11 +25,15 @@
 // call on every request.
 const MEDIA_URL = 'https://graph.instagram.com/me/media';
 const CACHE_TTL_SECONDS = 60 * 60; // 1 hour
-// Versioned: entries cached under the old key hold a shape with no videoUrl,
-// so bumping this retires them immediately instead of serving stills for up
-// to an hour after a deploy.
-const MEDIA_CACHE_KEY = 'media_cache_v2';
+// Versioned so a deploy that changes what gets cached retires the old
+// entries immediately, rather than serving them for up to an hour. v2 added
+// videoUrl; v3 narrowed the list to videos/reels only.
+const MEDIA_CACHE_KEY = 'media_cache_v3';
 const MEDIA_FIELDS = 'id,caption,media_type,media_url,thumbnail_url,permalink,timestamp';
+// How many recent posts to scan when looking for videos/reels (see
+// fetchLatestMedia). One page, one API call -- the account would have to post
+// 25 non-video items in a row before the carousel came up short.
+const SCAN_LIMIT = 25;
 
 export interface InstagramMedia {
   id: string;
@@ -52,7 +56,13 @@ interface InstagramEnv {
 }
 
 async function fetchLatestMedia(accessToken: string, count: number): Promise<InstagramMedia[]> {
-  const url = `${MEDIA_URL}?fields=${MEDIA_FIELDS}&limit=${count}&access_token=${accessToken}`;
+  // The carousel is a video feature -- a photo post there renders as a static
+  // card with a play triangle that does nothing. So rather than asking for the
+  // newest `count` posts of any kind, ask for a larger recent window and keep
+  // only the videos/reels from it. The window is what caps how far back a
+  // quiet stretch of photo posts can reach: if there aren't `count` videos
+  // among the last SCAN_LIMIT posts, the carousel simply shows fewer.
+  const url = `${MEDIA_URL}?fields=${MEDIA_FIELDS}&limit=${SCAN_LIMIT}&access_token=${accessToken}`;
   const res = await fetch(url);
   if (!res.ok) {
     throw new Error(`Instagram media fetch failed: ${res.status} ${await res.text()}`);
@@ -68,22 +78,19 @@ async function fetchLatestMedia(accessToken: string, count: number): Promise<Ins
       timestamp: string;
     }[];
   };
-  return (data.data ?? []).slice(0, count).map((m) => {
-    // For a video or reel, media_url is the playable file and thumbnail_url
-    // is the cover frame Meta generates for it; for a photo there is no
-    // thumbnail_url and media_url is the image itself. Keeping both lets the
-    // carousel actually play videos rather than showing a still with a play
-    // triangle over it.
-    const isVideo = m.media_type === 'VIDEO' || m.media_type === 'REELS';
-    return {
+  return (data.data ?? [])
+    .filter((m) => m.media_type === 'VIDEO' || m.media_type === 'REELS')
+    .slice(0, count)
+    .map((m) => ({
       id: m.id,
       permalink: m.permalink,
+      // media_url is the playable file; thumbnail_url is the cover frame Meta
+      // generates for it, used as the poster while the video loads.
       mediaUrl: m.thumbnail_url ?? m.media_url,
-      videoUrl: isVideo ? m.media_url : undefined,
+      videoUrl: m.media_url,
       caption: m.caption ?? '',
       timestamp: m.timestamp,
-    };
-  });
+    }));
 }
 
 // Returns null (never throws) when the integration isn't configured yet, or
