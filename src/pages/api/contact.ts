@@ -214,6 +214,23 @@ export async function POST({ request }: { request: Request }) {
   }
   const form = FORMS[requested as FormName];
 
+  // Normalizes plain digit strings to "+1 555-555-5555" so the sheet matches
+  // the formatting of the list carried over from the old Wix waitlist.
+  //
+  // Anything the visitor punctuated themselves (dashes or parens) is left
+  // exactly as typed -- they've already expressed a format, and rewriting it
+  // risks mangling an extension or a grouping we don't understand. Likewise,
+  // any digit count that isn't a US number falls through untouched, which is
+  // what keeps international numbers intact rather than forcing a wrong +1
+  // onto them.
+  function formatPhone(raw: string): string {
+    if (/[-()]/.test(raw)) return raw;
+    const digits = raw.replace(/\D/g, '');
+    const local = digits.length === 11 && digits.startsWith('1') ? digits.slice(1) : digits;
+    if (local.length !== 10) return raw;
+    return `+1 ${local.slice(0, 3)}-${local.slice(3, 6)}-${local.slice(6)}`;
+  }
+
   // Investor waitlist: mirrors the old Wix site (rows land in a sheet, no
   // email goes out) instead of joining the Resend flow below, so it has its
   // own validation and its own early return.
@@ -232,7 +249,7 @@ export async function POST({ request }: { request: Request }) {
     try {
       await appendRow(
         env,
-        [new Date().toISOString(), waitlistEmailRaw, waitlistPhoneRaw],
+        [new Date().toISOString(), waitlistEmailRaw, formatPhone(waitlistPhoneRaw)],
         { spreadsheetIdEnv: 'GOOGLE_SHEETS_INVEST_SPREADSHEET_ID', range: 'Waitlist' },
       );
     } catch (err) {
