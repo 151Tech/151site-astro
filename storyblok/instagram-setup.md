@@ -58,6 +58,21 @@ app, set:
   one above. This one gates the scheduled token-refresh endpoint
   (`/api/instagram-token-refresh`) rather than an OAuth redirect, so it's
   sent as a header instead of a `state` param -- see step 6.
+- `INSTAGRAM_REDIRECT_URI` -- **required on Webflow Cloud**, and the single
+  most likely thing to get stuck on. Set it to the full public callback URL,
+  exactly as registered in the Meta app and used in step 5's authorize URL,
+  e.g. `https://www.151coffee.com/api/instagram-oauth-callback` (or the
+  preview app's own `*.webflow.io` equivalent when testing there).
+
+  Without it the callback falls back to deriving its own URL from the
+  incoming request -- which does not work here. Webflow Cloud routes requests
+  through an internal hostname, so the Worker sees something like
+  `https://<uuid>.wf-app-prod.cosmic.webflow.services` rather than the public
+  domain the browser actually used, and Instagram rejects the mismatched
+  `redirect_uri` with a misleading "Error validating verification code"
+  message that names the redirect_uri without showing you either value. (Same
+  unreliable-Host-header behavior that makes `astro.config.mjs` set
+  `security.checkOrigin: false`.)
 
 ## 4. Create the KV namespace
 

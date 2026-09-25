@@ -42,18 +42,7 @@ export async function GET({ request }: { request: Request }) {
   // authorize URL.
   const expectedState = (env as any).INSTAGRAM_OAUTH_STATE;
   if (!expectedState || state !== expectedState) {
-    // TEMPORARY DEBUG (remove once the state mismatch is diagnosed): reveals
-    // only lengths and first/last characters, never the full secret, so we
-    // can tell a whitespace/truncation issue apart from a genuinely wrong
-    // value without ever printing either value in full.
-    const describe = (s: string | null | undefined) =>
-      s == null
-        ? 'undefined'
-        : `len=${s.length} first=${JSON.stringify(s[0])} last=${JSON.stringify(s[s.length - 1])}`;
-    return new Response(
-      `Invalid or missing state parameter\nreceived: ${describe(state)}\nexpected: ${describe(expectedState)}`,
-      { status: 403 },
-    );
+    return new Response('Invalid or missing state parameter', { status: 403 });
   }
 
   const clientId = (env as any).INSTAGRAM_CLIENT_ID;
@@ -64,29 +53,6 @@ export async function GET({ request }: { request: Request }) {
       'Server misconfigured: INSTAGRAM_CLIENT_ID, INSTAGRAM_CLIENT_SECRET, or the INSTAGRAM_CACHE KV binding is missing.',
       { status: 500 },
     );
-  }
-
-  // Wrapped in try/catch so a network-level failure (fetch throwing rather
-  // than resolving with a non-OK status) or a KV error surfaces as a real
-  // message instead of an unhandled exception -- which Cloudflare's edge
-  // reports as a bare 502 with no detail at all, impossible to debug from
-  // the browser alone.
-  //
-  // TEMPORARY: each fetch also gets its own AbortController timeout. A hung
-  // fetch (one that never resolves OR rejects) can't be caught by try/catch
-  // at all -- if the platform kills the whole isolate for exceeding some
-  // resource/time limit before the promise ever settles, that happens
-  // completely outside JS's control, so nothing here ever runs, which is
-  // consistent with the zero-log-output 502s seen so far. Forcing our own
-  // timeout turns that silent kill into a normal, catchable AbortError.
-  async function fetchWithTimeout(input: RequestInfo | URL, init: RequestInit = {}, ms = 8000): Promise<Response> {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), ms);
-    try {
-      return await fetch(input, { ...init, signal: controller.signal });
-    } finally {
-      clearTimeout(timer);
-    }
   }
 
   // Must match the redirect_uri from the authorize step byte for byte, or
@@ -102,9 +68,11 @@ export async function GET({ request }: { request: Request }) {
   const redirectUri =
     (env as any).INSTAGRAM_REDIRECT_URI || `${url.origin}/api/instagram-oauth-callback`;
 
+  // Wrapped in try/catch so a network-level failure (fetch throwing rather
+  // than resolving with a non-OK status) or a KV error surfaces as a real
+  // message instead of an unhandled exception.
   try {
-    console.error(`[instagram-oauth-callback] starting short-lived token exchange, redirect_uri=${redirectUri}`);
-    const exchangeRes = await fetchWithTimeout(TOKEN_URL, {
+    const exchangeRes = await fetch(TOKEN_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: new URLSearchParams({
@@ -115,20 +83,22 @@ export async function GET({ request }: { request: Request }) {
         redirect_uri: redirectUri,
       }),
     });
-    console.error(`[instagram-oauth-callback] short-lived exchange responded: ${exchangeRes.status}`);
 
     if (!exchangeRes.ok) {
       // Deliberately NOT a 5xx: Webflow Cloud's edge intercepts any 5xx this
       // Worker returns and replaces the body with its own branded "502 Bad
-      // gateway" page, discarding the diagnostic text below -- which made
-      // every failure here look like an unexplained platform crash. 4xx
+      // gateway" page, discarding the message below -- which makes an
+      // ordinary handled error look like an unexplained platform crash. 4xx
       // bodies pass through untouched.
+      //
+      // The redirect_uri is echoed because Instagram reports a mismatch with
+      // the same opaque "Error validating verification code" text it uses for
+      // an already-spent code, and this route is a one-time setup step a
+      // human reads the output of.
       return new Response(
         `Instagram token exchange failed: ${exchangeRes.status} ${await exchangeRes.text()}\n\n` +
           `redirect_uri sent: ${redirectUri}\n` +
-          `(url.origin seen by the Worker: ${url.origin})\n` +
-          `If those differ from the URI registered in the Meta app, set INSTAGRAM_REDIRECT_URI to the correct value.\n` +
-          `Note: Instagram returns this same error for an already-used or expired code, so retry with a fresh one before chasing a mismatch.`,
+          `Instagram returns this same error for an already-used or expired code, so retry with a fresh one before chasing a mismatch.`,
         { status: 400 },
       );
     }
@@ -143,9 +113,7 @@ export async function GET({ request }: { request: Request }) {
     longLivedUrl.searchParams.set('client_secret', clientSecret);
     longLivedUrl.searchParams.set('access_token', shortLived.access_token);
 
-    console.error('[instagram-oauth-callback] starting long-lived token exchange');
-    const longLivedRes = await fetchWithTimeout(longLivedUrl);
-    console.error(`[instagram-oauth-callback] long-lived exchange responded: ${longLivedRes.status}`);
+    const longLivedRes = await fetch(longLivedUrl);
     if (!longLivedRes.ok) {
       return new Response(
         `Instagram long-lived token exchange failed: ${longLivedRes.status} ${await longLivedRes.text()}`,
@@ -166,15 +134,7 @@ export async function GET({ request }: { request: Request }) {
     // which would escape this catch and crash the handler anyway, hiding
     // the real failure behind a bare edge 502 with zero log output.
     const message = err instanceof Error ? err.message : String(err);
-    const timedOut = err instanceof Error && err.name === 'AbortError';
-    console.error(
-      `[instagram-oauth-callback] unhandled error${timedOut ? ' (timed out)' : ''}: ${message}`,
-    );
-    return new Response(
-      timedOut
-        ? 'Instagram OAuth callback: a fetch to Instagram/Meta timed out after 8s (no response at all -- likely a network-level block, not a bad request).'
-        : `Instagram OAuth callback threw: ${message}`,
-      { status: 400 },
-    );
+    console.error(`[instagram-oauth-callback] unhandled error: ${message}`);
+    return new Response(`Instagram OAuth callback threw: ${message}`, { status: 400 });
   }
 }
