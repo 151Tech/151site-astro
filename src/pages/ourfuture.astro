@@ -30,9 +30,7 @@ const marketTags = [
     .re-hero-content { position: relative; z-index: 1; }
     .re-hero .eyebrow { display: inline-block; font-family: var(--font-inter), sans-serif; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.92); margin-bottom: 1rem; border: 1px solid rgba(255,255,255,0.30); padding: 0.3rem 0.9rem; border-radius: 999px; }
     .re-hero h1 { font-size: clamp(2.8rem, 6vw, 5rem); color: #fff; line-height: 1; margin-bottom: 0.75rem; }
-    .re-hero p { font-family: var(--font-inter), sans-serif; font-size: 1.05rem; color: rgba(255,255,255,0.94); max-width: 540px; margin: 0 auto 2rem; line-height: 1.6; }
-    .re-hero a.btn-white { display: inline-block; background: #fff; color: var(--red); padding: 0.85rem 2.2rem; border-radius: var(--radius-pill); font-family: var(--font-inter), sans-serif; font-size: 0.88rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; text-decoration: none; box-shadow: 0 4px 18px rgba(0,0,0,0.18); transition: transform 0.2s, box-shadow 0.2s; }
-    .re-hero a.btn-white:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,0,0,0.25); }
+    .re-hero p { font-family: var(--font-inter), sans-serif; font-size: 1.05rem; color: rgba(255,255,255,0.94); max-width: 540px; margin: 0 auto; line-height: 1.6; }
     .re-overview { background-color: #f4efe9; background-image: var(--bg-quote); background-size: 1250px auto; background-position: top center; background-repeat: repeat; padding: var(--section-pad); }
     .re-overview-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
     .re-overview-text { display: flex; flex-direction: column; justify-content: flex-start; aspect-ratio: 1 / 1; box-sizing: border-box; }
@@ -123,7 +121,6 @@ const marketTags = [
       <span class="eyebrow">{p.hero?.eyebrow ?? 'Est. 2017'}</span>
       <h1>{p.hero?.heading ?? 'Here We Grow Again.'}</h1>
       <p>{p.hero?.body ?? '151 Coffee is expanding rapidly across the country. If you have a site that fits our criteria, we want to hear from you.'}</p>
-      <a href={p.hero?.ctaHref ?? '#contact'} class="btn-white">{p.hero?.ctaLabel ?? 'Get in Touch'}</a>
     </div>
   </section>
 
@@ -166,6 +163,7 @@ const marketTags = [
                 <img loading="lazy" decoding="async"
                   src={imageUrl(photo.image, { width: 700 })}
                   alt={photo.imageAlt}
+                  width="700" height="700"
                 />
               </div>
             )
