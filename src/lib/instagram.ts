@@ -25,12 +25,19 @@
 // call on every request.
 const MEDIA_URL = 'https://graph.instagram.com/me/media';
 const CACHE_TTL_SECONDS = 60 * 60; // 1 hour
+// Versioned: entries cached under the old key hold a shape with no videoUrl,
+// so bumping this retires them immediately instead of serving stills for up
+// to an hour after a deploy.
+const MEDIA_CACHE_KEY = 'media_cache_v2';
 const MEDIA_FIELDS = 'id,caption,media_type,media_url,thumbnail_url,permalink,timestamp';
 
 export interface InstagramMedia {
   id: string;
   permalink: string;
+  /** Still frame: a video's cover image, or the photo itself for an image post. */
   mediaUrl: string;
+  /** Playable source, present only for videos/reels. */
+  videoUrl?: string;
   caption: string;
   timestamp: string;
 }
@@ -61,16 +68,22 @@ async function fetchLatestMedia(accessToken: string, count: number): Promise<Ins
       timestamp: string;
     }[];
   };
-  return (data.data ?? []).slice(0, count).map((m) => ({
-    id: m.id,
-    permalink: m.permalink,
-    // Reels/videos only expose a playable media_url, not a still frame --
-    // thumbnail_url is the cover image Meta generates for those, so it's
-    // preferred whenever present and media_url is the fallback for images.
-    mediaUrl: m.thumbnail_url ?? m.media_url,
-    caption: m.caption ?? '',
-    timestamp: m.timestamp,
-  }));
+  return (data.data ?? []).slice(0, count).map((m) => {
+    // For a video or reel, media_url is the playable file and thumbnail_url
+    // is the cover frame Meta generates for it; for a photo there is no
+    // thumbnail_url and media_url is the image itself. Keeping both lets the
+    // carousel actually play videos rather than showing a still with a play
+    // triangle over it.
+    const isVideo = m.media_type === 'VIDEO' || m.media_type === 'REELS';
+    return {
+      id: m.id,
+      permalink: m.permalink,
+      mediaUrl: m.thumbnail_url ?? m.media_url,
+      videoUrl: isVideo ? m.media_url : undefined,
+      caption: m.caption ?? '',
+      timestamp: m.timestamp,
+    };
+  });
 }
 
 // Returns null (never throws) when the integration isn't configured yet, or
@@ -83,7 +96,7 @@ export async function getLatestInstagramMedia(env: InstagramEnv, count = 3): Pro
   }
 
   try {
-    const cached = await env.INSTAGRAM_CACHE.get('media_cache');
+    const cached = await env.INSTAGRAM_CACHE.get(MEDIA_CACHE_KEY);
     if (cached) return JSON.parse(cached);
 
     const accessToken = await env.INSTAGRAM_CACHE.get('access_token');
@@ -93,7 +106,7 @@ export async function getLatestInstagramMedia(env: InstagramEnv, count = 3): Pro
     }
 
     const media = await fetchLatestMedia(accessToken, count);
-    await env.INSTAGRAM_CACHE.put('media_cache', JSON.stringify(media), {
+    await env.INSTAGRAM_CACHE.put(MEDIA_CACHE_KEY, JSON.stringify(media), {
       expirationTtl: CACHE_TTL_SECONDS,
     });
     return media;
