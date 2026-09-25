@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-25T16:37:30.258Z",
+  "generatedAt": "2026-09-25T16:55:09.027Z",
   "stories": {
     "settings/global": {
       "nav": [
@@ -1851,13 +1851,13 @@
           "tags": [],
           "badge": "",
           "image": {
-            "id": 220360954289466,
+            "id": 223909968103007,
             "alt": "",
             "name": "",
             "focus": "",
             "title": "",
             "source": "",
-            "filename": "https://a.storyblok.com/f/294671107081428/1350x1350/9ebf77ccd9/64.jpg",
+            "filename": "https://a.storyblok.com/f/294671107081428/1350x1350/4eca94920e/72.jpg",
             "copyright": "",
             "fieldtype": "asset",
             "meta_data": {
@@ -2932,13 +2932,13 @@
           "tags": [],
           "badge": "",
           "image": {
-            "id": 220360954281272,
+            "id": 223909968119396,
             "alt": "",
             "name": "",
             "focus": "",
             "title": "",
             "source": "",
-            "filename": "https://a.storyblok.com/f/294671107081428/1350x1350/9c2d6224bc/65.jpg",
+            "filename": "https://a.storyblok.com/f/294671107081428/1350x1350/0aa51c95f6/74.jpg",
             "copyright": "",
             "fieldtype": "asset",
             "meta_data": {
@@ -2994,13 +2994,13 @@
           "tags": [],
           "badge": "",
           "image": {
-            "id": 220360954387773,
+            "id": 223909968115298,
             "alt": "",
             "name": "",
             "focus": "",
             "title": "",
             "source": "",
-            "filename": "https://a.storyblok.com/f/294671107081428/1350x1350/5e866bacdc/6.jpg",
+            "filename": "https://a.storyblok.com/f/294671107081428/1350x1350/1b03d015e4/7.jpg",
             "copyright": "",
             "fieldtype": "asset",
             "meta_data": {
@@ -3025,13 +3025,13 @@
           "tags": [],
           "badge": "",
           "image": {
-            "id": 220360954281273,
+            "id": 223909968115299,
             "alt": "",
             "name": "",
             "focus": "",
             "title": "",
             "source": "",
-            "filename": "https://a.storyblok.com/f/294671107081428/1350x1350/588c840371/7.jpg",
+            "filename": "https://a.storyblok.com/f/294671107081428/1350x1350/86e5c77396/8.jpg",
             "copyright": "",
             "fieldtype": "asset",
             "meta_data": {
@@ -3056,13 +3056,13 @@
           "tags": [],
           "badge": "",
           "image": {
-            "id": 220360954318140,
+            "id": 223909968111201,
             "alt": "",
             "name": "",
             "focus": "",
             "title": "",
             "source": "",
-            "filename": "https://a.storyblok.com/f/294671107081428/1350x1350/c5d3244f11/5.jpg",
+            "filename": "https://a.storyblok.com/f/294671107081428/1350x1350/5f9c8fd435/6.jpg",
             "copyright": "",
             "fieldtype": "asset",
             "meta_data": {
@@ -3087,7 +3087,19 @@
           "tags": [],
           "badge": "",
           "image": {
-            "filename": "/images/egg-white-frittata.webp"
+            "id": 223909968127589,
+            "alt": "",
+            "name": "",
+            "focus": "",
+            "title": "",
+            "source": "",
+            "filename": "https://a.storyblok.com/f/294671107081428/1350x1350/2c5950e0df/75.jpg",
+            "copyright": "",
+            "fieldtype": "asset",
+            "meta_data": {
+              "size": "1350x1350"
+            },
+            "is_external_url": false
           },
           "category": "categories/hotfood",
           "subtitle": "Spinach, Feta & Roasted Red Pepper",
@@ -3106,13 +3118,13 @@
           "tags": [],
           "badge": "",
           "image": {
-            "id": 220360954297659,
+            "id": 223909968094814,
             "alt": "",
             "name": "",
             "focus": "",
             "title": "",
             "source": "",
-            "filename": "https://a.storyblok.com/f/294671107081428/1350x1350/804cbba36e/63.jpg",
+            "filename": "https://a.storyblok.com/f/294671107081428/1350x1350/d9850a721d/73.jpg",
             "copyright": "",
             "fieldtype": "asset",
             "meta_data": {
@@ -3137,7 +3149,19 @@
           "tags": [],
           "badge": "",
           "image": {
-            "filename": "/images/bacon-cheddar-egg-bites.webp"
+            "id": 223909968111200,
+            "alt": "",
+            "name": "",
+            "focus": "",
+            "title": "",
+            "source": "",
+            "filename": "https://a.storyblok.com/f/294671107081428/1350x1350/d58d3c8205/76.jpg",
+            "copyright": "",
+            "fieldtype": "asset",
+            "meta_data": {
+              "size": "1350x1350"
+            },
+            "is_external_url": false
           },
           "category": "categories/hotfood",
           "subtitle": "Three Per Order",
