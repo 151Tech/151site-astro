@@ -33,11 +33,20 @@ const marketTags = [
     .re-hero p { font-family: var(--font-inter), sans-serif; font-size: 1.05rem; color: rgba(255,255,255,0.94); max-width: 540px; margin: 0 auto; line-height: 1.6; }
     .re-overview { background-color: #f4efe9; background-image: var(--bg-quote); background-size: 1250px auto; background-position: top center; background-repeat: repeat; padding: var(--section-pad); }
     .re-overview-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+    /* A grid item defaults to min-width:auto, so a wide child can force the
+       track wider than the container instead of being made to fit. */
+    .re-overview-inner > * { min-width: 0; }
     .re-overview-text { display: flex; flex-direction: column; justify-content: flex-start; aspect-ratio: 1 / 1; box-sizing: border-box; }
     .re-overview-text h2 { font-size: clamp(1.8rem, 3.5vw, 2.8rem); color: var(--black); line-height: 1.1; margin-bottom: 1.25rem; }
     .re-overview-text h2 span { color: var(--red); }
     .re-overview-text > p { font-family: var(--font-inter), sans-serif; font-size: 1.08rem; line-height: 1.85; color: rgba(17,17,17,0.62); padding: 0.4rem 0; margin-bottom: 1rem; }
-    .re-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-top: auto; padding-top: 1.5rem; align-items: stretch; }
+    /* auto-fit rather than a fixed 1fr 1fr: the two cards sit side by side
+       wherever there is room for them and drop to one column on their own
+       below roughly 340px of usable width. A fixed two-column track could not
+       shrink past the min-content width of "950sf" plus its padding, which is
+       what pushed this whole section past the right edge of a 320-375px
+       phone. */
+    .re-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 1.25rem; margin-top: auto; padding-top: 1.5rem; align-items: stretch; }
     .re-stat {
       display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
       background:
@@ -45,13 +54,14 @@ const marketTags = [
           linear-gradient(160deg, #282828 0%, #1c1c1c 100%);
       border: 1px solid rgba(255,255,255,0.06);
       border-radius: var(--radius);
-      padding: 1.1rem 1.4rem;
+      padding: 1.1rem clamp(0.85rem, 4vw, 1.4rem);
+      min-width: 0;
       box-shadow: 0 10px 26px rgba(0,0,0,0.16);
       transition: border-color 0.2s, transform 0.2s;
     }
     .re-stat:hover { border-color: rgba(230,57,70,0.40); transform: translateY(-4px); }
-    .re-stat-num { font-size: 3.75rem; font-weight: 900; color: var(--red); line-height: 1; margin-bottom: 0.4rem; }
-    .re-stat-num-sm { font-size: 2.5rem; }
+    .re-stat-num { font-size: clamp(2.75rem, 13vw, 3.75rem); font-weight: 900; color: var(--red); line-height: 1; margin-bottom: 0.4rem; }
+    .re-stat-num-sm { font-size: clamp(1.9rem, 9vw, 2.5rem); }
     .re-stat-label { font-family: var(--font-inter), sans-serif; font-size: 0.95rem; color: rgba(255,255,255,0.90); font-weight: 700; letter-spacing: 0.03em; margin-bottom: 0.6rem; }
     .re-stat-desc { font-family: var(--font-inter), sans-serif; font-size: 1rem; line-height: 1.55; color: rgba(244,239,233,0.80); }
     .re-map-img { border-radius: var(--radius); overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.22); position: relative; background: #1a1a1a; aspect-ratio: 1 / 1; }
@@ -109,7 +119,10 @@ const marketTags = [
     }
     @media (max-width: 600px) {
       .criteria-grid { grid-template-columns: 1fr; }
-      .re-stats { grid-template-columns: 1fr 1fr; }
+      /* .re-stats deliberately not pinned to two columns here: that override
+         beat the auto-fit track above and kept two cards side by side down to
+         77px each. auto-fit already drops them to one column when that is the
+         only way they fit. */
     }
   </style>
 
