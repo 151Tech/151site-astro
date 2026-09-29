@@ -1,0 +1,18 @@
+{
+  "_comment": "Per-store amenities, keyed by location slug (from Bryson, 2026-09-29). patio: \"covered\" or \"uncovered\". wifi: guest Wi-Fi. Every store has a patio; North Richland Hills, Flower Mound and Manhattan are the only uncovered ones. Lawrence is the only store with guest Wi-Fi today.",
+  "151-coffee-alliance": { "patio": "covered", "wifi": false },
+  "151-coffee-burleson": { "patio": "covered", "wifi": false },
+  "151-coffee-coppell": { "patio": "covered", "wifi": false },
+  "151-coffee-flower-mound": { "patio": "uncovered", "wifi": false },
+  "151-coffee-keller": { "patio": "covered", "wifi": false },
+  "151-coffee-lawrence": { "patio": "covered", "wifi": true },
+  "151-coffee-lewisville": { "patio": "covered", "wifi": false },
+  "151-coffee-manhattan": { "patio": "uncovered", "wifi": false },
+  "151-coffee-north-richland-hills": { "patio": "uncovered", "wifi": false },
+  "151-coffee-overland-park": { "patio": "covered", "wifi": false },
+  "151-coffee-plano": { "patio": "covered", "wifi": false },
+  "151-coffee-roanoke": { "patio": "covered", "wifi": false },
+  "151-coffee-rowlett": { "patio": "covered", "wifi": false },
+  "151-coffee-the-colony": { "patio": "covered", "wifi": false },
+  "151-coffee-westworth-village": { "patio": "covered", "wifi": false }
+}

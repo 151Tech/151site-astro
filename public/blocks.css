@@ -98,9 +98,9 @@
 /* Split Feature: image one side, text the other (alternating) */
 .blk-split {
     padding: var(--section-pad);
-    background-color: #f4efe9;
+    background-color: var(--quote-ground);
     background-image: var(--bg-quote);
-    background-size: 1250px auto;
+    background-size: auto;
     background-position: top center;
     background-repeat: repeat;
 }
@@ -168,9 +168,9 @@
 /* Testimonial Grid: quote cards on light bg */
 .blk-testimonials {
     padding: var(--section-pad);
-    background-color: #f4efe9;
+    background-color: var(--quote-ground);
     background-image: var(--bg-quote);
-    background-size: 1250px auto;
+    background-size: auto;
     background-position: top center;
     background-repeat: repeat;
 }
@@ -281,9 +281,9 @@
 /* Card Grid: image/title/subtitle/link cards */
 .blk-cardgrid {
     padding: var(--section-pad);
-    background-color: #f4efe9;
+    background-color: var(--quote-ground);
     background-image: var(--bg-quote);
-    background-size: 1250px auto;
+    background-size: auto;
     background-position: top center;
     background-repeat: repeat;
 }
@@ -298,7 +298,8 @@
     transition: transform 0.35s ease, box-shadow 0.35s ease;
 }
 .blk-card:hover { transform: translateY(-8px); box-shadow: 0 20px 48px rgba(228,37,43,0.22); }
-.blk-card-img { aspect-ratio: 1; background-size: cover; background-position: center; transition: transform 0.5s cubic-bezier(0.22,1,0.36,1); }
+.blk-card-media { aspect-ratio: 1; overflow: hidden; }
+.blk-card-img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s cubic-bezier(0.22,1,0.36,1); }
 @media (hover:hover) and (pointer:fine) { .blk-card:hover .blk-card-img { transform: scale(1.06); } }
 .blk-card-body { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1.4rem 1.6rem; }
 .blk-card-body h3 { color: #fff; font-size: 1.15rem; margin: 0; }

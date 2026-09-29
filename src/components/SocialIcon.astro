@@ -1,0 +1,20 @@
+---
+// Brand icons for the social links (Instagram section header, footer).
+// Decorative: the surrounding link carries the aria-label.
+interface Props {
+  name: 'tiktok' | 'instagram' | 'facebook' | 'linkedin';
+}
+const { name } = Astro.props;
+---
+{name === 'tiktok' && (
+  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.6 5.82c-.8-.85-1.24-1.96-1.24-3.14h-3.06v13.44c0 1.53-1.24 2.77-2.77 2.77a2.77 2.77 0 0 1 0-5.54c.28 0 .55.04.8.12v-3.1a5.87 5.87 0 0 0-.8-.06 5.83 5.83 0 1 0 5.83 5.83V9.4a7.16 7.16 0 0 0 4.24 1.37V7.7a4.15 4.15 0 0 1-3-1.88z"/></svg>
+)}
+{name === 'instagram' && (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+)}
+{name === 'facebook' && (
+  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 21v-7.6h2.55l.38-2.96h-2.93V8.55c0-.86.24-1.44 1.47-1.44h1.57V4.46A21 21 0 0 0 14.3 4.3c-2.24 0-3.78 1.37-3.78 3.87v2.16H7.95v2.96h2.57V21h3z"/></svg>
+)}
+{name === 'linkedin' && (
+  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45z"/></svg>
+)}

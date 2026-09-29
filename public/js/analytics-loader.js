@@ -1,17 +1,9 @@
-// Loads Google Analytics (GA4) and the Meta/Facebook Pixel, but ONLY once
-// the visitor has actively clicked "Accept All" on the cookie banner
-// (cookie-consent.js, via consent.js) - never on page load by default, and
-// never after a decline or an implied non-answer. IDs come from
-// window.COFFEE151_TRACKING_IDS, injected server-side in Layout.astro from
-// the PUBLIC_GA_MEASUREMENT_ID / PUBLIC_META_PIXEL_ID env vars. Either one
-// left blank just skips that vendor - so this file is safe to ship now,
-// before those IDs exist, and "activates" itself the moment they're set in
-// Webflow Cloud with no further code change.
+// Loads Google Analytics (GA4) and the Meta Pixel only after the visitor
+// clicks "Accept All" on the cookie banner. IDs come from
+// window.COFFEE151_TRACKING_IDS (Layout.astro, from PUBLIC_GA_MEASUREMENT_ID
+// and PUBLIC_META_PIXEL_ID); a blank ID skips that vendor.
 //
-// No <noscript> pixel fallback: Meta's standard snippet includes one, but it
-// fires unconditionally for visitors with JS disabled, bypassing consent
-// entirely. Skipped on purpose - that audience is negligible next to the
-// privacy cost of a tracker that can't be gated.
+// There is no <noscript> pixel, since it would fire without consent.
 (() => {
     const consent = window.COFFEE151_CONSENT;
     const ids = window.COFFEE151_TRACKING_IDS || {};
@@ -33,8 +25,8 @@
         function gtag() { window.dataLayer.push(arguments); }
         window.gtag = gtag;
         gtag('js', new Date());
-        // GA4's Consent Mode v2: explicitly grant both, since the visitor has
-        // already said "Accept All" by the time this function ever runs.
+        // GA4 Consent Mode v2: both granted, since this only runs after
+        // "Accept All".
         gtag('consent', 'update', { ad_storage: 'granted', analytics_storage: 'granted' });
         gtag('config', ids.gaId, { anonymize_ip: true });
     }
@@ -43,7 +35,6 @@
         if (metaLoaded || !ids.metaPixelId) return;
         metaLoaded = true;
 
-        /* eslint-disable */
         !function (f, b, e, v, n, t, s) {
             if (f.fbq) return; n = f.fbq = function () {
                 n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments)
@@ -52,7 +43,6 @@
             n.queue = []; t = b.createElement(e); t.async = !0; t.src = v;
             s = b.getElementsByTagName(e)[0]; s.parentNode.insertBefore(t, s)
         }(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
-        /* eslint-enable */
 
         window.fbq('init', ids.metaPixelId);
         window.fbq('track', 'PageView');
@@ -63,15 +53,15 @@
         loadMetaPixel();
     }
 
-    // Consent already granted on a previous visit/page - load immediately.
+    // Consent granted on an earlier page.
     if (consent.get()?.accepted === true) {
         loadAll();
     }
 
-    // Consent granted live, on this page, via the banner.
+    // Consent granted on this page.
     consent.onChange((record) => {
         if (record.accepted === true) loadAll();
-        // Revocation is handled by cookie-consent.js reloading the page --
-        // there's no in-page "unload" call for either vendor's script.
+        // Revoking consent reloads the page (cookie-consent.js); neither
+        // vendor can be unloaded in place.
     });
 })();

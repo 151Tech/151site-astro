@@ -1,0 +1,18 @@
+{
+  "_comment": "Nearest major intersection for each store, keyed by location slug. Read from OpenStreetMap road data around each store's coordinates (2026-09-29), then checked for sense. A store's Storyblok \"Cross Streets\" field, once it exists and is filled in, wins over this file.",
+  "151-coffee-alliance": "I-35W & Prairie Vista Dr",
+  "151-coffee-burleson": "Wilshire Blvd & John Jones Dr",
+  "151-coffee-coppell": "Denton Tap Rd & Sandy Lake Rd",
+  "151-coffee-flower-mound": "Long Prairie Rd & Sagebrush Dr",
+  "151-coffee-keller": "Keller Pkwy & Keller Smithfield Rd",
+  "151-coffee-lawrence": "W 23rd St & Naismith Dr",
+  "151-coffee-lewisville": "W Main St & I-35E",
+  "151-coffee-manhattan": "N 3rd St & Bluemont Ave",
+  "151-coffee-north-richland-hills": "Rufe Snow Dr & Mid Cities Blvd",
+  "151-coffee-overland-park": "Metcalf Ave & W 91st St",
+  "151-coffee-plano": "Preston Rd & Parker Rd",
+  "151-coffee-roanoke": "US 377 & SH 114",
+  "151-coffee-rowlett": "Lakeview Pkwy & Rowlett Rd",
+  "151-coffee-the-colony": "SH 121 & Destination Dr",
+  "151-coffee-westworth-village": "Westworth Blvd & River Oaks Blvd"
+}

@@ -46,7 +46,7 @@ if (!instagramMedia) {
       permalink: 'https://www.instagram.com/p/DdcFTR4ANIZ/',
       mediaUrl: '/images/instagram/ig-1.jpg',
       videoUrl: '/videos/instagram/ig-1.mp4',
-      caption: 'See this post on Instagram.',
+      caption: '',
       timestamp: '',
     },
     {
@@ -54,7 +54,7 @@ if (!instagramMedia) {
       permalink: 'https://www.instagram.com/p/DdJeBs_xSy4/',
       mediaUrl: '/images/instagram/ig-2.jpg',
       videoUrl: '/videos/instagram/ig-2.mp4',
-      caption: 'See this post on Instagram.',
+      caption: '',
       timestamp: '',
     },
     {
@@ -62,7 +62,7 @@ if (!instagramMedia) {
       permalink: 'https://www.instagram.com/p/DdefzadkwAo/',
       mediaUrl: '/images/instagram/ig-3.jpg',
       videoUrl: '/videos/instagram/ig-3.mp4',
-      caption: 'See this post on Instagram.',
+      caption: '',
       timestamp: '',
     },
   ];
@@ -149,20 +149,15 @@ const homeSchema = graph(
   },
 );
 
-const storesJson = JSON.stringify(locations.map((l: any) => ({
-  name: l.name, address: l.address, city: l.city, state: l.state, zip: l.zip, lat: Number(l.lat), lng: Number(l.lng),
-})));
-
 ---
 <Layout title={p.seo?.title ?? '151 Coffee | Drive-Thru Coffee, Cold Brew & Energy Drinks'} description={p.seo?.description} ogImage={imageUrl(p.seo?.ogImage, { width: 1200, height: 630 })}>
-  <fragment slot="head">
-    <link rel="preconnect" href="https://unpkg.com" crossorigin />
+  <Fragment slot="head">
     <JsonLd schema={homeSchema} />
-  </fragment>
+  </Fragment>
 
   <Nav />
 
-  <!-- Hero -->
+  {/* Hero */}
   <section class="hero">
     <div>
       <HeroVideo src={mediaUrl(p.hero?.videoUrl)} videoClass="hero-video" />
@@ -170,7 +165,10 @@ const storesJson = JSON.stringify(locations.map((l: any) => ({
     <div class="container">
       <div class="hero-content">
         <Editable blok={p} />
-        <h1>{p.hero?.heading ?? '151 Coffee'}<br /><span>{p.hero?.subheadingLine1 ?? "It's a Good Day"}</span><br /><span>{p.hero?.subheadingLine2 ?? 'to Have a Good Day'}</span></h1>
+        {/* The kicker is part of the H1 on purpose: the slogan alone says
+            nothing a search engine can match to "drive-thru coffee" or a
+            region, so the page's main heading carried no keywords. */}
+        <h1><span class="hero-kicker">{p.hero?.keywordLine || 'Drive-Thru Coffee in DFW & Kansas'}</span>{' '}{p.hero?.heading ?? '151 Coffee'}{[p.hero?.subheadingLine1 ?? "It's a Good Day", p.hero?.subheadingLine2 ?? 'to Have a Good Day'].filter((line) => line?.trim()).map((line) => <><br /><span>{line}</span></>)}</h1>
         <div class="hero-buttons">
           <a href={p.hero?.ctaHref ?? '/menu'} class="main-menu-btn2">{p.hero?.ctaLabel ?? 'See Our Menu'}</a>
         </div>
@@ -178,7 +176,7 @@ const storesJson = JSON.stringify(locations.map((l: any) => ({
     </div>
   </section>
 
-  <!-- Invest Banner -->
+  {/* Invest Banner */}
   {p.investBanner?.visible !== false && (
     <section class:list={['invest-banner', { 'has-image': !!imageUrl(p.investBanner?.image, { width: 200 }) }]}>
       <div class="invest-banner-inner">
@@ -209,13 +207,12 @@ const storesJson = JSON.stringify(locations.map((l: any) => ({
 
   <BlockRenderer sections={p.sectionsAfterHero} />
 
-  <!-- Featured Drink -->
+  {/* Featured Drink */}
   {p.featuredDrink?.visible !== false && (
     <section class="featured-drink">
       <div class="featured-inner">
         <Editable blok={p.featuredDrink} />
         <div class="featured-visual">
-          <h2 class="featured-mobile-name">{p.featuredDrink?.name ?? 'Our'} <span>{p.featuredDrink?.nameBold ?? 'Coffee'}</span></h2>
           <div class="featured-card">
             <div class="drink-img-wrap">
               {imageUrl(p.featuredDrink?.image, { width: 960 }) && (
@@ -226,7 +223,7 @@ const storesJson = JSON.stringify(locations.map((l: any) => ({
         </div>
         <div class="featured-text">
           <span class="featured-badge">{p.featuredDrink?.badge ?? 'Featured Drink'}</span>
-          <h2>{p.featuredDrink?.name ?? 'Our'}<br /><span>{p.featuredDrink?.nameBold ?? 'Coffee'}</span></h2>
+          <h2>{p.featuredDrink?.name ?? 'Our'}{' '}<br /><span>{p.featuredDrink?.nameBold ?? 'Coffee'}</span></h2>
           <p>{p.featuredDrink?.description ?? 'Handcrafted espresso, cold brew, and energy drinks made your way.'}</p>
           <a href={p.featuredDrink?.ctaHref ?? '/menu'} class="featured-cta">{p.featuredDrink?.ctaLabel ?? 'Explore the Menu'}</a>
         </div>
@@ -234,13 +231,13 @@ const storesJson = JSON.stringify(locations.map((l: any) => ({
     </section>
   )}
 
-  <!-- Instagram feed takes the Locations section's old slot and dark-grid
+  {/* Instagram feed takes the Locations section's old slot and dark-grid
        background on the homepage; the full locator (search + map) still
        lives on its own page at /locations, linked from the nav and footer,
-       so nothing here was the only way to find a store. -->
+       so nothing here was the only way to find a store. */}
   <InstagramCarousel media={instagramMedia} social={socialLinks} />
 
-  <!-- Menu Section -->
+  {/* Menu Section */}
   {(p.visibility?.menuGrid ?? true) && (
   <section class="features" id="features">
     <div class="container">
@@ -250,16 +247,28 @@ const storesJson = JSON.stringify(locations.map((l: any) => ({
         {(p.menuSection?.cards ?? []).map((card: any, i: number) => (
           <a href={card.href} class="feature-card">
             <Editable blok={card} />
-            <div
-              class="feature-card-img"
-              style={imageUrl(card.image, { width: 700 })
-                ? `background-image:url('${imageUrl(card.image, { width: 700 })}')`
-                : undefined}
-            ></div>
+            {/* A real <img> (was a CSS background): lazy-loaded below the
+                fold, responsive via srcset, and carries alt text - the
+                Storyblok asset's alt when set, else the card title. */}
+            {imageUrl(card.image, { width: 700 }) && (
+              <div class="feature-card-media">
+                <img
+                  class="feature-card-img"
+                  src={imageUrl(card.image, { width: 700 })}
+                  srcset={[400, 700, 1000].map((w) => `${imageUrl(card.image, { width: w })} ${w}w`).join(', ')}
+                  sizes="(min-width: 1200px) 560px, (min-width: 700px) 45vw, 92vw"
+                  width="700"
+                  height="700"
+                  loading="lazy"
+                  decoding="async"
+                  alt={card.image?.alt || card.title || ''}
+                />
+              </div>
+            )}
             <div class="card-content">
               <h3>
                 {card.title}
-                <span class="feature-card-subtitle" style={i===1?{color:'var(--red)'}:{}}>{card.subtitle}</span>
+                <span class={i === 1 ? 'feature-card-subtitle feature-card-subtitle--red' : 'feature-card-subtitle'}>{card.subtitle}</span>
               </h3>
               <span class="menu-btn">{card.label}</span>
             </div>
@@ -270,7 +279,7 @@ const storesJson = JSON.stringify(locations.map((l: any) => ({
   </section>
   )}
 
-  <!-- CTA -->
+  {/* CTA */}
   {(p.visibility?.cta ?? true) && (
   <section class="cta">
     <div class="container">
@@ -303,31 +312,31 @@ const storesJson = JSON.stringify(locations.map((l: any) => ({
   </section>
   )}
 
-  <!-- Reviews -->
+  {/* Reviews */}
   {(p.visibility?.reviews ?? true) && (
-  <section class="pricing" id="pricing">
+  <section class="reviews" id="reviews">
     <div class="container">
       <div class="section-header"><h2>{p.reviews?.heading ?? 'What People Are Saying'}</h2></div>
-      <div class="pricing-grid">
+      <div class="reviews-grid">
         {(p.reviews?.items ?? []).map((r: any, i: number) => (
-          <div class="pricing-card">
+          <figure class="review-card">
             <Editable blok={r} />
-            <p class="plan-price">{r.quote}</p>
-            <div class="review-byline">
-              <span class="review-avatar">{(r.name ?? '?').charAt(0)}</span>
+            <blockquote class="review-quote">{r.quote}</blockquote>
+            <figcaption class="review-byline">
+              <span class="review-avatar" aria-hidden="true">{(r.name ?? '?').charAt(0)}</span>
               <div class="review-byline-text">
-                <h3 class="plan-name">{r.name}</h3>
+                <p class="review-name">{r.name}</p>
                 {r.location && <span class="review-location">{r.location}</span>}
               </div>
-            </div>
-          </div>
+            </figcaption>
+          </figure>
         ))}
       </div>
     </div>
   </section>
   )}
 
-  <!-- FAQ -->
+  {/* FAQ */}
   {(p.visibility?.faq ?? true) && (
   <section class="faq" id="faq">
     <div class="container">
@@ -345,16 +354,16 @@ const storesJson = JSON.stringify(locations.map((l: any) => ({
   </section>
   )}
 
-  <!-- Contact -->
+  {/* Contact */}
   {(p.visibility?.contact ?? true) && (
   <section class="contact" id="contact">
     <div class="container">
       <Editable blok={p.contact} />
       <div class="section-header"><h2>{p.contact?.heading ?? 'Get In Touch'}</h2></div>
       <div class="contact-form-wrapper">
-        <form class="contact-form" name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+        <form class="contact-form" name="contact" method="POST" data-ajax-form>
           <input type="hidden" name="form-name" value="contact" />
-          <p style="display:none"><label>Leave this field blank: <input name="bot-field" /></label></p>
+          <p class="visually-hidden-field" aria-hidden="true"><label>Leave this field blank: <input name="bot-field" /></label></p>
           <div class="form-header">
             <h3>{p.contact?.formHeading ?? 'Send Us a Message'}</h3>
             <p>{p.contact?.subheading ?? "We'd love to hear from you."}</p>
@@ -379,11 +388,6 @@ const storesJson = JSON.stringify(locations.map((l: any) => ({
 
   <Footer />
 
-  <script define:vars={{ storesJson, hours: s.hours, phone: s.phone }} is:inline>
-    window.COFFEE151_STORES = JSON.parse(storesJson);
-    window.COFFEE151_LOCATOR = { hours, phone };
-  </script>
-  <script src="/js/locator-loader.js" is:inline></script>
   <script is:inline>
     (function () {
       document.querySelectorAll('.cta-signature').forEach(function (sig) {

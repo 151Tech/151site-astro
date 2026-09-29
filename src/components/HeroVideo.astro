@@ -1,4 +1,5 @@
 ---
+import heroPosters from '../data/hero-posters.json';
 // Renders a full-bleed hero background from a URL that can be:
 //  - a YouTube link (any format)  -> autoplay/muted/looping embed
 //  - a Vimeo link                 -> autoplay/muted/looping embed
@@ -17,10 +18,17 @@ interface Props {
   // video never even loads on mobile when this is set (saves bandwidth).
   // Desktop is unaffected and keeps playing the normal video.
   mobileImage?: string;
+  // Still frame shown until the video plays. Defaults to the committed frame
+  // for this exact video URL (src/data/hero-posters.json).
+  poster?: string;
 }
 const { src, videoClass = '', blurBackdrop = false, mobileImage } = Astro.props;
 
 const raw = (src && src.trim()) ? src.trim() : '';
+// The video itself still loads at idle (see the script below) so it never
+// competes with the page for bandwidth; the poster is what fills the hero
+// until then, so the first paint isn't an empty black box.
+const poster = Astro.props.poster || (heroPosters as Record<string, string>)[raw] || undefined;
 
 const ytMatch = raw.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/|v\/|live\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/);
 const vimeoMatch = ytMatch ? null : raw.match(/vimeo\.com\/(?:video\/)?(\d+)/);
@@ -53,11 +61,14 @@ if (ytMatch) {
   <img class={videoClass} src={raw} alt="" aria-hidden="true" />
 ) : (
   <Fragment>
+    {poster && (
+      <link rel="preload" as="image" href={poster} fetchpriority="high" media={mobileImage ? '(min-width: 769px)' : undefined} />
+    )}
     {blurBackdrop && (
       <video muted loop playsinline preload="none" class={`${videoClass}-backdrop`} data-hero-video data-mobile-only aria-hidden="true"
-        data-src={raw}></video>
+        poster={poster} data-src={raw}></video>
     )}
-    <video muted loop playsinline preload="none" class={videoClass} data-hero-video data-src={raw} data-mobile-skip={mobileImage ? 'true' : undefined} aria-hidden="true"></video>
+    <video muted loop playsinline preload="none" class={videoClass} data-hero-video poster={poster} data-src={raw} data-mobile-skip={mobileImage ? 'true' : undefined} aria-hidden="true"></video>
     {mobileImage && (
       <img class={`${videoClass} hero-mobile-still`} src={mobileImage} alt="" aria-hidden="true" />
     )}

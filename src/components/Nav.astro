@@ -1,5 +1,5 @@
 ---
-import { getSettings, imageUrl } from '../lib/storyblok';
+import { getSettings } from '../lib/storyblok';
 import Editable from './Editable.astro';
 interface Props {
   active?: string;
@@ -7,8 +7,7 @@ interface Props {
 const { active = '' } = Astro.props;
 const s = (await getSettings()) as any;
 const siteName = s.siteName ?? '151 Coffee';
-const logo = imageUrl(s.logo, { width: 128 });
-const giftCardLabel = s.giftCardLabel ?? 'Gift Card';
+const giftCardLabel = 'Gift Card Balance';
 
 const navLinks: { label: string; href: string }[] = s.nav ?? [
   { label: 'Menu', href: '/menu' },
@@ -16,7 +15,7 @@ const navLinks: { label: string; href: string }[] = s.nav ?? [
   { label: 'About', href: '/about' },
   { label: 'Careers', href: '/careers' },
   { label: 'Contact', href: '/#contact' },
-  { label: 'Our Future', href: '/ourfuture' },
+  { label: 'Our Future', href: '/realestate' },
 ];
 
 const cur = Astro.url.pathname.replace(/\/+$/, '') || '/';
@@ -34,8 +33,7 @@ function isActive(href: string): boolean {
   <div class="nav-container">
     <a href="/" class="logo">
       <Editable blok={s} />
-      {logo && <img src={logo} alt={`${siteName} logo`} width="128" height="128" style="width:3rem;height:auto;" />}
-      <span>{siteName}</span>
+      <img src="/images/logo.webp" alt={siteName} width="164" height="192" class="logo-mark" />
     </a>
     <ul class="nav-links">
       {navLinks.map((link, i) => (
@@ -43,8 +41,8 @@ function isActive(href: string): boolean {
       ))}
     </ul>
     <button type="button" id="giftCardNavBtn" class="main-menu-btn">{giftCardLabel}</button>
-    <div class="menu-toggle" role="button" tabindex="0" aria-label="Toggle navigation menu" aria-expanded="false">
+    <button type="button" class="menu-toggle" aria-label="Menu" aria-expanded="false" aria-controls="mobileNavDrawer">
       <span></span><span></span><span></span>
-    </div>
+    </button>
   </div>
 </nav>

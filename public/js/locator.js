@@ -1,37 +1,22 @@
-// 151 Coffee store locator - MapLibre GL + CARTO vector tiles, no API key
-// required. See maplibre-map-helpers.js for why this isn't Leaflet anymore.
-// Store data comes from window.COFFEE151_STORES, populated on each page from
-// the editable Location content collection (see index.astro / locations.astro),
-// so adding, removing, or correcting a location in the Visual Editor is
-// reflected here automatically, with nothing to keep in sync by hand.
+// Store locator: MapLibre GL with CARTO vector tiles (no API key). Store data
+// comes from window.COFFEE151_STORES, set by each page from the Storyblok
+// locations.
 (function () {
     const mapEl = document.getElementById("locator-map");
-    // The results list is optional: the locations page drops it (the state-
-    // grouped grid below already shows every location as a card), while the
-    // homepage still renders one. Map + search still work either way.
+    // The results list is optional (the locations page shows its own store
+    // grid). Map and search work either way.
     const listEl = document.getElementById("locator-list");
     const searchEl = document.getElementById("locator-search");
     const STORES = window.COFFEE151_STORES || [];
     if (!mapEl || !searchEl || !STORES.length) return;
-    // MapLibre absent means the loader deliberately skipped it because this
-    // device has no WebGL (see locator-loader.js). Everything except the map
-    // - search, ZIP distance sorting, state filters, the store list - works
-    // without it, so this file still runs; `map` just stays null.
+    // No maplibregl means the loader skipped it because the device has no
+    // WebGL. Search, sorting, filters and the list still work; `map` stays
+    // null.
     const mapSupported = typeof maplibregl !== "undefined";
 
-    // Store hours + phone come from global settings (editable), same for
-    // every location today; swap to per-location fields or the Google
-    // Places API later if that's ever needed.
-    // Easter egg: searching one of these exactly (trimmed, case-insensitive)
-    // hides every card without touching the map, so the searcher's own
-    // location stays put instead of re-fitting to "all stores". Re-checked
-    // on every keystroke via the same input handler as the real search, so
-    // it only shows while the exact term is still in the box.
-    //
-    // Matched on a squashed form (lowercase, letters and digits only) so the
-    // spacing and punctuation someone actually types doesn't decide whether
-    // the joke lands: "7brew", "7 brew" and "7-brew" are all the same brand
-    // to the person typing them.
+    // Easter egg: searching exactly one of these (ignoring case, spaces and
+    // punctuation, so "7 brew" and "7-brew" both count) hides every card and
+    // leaves the map alone. It shows only while the term is in the box.
     const COMPETITOR_TERMS = new Set([
         "7brew",
         "sevenbrew",
@@ -41,31 +26,23 @@
     ]);
     const squash = (s) => s.toLowerCase().replace(/[^a-z0-9]/g, "");
 
+    // "151 Coffee Keller" -> "Keller"
+    const shortStoreName = (name) => String(name).replace(/^151 Coffee\s*/i, "") || name;
     const HOURS = (window.COFFEE151_LOCATOR && window.COFFEE151_LOCATOR.hours) || "Open daily 6 AM - 8 PM";
-    const PHONE = (window.COFFEE151_LOCATOR && window.COFFEE151_LOCATOR.phone) || "(682) 325-2124";
-    const PHONE_TEL = PHONE.replace(/\D/g, "");
 
-    // The locations page supplies its own zoom buttons in a toolbar above
-    // the map (a cleaner look than the library's default on-map control);
-    // the homepage locator has no such toolbar, so it keeps the default.
+    // The locations page has its own zoom buttons above the map; the homepage
+    // uses the built-in control.
     const zoomInEl = document.getElementById("locator-zoom-in");
     const zoomOutEl = document.getElementById("locator-zoom-out");
     const hasCustomZoom = !!(zoomInEl && zoomOutEl);
 
-    // There used to be a minimum-zoom floor here (10 on mobile, 6 on desktop)
-    // because Leaflet's raster tiles turned to unreadable mush when a fit
-    // zoomed out far enough. It had to go: on a phone-sized map the fit that
-    // frames every Texas store lands around zoom 7, so forcing 10 afterwards
-    // zoomed straight past the stores it had just framed - an iPhone SE
-    // opened the page, and every state filter click landed, on an empty patch
-    // of map. Vector tiles stay sharp at any zoom, so there's nothing left to
-    // protect against; maxZoom on the individual calls below is what keeps a
-    // single-store fit from diving to street level.
+    // No minimum zoom: vector tiles stay sharp, and on a phone the fit that
+    // frames every store lands around zoom 7. maxZoom on each fit keeps a
+    // single store from zooming to street level.
     const isMobileViewport = () => window.matchMedia("(max-width: 902px)").matches;
 
-    // Points are [lat, lng] everywhere in this file (and in the store data);
-    // MapLibre wants [lng, lat]. Converting in one named place beats flipping
-    // pairs inline at a dozen call sites.
+    // Points are [lat, lng] in this file and the store data; MapLibre wants
+    // [lng, lat].
     const toLngLat = (p) => [p[1], p[0]];
     function boundsOf(latlngs) {
         return latlngs.reduce(
@@ -74,46 +51,34 @@
         );
     }
     function fitBoundsLegibly(latlngs, opts) {
-        // No map (see the buildMap try/catch below) is a supported state, not
-        // an error: the list is the fallback and it doesn't need framing.
+        // Without a map there is nothing to frame.
         if (!map || !latlngs.length) return;
-        // resize() first: a fit computed against a stale container size is
-        // what put stores outside the frame on first load.
+        // resize() first, so the fit uses the container's current size.
         map.resize();
         map.fitBounds(
             boundsOf(latlngs),
-            // A phone's map box is much shorter than the desktop panel, so it
-            // needs proportionally less padding before the padding itself
-            // starts squeezing the stores out of frame.
+            // Phones get less padding so it doesn't squeeze stores out of
+            // frame.
             Object.assign({ duration: 0, padding: isMobileViewport() ? 24 : 40, maxZoom: 13 }, opts),
         );
     }
 
-    // Locations page has state-narrowing buttons ("Texas" / "Kansas", one
-    // marked up as .active - see locations.astro); the homepage locator
-    // has neither, so it always starts from every store. Read whichever
-    // button starts active rather than hardcoding a state here, so the
-    // default stays in sync with the markup instead of two places having
-    // to agree on it.
+    // Start from whichever state button is marked active in the markup
+    // (locations page only); otherwise show every store.
     const initialStateBtn = document.querySelector("[data-state-filter].active");
     const initialState = initialStateBtn ? initialStateBtn.dataset.stateFilter : "";
     const initialStores = initialState ? STORES.filter((s) => s.state === initialState) : STORES;
 
-    // The map opens already framed on the real store bounds rather than on a
-    // throwaway view it then corrects: `bounds` in the constructor means the
-    // very first tile request is for the zoom it actually settles on. (Under
-    // Leaflet's raster tiles that mattered even more - a throwaway view sent
-    // a whole zoom level's worth of PNGs that were immediately abandoned.)
+    // Open already framed on the store bounds, so the first tiles requested
+    // are at the final zoom.
     const initialPoints = initialStores.map(s => [s.lat, s.lng]);
     let map = null;
     try {
         if (mapSupported) map = buildMap();
     } catch (err) {
-        // The loader already screened for WebGL, so reaching here means the
-        // context existed but MapLibre still couldn't start (a lost context,
-        // a driver the browser gives up on mid-init). Everything below this
-        // point is guarded by `map &&`, so the panel, search, and store list
-        // carry on working with the map's slot closed up.
+        // WebGL exists but MapLibre failed to start. Everything below is
+        // guarded by `map &&`, so the rest of the locator keeps working with
+        // the map slot closed.
         console.warn("[locator] map unavailable, falling back to the list", err);
         const locator = mapEl.closest(".locator");
         if (locator) locator.classList.add("is-map-unavailable");
@@ -126,15 +91,13 @@
             bounds: boundsOf(initialPoints.length ? initialPoints : [[32.75, -97.33]]),
             fitBoundsOptions: { padding: isMobileViewport() ? 24 : 40, maxZoom: 13 },
             scrollZoom: true,
-            // The locations page has its own zoom buttons in a toolbar; only
-            // the homepage locator needs the on-map control.
+            // Only the homepage locator needs the on-map zoom control.
             attributionControl: false,
             dragRotate: false,
         });
         window.COFFEE151_MAP.lockRotation(m);
-        // Kept even with attributionControl off in the constructor: CARTO and
-        // OpenStreetMap both require credit, and compact mode is a single "i"
-        // that expands on tap rather than a line of text across the map.
+        // CARTO and OpenStreetMap require credit; compact mode shows it as a
+        // small "i".
         m.addControl(new maplibregl.AttributionControl({ compact: true }), "bottom-right");
         if (!hasCustomZoom) {
             m.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
@@ -145,10 +108,8 @@
             zoomOutEl.addEventListener("click", () => m.zoomOut());
         }
 
-        // The constructor's fit runs against whatever size the container
-        // reported at that instant, which on a phone is routinely before the
-        // map box has its final height. Re-fit once the style is up and the
-        // real size is known, or the stores end up outside the frame.
+        // Re-fit once the style loads, when the container has its final
+        // height (often not yet true on phones at construction time).
         m.once("load", () => {
             m.resize();
             if (initialPoints.length) {
@@ -160,9 +121,8 @@
             }
         });
 
-        // A context lost after a clean start (the browser reclaiming GPU
-        // memory, a driver reset) leaves a blank canvas behind with no error
-        // thrown. Close the slot the same way the never-started case does.
+        // A context lost later (GPU memory reclaimed, driver reset) leaves a
+        // blank canvas with no error; close the slot the same way.
         m.getCanvas().addEventListener("webglcontextlost", () => {
             const locator = mapEl.closest(".locator");
             if (locator) locator.classList.add("is-map-unavailable");
@@ -172,17 +132,15 @@
     }
 
     const markers = !map ? [] : STORES.map((store, i) => {
-        const shortName = store.name.replace("151 Coffee ", "");
         const nameHtml = store.slug
             ? `<a href="/locations/${store.slug}"><strong>${store.name}</strong></a>`
             : `<strong>${store.name}</strong>`;
         const popup = new maplibregl.Popup({ offset: 46, closeButton: true, maxWidth: "260px" }).setHTML(
-            `${nameHtml}<br>${store.address}<br>${store.city}, ${store.state} ${store.zip}<br>${HOURS}<br><a href="tel:+1${PHONE_TEL}">${PHONE}</a>`
+            `${nameHtml}<br>${store.address}<br>${store.city}, ${store.state} ${store.zip}<br>${HOURS}`
         );
-        // The store's name rides inside the marker element (see
-        // markerElement) instead of being a separate always-on tooltip layer,
-        // so the label moves with the pin for free.
-        const marker = new maplibregl.Marker({ element: window.COFFEE151_MAP.markerElement(shortName), anchor: "bottom" })
+        // The store name is part of the marker element, so the label moves
+        // with the pin.
+        const marker = new maplibregl.Marker({ element: window.COFFEE151_MAP.markerElement(shortStoreName(store.name)), anchor: "bottom" })
             .setLngLat([store.lng, store.lat])
             .setPopup(popup)
             .addTo(map);
@@ -194,8 +152,8 @@
         return `https://www.google.com/maps/dir/?api=1&destination=${store.lat},${store.lng}`;
     }
 
-    // origin (optional) = [lat, lng] of the searched location; when present we
-    // show each store's distance and assume `stores` is already sorted nearest-first.
+    // origin (optional) is the searched [lat, lng]; when present, distances
+    // are shown and `stores` is already sorted nearest first.
     function renderList(stores, origin) {
         if (!listEl) return;
         listEl.innerHTML = "";
@@ -203,9 +161,8 @@
         stores.forEach((store) => {
             const originalIndex = STORES.indexOf(store);
             const item = document.createElement("div");
-            // store.image/slug only exist on the locations page's store data
-            // (the homepage locator doesn't pass them). Their presence is
-            // what turns this into a photo card with a "More Info" link.
+            // image and slug are only passed by the locations page; with them
+            // the row becomes a photo card with a "More Info" link.
             item.className = store.image ? "locator__item locator-photo-card" : "locator__item";
             item.dataset.index = String(originalIndex);
             const dist = origin
@@ -214,25 +171,17 @@
             const photo = store.image ? `<img class="locator__item-photo" src="${store.image}" alt="" loading="lazy" decoding="async">` : "";
             const arrow = '<svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
             const moreInfo = store.slug ? `<a class="locator__more-info" href="/locations/${store.slug}">More Info${arrow}</a>` : "";
-            const shortStoreName = store.name.replace("151 Coffee ", "");
-            // Mobile-only card: photo + non-truncating name/hours/phone, so
-            // the row reads at a glance without cutting anything off. No
-            // address here by design - the row itself now opens the
-            // store's More Info page (which has the full address), and
-            // Directions doesn't need it repeated either. Hidden on
-            // desktop; the stacked elements above are hidden on mobile
-            // instead (see the max-width: 902px rules in style.css).
-            // The Directions link lives here (under the name/hours/phone
-            // text) rather than in .locator__item-actions below, which is
-            // hidden on mobile - see the max-width: 902px rules in
-            // style.css. Desktop keeps its own copy in .locator__item-actions.
+            const shortName = shortStoreName(store.name);
+            // Mobile card: photo, full name, hours and Directions. The row
+            // itself links to the store page, which has the address. Hidden
+            // on desktop, where the elements above show instead (see the
+            // max-width: 902px rules in style.css).
             const mobileCard = `
                 <div class="locator__mobile-card">
                     ${photo}
                     <div class="locator__mobile-info">
-                        <p class="locator__mobile-name">${shortStoreName}</p>
+                        <p class="locator__mobile-name">${shortName}</p>
                         <p class="locator__mobile-hours">${HOURS}</p>
-                        <p class="locator__mobile-phone">${PHONE}</p>
                         <a class="locator__directions locator__directions--mobile" href="${directionsUrl(store)}" target="_blank" rel="noopener noreferrer">Directions${arrow}</a>
                     </div>
                 </div>
@@ -241,7 +190,7 @@
                 <div class="locator__item-top">
                     ${photo}
                     <div class="locator__item-info">
-                        <h3 class="locator__item-name">${shortStoreName}${dist}</h3>
+                        <h3 class="locator__item-name">${shortName}${dist}</h3>
                         <p>${store.address}<br>${store.city}, ${store.state} ${store.zip}</p>
                         ${moreInfo}
                     </div>
@@ -249,7 +198,6 @@
                 <div class="locator__item-bottom">
                     <div class="locator__item-bottom-text">
                         <p class="locator__hours">${HOURS}</p>
-                        <a class="locator__phone" href="tel:+1${PHONE_TEL}">${PHONE}</a>
                     </div>
                     <div class="locator__item-actions">
                         <a class="locator__directions" href="${directionsUrl(store)}" target="_blank" rel="noopener noreferrer">Directions${photo ? arrow : ""}</a>
@@ -258,12 +206,10 @@
                 ${mobileCard}
             `;
             item.addEventListener("click", (e) => {
-                if (e.target.closest(".locator__directions, .locator__phone, .locator__more-info")) return;
-                // Compact rows (mobile + the shared tablet breakpoint, see
-                // the max-width: 902px rules in style.css) drop the visible
-                // "More Info" button - tapping the row itself takes its
-                // place. Desktop keeps its old behavior: highlight + fly the
-                // map to it, since More Info is still its own button there.
+                if (e.target.closest(".locator__directions, .locator__more-info")) return;
+                // On compact layouts (max-width: 902px) the whole row opens
+                // the store page. On desktop a click highlights the store and
+                // flies the map to it.
                 if (store.slug && window.matchMedia("(max-width: 902px)").matches) {
                     window.location.href = `/locations/${store.slug}`;
                     return;
@@ -275,10 +221,8 @@
         requestAnimationFrame(squareMobilePhotos);
     }
 
-    // Sizes each mobile-card photo (inline, in px) to exactly match its own
-    // row's text-column height, so it's a true square flush with the card's
-    // padding on every side - see the comment on .locator__mobile-card in
-    // style.css for why this has to happen in JS rather than pure CSS.
+    // Sizes each mobile card photo to its row's text height so it's a true
+    // square (see .locator__mobile-card in style.css).
     function squareMobilePhotos() {
         if (!listEl || !window.matchMedia("(max-width: 902px)").matches) return;
         listEl.querySelectorAll(".locator__mobile-card").forEach((card) => {
@@ -313,7 +257,7 @@
         fitBoundsLegibly(stores.map(s => [s.lat, s.lng]), { maxZoom: 13 });
     }
 
-    // Geocode a US ZIP (free OpenStreetMap Nominatim) and order stores by distance.
+    // Geocode a US ZIP (OpenStreetMap Nominatim) and sort stores by distance.
     function searchByZip(zip) {
         fetch(`https://nominatim.openstreetmap.org/search?format=jsonv2&countrycodes=us&postalcode=${encodeURIComponent(zip)}&limit=1`)
             .then(r => r.ok ? r.json() : [])
@@ -337,9 +281,8 @@
             const item = listEl.querySelector(`.locator__item[data-index="${index}"]`);
             if (item) {
                 item.classList.add("active");
-                // Scroll the sidebar to the picked location either way - a
-                // marker click should surface it in the list just as much as
-                // clicking the list itself flies the map to it.
+                // Scroll the list to the selected store, whether it was
+                // picked on the map or in the list.
                 item.scrollIntoView({ behavior: "smooth", block: "nearest" });
             }
         }
@@ -355,13 +298,14 @@
         const raw = searchEl.value.trim();
         clearTimeout(geoTimer);
 
-        // A full 5-digit ZIP -> find the nearest stores (debounced so we geocode once).
+        // A full 5-digit ZIP finds the nearest stores (debounced to geocode
+        // once).
         if (/^\d{5}$/.test(raw)) {
             geoTimer = setTimeout(() => searchByZip(raw), 400);
             return;
         }
 
-        // Text search by name / address / city / state / partial zip.
+        // Text search by name, address, city, state or partial ZIP.
         const q = raw.toLowerCase();
 
         if (COMPETITOR_TERMS.has(squash(q))) {
@@ -384,15 +328,14 @@
             s.state.toLowerCase().includes(q) ||
             s.zip.includes(q)
         );
-        // Never empty the list: if nothing matches, keep all locations on screen.
+        // If nothing matches, keep every location listed.
         const list = filtered.length ? filtered : STORES;
         renderList(list);
         fitTo(list);
     });
 
-    // Optional state-narrowing buttons (locations page only - "Texas" /
-    // "Kansas"). Clears whatever's in the search box so the two filters
-    // don't fight each other over what the list shows.
+    // State buttons (locations page only). Clears the search box so the two
+    // filters don't conflict.
     const stateButtons = document.querySelectorAll("[data-state-filter]");
     stateButtons.forEach((btn) => {
         btn.addEventListener("click", () => {

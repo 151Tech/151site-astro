@@ -23,7 +23,7 @@ const p = unwrapSingletons((await getPage('about')) as any, [
     .about-hero h1 { font-size: clamp(2.8rem, 6vw, 5rem); color: #fff; line-height: 1; margin-bottom: 0.75rem; }
     .about-hero h1 span { color: var(--red); }
     .about-hero p { font-family: var(--font-montserrat), sans-serif; font-size: 1.1rem; color: rgba(255,255,255,0.80); max-width: 520px; margin: 0 auto; }
-    .about-intro { background-color: #f4efe9; background-image: var(--bg-quote); background-size: 1250px auto; background-position: top center; background-repeat: repeat; padding: var(--section-pad); }
+    .about-intro { background-color: var(--quote-ground); background-image: var(--bg-quote); background-size: auto; background-position: top center; background-repeat: repeat; padding: var(--section-pad); }
     .about-intro-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: stretch; }
     .about-intro-text { display: flex; flex-direction: column; justify-content: center; aspect-ratio: 1 / 1; box-sizing: border-box; }
     .about-intro-text h2 { font-size: clamp(1.8rem, 3.5vw, 2.8rem); color: var(--black); line-height: 1.12; margin-bottom: 1.25rem; }
@@ -53,7 +53,7 @@ const p = unwrapSingletons((await getPage('about')) as any, [
       background: linear-gradient(90deg, transparent, var(--red), transparent);
     }
     .why-151-text { font-family: var(--font-montserrat), sans-serif; font-size: 1.05rem; line-height: 1.75; color: rgba(255,255,255,0.75); margin-top: 1.5rem; }
-    .about-history { background-color: #f4efe9; background-image: var(--bg-quote); background-size: 1250px auto; background-position: top center; background-repeat: repeat; padding: var(--section-pad); }
+    .about-history { background-color: var(--quote-ground); background-image: var(--bg-quote); background-size: auto; background-position: top center; background-repeat: repeat; padding: var(--section-pad); }
     .about-history .section-header h2 { color: var(--red); }
     .history-body {
       max-width: 900px; margin: 2rem auto 0;
@@ -156,7 +156,7 @@ const p = unwrapSingletons((await getPage('about')) as any, [
       <div class="about-intro-inner">
         <Editable blok={p.intro} />
         <div class="about-intro-text">
-          <h2><span style="color:inherit">{p.intro?.heading ?? 'Not Your Typical'}</span><br><span>{p.intro?.headingSpan ?? 'Coffee Shop.'}</span></h2>
+          <h2><span class="text-inherit">{p.intro?.heading ?? 'Not Your Typical'}</span><br><span>{p.intro?.headingSpan ?? 'Coffee Shop.'}</span></h2>
           {(p.intro?.paragraphs ?? [
             '151 Coffee is not your typical coffee shop. Fun and happiness drive our culture and music drives our speed, that\'s why we live by the 151 motto "It\'s a good day to have a good day."',
             "Each of our drive-thru stores serves the best tasting coffee and energy drinks faster than anyone. If you're thirsty and looking for a tasty beverage to buzz your day, swing through our drive thru, say hi, and drive with the 151 vibe.",

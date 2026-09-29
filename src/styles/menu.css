@@ -133,9 +133,9 @@
    down so it reads as ambience, not competition) but bright/warm instead
    of near-black. */
 .timeline-wrap {
-    background-color: #f4efe9;
+    background-color: var(--quote-ground);
     background-image: var(--bg-quote);
-    background-size: 1250px auto;
+    background-size: auto;
     background-position: top center;
     background-repeat: repeat;
     position: relative;
@@ -148,11 +148,7 @@
     content: '';
     position: absolute;
     inset: 0;
-    background:
-        radial-gradient(120% 60% at 50% 0%,   rgba(228,37,43,0.08) 0%, transparent 60%),
-        radial-gradient(120% 60% at 50% 100%, rgba(228,37,43,0.06) 0%, transparent 60%),
-        radial-gradient(60% 100% at 0% 50%,   rgba(228,37,43,0.06) 0%, transparent 55%),
-        radial-gradient(60% 100% at 100% 50%, rgba(228,37,43,0.06) 0%, transparent 55%);
+    background: none; /* red glow removed: pattern ground is fully neutral */
     pointer-events: none;
 }
 
@@ -256,12 +252,14 @@
     margin: 0;
 }
 
-/* "Refreshers" and "Smoothies" are single long words with no natural
-   line break, so at the default size they run past the card, scale
-   them down a notch to fit cleanly. */
-.cat-title-card[data-cat="refreshers"] .cat-title-text,
+/* Single long words with no line break: sized down to fit the card. */
+.cat-title-card[data-cat="lto"] .cat-title-text,
 .cat-title-card[data-cat="smoothies"] .cat-title-text {
     font-size: clamp(1.9rem, 3.9vw, 3.3rem);
+}
+
+.cat-title-card[data-cat="refreshers"] .cat-title-text {
+    font-size: clamp(1.7rem, 3.4vw, 2.9rem);
 }
 
 .cat-title-desc {

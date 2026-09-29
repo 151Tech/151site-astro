@@ -1,7 +1,7 @@
 ---
-// Loops over a page's `sections` array (each entry: { type, ...fields })
-// and renders the matching block component. Add a new block type by
-// creating its component and adding one line to this map.
+// Renders a page's `sections` array ({ type, ...fields }) with the matching
+// block component. To add a block type, create its component and add it to
+// this map.
 import PromoBanner from './PromoBanner.astro';
 import ImageBanner from './ImageBanner.astro';
 import SplitFeature from './SplitFeature.astro';
@@ -11,7 +11,6 @@ import StatStrip from './StatStrip.astro';
 import FaqAccordion from './FaqAccordion.astro';
 import CardGrid from './CardGrid.astro';
 
-// Keyed by each block's `type` value on the section's content.
 const BLOCK_COMPONENTS: Record<string, any> = {
   PromoBannerBlock: PromoBanner,
   ImageBannerBlock: ImageBanner,
@@ -28,14 +27,14 @@ interface Props {
 }
 const { sections = [] } = Astro.props as Props;
 
-// Tolerate sections created before this fix, whose `type` was accidentally
-// written without the "Block" suffix (e.g. "PromoBanner" instead of
-// "PromoBannerBlock"). Try the raw value first, then with "Block" appended.
+// Also accept types saved without the "Block" suffix (e.g. "PromoBanner").
 function resolveComponent(type: string | undefined) {
   if (!type) return null;
   return BLOCK_COMPONENTS[type] ?? BLOCK_COMPONENTS[`${type}Block`] ?? null;
 }
 ---
+{/* Block styles load only on pages that have blocks. */}
+{sections.length > 0 && <link rel="stylesheet" href="/blocks.css" />}
 {sections.map((section, i) => {
   const Component = resolveComponent(section?.type);
   if (!Component) return null;

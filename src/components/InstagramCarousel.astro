@@ -17,6 +17,8 @@
 // which slide sits in which slot, on a fixed timer (ROTATE_INTERVAL_MS
 // below) - purely a visual "now featured" cue, independent of each video's
 // own (unsynced, looping) playback.
+import SocialIcon from './SocialIcon.astro';
+
 interface Media {
   id: string;
   permalink: string;
@@ -42,6 +44,21 @@ const socialLinks = {
 // Instagram call failed - either way, the section just doesn't render
 // rather than showing a broken or empty carousel.
 const items = (media ?? []).slice(0, 3);
+
+// The link's accessible name. The raw caption is the whole post - emojis,
+// hashtags, line breaks - so a screen reader would read all of it. Keep the
+// first sentence or so of plain text instead.
+function igLabel(caption?: string): string {
+  const text = (caption ?? '')
+    .replace(/[#@][\w.]+/g, '')
+    .replace(/[\p{Extended_Pictographic}\u{1F3FB}-\u{1F3FF}‍️]/gu, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+  if (!text) return 'Watch on Instagram';
+  const first = text.split(/(?<=[.!?])\s/)[0];
+  const short = first.length > 80 ? first.slice(0, 80).replace(/\s+\S*$/, '') + '…' : first;
+  return `${short} (watch on Instagram)`;
+}
 ---
 
 {items.length > 0 && (
@@ -50,13 +67,13 @@ const items = (media ?? []).slice(0, 3);
     <div class="section-header">
       <div class="ig-social-links">
         <a href={socialLinks.tiktok} target="_blank" rel="noopener noreferrer" aria-label="151 Coffee on TikTok">
-          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.6 5.82c-.8-.85-1.24-1.96-1.24-3.14h-3.06v13.44c0 1.53-1.24 2.77-2.77 2.77a2.77 2.77 0 0 1 0-5.54c.28 0 .55.04.8.12v-3.1a5.87 5.87 0 0 0-.8-.06 5.83 5.83 0 1 0 5.83 5.83V9.4a7.16 7.16 0 0 0 4.24 1.37V7.7a4.15 4.15 0 0 1-3-1.88z"/></svg>
+          <SocialIcon name="tiktok" />
         </a>
         <a href={socialLinks.instagram} target="_blank" rel="noopener noreferrer" aria-label="151 Coffee on Instagram">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+          <SocialIcon name="instagram" />
         </a>
         <a href={socialLinks.facebook} target="_blank" rel="noopener noreferrer" aria-label="151 Coffee on Facebook">
-          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 21v-7.6h2.55l.38-2.96h-2.93V8.55c0-.86.24-1.44 1.47-1.44h1.57V4.46A21 21 0 0 0 14.3 4.3c-2.24 0-3.78 1.37-3.78 3.87v2.16H7.95v2.96h2.57V21h3z"/></svg>
+          <SocialIcon name="facebook" />
         </a>
       </div>
       <h2>{heading}</h2>
@@ -69,7 +86,7 @@ const items = (media ?? []).slice(0, 3);
             Now Playing
             <span class="ig-progress"><i></i></span>
           </div>
-          <a class="ig-card-placeholder" href={m.permalink} target="_blank" rel="noopener noreferrer" aria-label={m.caption || 'View on Instagram'}>
+          <a class="ig-card-placeholder" href={m.permalink} target="_blank" rel="noopener noreferrer" aria-label={igLabel(m.caption)}>
             {m.videoUrl ? (
               <video src={m.videoUrl} poster={m.mediaUrl || undefined} muted playsinline preload="metadata" />
             ) : (

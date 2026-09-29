@@ -1,8 +1,10 @@
 ---
 import Font from 'astro/components/Font.astro';
 import { getSettings, imageUrl } from '../lib/storyblok';
-import { ogImageUrl } from '../lib/seo';
+import { ogImageUrl, metaDescription } from '../lib/seo';
 import { TEMP_NOINDEX } from '../lib/temp-noindex';
+// Page stylesheets are imported after this one, so they win the cascade.
+import '../styles/style.css';
 
 interface Props {
   title: string;
@@ -10,57 +12,31 @@ interface Props {
   ogImage?: string;
   canonical?: string;
   bodyClass?: string;
+  // Promo landing pages reached only by a texted link.
   noindex?: boolean;
 }
 
 const {
   title,
-  description = '151 Coffee is a fast drive-thru coffee shop serving handcrafted espresso, cold brew, blended energy drinks, smoothies, teas & breakfast across Texas and Kansas.',
+  description: rawDescription = '151 Coffee is a fast drive-thru coffee shop serving handcrafted espresso, cold brew, blended energy drinks, smoothies, teas & breakfast across Texas and Kansas.',
   ogImage,
   canonical,
   bodyClass = '',
-  // Text-message/SMS discount landing pages (src/pages/[slug].astro) pass
-  // this: they're meant to be reachable only by whoever was sent the exact
-  // link, not something anyone should be able to find by searching the
-  // offer name - same "noindex + left out of the sitemap" treatment as the
-  // /menu/<store> QR-code stubs below, just via a Layout prop instead of a
-  // one-off <meta> tag since these pages already render through Layout.
   noindex = false,
 } = Astro.props;
+const description = metaDescription(rawDescription);
 
-// Points at the real domain even when this response is coming from the
-// preview deployment's own *.webflow.io host, so a crawler that ignores
-// noindex (some do, for canonical/duplicate-detection purposes) is still
-// pointed at the real page rather than credited to a draft one. Explicit
-// `canonical` prop callers are unaffected.
-const canonicalUrl = canonical ?? new URL(Astro.url.pathname, 'https://www.151coffee.com').href;
-// Falls back to the static /favicon.ico in public/ until an editor picks one
-// in Storyblok (settings/global -> Favicon).
+// Always the production domain, without a trailing slash (pages are served
+// flat, see flattenRoutes in astro.config.mjs).
+const canonicalPath = Astro.url.pathname === '/' ? '/' : Astro.url.pathname.replace(/\/+$/, '');
+const canonicalUrl = canonical ?? new URL(canonicalPath, 'https://www.151coffee.com').href;
 const settingsData = (await getSettings()) as any;
 const favicon = imageUrl(settingsData?.favicon) ?? '/favicon.ico';
-// Small round mark reused inside the locator map's pin icons (see
-// maplibre-map-helpers.js) - resized here rather than in that plain JS file,
-// which has no access to Storyblok's image service.
+// Small logo used inside the map pins (maplibre-map-helpers.js).
 const logoMarkUrl = imageUrl(settingsData?.logo, { width: 64 });
-
-// 74 of 88 indexable pages were shipping no og:image at all. The per-page
-// seo.ogImage fields are populated in Storyblok, but every one of them points
-// at a pre-migration /images/splash1.jpg path that no longer exists and is
-// (correctly) rejected by imageUrl's Storyblok-only rule - so the tag simply
-// vanished. Rather than leave social and AI preview cards blank, fall back
-// site-wide: settings_global > ogImage when an editor uploads a proper
-// 1200x630 card, else the logo, which is square and not ideal but is a real
-// asset. An explicit per-page ogImage prop still wins.
 const socialImage = ogImage ?? ogImageUrl(settingsData);
 
-// The draft-preview deployment (STORYBLOK_DRAFT_MODE=true, see
-// src/lib/storyblok.ts) renders live unpublished content and shares this
-// same codebase with production, on its own *.webflow.io domain. Nothing
-// there should ever be indexed or credited as canonical - it would put
-// draft copy in search results and risk being read as duplicate content
-// against the real site. See also src/pages/robots.txt.ts, which disallows
-// the whole preview domain outright, and astro.config.mjs, which skips
-// generating a sitemap for it.
+// The draft-preview deployment is never indexed.
 const isDraftPreview = import.meta.env.STORYBLOK_DRAFT_MODE === 'true';
 ---
 <!DOCTYPE html>
@@ -69,8 +45,9 @@ const isDraftPreview = import.meta.env.STORYBLOK_DRAFT_MODE === 'true';
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <Font cssVariable="--font-montserrat" preload />
-  <Font cssVariable="--font-source-sans" preload />
+  {/* Italic faces aren't used above the fold, so only upright ones are preloaded. */}
+  <Font cssVariable="--font-montserrat" preload={[{ style: 'normal' }]} />
+  <Font cssVariable="--font-source-sans" preload={[{ style: 'normal' }]} />
   <Font cssVariable="--font-caveat" />
 
   <title>{title}</title>
@@ -94,14 +71,10 @@ const isDraftPreview = import.meta.env.STORYBLOK_DRAFT_MODE === 'true';
   <meta name="twitter:description" content={description} />
   {socialImage && <meta name="twitter:image" content={socialImage} />}
 
-  <!-- Every image and video on the site is served from Storyblok's CDN, so
-       the connection is worth opening while the HTML is still parsing
-       rather than when the first <img> is discovered. -->
+  {/* All images and videos come from Storyblok's CDN. */}
   <link rel="preconnect" href="https://a.storyblok.com" crossorigin />
 
   <link rel="icon" href={favicon} />
-  <link rel="stylesheet" href="/style.css" />
-  <link rel="stylesheet" href="/blocks.css" />
   <slot name="head" />
   <script is:inline>if(!window.matchMedia('(prefers-reduced-motion:reduce)').matches)document.documentElement.classList.add('js-anim');</script>
 </head>
@@ -111,45 +84,25 @@ const isDraftPreview = import.meta.env.STORYBLOK_DRAFT_MODE === 'true';
   <script src="/js/animations.js" is:inline defer></script>
   <script src="/js/click-egg.js" is:inline defer></script>
 
-  <!--
-    Cookie/tracking stack, in load order:
-      1. consent.js         - read/write/subscribe API for the stored choice
-      2. tracking IDs        - GA/Meta IDs from env, blank until real ones exist
-      3. analytics-loader.js - loads GA + Meta Pixel, but only once consent.js
-                                 reports the visitor clicked "Accept All"
-      4. cookie-consent.js   - the banner UI; calls consent.set() on a click,
-                                 which analytics-loader.js is already listening for
-    Order matters: each of these is a `defer` script, which the browser runs
-    in document order once parsing finishes, so a later file can safely
-    assume an earlier one already ran.
-  -->
-  <script src="/js/consent.js" is:inline defer></script>
+  {/* Consent and analytics. Deferred scripts run in document order:
+      consent.js (stored choice), analytics-loader.js (GA and Meta Pixel,
+      only after "Accept All"), cookie-consent.js (the banner). */}
   <script
     define:vars={{
       gaId: import.meta.env.PUBLIC_GA_MEASUREMENT_ID || '',
       metaPixelId: import.meta.env.PUBLIC_META_PIXEL_ID || '',
+      logoMarkUrl: logoMarkUrl || '',
     }}
     is:inline
   >
     window.COFFEE151_TRACKING_IDS = { gaId, metaPixelId };
+    window.COFFEE151_LOGO_URL = logoMarkUrl;
   </script>
-  <script define:vars={{ logoMarkUrl }} is:inline>
-    window.COFFEE151_LOGO_URL = logoMarkUrl || '';
-  </script>
+  <script src="/js/consent.js" is:inline defer></script>
   <script src="/js/analytics-loader.js" is:inline defer></script>
   <script src="/js/cookie-consent.js" is:inline defer></script>
 
-  <!--
-    Storyblok's Visual Editor loads pages inside an iframe with a
-    `_storyblok` query param. Only load its bridge there, never for real
-    visitors. The bridge gives us click-to-highlight between the editor
-    sidebar and this preview (via the `_editable` markers rendered by
-    <Editable blok={...} />) and reloads the page on save/publish. A reload
-    only pulls fresh *draft* content when this page is server-rendered per
-    request (`npm run dev`, or a future draft deployment). On the static
-    production build it just reloads the same prebuilt HTML, which is
-    expected until the next auto-rebuild picks up the publish.
-  -->
+  {/* Storyblok Visual Editor bridge, loaded only inside the editor (?_storyblok). */}
   <script is:inline>
     if (new URLSearchParams(window.location.search).has('_storyblok')) {
       var s = document.createElement('script');

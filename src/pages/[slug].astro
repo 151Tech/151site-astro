@@ -25,7 +25,13 @@ const [pages, settingsData, drinksEntries, categoryEntries] = await Promise.all(
 ]);
 const page = pages.find((p: any) => p.slug === slug);
 
-if (!page) return Astro.redirect('/');
+// Unknown slug: serve the real 404 page with a 404 status. A redirect here
+// (the old behaviour) is a soft 404 - crawlers read junk URLs as duplicates
+// of the redirect target and broken links stop showing up as broken. Only
+// reachable when this route renders per request (draft preview, or if the
+// platform ever stops prerendering it); prerendered builds never match an
+// unknown slug in the first place.
+if (!page) return Astro.rewrite('/404');
 
 const logoUrl = imageUrl((settingsData as any)?.logo, { width: 120 });
 const bonusImage = imageUrl(page.image, { width: 700 });
@@ -490,7 +496,7 @@ function highlight(text: string): string {
     letter-spacing: -0.066em;
     text-transform: uppercase;
     color: #f4efe9;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    text-shadow: 0 1px 19px rgba(0, 0, 0, 0.5);
   }
   .drink-label-name {
     font-family: var(--font-source-sans), sans-serif; font-weight: 700;

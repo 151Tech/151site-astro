@@ -1,9 +1,6 @@
-// Called on a schedule (see .github/workflows/instagram-token-refresh.yml,
-// ~every 45 days) to refresh the long-lived Instagram token before its ~60
-// day expiry. Unlike the initial exchange in instagram-oauth-callback.ts,
-// refreshing a still-valid long-lived token doesn't need the app secret -
-// it just needs the current token itself, which is why this route reads it
-// straight from KV instead of taking any OAuth params.
+// Refreshes the long-lived Instagram token before its 60 day expiry. Called
+// by .github/workflows/instagram-token-refresh.yml about every 45 days. A
+// refresh only needs the current token, read from KV.
 import { env } from 'cloudflare:workers';
 
 export const prerender = false;
@@ -12,9 +9,7 @@ export const config = { runtime: 'edge' };
 const REFRESH_URL = 'https://graph.instagram.com/refresh_access_token';
 
 export async function POST({ request }: { request: Request }) {
-  // Shared-secret header instead of a state param - this isn't part of an
-  // OAuth redirect, it's a plain server-to-server call from the scheduled
-  // workflow, so a bearer-style header is the natural fit.
+  // Server-to-server call, authenticated with a shared-secret header.
   const expectedSecret = (env as any).INSTAGRAM_REFRESH_SECRET;
   const providedSecret = request.headers.get('x-refresh-secret');
   if (!expectedSecret || providedSecret !== expectedSecret) {

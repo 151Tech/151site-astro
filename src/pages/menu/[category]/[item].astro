@@ -1,0 +1,171 @@
+---
+export const prerender = import.meta.env.STORYBLOK_DRAFT_MODE !== 'true';
+import Layout from '../../../layouts/Layout.astro';
+import '../../../styles/drink.css';
+import Nav from '../../../components/Nav.astro';
+import Footer from '../../../components/Footer.astro';
+import { getDrinks, getPage, getCategories, unwrapSingletons, imageUrl } from '../../../lib/storyblok';
+import Editable from '../../../components/Editable.astro';
+import JsonLd from '../../../components/JsonLd.astro';
+import { graph, menuItemSchema, breadcrumbSchema } from '../../../lib/seo';
+import { routableItems, categorySegment, itemSegment } from '../../../lib/menu-urls.mjs';
+
+// Every menu item (drinks and food alike) at /menu/<category>/<item>, e.g.
+// /menu/cold-brew/snickers. src/lib/menu-urls.mjs owns the mapping.
+export async function getStaticPaths() {
+  const [drinks, categories] = await Promise.all([getDrinks(), getCategories()]);
+  return routableItems(drinks, categories).map((drink: any) => ({
+    params: { category: categorySegment(drink.category), item: itemSegment(drink) },
+  }));
+}
+
+const { category, item } = Astro.params;
+const [drinks, menuData, categoryEntries] = await Promise.all([
+  getDrinks(),
+  getPage('menu'),
+  getCategories(),
+]);
+const drink = routableItems(drinks, categoryEntries).find((e: any) =>
+  categorySegment(e.category) === category && itemSegment(e) === item);
+const slug = drink?.slug;
+
+// Unknown slug: serve the real 404 page with a 404 status. A redirect here
+// (the old behaviour) is a soft 404 - crawlers read junk URLs as duplicates
+// of the redirect target and broken links stop showing up as broken. Only
+// reachable when this route renders per request (draft preview, or if the
+// platform ever stops prerendering it); prerendered builds never match an
+// unknown slug in the first place.
+if (!drink) return Astro.rewrite('/404');
+const m = unwrapSingletons(menuData as any, [
+  'seo', 'visibility', 'hero', 'labels', 'locationPicker', 'drinkPage', 'customize',
+]);
+
+// drink.category holds a Storyblok slug like "categories/coffee"; resolve it to the title.
+const categoryEntry = categoryEntries.find((c: any) => `categories/${c.slug}` === drink.category);
+const categoryTitle = categoryEntry ? categoryEntry.title : '';
+
+const drinkImage = imageUrl(drink.image, { width: 1040 });
+const ogImage = drinkImage
+  ? drinkImage.startsWith('http')
+    ? drinkImage
+    : `https://www.151coffee.com${encodeURI(drinkImage.startsWith('/') ? drinkImage : '/' + drinkImage)}`
+  : undefined;
+
+// Marks the drink up as the MenuItem it is, so a question like "does 151
+// Coffee have nitro cold brew" can be answered from our own page rather than
+// from a third party. The breadcrumb supplies the Menu > Category > Drink
+// trail these pages have never expressed - they only ever had a Back link.
+const drinkSchema = graph(
+  menuItemSchema({ ...drink, slug }),
+  breadcrumbSchema([
+    { name: 'Home', url: '/' },
+    { name: 'Menu', url: '/menu' },
+    ...(categoryTitle && categoryEntry
+      ? [{ name: categoryTitle, url: `/menu#${categoryEntry.slug}` }]
+      : []),
+    { name: drink.name },
+  ]),
+);
+---
+<Layout
+  title={`${drink.name}${categoryTitle ? ` - ${categoryTitle}` : ''} | 151 Coffee Menu`}
+  description={drink.description || `${drink.name}${drink.subtitle ? ' - ' + drink.subtitle : ''} at 151 Coffee.`}
+  ogImage={ogImage}
+>
+  <Fragment slot="head">
+    <JsonLd schema={drinkSchema} />
+  </Fragment>
+
+  <Nav active="menu" />
+
+  {/* Red polka-dot hero */}
+  <section class="dk-hero">
+    <Editable blok={drink} />
+    <div class="dk-hero-bg"></div>
+    <div class="dk-hero-inner">
+      <a href="/menu" class="dk-back">
+        <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M13 8H3M7 4L3 8l4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>{m.drinkPage?.backLabel ?? 'Back to Menu'}</span>
+      </a>
+      <div class="dk-pills-row">
+        <span class="dk-cat-pill">{categoryTitle}</span>
+      </div>
+      {/* Category is in the H1 too: several items share a name across
+           categories (Snickers is both a coffee and a cold brew), and the
+           pill above already shows it visually. */}
+      <h1 class="dk-title">{drink.name}{categoryTitle && <span class="sr-only"> - {categoryTitle}</span>}</h1>
+      {drink.tags && drink.tags.length > 0 && (
+        <div class="dk-tag-pills">
+          {drink.tags.map((tag: string, i: number) => (
+            <span class="dk-flavor-tag">{tag}</span>
+          ))}
+        </div>
+      )}
+    </div>
+  </section>
+
+  {/* Drink info: photo + one unified detail card */}
+  <section class="dk-info">
+    <div class="dk-body-inner">
+      <div class="dk-img-col">
+        <div class="dk-photo-frame">
+          <div class="featured-card">
+            <div class="drink-img-wrap">
+              {drink.badge && <span class="drink-badge">{drink.badge}</span>}
+              {drinkImage && (() => {
+                const src = drinkImage.startsWith('http') || drinkImage.startsWith('/') ? drinkImage : '/' + drinkImage;
+                return <img src={src} alt={drink.name} width="1040" height="1040" decoding="async" fetchpriority="high" />;
+              })()}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dk-detail-col">
+        <div class="dk-detail-card">
+          <h2 class="dk-detail-name">{drink.name}</h2>
+          {drink.description && (
+            <p class="dk-detail-desc">{drink.description}</p>
+          )}
+          {drink.tags && drink.tags.length > 0 && (
+            <>
+              <div class="dk-divider"></div>
+              <p class="dk-flavor-label">{m.drinkPage?.flavorNotesLabel ?? 'Flavor Notes'}</p>
+              <p class="dk-flavor-val">{drink.tags.join(', ')}</p>
+            </>
+          )}
+
+          <a href="/menu" class="dk-menu-link">{m.drinkPage?.viewMenuLabel ?? 'View Full Menu'}</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="dk-customize-wrap">
+      <div class="dk-customize-card">
+        <h3 class="dk-customize-heading">{m.drinkPage?.customizeHeading ?? 'Customize Your Drink'}</h3>
+        <div class="dk-customize-rows">
+          <div class="dk-customize-row">
+            <h4>{m.drinkPage?.flavorsHeading ?? 'Flavors'}</h4>
+            <div class="dk-customize-tags">
+              {(m.customize?.flavors ?? []).map((f: string, i: number) => (
+                <span class="dk-customize-tag">{f}</span>
+              ))}
+            </div>
+          </div>
+          <div class="dk-customize-row">
+            <h4>{m.drinkPage?.sugarFreeHeading ?? 'Sugar Free'}</h4>
+            <div class="dk-customize-tags">
+              {(m.customize?.sfFlavors ?? []).map((f: string, i: number) => (
+                <span class="dk-customize-tag sf">{f}</span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <Footer />
+</Layout>

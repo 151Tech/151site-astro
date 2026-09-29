@@ -14,7 +14,11 @@ const bgClass = background === 'dark' ? 'blk-cardgrid--dark' : '';
     <div class="blk-card-grid">
       {cards.map((card) => (
         <a href={card.href} class="blk-card">
-          {card.image && <div class="blk-card-img" style={`background-image:url('${card.image}')`}></div>}
+          {card.image && (
+            <div class="blk-card-media">
+              <img class="blk-card-img" src={card.image} width="700" height="700" loading="lazy" decoding="async" alt={card.title} />
+            </div>
+          )}
           <div class="blk-card-body">
             <div>
               <h3>{card.title}</h3>

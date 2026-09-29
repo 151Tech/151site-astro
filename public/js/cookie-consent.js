@@ -1,7 +1,6 @@
 (() => {
     const consent = window.COFFEE151_CONSENT;
-    // Fail safe: if consent.js didn't load for some reason, show no banner
-    // and load no trackers, rather than guessing.
+    // Without consent.js, show no banner and load no trackers.
     if (!consent) return;
 
     function dismiss(banner) {
@@ -13,9 +12,8 @@
         if (document.getElementById('cookie-consent')) return; // already open
         const wasAccepted = consent.get()?.accepted === true;
 
-        // 1-in-1,000 easter egg: same banner, silly copy. Purely cosmetic --
-        // it still calls the same consent.set()/choose() below, so it has no
-        // effect on what's actually recorded.
+        // 1-in-1,000 easter egg: the same banner with different copy. It
+        // records consent exactly the same way.
         const isCookieMonster = Math.random() < 1 / 1000;
         const copy = isCookieMonster
             ? {
@@ -54,11 +52,9 @@
         function choose(accepted) {
             consent.set(accepted);
             dismiss(banner);
-            // Granting consent needs no reload: analytics-loader.js is already
-            // listening and loads GA/Meta immediately. Revoking previously-
-            // granted consent has no clean in-page undo (GA/Meta don't offer
-            // a "forget this pageview" call once their scripts have fired),
-            // so reload into a fresh page that never loads them at all.
+            // Granting consent needs no reload: analytics-loader.js is
+            // already listening. Revoking reloads into a page that never
+            // loads the trackers, since they can't be unloaded.
             if (wasAccepted && !accepted) {
                 window.location.reload();
             }
@@ -68,15 +64,11 @@
         banner.querySelector('#ccDecline').addEventListener('click', () => choose(false));
         banner.querySelector('#ccClose').addEventListener('click', () => choose(false));
 
-        // Deliberately no "leave without choosing" handler: nothing is ever
-        // recorded just for navigating away or closing the tab. init() below
-        // re-checks consent.get() fresh on every single page load, so if the
-        // visitor never actually clicked a button, this banner comes right
-        // back on the next page, and the one after that, for as long as it
-        // takes.
+        // Nothing is recorded unless a button is clicked; the banner returns
+        // on every page until then.
         document.body.appendChild(banner);
 
-        // Slight delay so the slide-up animation plays on load
+        // Short delay so the slide-up animation plays.
         requestAnimationFrame(() => requestAnimationFrame(() => banner.classList.add('cc-visible')));
     }
 
@@ -89,8 +81,7 @@
         }
     }
 
-    // Exposed so a "Cookie Preferences" control (see Footer.astro) can
-    // reopen the banner on demand, even after a choice was already made.
+    // Lets the footer's "Cookie Preferences" link reopen the banner.
     window.COFFEE151_REOPEN_CONSENT = build;
 
     init();

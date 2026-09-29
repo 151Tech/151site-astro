@@ -47,8 +47,19 @@ const STORY_SLUGS = [
 // too) that src/lib/storyblok.ts's getDrinks()/getDrink() read from.
 const COLLECTIONS = ['products', 'categories', 'locations', 'landing-pages'];
 
+// Last-publish time per story, keyed by full slug ("pages/home",
+// "products/latte"). Kept beside the content rather than inside it so every
+// existing reader of stories/collections sees the same shape as before; the
+// sitemap (astro.config.mjs) uses it for <lastmod>.
+const publishedAt = {};
+const recordPublished = (story) => {
+  const at = story.published_at || story.first_published_at;
+  if (at) publishedAt[story.full_slug] = at;
+};
+
 async function fetchStory(slug) {
   const { data } = await client.get(`cdn/stories/${slug}`, { version: 'published' });
+  recordPublished(data.story);
   return data.story.content;
 }
 
@@ -58,6 +69,7 @@ async function fetchCollection(startsWith) {
     version: 'published',
     per_page: 100,
   });
+  data.stories.forEach(recordPublished);
   return data.stories.map((story) => ({ slug: story.slug, uuid: story.uuid, content: story.content }));
 }
 
@@ -108,5 +120,5 @@ for (const drink of collections.products) normalizeUnavailableAt(drink.content);
 for (const category of collections.categories) normalizeUnavailableAt(category.content);
 
 fs.mkdirSync(path.dirname(outPath), { recursive: true });
-fs.writeFileSync(outPath, JSON.stringify({ generatedAt: new Date().toISOString(), stories, collections }, null, 2) + '\n');
+fs.writeFileSync(outPath, JSON.stringify({ generatedAt: new Date().toISOString(), publishedAt, stories, collections }, null, 2) + '\n');
 console.log(`Wrote snapshot to ${outPath}`);

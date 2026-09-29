@@ -1,20 +1,14 @@
-// A static /public/robots.txt is shared byte-for-byte between production
-// and the draft-preview deployment (the `preview` branch fast-forwards
-// from this one - see .github/workflows/sync-preview.yml), so it can't
-// carry different content per environment. Serving it from a route instead
-// lets it read STORYBLOK_DRAFT_MODE and disallow the preview domain
-// entirely, while production keeps the real, fully-open file.
+// Served from a route (not public/robots.txt) so production and the
+// draft-preview deployment can return different rules.
 import { TEMP_NOINDEX } from '../lib/temp-noindex';
 
 export const prerender = import.meta.env.STORYBLOK_DRAFT_MODE !== 'true';
 
-const PRODUCTION_ROBOTS = `# 151 Coffee - robots.txt
-# Allow all standard search engines full access
+const PRODUCTION_ROBOTS = `# 151 Coffee
 User-agent: *
 Allow: /
 
-# --- Explicitly welcome AI answer engines (AEO / GEO) ---
-# We WANT to be cited by AI assistants and answer engines.
+# AI search and answer engines
 User-agent: GPTBot
 Allow: /
 
@@ -60,35 +54,17 @@ Allow: /
 Sitemap: https://www.151coffee.com/sitemap-index.xml
 `;
 
-// No Sitemap line here on purpose: astro.config.mjs skips the sitemap
-// integration entirely on this deployment, so there is nothing to point at.
-//
-// Counter-intuitively this ALLOWS crawling, because the goal is to be
-// deindexed rather than merely uncrawled, and those need opposite settings.
-// `Disallow: /` stops a crawler fetching the page, so it never reads the
-// noindex sent by Layout.astro and the X-Robots-Tag sent by middleware.ts --
-// and a blocked URL that someone links to publicly can still be indexed
-// URL-only, which is Search Console's "Indexed, though blocked by
-// robots.txt". Letting crawlers in means they read noindex and drop the page
-// for good. nofollow travels with it, so nothing here is crawled onward.
-//
-// This is not a privacy boundary and was never meant to be one: noindex
-// keeps the preview out of search results, it does not stop anyone who has
-// the URL. Making it genuinely inaccessible needs access control at the
-// platform level (Webflow Cloud environment protection), not a crawler hint.
-const PREVIEW_ROBOTS = `# Draft-preview deployment. Not the real site.
-# Crawling is allowed ONLY so crawlers can read the noindex that
-# Layout.astro and middleware.ts send on every response. Nothing here
-# should ever appear in a search result.
+// The preview has no sitemap. Crawling is allowed on purpose: a crawler
+// blocked by Disallow never sees the noindex and can still index the bare
+// URL, while one that fetches the page reads noindex and drops it. This keeps
+// the preview out of search results; it is not access control.
+const PREVIEW_ROBOTS = `# Preview site. Every page is noindex. The real site is https://www.151coffee.com
 User-agent: *
 Allow: /
 `;
 
-// TEMPORARY (see src/lib/temp-noindex.ts): production serves this until the
-// new site replaces the live one. Same Allow-not-Disallow reasoning as above.
-const TEMP_NOINDEX_ROBOTS = `# Temporarily not for search engines while this site is being built.
-# Crawling is allowed ONLY so crawlers can read the noindex sent on every
-# page. The real site is https://www.151coffee.com
+// Pre-launch (src/lib/temp-noindex.ts): crawlable, but every page is noindex.
+const TEMP_NOINDEX_ROBOTS = `# Every page is noindex until launch. The real site is https://www.151coffee.com
 User-agent: *
 Allow: /
 `;

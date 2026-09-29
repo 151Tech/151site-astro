@@ -1,9 +1,13 @@
 ---
 export const prerender = import.meta.env.STORYBLOK_DRAFT_MODE !== 'true';
 import Layout from '../../layouts/Layout.astro';
+import '../../styles/location-detail.css';
 import Nav from '../../components/Nav.astro';
 import Footer from '../../components/Footer.astro';
-import { getLocations, getSettings, getPage, unwrapSingletons, imageUrl } from '../../lib/storyblok';
+import { getLocations, getSettings, getPage, getCategories, getDrinks, unwrapSingletons, imageUrl } from '../../lib/storyblok';
+import { routableItems } from '../../lib/menu-urls.mjs';
+import crossStreetDefaults from '../../data/store-cross-streets.json';
+import storeAmenities from '../../data/store-amenities.json';
 import Editable from '../../components/Editable.astro';
 import JsonLd from '../../components/JsonLd.astro';
 import { graph, locationSchema, organizationSchema, breadcrumbSchema, SITE } from '../../lib/seo';
@@ -14,14 +18,22 @@ export async function getStaticPaths() {
 }
 
 const { slug } = Astro.params;
-const [locations, settingsData, pageData] = await Promise.all([
+const [locations, settingsData, pageData, categoryEntries, drinkEntries] = await Promise.all([
   getLocations(),
   getSettings(),
   getPage('locations'),
+  getCategories(),
+  getDrinks(),
 ]);
 const loc = locations.find((e: any) => e.slug === slug);
 
-if (!loc) return Astro.redirect('/locations');
+// Unknown slug: serve the real 404 page with a 404 status. A redirect here
+// (the old behaviour) is a soft 404 - crawlers read junk URLs as duplicates
+// of the redirect target and broken links stop showing up as broken. Only
+// reachable when this route renders per request (draft preview, or if the
+// platform ever stops prerendering it); prerendered builds never match an
+// unknown slug in the first place.
+if (!loc) return Astro.rewrite('/404');
 const s = (settingsData as any) ?? {};
 // Shared store-detail UI labels live on the Locations page (mirrors how the
 // drink detail page pulls its labels from the Menu page).
@@ -29,8 +41,6 @@ const lp = unwrapSingletons((pageData as any) ?? {}, ['seo', 'visibility', 'hero
 const dl = lp.storeDetail ?? {};
 
 const hours = loc.hours || s.hours || 'Open daily 6 AM - 8 PM';
-const phone = s.phone || '(682) 325-2124';
-const phoneTel = phone.replace(/\D/g, '');
 // The slot is a square (.ld-photo is aspect-ratio 1/1, object-fit cover) that
 // tops out around 584px wide, so 1200 is already a 2x source - 1600 was just
 // extra bytes.
@@ -40,6 +50,120 @@ const image = locImage
   : undefined;
 const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${loc.lat},${loc.lng}`;
 const shortName = (loc.name as string).replace(/^151 Coffee\s*/i, '') || loc.name;
+const fullAddress = `${loc.address}, ${loc.city}, ${loc.state} ${loc.zip}`;
+// Storyblok "Cross Streets" when filled in, else the committed default
+// (src/data/store-cross-streets.json).
+const crossStreets =
+  (typeof loc.crossStreets === 'string' && loc.crossStreets.trim()) ||
+  (crossStreetDefaults as Record<string, string>)[slug as string] ||
+  '';
+// Storyblok still has the old "See This Store's Menu" label; the button
+// reads "This Store's Menu" now. Harmless once the label is edited there.
+const menuButtonLabel = String(dl.menuButtonLabel ?? "This Store's Menu").replace(/^see\s+/i, '');
+
+// --- Food at this store ----------------------------------------------------
+// Worked out from the menu's own availability data rather than a separate
+// per-store flag, so this line can never disagree with the store's menu.
+// unavailableAt holds "locations/<slug>" in the snapshot, or the location's
+// UUID from the live API (same split as menu.astro).
+const FOOD_CATEGORIES = ['hotfood', 'treats'];
+const excludesThisStore = (refs: any) =>
+  (Array.isArray(refs) ? refs : []).some((ref: string) => ref === `locations/${slug}` || ref === loc.uuid);
+const foodCats = FOOD_CATEGORIES
+  .map((key) => categoryEntries.find((c: any) => c.slug === key))
+  .filter((c: any) => c && !c.hiddenByDefault && !excludesThisStore(c.unavailableAt));
+const hasHotFood = foodCats.some((c: any) => c.slug === 'hotfood');
+const foodLabel = foodCats.length ? foodCats.map((c: any) => c.title).join(' & ') : 'Drinks only';
+// Two examples, rotated by store number so the stores don't all name the
+// same two items. "The Ultimate Burrito" -> "Ultimate Burrito" so it reads
+// after "like our".
+const hotFoodItems = hasHotFood
+  ? routableItems(drinkEntries, categoryEntries)
+      .filter((d: any) => d.category === 'categories/hotfood' && !excludesThisStore(d.unavailableAt))
+      .map((d: any) => String(d.name).replace(/^the\s+/i, ''))
+  : [];
+const rotateBy = (Number(loc.displayOrder) || 0) * 2;
+const hotFoodExamples = hotFoodItems.length
+  ? [0, 1].map((i) => hotFoodItems[(rotateBy + i) % hotFoodItems.length]).filter((n, i, all) => all.indexOf(n) === i)
+  : [];
+
+// --- Amenities -------------------------------------------------------------
+// Patio (covered or not) and guest Wi-Fi, from src/data/store-amenities.json.
+// A store missing from that file just shows neither.
+const amenities = ((storeAmenities as Record<string, any>)[slug as string] ?? {}) as { patio?: string; wifi?: boolean };
+const patio = amenities.patio === 'covered' || amenities.patio === 'uncovered' ? amenities.patio : '';
+const hasWifi = amenities.wifi === true;
+const amenityList = [
+  patio === 'covered' && { key: 'covered', label: 'Covered Patio' },
+  patio === 'uncovered' && { key: 'uncovered', label: 'Patio (Uncovered)' },
+  hasWifi && { key: 'wifi', label: 'Guest Wi-Fi' },
+].filter(Boolean) as { key: string; label: string }[];
+
+// --- Hours ---------------------------------------------------------------
+// Storyblok hours are free text ("6am-8pm"). Parse a single daily range for
+// the card's big hours line; anything that doesn't parse is shown as written.
+const fmtTime = (h: string, m: string | undefined, ap: string) => `${Number(h)}${m && m !== '00' ? `:${m}` : ''} ${ap.toUpperCase()}`;
+const hoursMatch = String(hours).match(/(\d{1,2})(?::(\d{2}))?\s*(am|pm)\s*(?:-|–|—|to)\s*(\d{1,2})(?::(\d{2}))?\s*(am|pm)/i);
+const openLabel = hoursMatch ? fmtTime(hoursMatch[1], hoursMatch[2], hoursMatch[3]) : '';
+const closeLabel = hoursMatch ? fmtTime(hoursMatch[4], hoursMatch[5], hoursMatch[6]) : '';
+
+// --- Nearby stores ---------------------------------------------------------
+// Straight-line miles from the stored coordinates. Up to three stores within
+// 100 miles; a store with nothing that close still gets its single nearest
+// neighbour so the section is never empty.
+const milesBetween = (a: any, b: any) => {
+  const rad = (d: any) => (Number(d) * Math.PI) / 180;
+  const dLat = rad(b.lat - a.lat);
+  const dLng = rad(b.lng - a.lng);
+  const h = Math.sin(dLat / 2) ** 2 + Math.cos(rad(a.lat)) * Math.cos(rad(b.lat)) * Math.sin(dLng / 2) ** 2;
+  return 3958.8 * 2 * Math.asin(Math.sqrt(h));
+};
+const byDistance = locations
+  .filter((l: any) => l.slug !== slug && Number.isFinite(Number(l.lat)) && Number.isFinite(Number(l.lng)))
+  .map((l: any) => ({
+    slug: l.slug,
+    name: l.name,
+    shortName: (l.name as string).replace(/^151 Coffee\s*/i, '') || l.name,
+    city: l.city,
+    state: l.state,
+    image: imageUrl(l.image, { width: 160 }),
+    miles: milesBetween(loc, l),
+  }))
+  .sort((a: any, b: any) => a.miles - b.miles);
+const nearby = byDistance.filter((l: any) => l.miles <= 100).slice(0, 3);
+if (!nearby.length && byDistance.length) nearby.push(byDistance[0]);
+const miles = (m: number) => `${m < 10 ? m.toFixed(1) : Math.round(m)} mi`;
+
+// --- About copy ------------------------------------------------------------
+// Storyblok's "Store Description" when an editor has written one (blank
+// lines split paragraphs). Until then, a paragraph built only from this
+// store's own facts, so no two pages read the same and nothing is invented.
+const listNames = (names: string[]) =>
+  names.length <= 1 ? names.join('') : `${names.slice(0, -1).join(', ')} and ${names[names.length - 1]}`;
+const writtenCopy = typeof loc.description === 'string' ? loc.description.trim() : '';
+const aboutParagraphs = writtenCopy
+  ? writtenCopy.split(/\n\s*\n/).map((p: string) => p.trim()).filter(Boolean)
+  : [
+      `151 Coffee ${shortName} is our drive-thru at ${loc.address} in ${loc.city}, ${loc.state}${crossStreets ? `, near ${crossStreets}` : ''}, open ${hours}. Pull up for handcrafted coffee, cold brew, energy drinks, teas and smoothies, made the way you order them.${patio ? ` There's ${patio === 'covered' ? 'a covered' : 'an uncovered'} patio if you'd rather stay a while${hasWifi ? ', plus guest Wi-Fi (the only 151 Coffee store with it right now)' : ''}.` : hasWifi ? ' This is our only store with guest Wi-Fi right now.' : ''}`,
+      hasHotFood
+        ? `This store serves hot food too${hotFoodExamples.length ? `, like our ${listNames(hotFoodExamples)}` : ''}${foodCats.length > 1 ? ', plus baked treats' : ''}. Check the store menu for what's available today.`
+        : foodCats.length
+          ? `This store carries our ${foodLabel.toLowerCase()} alongside the full drink menu. Hot food isn't offered at this location.`
+          : `This store serves our full drink menu. Hot food and baked treats aren't offered at this location.`,
+      nearby.length
+        ? `Heading somewhere else? The closest other 151 Coffee ${nearby.length > 1 ? 'stores are' : 'store is'} ${listNames(nearby.map((n: any) => `${n.shortName} (${miles(n.miles)})`))}.`
+        : '',
+    ].filter(Boolean);
+
+// --- Google reviews --------------------------------------------------------
+// With the store's Google Place ID (Storyblok "Google Place ID"), link
+// straight to Google's write-a-review box. Without it, open the store's
+// Google Maps listing, where the reviews and the review button live.
+const placeId = typeof loc.googlePlaceId === 'string' ? loc.googlePlaceId.trim() : '';
+const reviewUrl = placeId
+  ? `https://search.google.com/local/writereview?placeid=${encodeURIComponent(placeId)}`
+  : loc.googleMapsUrl || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`151 Coffee ${fullAddress}`)}`;
+const reviewLabel = placeId ? (dl.reviewButtonLabel ?? 'Leave a Google Review') : (dl.reviewsButtonLabel ?? 'Google Reviews');
 
 const ogImage = image ? (image.startsWith('http') ? image : `https://www.151coffee.com${encodeURI(image)}`) : undefined;
 
@@ -49,7 +173,14 @@ const ogImage = image ? (image.startsWith('http') ? image : `https://www.151coff
 // The Organization is repeated here so each store resolves its
 // parentOrganization reference within its own page's graph.
 const storeSchema = graph(
-  locationSchema({ ...loc, slug }, s, { menuUrl: `${SITE}/menu?store=${slug}` }),
+  locationSchema({ ...loc, slug }, s, {
+    menuUrl: `${SITE}/menu?store=${slug}`,
+    amenities: [
+      patio && 'Outdoor seating',
+      patio === 'covered' && 'Covered patio',
+      hasWifi && 'Guest Wi-Fi',
+    ].filter(Boolean) as string[],
+  }),
   organizationSchema(s),
   breadcrumbSchema([
     { name: 'Home', url: '/' },
@@ -60,18 +191,16 @@ const storeSchema = graph(
 ---
 <Layout
   title={`151 Coffee ${shortName} | Store Info & Hours`}
-  description={`Visit 151 Coffee in ${loc.city}, ${loc.state}. Address, hours, and directions for our ${shortName} drive-thru.`}
+  description={`151 Coffee ${shortName} drive-thru at ${loc.address}, ${loc.city}, ${loc.state}${crossStreets ? ` (${crossStreets})` : ''}. Open ${hours}${hasHotFood ? ', with hot food' : foodCats.length ? `, with ${foodLabel.toLowerCase()}` : ''}. Menu, directions, reviews and nearby stores.`}
   ogImage={ogImage}
 >
   <Fragment slot="head">
-    <link rel="stylesheet" href="/location-detail.css" />
-    <link rel="preconnect" href="https://unpkg.com" crossorigin />
     <JsonLd schema={storeSchema} />
   </Fragment>
 
   <Nav active="locations" />
 
-  <section class="ld-hero" style="margin-top:58px;">
+  <section class="ld-hero">
     <Editable blok={loc} />
     <div class="ld-hero-bg"></div>
     <div class="ld-hero-inner">
@@ -92,36 +221,105 @@ const storeSchema = graph(
   <section class="ld-body">
     <div class="ld-body-inner">
       <div class="ld-img-col">
-        {image && <img class="ld-photo" src={image} alt={`151 Coffee ${shortName}`} width="1200" height="1200" decoding="async" fetchpriority="high" />}
+        {image && <img class="ld-photo" src={image} alt={`151 Coffee ${shortName} drive-thru at ${loc.address}, ${loc.city}`} width="1200" height="1200" decoding="async" fetchpriority="high" />}
       </div>
 
       <div class="ld-detail-col">
         <div class="ld-detail-card">
-          <div class="ld-detail-row">
-            <span class="ld-detail-label">{dl.hoursLabel ?? 'Hours'}</span>
-            <p class="ld-detail-val">{hours}</p>
+          <div class="ld-hours-row">
+            <div class="ld-hours">
+              <span class="ld-detail-label">{dl.hoursLabel ?? 'Hours'}</span>
+              {hoursMatch
+                ? <p class="ld-hours-big">{openLabel}<span class="ld-hours-dash" aria-hidden="true">&ndash;</span><span class="sr-only"> to </span>{closeLabel}</p>
+                : <p class="ld-hours-big ld-hours-big--text">{hours}</p>}
+              <p class="ld-hours-sub">Open daily</p>
+            </div>
+            {amenityList.length > 0 && (
+              <ul class="ld-amenities" aria-label="Amenities">
+                {amenityList.map((a) => (
+                  <li class="ld-amenity">
+                    {a.key === 'covered' && <svg class="ld-amenity-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5a7 7 0 0 1 14 0z"/><path d="M10 3.5v13a1.8 1.8 0 0 1-3.6 0"/></svg>}
+                    {a.key === 'uncovered' && <svg class="ld-amenity-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="3.4"/><path d="M10 2.5v1.8M10 15.7v1.8M2.5 10h1.8M15.7 10h1.8M4.7 4.7l1.3 1.3M14 14l1.3 1.3M4.7 15.3L6 14M14 6l1.3-1.3"/></svg>}
+                    {a.key === 'wifi' && <svg class="ld-amenity-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.8 7.6a10.4 10.4 0 0 1 14.4 0"/><path d="M5.4 10.3a6.6 6.6 0 0 1 9.2 0"/><path d="M8 13a2.9 2.9 0 0 1 4 0"/><circle cx="10" cy="15.6" r=".6" fill="currentColor"/></svg>}
+                    {a.label}
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
-          <div class="ld-divider"></div>
-          <div class="ld-detail-row">
-            <span class="ld-detail-label">{dl.phoneLabel ?? 'Phone'}</span>
-            <a class="ld-detail-val ld-detail-link" href={`tel:+1${phoneTel}`}>{phone}</a>
-          </div>
-          <div class="ld-divider"></div>
-          <div class="ld-detail-row">
-            <span class="ld-detail-label">{dl.addressLabel ?? 'Address'}</span>
-            <p class="ld-detail-val">{loc.address}<br />{loc.city}, {loc.state} {loc.zip}</p>
+
+          <div class="ld-tiles">
+            <div class="ld-tile">
+              <svg class="ld-tile-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 18s-5.5-5.1-5.5-9.2A5.5 5.5 0 0 1 10 3.3a5.5 5.5 0 0 1 5.5 5.5C15.5 12.9 10 18 10 18z"/><circle cx="10" cy="8.8" r="2"/></svg>
+              <span class="ld-detail-label">{dl.addressLabel ?? 'Address'}</span>
+              <p class="ld-detail-val">{loc.address}<br />{loc.city}, {loc.state} {loc.zip}</p>
+            </div>
+            {crossStreets && (
+              <div class="ld-tile">
+                <svg class="ld-tile-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 2.5v15M2.5 10h15"/><path d="M6.5 6.5h0M13.5 13.5h0"/></svg>
+                <span class="ld-detail-label">{dl.crossStreetsLabel ?? 'Cross Streets'}</span>
+                <p class="ld-detail-val">{crossStreets}</p>
+              </div>
+            )}
+            <div class="ld-tile">
+              <svg class="ld-tile-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7.5h9.5v4.2A4.3 4.3 0 0 1 9.2 16h-.9A4.3 4.3 0 0 1 4 11.7z"/><path d="M13.5 9h1.2a2 2 0 0 1 0 4h-1.5"/><path d="M7 2.8c-.6.8.6 1.4 0 2.3M10.3 2.8c-.6.8.6 1.4 0 2.3"/></svg>
+              <span class="ld-detail-label">{dl.foodLabel ?? 'Food'}</span>
+              <p class="ld-detail-val">{foodLabel}</p>
+              {foodCats.length > 0 && !hasHotFood && <p class="ld-detail-note">No hot food at this store</p>}
+              {!foodCats.length && <p class="ld-detail-note">Full drink menu</p>}
+            </div>
+            {nearby[0] && (
+              <a class="ld-tile ld-tile--link" href={`/locations/${nearby[0].slug}`}>
+                <svg class="ld-tile-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7.2"/><path d="M13.2 6.8l-2 4.4-4.4 2 2-4.4z"/></svg>
+                <span class="ld-detail-label">{dl.nearestStoreLabel ?? 'Nearest Store'}</span>
+                <p class="ld-detail-val">{nearby[0].shortName}</p>
+                <p class="ld-detail-note">{miles(nearby[0].miles)} away</p>
+              </a>
+            )}
           </div>
 
           <div class="ld-btn-row">
-            <a href={`/menu?store=${slug}`} class="ld-btn ld-btn-primary">{dl.menuButtonLabel ?? "See This Store's Menu"}</a>
+            <a href={`/menu?store=${slug}`} class="ld-btn ld-btn-primary">{menuButtonLabel}</a>
             <a href={directionsUrl} target="_blank" rel="noopener noreferrer" class="ld-btn ld-btn-secondary">{dl.directionsButtonLabel ?? 'Get Directions'}</a>
+            <a href={reviewUrl} target="_blank" rel="noopener noreferrer" class="ld-btn ld-btn-secondary">
+              <svg class="ld-btn-icon" viewBox="0 0 20 20" aria-hidden="true"><path fill="currentColor" d="M10 1.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.5 7.7l5.9-.9z"/></svg>
+              {reviewLabel}
+            </a>
           </div>
         </div>
       </div>
     </div>
 
     <div class="ld-map-wrap">
-      <div class="ld-map" id="storeMap"></div>
+      <div class="ld-map" id="storeMap" role="region" aria-label={`Map of 151 Coffee ${shortName}`}>
+        <noscript><p class="ld-map-noscript">{fullAddress}. <a href={directionsUrl}>Open in Google Maps</a></p></noscript>
+      </div>
+    </div>
+
+    <div class="ld-more">
+      <div class="ld-about">
+        <h2 class="ld-section-title">{dl.aboutHeading ?? 'About This Store'}</h2>
+        {aboutParagraphs.map((p: string) => <p>{p}</p>)}
+      </div>
+
+      {nearby.length > 0 && (
+        <div class="ld-nearby">
+          <h2 class="ld-section-title">{dl.nearbyHeading ?? 'Nearby Stores'}</h2>
+          <ul class="ld-nearby-list">
+            {nearby.map((n: any) => (
+              <li>
+                <a class="ld-nearby-card" href={`/locations/${n.slug}`}>
+                  {n.image && <img src={n.image} alt="" width="64" height="64" loading="lazy" decoding="async" />}
+                  <span class="ld-nearby-text">
+                    <span class="ld-nearby-name">{n.name}</span>
+                    <span class="ld-nearby-meta">{n.city}, {n.state} &middot; {miles(n.miles)} away</span>
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   </section>
 
@@ -131,4 +329,31 @@ const storeSchema = graph(
     window.STORE_MAP = { lat, lng, name, address };
   </script>
   <script src="/js/store-map-loader.js" is:inline></script>
+  <script is:inline>
+    // Largest button text that still keeps all three buttons on one row at
+    // their current widths. Labels come from Storyblok and change length
+    // (e.g. "Leave a Google Review" once a Place ID is set), so this measures
+    // instead of hardcoding a size. Phones stack the buttons and use the CSS
+    // size as-is.
+    (function () {
+      var row = document.querySelector('.ld-btn-row');
+      if (!row) return;
+      var MIN = 10, MAX = 17;
+      function fits() { return row.scrollWidth <= row.clientWidth + 0.5; }
+      function fit() {
+        row.style.removeProperty('--ld-btn-font');
+        if (getComputedStyle(row).flexDirection === 'column') return;
+        var lo = MIN, hi = MAX;
+        for (var i = 0; i < 10; i++) {
+          var mid = (lo + hi) / 2;
+          row.style.setProperty('--ld-btn-font', mid + 'px');
+          if (fits()) lo = mid; else hi = mid;
+        }
+        row.style.setProperty('--ld-btn-font', Math.floor(lo * 10) / 10 + 'px');
+      }
+      fit();
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+      if (window.ResizeObserver) new ResizeObserver(fit).observe(row.parentElement);
+    })();
+  </script>
 </Layout>

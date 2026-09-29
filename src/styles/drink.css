@@ -2,6 +2,7 @@
 
 /* Hero */
 .dk-hero {
+    margin-top: 58px; /* clears the fixed nav */
     position: relative;
     display: flex;
     align-items: flex-end;
@@ -106,19 +107,11 @@
     margin: 0;
 }
 
-.dk-subtitle {
-    font-size: 1rem;
-    color: rgba(255,255,255,0.9);
-    font-weight: 400;
-    margin: 0;
-    max-width: 55ch;
-}
-
 /* Drink info: photo + one unified detail card */
 .dk-info {
-    background-color: #f4efe9;
+    background-color: var(--quote-ground);
     background-image: var(--bg-quote);
-    background-size: 1250px auto;
+    background-size: auto;
     background-position: top center;
     background-repeat: repeat;
     padding: 5rem 2rem;
@@ -130,11 +123,7 @@
     content: '';
     position: absolute;
     inset: 0;
-    background:
-        radial-gradient(120% 60% at 50% 0%,   rgba(228,37,43,0.08) 0%, transparent 60%),
-        radial-gradient(120% 60% at 50% 100%, rgba(228,37,43,0.06) 0%, transparent 60%),
-        radial-gradient(60% 100% at 0% 50%,   rgba(228,37,43,0.06) 0%, transparent 55%),
-        radial-gradient(60% 100% at 100% 50%, rgba(228,37,43,0.06) 0%, transparent 55%);
+    background: none; /* red glow removed: pattern ground is fully neutral */
     pointer-events: none;
 }
 

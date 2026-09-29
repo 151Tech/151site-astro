@@ -22,9 +22,16 @@
 /_astro/*
   Cache-Control: public, max-age=31536000, immutable
 
+# Third-party libraries copied into public/vendor/ (MapLibre). The version
+# is in the path, so an upgrade is a new URL and these never change.
+/vendor/*
+  Cache-Control: public, max-age=31536000, immutable
+
 # Hand-maintained CSS and JS in public/ keep their filenames across deploys,
 # so they get a short browser TTL and a longer shared/edge one, with
-# stale-while-revalidate so a visitor never waits on the refetch.
+# stale-while-revalidate so a visitor never waits on the refetch. (The site's
+# main stylesheets now live in src/styles/ and are inlined into each page;
+# this is left for blocks.css and anything else still linked from public/.)
 /*.css
   Cache-Control: public, max-age=300, s-maxage=86400, stale-while-revalidate=604800
 

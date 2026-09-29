@@ -7,10 +7,9 @@ export async function getStaticPaths() {
   const paths = [];
   for (const loc of locations as any[]) {
     const props = { slug: loc.slug, name: loc.name };
-    // Name-based slug (e.g. /menu/keller) for internal links (Store Info
-    // pages, etc.), plus the numbered short URL (e.g. /menu/8) that matches
-    // the QR codes already printed for each store. displayOrder is that
-    // same 1-15 numbering (see the location's displayOrder field).
+    // Each store's menu at its name slug (/menu/keller) and at its number
+    // (/menu/8), which matches the printed QR codes. The number is the
+    // location's displayOrder.
     paths.push({ params: { store: loc.slug.replace(/^151-coffee-/, '') }, props });
     const order = loc.displayOrder;
     if (order != null) paths.push({ params: { store: String(Number(order)) } , props });
@@ -18,7 +17,17 @@ export async function getStaticPaths() {
   return paths;
 }
 
-const { slug, name } = Astro.props as { slug: string; name: string };
+let { slug, name } = (Astro.props ?? {}) as { slug?: string; name?: string };
+// Props exist only when prerendered. When rendered per request, resolve the
+// store from the URL and 404 anything else.
+if (!slug) {
+  const { store } = Astro.params;
+  const loc = (await getLocations() as any[]).find((l) =>
+    l.slug.replace(/^151-coffee-/, '') === store ||
+    (l.displayOrder != null && String(Number(l.displayOrder)) === store));
+  if (!loc) return Astro.rewrite('/404');
+  ({ slug, name } = loc);
+}
 const target = `/menu?store=${slug}`;
 ---
 <!doctype html>

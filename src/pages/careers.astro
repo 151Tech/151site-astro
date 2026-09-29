@@ -165,7 +165,7 @@ const heroVideoSrc = mediaUrl(p.heroVideo);
 
   <Nav active="careers" />
 
-  <!-- Age gate -->
+  {/* Age gate */}
   <div class="age-gate-page" id="ageGatePage">
     <HeroVideo src={heroVideoSrc} videoClass="age-bg-video" />
     <div class="age-overlay"></div>
@@ -190,8 +190,8 @@ const heroVideoSrc = mediaUrl(p.heroVideo);
     </div>
   </div>
 
-  <!-- Careers content (revealed after age gate) -->
-  <div id="careersContent" style="display:none;">
+  {/* Careers content (revealed after age gate) */}
+  <div id="careersContent" hidden>
     <BlockRenderer sections={p.sections} />
 
     <section class="careers-hero">
@@ -199,18 +199,17 @@ const heroVideoSrc = mediaUrl(p.heroVideo);
       <div class="careers-hero-content">
         <h1>{p.hero?.heading ?? 'Join the 151 Team'}</h1>
         <p>{p.hero?.subheading ?? 'Fun, fast, and built on good vibes. See what\'s open.'}</p>
-        <a href={p.workstreamHref ?? '#'} target="_blank" rel="noopener noreferrer" class="btn-primary"
-          style="font-size:1.1rem;padding:1rem 2.5rem;">
+        <a href={p.workstreamHref ?? '#'} target="_blank" rel="noopener noreferrer" class="btn-primary btn-primary--lg">
           {p.workstreamLabel ?? 'View Open Positions'}
         </a>
       </div>
     </section>
   </div>
 
-  <!-- Rendered outside #careersContent (which stays display:none until the
+  {/* Rendered outside #careersContent (which stays display:none until the
        age gate is passed) - the gift card modal it contains must be reachable
        from the nav button regardless of age-gate state, or the button appears
-       broken while the gate is up. -->
+       broken while the gate is up. */}
   <Footer />
 
   <script is:inline>

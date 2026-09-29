@@ -1,40 +1,9 @@
-// Gentle background parallax for the light bands, which now carry the shared
-// --bg-quote ground (background1.jpg, named in an earlier version of this
-// comment, is long gone).
-(function () {
-  const els = document.querySelectorAll('.features, .pricing, .contact, .cta');
-  if (!els.length) return;
-  const SPEED = 0.05;   // very gentle, bg drifts at 5% of scroll
-  const MAX = 40;       // px cap so the layer never runs out of slack
-  let ticking = false;
-
-  function update() {
-    const vh = window.innerHeight || document.documentElement.clientHeight;
-    els.forEach(el => {
-      const r = el.getBoundingClientRect();
-      if (r.bottom < -100 || r.top > vh + 100) return; // skip off-screen
-      const center = (r.top + r.height / 2) - vh / 2;
-      let shift = -center * SPEED;
-      if (shift > MAX) shift = MAX;
-      else if (shift < -MAX) shift = -MAX;
-      el.style.setProperty('--parallax', shift.toFixed(1) + 'px');
-    });
-    ticking = false;
-  }
-
-  window.addEventListener('scroll', () => {
-    if (!ticking) { requestAnimationFrame(update); ticking = true; }
-  }, { passive: true });
-  window.addEventListener('resize', update);
-  update();
-})();
-
-// Smart nav: hide on scroll down, reveal on scroll up, condense once scrolled
+// The nav hides on scroll down, returns on scroll up, and condenses once scrolled.
 (function () {
   const nav = document.querySelector('nav');
   if (!nav) return;
-  const REVEAL_TOP = 90;   // always visible near the top
-  const DELTA = 5;         // ignore tiny jitters
+  const REVEAL_TOP = 90;
+  const DELTA = 5;
   let lastY = window.scrollY || 0;
   let ticking = false;
 
@@ -45,9 +14,9 @@
     if (y < REVEAL_TOP) {
       nav.classList.remove('nav-hidden');
     } else if (y > lastY + DELTA) {
-      nav.classList.add('nav-hidden');      // scrolling down
+      nav.classList.add('nav-hidden');
     } else if (y < lastY - DELTA) {
-      nav.classList.remove('nav-hidden');   // scrolling up
+      nav.classList.remove('nav-hidden');
     }
     lastY = y;
     ticking = false;
@@ -59,49 +28,47 @@
   update();
 })();
 
-// Smooth scrolling for navigation links
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+// Smooth scrolling for in-page links
+document.querySelectorAll('a[href^="#"]:not([href="#"])').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
+        const target = document.getElementById(decodeURIComponent(this.getAttribute('href').slice(1)));
+        if (!target) return;
         e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-            target.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-            });
-        }
+        const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        target.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+        history.pushState(null, '', this.getAttribute('href'));
     });
 });
 
-// Mobile drawer nav 
+// Mobile drawer nav
 (function () {
     const toggle = document.querySelector('.menu-toggle');
     if (!toggle) return;
 
-    // Build overlay
     const overlay = document.createElement('div');
     overlay.className = 'mobile-nav-overlay';
 
-    // Build drawer
     const drawer = document.createElement('div');
     drawer.className = 'mobile-nav-drawer';
+    drawer.id = 'mobileNavDrawer';
+    drawer.setAttribute('aria-label', 'Site navigation');
+    // Out of the tab order and hidden from screen readers while closed.
+    drawer.inert = true;
 
-    // Clone nav links into drawer
     const srcList = document.querySelector('nav .nav-links');
     if (srcList) {
         const cloned = srcList.cloneNode(true);
         drawer.appendChild(cloned);
     }
 
-    // Gift card button inside drawer
     const gcBtn = document.querySelector('#giftCardNavBtn');
     if (gcBtn) {
         const wrapper = document.createElement('div');
         wrapper.className = 'drawer-gc-btn';
         const btn = document.createElement('button');
         btn.className = 'main-menu-btn';
-        btn.style.width = '100%';
-        btn.textContent = 'Gift Card';
+        btn.type = 'button';
+        btn.textContent = gcBtn.textContent;
         btn.addEventListener('click', () => {
             closeDrawer();
             openGiftCardModal();
@@ -119,6 +86,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         drawer.classList.add('open');
         toggle.classList.add('open');
         toggle.setAttribute('aria-expanded', 'true');
+        drawer.inert = false;
         document.body.style.overflow = 'hidden';
     }
 
@@ -127,6 +95,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         drawer.classList.remove('open');
         toggle.classList.remove('open');
         toggle.setAttribute('aria-expanded', 'false');
+        drawer.inert = true;
         document.body.style.overflow = '';
         setTimeout(() => overlay.classList.remove('open'), 320);
     }
@@ -135,53 +104,32 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         drawer.classList.contains('open') ? closeDrawer() : openDrawer();
     });
 
-    // Keyboard support (Enter / Space) for the role="button" toggle
-    toggle.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            drawer.classList.contains('open') ? closeDrawer() : openDrawer();
-        }
-    });
-
-    // Close drawer on Escape
     document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && drawer.classList.contains('open')) closeDrawer();
+        if (e.key === 'Escape' && drawer.classList.contains('open')) {
+            closeDrawer();
+            toggle.focus();
+        }
     });
 
     overlay.addEventListener('click', closeDrawer);
 
-    // Close on link click
     drawer.querySelectorAll('a').forEach(a => a.addEventListener('click', closeDrawer));
 })();
 
-// Remove loading bar after page load
-window.addEventListener('load', function() {
-    setTimeout(() => {
-        const bar = document.querySelector('.loading-bar');
-        if (bar) bar.style.display = 'none';
-    }, 2000);
-});
-
-// Gift Card Modal functionality
+// Gift card modal
 const giftCardModal = document.getElementById('giftCardModal');
 const giftCardNavBtn = document.getElementById('giftCardNavBtn');
 const giftCardFooterBtn = document.getElementById('giftCardFooterBtn');
 const giftCardFooterSupportBtn = document.getElementById('giftCardFooterSupportBtn');
 const closeGiftCardModal = document.getElementById('closeGiftCardModal');
 
-// Crisp's embedded gift card app paints in visibly after
-// the iframe starts loading. Keeping the iframe hidden behind a spinner
-// (see .crisp-loader in style.css) until its 'load' event fires turns that
-// choppy pop-in into a deliberate fade.
+// The Crisp gift card iframe loads on first open and stays behind a spinner
+// (.crisp-loader) until it has loaded and a minimum delay has passed, which
+// covers Crisp's own dark loading screen.
 function activateCrispEmbed(modal) {
     const wrapper = modal.querySelector('.crisp');
     const iframe = modal.querySelector('iframe[data-src]');
-    if (!iframe) return; // already activated on a previous open
-    // The iframe's 'load' event fires once the outer document loads, but
-    // Crisp's own app then paints its (initially dark) loading state before
-    // rendering the real white-themed form. Holding the reveal for a fixed
-    // minimum keeps our white spinner up through that inner flash instead of
-    // handing off straight to Crisp's own transition.
+    if (!iframe) return;
     const minDelay = new Promise((resolve) => setTimeout(resolve, 1200));
     const loaded = new Promise((resolve) => iframe.addEventListener('load', resolve, { once: true }));
     Promise.all([minDelay, loaded]).then(() => {
@@ -191,64 +139,41 @@ function activateCrispEmbed(modal) {
     iframe.removeAttribute('data-src');
 }
 
-// The gift-card balance checker is a full third-party embedded app (Crisp).
-// Loading its iframe eagerly would run that app's JS on every single page
-// view, even though almost nobody opens this modal - so its src is set only
-// the first time the modal is actually opened.
 function openGiftCardModal() {
     if (!giftCardModal) return;
     activateCrispEmbed(giftCardModal);
     giftCardModal.classList.add('active');
 }
 
-if (giftCardNavBtn) {
-    giftCardNavBtn.addEventListener('click', function(e) {
+[giftCardNavBtn, giftCardFooterBtn, giftCardFooterSupportBtn].forEach(function (btn) {
+    if (!btn) return;
+    btn.addEventListener('click', function (e) {
         e.preventDefault();
         openGiftCardModal();
     });
-}
+});
 
-if (giftCardFooterBtn) {
-    giftCardFooterBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        openGiftCardModal();
-    });
-}
-
-if (giftCardFooterSupportBtn) {
-    giftCardFooterSupportBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        openGiftCardModal();
-    });
-}
-
-// Delegated, unlike the named buttons above: the FAQ's inline "here" opener
-// is generated from CMS answer text (see FaqAccordion.astro), so there's no
-// fixed id to bind to and there may be none, one, or several of them.
-document.addEventListener('click', function(e) {
-    var trigger = e.target.closest && e.target.closest('[data-open-giftcard]');
+// FAQ answers can contain generated "here" buttons (see src/lib/faq.ts).
+document.addEventListener('click', function (e) {
+    const trigger = e.target.closest && e.target.closest('[data-open-giftcard]');
     if (!trigger) return;
     e.preventDefault();
     openGiftCardModal();
 });
 
 if (closeGiftCardModal) {
-    closeGiftCardModal.addEventListener('click', function() {
+    closeGiftCardModal.addEventListener('click', function () {
         giftCardModal.classList.remove('active');
-        giftCardModal.style.display = '';
     });
 }
 
 if (giftCardModal) {
-    giftCardModal.addEventListener('click', function(e) {
-        if (e.target === giftCardModal) {
-            giftCardModal.classList.remove('active');
-            giftCardModal.style.display = '';
-        }
+    giftCardModal.addEventListener('click', function (e) {
+        if (e.target === giftCardModal) giftCardModal.classList.remove('active');
     });
 }
 
-// Invest Banner Modal functionality
+// Investor waitlist modal
 const investModal = document.getElementById('investModal');
 const investBannerBtn = document.getElementById('investBannerBtn');
 const closeInvestModal = document.getElementById('closeInvestModal');
@@ -259,17 +184,15 @@ function openInvestModal() {
 }
 
 if (investBannerBtn) {
-    investBannerBtn.addEventListener('click', function(e) {
+    investBannerBtn.addEventListener('click', function (e) {
         e.preventDefault();
         openInvestModal();
     });
 }
 
-// Dismisses the modal and drops any "Sent!" panel with it, so reopening
-// offers a usable form rather than a stale confirmation from last time.
+// Also clears the "Sent!" panel so reopening shows the form.
 function closeInvestModalNow() {
     investModal.classList.remove('active');
-    investModal.style.display = '';
     const sent = investModal.querySelector('.form-sent');
     if (sent) sent.remove();
 }
@@ -279,39 +202,73 @@ if (closeInvestModal) {
 }
 
 if (investModal) {
-    investModal.addEventListener('click', function(e) {
+    investModal.addEventListener('click', function (e) {
         if (e.target === investModal) closeInvestModalNow();
     });
 }
 
-// Contact forms (AJAX submit, no page reload) 
-// Shared by every form marked data-netlify="true" (home contact + real
-// estate inquiry). The data-netlify/form-name/bot-field attributes are
-// leftover from an earlier Netlify-hosted version of this site; they aren't
-// used by any Netlify backend anymore (this deployment is Webflow Cloud /
-// Cloudflare Workers, not Netlify) - form-name still tells our own
-// /api/contact endpoint which form fired and doubles as the honeypot field
-// name, so the markup stayed as-is.
-// Keyed by each form's `name` attribute, which is also what tells
-// /api/contact which form fired. The waitlist gets a longer line because
-// there's a real wait involved: nothing happens until the round opens.
+// Keyboard behavior for every .modal, driven by its `active` class: focus
+// moves to the close button on open, Tab stays inside, Escape clicks the
+// close button (so each modal's own close logic runs), and focus returns to
+// the opener on close.
+(function () {
+    const FOCUSABLE = 'a[href], button:not([disabled]), input:not([type="hidden"]):not([disabled]), select, textarea, iframe, [tabindex]:not([tabindex="-1"])';
+    const openedFrom = new WeakMap();
+    const activeModal = () => document.querySelector('.modal.active');
+
+    document.querySelectorAll('.modal').forEach((modal) => {
+        new MutationObserver(() => {
+            const isOpen = modal.classList.contains('active');
+            if (isOpen && !openedFrom.has(modal)) {
+                openedFrom.set(modal, document.activeElement);
+                modal.querySelector('.modal-close')?.focus({ preventScroll: true });
+            } else if (!isOpen && openedFrom.has(modal)) {
+                const from = openedFrom.get(modal);
+                openedFrom.delete(modal);
+                if (from && from.isConnected && from !== document.body) from.focus({ preventScroll: true });
+            }
+        }).observe(modal, { attributes: true, attributeFilter: ['class'] });
+    });
+
+    document.addEventListener('keydown', (e) => {
+        const modal = activeModal();
+        if (!modal) return;
+        if (e.key === 'Escape') {
+            modal.querySelector('.modal-close')?.click();
+            return;
+        }
+        if (e.key !== 'Tab') return;
+        const items = [...modal.querySelectorAll(FOCUSABLE)].filter((el) => el.offsetParent !== null);
+        if (!items.length) return;
+        const first = items[0];
+        const last = items[items.length - 1];
+        if (!modal.contains(document.activeElement)) {
+            e.preventDefault();
+            first.focus();
+        } else if (e.shiftKey && document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+        }
+    });
+})();
+
+// AJAX submit for forms marked data-ajax-form. The hidden form-name field
+// tells /api/contact which form it is.
 const FORM_SENT_MESSAGES = {
     'invest-waitlist': "Thanks for submitting! We'll reach out to you when we go live.",
     'contact': "Thanks for reaching out! We'll get back to you soon.",
     'realestate-inquiry': "Thanks for reaching out! We'll be in touch soon.",
 };
 
-// Covers the whole form rather than just relabelling the button, so a
-// submission reads as finished at a glance. The form keeps its own height
-// underneath, which is what the overlay sizes itself against.
+// A confirmation panel laid over the whole form.
 function showFormSent(form) {
-    if (form.querySelector('.form-sent')) return; // already showing
+    if (form.querySelector('.form-sent')) return;
     const message = FORM_SENT_MESSAGES[form.getAttribute('name')] || FORM_SENT_MESSAGES.contact;
     const overlay = document.createElement('div');
     overlay.className = 'form-sent';
-    // role=status announces this to a screen reader without stealing focus,
-    // which matters because the visible confirmation is otherwise purely
-    // visual.
     overlay.setAttribute('role', 'status');
     overlay.innerHTML =
         '<p class="form-sent__title">Sent!</p>' +
@@ -320,14 +277,11 @@ function showFormSent(form) {
         '<path d="M14 27l8 8 16-16"></path>' +
         '</svg>' +
         '<p class="form-sent__msg"></p>';
-    // textContent, not innerHTML: these strings are ours today, but this keeps
-    // a future message containing an apostrophe or angle bracket from
-    // breaking (or injecting into) the markup above.
     overlay.querySelector('.form-sent__msg').textContent = message;
     form.appendChild(overlay);
 }
 
-document.querySelectorAll('form[data-netlify]').forEach(function (form) {
+document.querySelectorAll('form[data-ajax-form]').forEach(function (form) {
     form.addEventListener('submit', function (e) {
         e.preventDefault();
         const btn = form.querySelector('.form-submit');
@@ -346,11 +300,8 @@ document.querySelectorAll('form[data-netlify]').forEach(function (form) {
                 showFormSent(form);
             })
             .catch(function () {
-                // Failure stays on the button: the form is still usable, and
-                // covering it with a full-panel error would hide the details
-                // the visitor needs to retry.
+                // Errors show on the button so the filled-in form stays visible.
                 if (label) label.textContent = 'Error, please try again';
-                if (btn) btn.style.background = '';
                 setTimeout(function () {
                     if (label) label.textContent = originalText;
                 }, 3000);
@@ -358,13 +309,8 @@ document.querySelectorAll('form[data-netlify]').forEach(function (form) {
     });
 });
 
-// Social links: open the native app on mobile instead of the web page 
-// A plain https:// link to instagram.com opens the profile inside whatever
-// browser/webview the visitor is already in. On a phone with the Instagram
-// app installed, jumping to its app:// URI scheme instead opens the app
-// directly. If the app isn't installed, the scheme silently fails and
-// nothing happens, so fall back to the normal web link if the page hasn't
-// been backgrounded (i.e. the app didn't open) after a short delay.
+// On phones, Instagram links try the app first and fall back to the web
+// page if the app didn't open.
 (function () {
     const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
     if (!isMobile) return;
@@ -378,7 +324,7 @@ document.querySelectorAll('form[data-netlify]').forEach(function (form) {
 
             let fellBack = false;
             function fallback() {
-                if (fellBack || document.hidden) return; // app opened, page backgrounded
+                if (fellBack || document.hidden) return;
                 fellBack = true;
                 window.open(webUrl, '_blank', 'noopener,noreferrer');
             }

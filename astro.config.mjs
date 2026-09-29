@@ -1,21 +1,16 @@
 import { defineConfig, fontProviders } from 'astro/config';
+import { routableItems, itemPath } from './src/lib/menu-urls.mjs';
 import sitemap from '@astrojs/sitemap';
-import { readdirSync, copyFileSync, rmSync, existsSync, readFileSync } from 'node:fs';
+import { readdirSync, copyFileSync, rmSync, existsSync, readFileSync, writeFileSync } from 'node:fs';
+import { transform } from 'esbuild';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const SITE_URL = 'https://www.151coffee.com';
 
-// SMS/text-link discount landing pages (src/pages/[slug].astro) are meant
-// to be reachable only via the exact link they were sent, not discoverable
-// by searching the offer name - see the `noindex` prop on their Layout
-// call. Advertising them in the sitemap would defeat that, the same
-// contradiction the /menu/<store> QR-stub filter below already guards
-// against. Read straight out of the committed snapshot (rather than
-// importing src/lib/storyblok.ts, which relies on import.meta.env and isn't
-// safe to import from this plain-Node config file) since the sitemap only
-// needs slugs, and the snapshot is already the source of truth for
-// everything this build renders.
+// Promo landing pages are reached only by a texted link, so they stay out of
+// the sitemap. Slugs come from the committed snapshot (src/lib/storyblok.ts
+// can't be imported from this Node config).
 const snapshot = JSON.parse(
   readFileSync(new URL('./src/data/storyblok-snapshot.json', import.meta.url), 'utf-8'),
 );
@@ -23,40 +18,53 @@ const landingPageSlugs = new Set(
   snapshot.collections?.['landing-pages']?.map((s) => s.slug) ?? [],
 );
 
-// @astrojs/sitemap enumerates the routes the build emitted, and under the
-// output:'server' mode Webflow forces on us that enumeration only ever
-// contained the eight non-dynamic pages: every getStaticPaths route - all 15
-// store pages and all 65 drink pages - was silently left out, despite being
-// prerendered, indexable and live. Those are exactly the long-tail pages
-// ("151 Coffee Keller", each drink by name) that a sitemap is most useful
-// for, so the URLs are supplied explicitly instead of being discovered.
-//
-// The slugs come from the same committed snapshot the two [slug].astro
-// routes build their getStaticPaths from, so the sitemap cannot drift from
-// what actually got built - a drink unpublished in Storyblok disappears from
-// both at the same rebuild.
+// Prerendered dynamic routes aren't discovered by @astrojs/sitemap under
+// Webflow's server output, so store and menu item URLs are listed from the
+// snapshot.
 const collectionUrls = (collection, prefix) =>
   (snapshot.collections?.[collection] ?? []).map((entry) => `${SITE_URL}${prefix}/${entry.slug}`);
 
-// Webflow Cloud builds this project with its own platform configuration: it
-// injects the Cloudflare adapter, server output mode, and the mount path, and
-// serves prerendered pages through Cloudflare Workers Assets. That asset layer
-// runs in its default "auto-trailing-slash" mode, where a page emitted as
-// /menu/index.html answers a request for /menu with 307 -> /menu/, while
-// Webflow's own edge answers /menu/ with 301 -> /menu. The two rules chase
-// each other forever, so every page except / becomes unreachable.
+const menuItems = routableItems(
+  (snapshot.collections?.products ?? []).map((e) => ({ slug: e.slug, category: e.content?.category })),
+  snapshot.collections?.categories ?? [],
+);
+const menuItemUrls = menuItems.map((d) => `${SITE_URL}${itemPath(d)}`);
+
+// <lastmod> for each URL is the newest Storyblok publish date among the
+// stories the page renders. URLs with no known source get none.
+const publishedAt = snapshot.publishedAt ?? {};
+const folderSlugs = (folder) =>
+  (snapshot.collections?.[folder] ?? []).map((e) => `${folder}/${e.slug}`);
+const newest = (keys) =>
+  keys.map((k) => publishedAt[k]).filter(Boolean).sort().at(-1);
+// Stories each fixed page is built from.
+const PAGE_SOURCES = {
+  '/': ['pages/home', ...folderSlugs('locations')],
+  '/about': ['pages/about'],
+  '/careers': ['pages/careers'],
+  '/locations': ['pages/locations', ...folderSlugs('locations')],
+  '/menu': ['pages/menu', ...folderSlugs('products'), ...folderSlugs('categories')],
+  '/realestate': ['pages/ourfuture', ...folderSlugs('locations')],
+  '/privacy-policy': ['pages/privacy'],
+};
+const lastmodByPath = new Map(Object.entries(PAGE_SOURCES).map(([p, keys]) => [p, newest(keys)]));
+// Store pages: the store plus the categories whose unavailableAt sets its
+// "Food" line.
+for (const loc of snapshot.collections?.locations ?? []) {
+  lastmodByPath.set(`/locations/${loc.slug}`, newest([`locations/${loc.slug}`, ...folderSlugs('categories')]));
+}
+// Menu items: the product and its category.
+for (const d of menuItems) {
+  lastmodByPath.set(itemPath(d), newest([`products/${d.slug}`, d.category]));
+}
+
+// Emits every page as a flat /menu.html instead of /menu/index.html. On
+// Webflow Cloud a directory index redirects /menu to /menu/ while Webflow's
+// edge redirects /menu/ to /menu, an infinite loop; a flat file is served at
+// /menu directly. The index is deleted so only one file exists per route.
 //
-// Emitting each page as a flat /menu.html removes the ambiguity: under
-// auto-trailing-slash a flat file is served directly at /menu with 200 and
-// never redirects, so the loop cannot start. The directory index is deleted
-// rather than merely duplicated, because Cloudflare does not define which one
-// wins when both /menu.html and /menu/index.html exist.
-//
-// This runs as a build hook rather than a separate npm script because Webflow
-// invokes `astro build` directly and never runs our package.json build script,
-// which is why the earlier postbuild version of this fix never took effect.
-// Setting build.format:'file' does not work either: Webflow's template
-// overrides it, as their deployed sitemap's trailing-slash URLs show.
+// This must be a build hook: Webflow runs `astro build` directly (no npm
+// build scripts) and overrides build.format.
 function flattenRoutes() {
   return {
     name: 'flatten-routes',
@@ -81,8 +89,7 @@ function flattenRoutes() {
         }
         walk(root);
 
-        // Logged so the deployed layout is visible in Webflow's build output,
-        // which is otherwise the only window into what their pipeline emits.
+        // Logged so the emitted layout shows in Webflow's build output.
         const topLevel = readdirSync(root).filter((f) => f.endsWith('.html')).sort();
         logger.info(`flattened ${converted.length} route(s): ${converted.join(', ') || 'none'}`);
         logger.info(`top-level .html: ${topLevel.join(', ')}`);
@@ -91,27 +98,106 @@ function flattenRoutes() {
   };
 }
 
+// Minifies what Astro doesn't: the scripts and stylesheets in public/ and the
+// inline <script> and <style> blocks in every page. /_astro (already
+// minified) and /vendor (keeps license headers) are skipped. Top-level names
+// are never renamed, so globals shared between scripts keep working.
+function minifyShippedCode() {
+  // Inline JavaScript (no src, not JSON data) and inline CSS.
+  const INLINE_CODE =
+    /(<script\b(?![^>]*\bsrc=)(?![^>]*\btype="application\/(?:ld\+)?json")[^>]*>)([\s\S]*?)(<\/script>)|(<style\b[^>]*>)([\s\S]*?)(<\/style>)/g;
+  const SKIP = /^(_astro|vendor)$/;
+
+  const files = (root) => {
+    const out = [];
+    const walk = (current) => {
+      for (const entry of readdirSync(current, { withFileTypes: true })) {
+        const full = path.join(current, entry.name);
+        if (entry.isDirectory()) {
+          if (current !== root || !SKIP.test(entry.name)) walk(full);
+        } else if (/\.(html|js|css)$/.test(entry.name)) {
+          out.push(full);
+        }
+      }
+    };
+    walk(root);
+    return out;
+  };
+
+  const minify = async (code, loader) =>
+    (await transform(code, { loader, minify: true, legalComments: 'none', charset: 'utf8' })).code.trim();
+
+  return {
+    name: 'minify-shipped-code',
+    hooks: {
+      'astro:build:done': async ({ dir, logger }) => {
+        const root = fileURLToPath(dir);
+        let saved = 0;
+        for (const file of files(root)) {
+          const src = readFileSync(file, 'utf-8');
+          let out = '';
+          if (file.endsWith('.html')) {
+            let last = 0;
+            for (const m of src.matchAll(INLINE_CODE)) {
+              const isScript = m[1] !== undefined;
+              const [open, body, close] = isScript ? m.slice(1, 4) : m.slice(4, 7);
+              const min = body.trim() ? await minify(body, isScript ? 'js' : 'css') : body;
+              out += src.slice(last, m.index) + open + min + close;
+              last = m.index + m[0].length;
+            }
+            out += src.slice(last);
+          } else {
+            out = await minify(src, file.endsWith('.css') ? 'css' : 'js');
+          }
+          if (out !== src) {
+            saved += Buffer.byteLength(src) - Buffer.byteLength(out);
+            writeFileSync(file, out);
+          }
+        }
+        logger.info(`minified shipped code, ${Math.round(saved / 1024)}KB saved`);
+      },
+    },
+  };
+}
+
+// Strips whole-line comments from is:inline scripts as .astro files compile,
+// for pages rendered on request (the build hook above covers prerendered
+// ones). Runs after Astro's own transform, when every <script> left in a
+// template is inline. Code lines are never touched.
+function stripInlineScriptComments() {
+  // The compiler escapes closing tags as <\/script> inside template strings.
+  const SCRIPT = /(<script\b[^>]*>)([\s\S]*?)(<\\?\/script>)/g;
+  const clean = (js) =>
+    js
+      // Only comments with nothing else on their line.
+      .replace(/^[ \t]*\/\*[^*]*\*+(?:[^/*][^*]*\*+)*\/[ \t]*\r?\n/gm, '')
+      .replace(/^[ \t]*\/\/.*\r?\n/gm, '');
+  return {
+    name: 'strip-inline-script-comments',
+    enforce: 'post',
+    transform(code, id) {
+      // The .astro module itself, not its ?astro&type=style/script parts.
+      if (!id.endsWith('.astro')) return null;
+      const out = code.replace(SCRIPT, (_, open, body, close) => open + clean(body) + close);
+      return out === code ? null : { code: out, map: null };
+    },
+  };
+}
+
 export default defineConfig({
   output: 'static',
   site: SITE_URL,
-  // Astro's cross-site-forgery guard compares the Origin header against the
-  // request's own host, and behind Webflow Cloud's proxy that host is not
-  // reliably ours, so a legitimate form POST gets a 403. Webflow's own docs
-  // say to turn this off for form submissions. The check is not simply
-  // dropped: src/pages/api/contact.ts does its own Origin allowlist, which
-  // does not depend on the proxied host and so is the more reliable of the
-  // two. This is the only route in the app that accepts a POST.
+  build: {
+    // Inline page CSS: Webflow Cloud forces Cache-Control: private, no-cache,
+    // so an external stylesheet would be revalidated on every visit.
+    inlineStylesheets: 'always',
+  },
+  // Behind Webflow Cloud's proxy the request host isn't reliably ours, so
+  // legitimate form posts would fail this check. The API routes check the
+  // Origin header themselves.
   security: { checkOrigin: false },
-  // Prefetches a linked page's HTML on hover/touchstart, so most in-site
-  // navigation feels instant - pairs well with the edge-cache headers set
-  // in src/middleware.ts, since a prefetch often just warms (or hits) that
-  // same cache before the click ever happens.
   prefetch: true,
-  // Self-hosts these Google fonts (downloaded and served from our own
-  // origin/CDN, no request to fonts.googleapis.com at all) and generates
-  // @font-face rules under the same family names already used everywhere
-  // in our CSS (font-family: 'Montserrat' / 'Source Sans 3' / 'Caveat'), so no CSS
-  // had to change to pick this up.
+  // Self-hosted Google fonts.
   fonts: [
     {
       provider: fontProviders.google(),
@@ -121,7 +207,7 @@ export default defineConfig({
     },
     {
       provider: fontProviders.google(),
-      name: 'Source Sans 3', // Google's current name for Source Sans Pro
+      name: 'Source Sans 3',
       cssVariable: '--font-source-sans',
       weights: [400, 600, 700],
     },
@@ -132,66 +218,50 @@ export default defineConfig({
       weights: [600],
     },
   ],
-  // This file runs under Node at build time (not the Vite-transformed app
-  // code), so the draft-preview switch reads process.env here rather than
-  // import.meta.env - same variable, same value, different runtime.
   integrations: [
-    // A sitemap advertising draft/unpublished URLs is exactly the kind of
-    // leak the noindex + disallowed robots.txt on this deployment (see
-    // Layout.astro, src/pages/robots.txt.ts) are meant to prevent, and
-    // it's also just meaningless there: the preview site is one Webflow
-    // app whose only visitor is the Storyblok Visual Editor.
+    // The draft-preview deployment has no sitemap. (A Node config file, so
+    // process.env rather than import.meta.env.)
     ...(process.env.STORYBLOK_DRAFT_MODE === 'true'
       ? []
       : [
           sitemap({
-            // /menu/<store> and /menu/<1-15> are QR-code redirect stubs: they
-            // carry meta refresh + noindex + a canonical to /menu?store=...
-            // (see src/pages/menu/[store].astro). Advertising a noindex URL in
-            // the sitemap is a contradiction Search Console reports as
-            // "Submitted URL marked 'noindex'" - 30 of 117 URLs were doing
-            // exactly that. The stubs still work for the printed QR codes;
-            // they just aren't offered to crawlers as content.
+            // /menu/<store> and /menu/<number> are noindex QR-code redirects.
             filter: (page) => {
               const pathname = new URL(page).pathname;
               if (/\/menu\/[^/]+\/?$/.test(pathname)) return false;
               const slug = pathname.replace(/^\/|\/$/g, '');
               if (landingPageSlugs.has(slug)) return false;
-              // /loyalty is a 301 to /#faq (src/pages/loyalty.astro): the
-              // standalone page was folded into the homepage FAQ and the route
-              // only survives to keep old inbound links working. Submitting a
-              // redirect is what Search Console reports as "Submitted URL has
-              // redirect"; the destination is already in the sitemap as /.
-              if (slug === 'loyalty') return false;
+              // Redirect-only routes.
+              if (slug === 'loyalty' || slug === 'ourfuture') return false;
+              // Old /drinks/* URLs only redirect.
+              if (pathname.startsWith('/drinks/')) return false;
               return true;
             },
             customPages: [
               ...collectionUrls('locations', '/locations'),
-              ...collectionUrls('products', '/drinks'),
+              ...menuItemUrls,
             ],
-            // flattenRoutes rewrites every page to a flat .html, making the
-            // canonical URL slash-less, but sitemap runs before that hook and
-            // would otherwise advertise /menu/ for every page: URLs that all
-            // redirect.
+            // Canonical URLs have no trailing slash (see flattenRoutes).
             serialize: (item) => {
               const url = new URL(item.url);
               if (url.pathname !== '/') url.pathname = url.pathname.replace(/\/$/, '');
-              // The content-sync workflow rebuilds whenever an editor
-              // publishes, so build time is an honest proxy for "last
-              // changed" and tells crawlers which pages to revisit. Without
-              // it every URL looks equally stale forever.
-              return { ...item, url: url.href, lastmod: new Date().toISOString() };
+              const lastmod = lastmodByPath.get(url.pathname);
+              return { ...item, url: url.href, ...(lastmod ? { lastmod } : {}) };
             },
           }),
         ]),
     flattenRoutes(),
+    minifyShippedCode(),
   ],
   server: {
     host: true,
   },
   vite: {
+    plugins: [stripInlineScriptComments()],
     server: {
-      allowedHosts: ['100.125.249.107', 'brysonlaptop.tail2f0d4c.ts.net'],
+      // Extra hostnames allowed to reach the dev server, comma-separated
+      // (e.g. for testing on a phone over a private network).
+      allowedHosts: (process.env.DEV_ALLOWED_HOSTS ?? '').split(',').map((h) => h.trim()).filter(Boolean),
     },
   },
 });

@@ -1,32 +1,27 @@
-// Scroll-reveal + count-up animations, shared across every page.
-// Progressive enhancement: only runs when motion is allowed (the <head> sets
-// `js-anim` unless the user prefers reduced motion). Matching CSS keeps the
-// targets hidden until JS adds `.in`, so without JS everything stays visible.
+// Scroll-reveal and count-up animations. The <head> sets `js-anim` only when
+// motion is allowed; CSS hides the targets until `.in` is added.
 (function () {
   const root = document.documentElement;
-  if (!root.classList.contains('js-anim')) return; // reduced motion / no flag
+  if (!root.classList.contains('js-anim')) return;
 
-  // Union of reveal targets across all pages. Selectors not present on the
-  // current page simply match nothing, so this one list serves every page.
+  // Reveal targets for every page; selectors missing from a page match nothing.
   const REVEAL_SELECTOR = [
     // home
     '.hero-content h1', '.hero-buttons',
     '.featured-visual', '.featured-text',
     '.features .section-header', '.feature-card',
     '.cta-content',
-    '.spaces .section-header',
-    '.pricing .section-header', '.pricing-card',
+    '.reviews .section-header', '.review-card',
     '.faq .section-header', '.faq .faq-list details',
     '.contact .section-header', '.contact-form-wrapper',
     // about
     '.about-hero-content',
-    '.about-intro-text', '.about-intro-img', '.stat-item',
+    '.about-intro-text', '.about-intro-img',
     '.about-history .section-header', '.history-body', '.timeline-item',
-    '.founder-img', '.founder-text',
     '.about-cta h2', '.about-cta p', '.about-cta-buttons',
     // careers
     '.careers-hero-content',
-    // menu (hero) and menu customize
+    // menu
     '.menu-hero-content', '.cz-heading', '.cz-block',
     // real estate
     '.re-hero-content', '.re-overview-text', '.re-map-img', '.re-stat',
@@ -34,23 +29,20 @@
     '.re-ideal .section-header', '.ideal-item',
     '.re-locations .section-header', '.re-location-tag',
     '.re-contact .section-header',
-    // locations
-    '.loc-hero-content', '.loc-state-label',
-    // privacy policy (page hero) and privacy content
+    // legal pages
     '.page-hero-content', '.legal-content'
   ].join(',');
 
   const targets = document.querySelectorAll(REVEAL_SELECTOR);
 
-  // True if the element already has a CSS-defined transition-delay (e.g. the
-  // home page's nth-child stagger). If so we leave it alone; otherwise we apply
-  // an automatic stagger based on the element's position among its siblings.
+  // Elements with a stagger delay set in CSS keep it; others get one from
+  // their position among sibling targets.
   function hasCssDelay(el) {
     return getComputedStyle(el).transitionDelay.split(',').some(v => parseFloat(v) > 0);
   }
 
   if (!('IntersectionObserver' in window)) {
-    targets.forEach(el => el.classList.add('in')); // fallback: just show
+    targets.forEach(el => el.classList.add('in'));
   } else {
     const revealIO = new IntersectionObserver((entries, obs) => {
       entries.forEach(entry => {
@@ -67,13 +59,8 @@
       });
     }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
 
-    // A direct link to an in-page anchor (e.g. a footer link to "/#contact")
-    // lands the browser on that section immediately, racing this script's
-    // observer setup, so the section can end up already in view before it's
-    // ever observed, so it never crosses the "entering the viewport"
-    // threshold the observer watches for and stays invisible forever.
-    // Reveal anything already on-screen at setup time instead of relying
-    // solely on that async transition.
+    // Anything already on screen (e.g. after landing on /#contact) is shown
+    // right away, since it may never cross the observer's threshold.
     const vh = window.innerHeight;
     targets.forEach(el => {
       const r = el.getBoundingClientRect();
@@ -85,9 +72,7 @@
     });
   }
 
-  // Failsafe: content must never be left invisible. Shortly after load, force
-  // any still-hidden element that is in view to show (covers an observer that
-  // never fires). Uses inline styles so visibility is guaranteed regardless.
+  // Failsafe: shortly after load, force any hidden target in view to show.
   window.addEventListener('load', () => {
     setTimeout(() => {
       const vh = window.innerHeight || document.documentElement.clientHeight;
@@ -102,16 +87,16 @@
     }, 1500);
   });
 
-  // Count-up for stat numbers (e.g. "$15 Million", "500 Stores", "16+") 
-  const counters = document.querySelectorAll('.stat-number');
+  // Count-up for stat numbers such as "$15 Million", "500 Stores" or "16+".
+  const counters = document.querySelectorAll('.blk-stat-number');
 
   function animateCount(el) {
     const raw = el.textContent.trim();
     const m = raw.match(/^(\D*)([\d,]+)(.*)$/s);
-    if (!m) return;                              // nothing numeric to animate
+    if (!m) return;
     const prefix = m[1], numStr = m[2], suffix = m[3];
     const target = parseInt(numStr.replace(/,/g, ''), 10);
-    // Skip bare years (e.g. "2017"): counting up from 0 looks wrong.
+    // Bare years (e.g. "2017") are left as they are.
     if (prefix === '' && suffix === '' && /^\d{4}$/.test(numStr) && target >= 1900 && target <= 2099) return;
 
     const DURATION = 1400;
@@ -121,10 +106,10 @@
     el.textContent = fmt(0);
     function tick(now) {
       const p = Math.min((now - start) / DURATION, 1);
-      const eased = 1 - Math.pow(1 - p, 3); // easeOutCubic
+      const eased = 1 - Math.pow(1 - p, 3);
       el.textContent = fmt(Math.round(target * eased));
       if (p < 1) requestAnimationFrame(tick);
-      else el.textContent = fmt(target);     // exact final value
+      else el.textContent = fmt(target);
     }
     requestAnimationFrame(tick);
   }

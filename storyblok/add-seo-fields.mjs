@@ -1,4 +1,4 @@
-// Adds the SEO/structured-data fields that src/lib/seo.ts reads but the
+// Adds the fields that src/lib/seo.ts and the location pages read but the
 // Storyblok schema does not yet define. Run against the live space:
 //
 //   node storyblok/add-seo-fields.mjs            # dry run, prints the plan
@@ -54,6 +54,12 @@ const ADDITIONS = {
     addressState: text('HQ State', 'Two-letter abbreviation, e.g. "TX".'),
     addressZip: text('HQ ZIP Code', ''),
   },
+  page_home_hero: {
+    keywordLine: text(
+      'Keyword Line',
+      'Small line above the slogan, part of the homepage main heading so search engines see what and where we are. Default: "Drive-Thru Coffee in DFW & Kansas".',
+    ),
+  },
   location: {
     googleMapsUrl: text(
       'Google Maps Link',
@@ -64,6 +70,20 @@ const ADDITIONS = {
       display_name: 'Has Drive-Thru',
       description: 'Tick if this location has a drive-thru window.',
     },
+    description: {
+      type: 'textarea',
+      display_name: 'Store Description',
+      description:
+        "A few sentences about this store for its location page: what's nearby, landmarks, what regulars order. Leave a blank line between paragraphs. If empty, the page writes a short paragraph from the store's address, hours, food and nearby stores.",
+    },
+    crossStreets: text(
+      'Cross Streets',
+      'Nearest major intersection, e.g. "Keller Pkwy & Keller Smithfield Rd". Shown on the location page. If empty, the site uses its built-in default for this store.',
+    ),
+    googlePlaceId: text(
+      'Google Place ID',
+      "This store's Google Place ID (starts with \"ChIJ\"), from Google's Place ID Finder. Makes the location page's review button open Google's write-a-review box directly. If empty, it opens the store on Google Maps instead.",
+    ),
   },
 };
 

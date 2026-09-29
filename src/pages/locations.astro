@@ -70,22 +70,21 @@ const locationsJsonLd = graph(
   ogImage={imageUrl(p.seo?.ogImage, { width: 1200, height: 630 })}
 
 >
-  <fragment slot="head">
-    <link rel="preconnect" href="https://unpkg.com" crossorigin />
-    <!-- The map fills the entire initial viewport on this page (it's never
+  <Fragment slot="head">
+    {/* The map fills the entire initial viewport on this page (it's never
          actually offscreen for locator-loader.js's IntersectionObserver to
          defer), so starting these fetches immediately - in parallel with
          HTML parsing, instead of waiting on JS to inject them - shaves a
-         full request's worth of latency off when the map becomes usable. -->
-    <link rel="preload" as="style" href="https://unpkg.com/maplibre-gl@5.6.1/dist/maplibre-gl.css" crossorigin />
-    <link rel="preload" as="script" href="https://unpkg.com/maplibre-gl@5.6.1/dist/maplibre-gl.js" crossorigin />
+         full request's worth of latency off when the map becomes usable. */}
+    <link rel="preload" as="style" href="/vendor/maplibre-gl/5.6.1/maplibre-gl.css" />
+    <link rel="preload" as="script" href="/vendor/maplibre-gl/5.6.1/maplibre-gl.js" />
     <link rel="preload" as="script" href="/js/maplibre-map-helpers.js?v=1" />
-    <!-- The vector basemap style and its tiles come from CARTO, so the
-         connection to that origin is worth opening before the map asks. -->
+    {/* The vector basemap style and its tiles come from CARTO, so the
+         connection to that origin is worth opening before the map asks. */}
     <link rel="preconnect" href="https://basemaps.cartocdn.com" crossorigin />
     <link rel="preload" as="script" href="/js/locator.js" />
     <JsonLd schema={locationsJsonLd} />
-  </fragment>
+  </Fragment>
 
   <Nav active="locations" />
 
@@ -128,15 +127,15 @@ const locationsJsonLd = graph(
   </section>
   )}
 
-  <!-- Every location as plain crawlable links, grouped by state - the
+  {/* Every location as plain crawlable links, grouped by state - the
        sidebar list above is populated client-side by locator.js, so this is
        what keeps every store page reachable without JS and gives crawlers a
        real link per location (on top of the ItemList JSON-LD below). Visually
-       out of the way since the locator above is the real UI. -->
-  <!-- On desktop/tablet the locator above IS the whole page (no scroll at
+       out of the way since the locator above is the real UI. */}
+  {/* On desktop/tablet the locator above IS the whole page (no scroll at
        all); this tail only ever appears in the narrow-screen fallback layout,
        where the page scrolls normally anyway, so the sitemap links and
-       footer are hidden rather than removed above ~640px. -->
+       footer are hidden rather than removed above ~640px. */}
   <div class="loc-page-tail">
     <div class="loc-sitemap" role="navigation" aria-label="All locations">
       <div class="container">
@@ -152,14 +151,33 @@ const locationsJsonLd = graph(
     </div>
   </div>
 
-  <!-- Rendered outside .loc-page-tail (which is display:none) - the gift
+  {/* Rendered outside .loc-page-tail (which is display:none) - the gift
        card modal it contains must stay reachable from the nav button even
-       though the sitemap tail itself is hidden. -->
+       though the sitemap tail itself is hidden. */}
   <Footer />
 
-  <script define:vars={{ storesJson, hours: s.hours, phone: s.phone }} is:inline>
+  <script define:vars={{ storesJson, hours: s.hours }} is:inline>
     window.COFFEE151_STORES = JSON.parse(storesJson);
-    window.COFFEE151_LOCATOR = { hours, phone };
+    window.COFFEE151_LOCATOR = { hours };
   </script>
   <script src="/js/locator-loader.js" is:inline></script>
+  <script is:inline>
+    // Keeps the sidebar heading on one line even if it's edited in
+    // Storyblok to something longer than "Find Your 151" (the CSS size is
+    // calibrated to that text): shrink only when it would overflow.
+    (function () {
+      var h = document.querySelector('.locator__panel-header h1');
+      if (!h) return;
+      function fit() {
+        h.style.fontSize = '';
+        var room = h.clientWidth, need = h.scrollWidth;
+        if (room && need > room) {
+          h.style.fontSize = (parseFloat(getComputedStyle(h).fontSize) * room / need * 0.98) + 'px';
+        }
+      }
+      fit();
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+      window.addEventListener('resize', fit);
+    })();
+  </script>
 </Layout>

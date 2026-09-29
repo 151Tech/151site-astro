@@ -1,23 +1,13 @@
-// Backs the "click any page 20 times fast" easter egg (see
-// public/js/click-egg.js, wired in on every page via Layout.astro). The
-// front-end owns the click-counting entirely client-side; this endpoint's
-// only job is handing back a shared, ever-increasing "you're the Nth person"
-// number, which needs a store every visitor's request can both read and
-// write - import.meta.env can't do that (see src/pages/api/contact.ts for
-// why), so this reuses the cloudflare:workers `env` KV accessor already
-// proven there and in src/lib/instagram.ts.
+// Counter for the click easter egg (public/js/click-egg.js): hands out a
+// shared, increasing "you're the Nth person" number stored in KV.
 import { env } from 'cloudflare:workers';
 
 export const prerender = false;
 
-// Required by Webflow Cloud: API routes have to opt into the edge runtime or
-// the platform won't route requests to them.
+// Webflow Cloud only routes API requests to edge-runtime endpoints.
 export const config = { runtime: 'edge' };
 
-// Same CSRF replacement as contact.ts: Astro's checkOrigin is off site-wide
-// (Webflow Cloud's proxy makes the Host header unreliable), so this is the
-// only thing stopping another site's page from POSTing here and inflating
-// the counter for everyone.
+// CSRF check, as in contact.ts.
 const ALLOWED_ORIGIN_HOSTS = new Set([
   'www.151coffee.com',
   '151coffee.com',
@@ -47,11 +37,8 @@ export async function POST({ request }: { request: Request }) {
     return new Response('Forbidden', { status: 403 });
   }
 
-  // Reuses the INSTAGRAM_CACHE KV namespace under its own key prefix rather
-  // than provisioning a binding just for a novelty counter (same call as the
-  // rate limiter in contact.ts). No KV bound (e.g. local `astro dev` without
-  // wrangler) just means the number can't be handed out - the front end
-  // already has a no-count fallback line for that.
+  // Stored in the INSTAGRAM_CACHE KV namespace. Without KV (e.g. plain `astro
+  // dev`) no number is returned and the front end shows its fallback line.
   const kv = (env as any).INSTAGRAM_CACHE;
   if (!kv) {
     return new Response(JSON.stringify({ count: null }), {
@@ -60,15 +47,8 @@ export async function POST({ request }: { request: Request }) {
     });
   }
 
-  // Same per-IP-per-hour cap as the contact form's rate limiter (src/pages/
-  // api/contact.ts), applied here for a different reason: this endpoint has
-  // no honeypot or form fields to slow a scripted loop down, and it shares
-  // this KV namespace with the contact-form rate limiter and the Instagram
-  // cache - Cloudflare KV's free tier caps writes per day, so an unthrottled
-  // loop here could burn through that quota and break those other features
-  // too. Fails open on KV errors, same reasoning as contact.ts: a broken
-  // rate limiter should never be worse than no rate limiter for a feature
-  // this low-stakes.
+  // Per-IP hourly cap, so a scripted loop can't use up the shared KV write
+  // quota. Fails open on KV errors.
   try {
     const ip =
       request.headers.get('cf-connecting-ip') ||
@@ -90,10 +70,8 @@ export async function POST({ request }: { request: Request }) {
   }
 
   try {
-    // KV has no atomic increment, so two visitors hitting 20 clicks in the
-    // same instant could both read the same number before either writes --
-    // an occasional duplicate ordinal on a just-for-fun counter is a fine
-    // trade against provisioning Durable Objects for it.
+    // KV has no atomic increment, so simultaneous visitors may occasionally
+    // share a number.
     const current = parseInt((await kv.get(COUNT_KEY)) ?? '0', 10) || 0;
     const next = current + 1;
     await kv.put(COUNT_KEY, String(next));

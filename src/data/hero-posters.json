@@ -1,0 +1,5 @@
+{
+  "_comment": "Still frame shown while a hero video loads, keyed by the video's exact Storyblok URL. Frames were pulled from each video with ffmpeg (drinks_bg at 1.2s, past its fade-in from black; careers_bg at 0s). A new video in Storyblok simply has no entry here and shows no poster until one is added - a stale frame from the old video never shows on the new one.",
+  "https://a.storyblok.com/f/294671107081428/x/1bd9df486a/drinks_bg.mp4": "/images/hero-posters/drinks_bg.webp",
+  "https://a.storyblok.com/f/294671107081428/x/3f9227b388/careers_bg.mp4": "/images/hero-posters/careers_bg.webp"
+}

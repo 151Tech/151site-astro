@@ -1,13 +1,11 @@
 ---
-// Renders the invisible marker Storyblok's Visual Editor bridge needs to
-// draw a click-to-highlight outline around this block in its preview pane.
-// `blok` is any denormalized story/component object: pass the drink,
-// location, or page-section object whose editable region this wraps. Only
-// has content when the story was fetched in draft mode (see
-// src/lib/storyblok.ts); a no-op on the published/production build.
+// The marker the Storyblok Visual Editor uses to outline a block in its
+// preview. `blok` is the story or component object the markup belongs to.
+// Rendered only where the editor runs: dev and the draft-preview deployment.
 interface Props {
   blok?: { _editable?: string } | null;
 }
 const { blok } = Astro.props as Props;
+const showMarkers = import.meta.env.STORYBLOK_DRAFT_MODE === 'true' || import.meta.env.DEV;
 ---
-<Fragment set:html={blok?._editable ?? ''} />
+{showMarkers && <Fragment set:html={blok?._editable ?? ''} />}

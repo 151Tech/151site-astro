@@ -1,155 +1,18 @@
 ---
 export const prerender = import.meta.env.STORYBLOK_DRAFT_MODE !== 'true';
-import Layout from '../../layouts/Layout.astro';
-import Nav from '../../components/Nav.astro';
-import Footer from '../../components/Footer.astro';
-import { getDrinks, getPage, getCategories, unwrapSingletons, imageUrl } from '../../lib/storyblok';
-import Editable from '../../components/Editable.astro';
-import JsonLd from '../../components/JsonLd.astro';
-import { graph, menuItemSchema, breadcrumbSchema } from '../../lib/seo';
+import { getDrinks, getCategories } from '../../lib/storyblok';
+import { routableItems, itemPath } from '../../lib/menu-urls.mjs';
 
+// Old /drinks/<slug> URLs permanently redirect to /menu/<category>/<item>.
+// Unknown slugs 404.
 export async function getStaticPaths() {
-  const drinks = await getDrinks();
-  return drinks.map((drink: any) => ({ params: { slug: drink.slug } }));
+  const [drinks, categories] = await Promise.all([getDrinks(), getCategories()]);
+  return routableItems(drinks, categories).map((d: any) => ({ params: { slug: d.slug } }));
 }
 
 const { slug } = Astro.params;
-const [drinks, menuData, categoryEntries] = await Promise.all([
-  getDrinks(),
-  getPage('menu'),
-  getCategories(),
-]);
-const drink = drinks.find((e: any) => e.slug === slug);
-
-if (!drink) return Astro.redirect('/menu');
-const m = unwrapSingletons(menuData as any, [
-  'seo', 'visibility', 'hero', 'labels', 'locationPicker', 'drinkPage', 'customize',
-]);
-
-// drink.category holds a Storyblok slug like "categories/coffee"; resolve it to the title.
-const categoryEntry = categoryEntries.find((c: any) => `categories/${c.slug}` === drink.category);
-const categoryTitle = categoryEntry ? categoryEntry.title : '';
-
-const drinkImage = imageUrl(drink.image, { width: 1040 });
-const ogImage = drinkImage
-  ? drinkImage.startsWith('http')
-    ? drinkImage
-    : `https://www.151coffee.com${encodeURI(drinkImage.startsWith('/') ? drinkImage : '/' + drinkImage)}`
-  : undefined;
-
-// Marks the drink up as the MenuItem it is, so a question like "does 151
-// Coffee have nitro cold brew" can be answered from our own page rather than
-// from a third party. The breadcrumb supplies the Menu > Category > Drink
-// trail these pages have never expressed - they only ever had a Back link.
-const drinkSchema = graph(
-  menuItemSchema({ ...drink, slug }),
-  breadcrumbSchema([
-    { name: 'Home', url: '/' },
-    { name: 'Menu', url: '/menu' },
-    ...(categoryTitle && categoryEntry
-      ? [{ name: categoryTitle, url: `/menu#${categoryEntry.slug}` }]
-      : []),
-    { name: drink.name },
-  ]),
-);
+const [drinks, categories] = await Promise.all([getDrinks(), getCategories()]);
+const drink = routableItems(drinks, categories).find((d: any) => d.slug === slug);
+if (!drink) return Astro.rewrite('/404');
+return Astro.redirect(itemPath(drink), 301);
 ---
-<Layout
-  title={`${drink.name} | 151 Coffee Menu`}
-  description={drink.description || `${drink.name}${drink.subtitle ? ' - ' + drink.subtitle : ''} at 151 Coffee.`}
-  ogImage={ogImage}
->
-  <Fragment slot="head">
-    <link rel="stylesheet" href="/drink.css" />
-    <JsonLd schema={drinkSchema} />
-  </Fragment>
-
-  <Nav active="menu" />
-
-  <!-- Red polka-dot hero -->
-  <section class="dk-hero" style="margin-top:58px;">
-    <Editable blok={drink} />
-    <div class="dk-hero-bg"></div>
-    <div class="dk-hero-inner">
-      <a href="/menu" class="dk-back">
-        <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M13 8H3M7 4L3 8l4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        <span>{m.drinkPage?.backLabel ?? 'Back to Menu'}</span>
-      </a>
-      <div class="dk-pills-row">
-        <span class="dk-cat-pill">{categoryTitle}</span>
-      </div>
-      <h1 class="dk-title">{drink.name}</h1>
-      {drink.tags && drink.tags.length > 0 && (
-        <div class="dk-tag-pills">
-          {drink.tags.map((tag: string, i: number) => (
-            <span class="dk-flavor-tag">{tag}</span>
-          ))}
-        </div>
-      )}
-    </div>
-  </section>
-
-  <!-- Drink info: photo + one unified detail card -->
-  <section class="dk-info">
-    <div class="dk-body-inner">
-      <div class="dk-img-col">
-        <div class="dk-photo-frame">
-          <div class="featured-card">
-            <div class="drink-img-wrap">
-              {drink.badge && <span class="drink-badge">{drink.badge}</span>}
-              {drinkImage && (() => {
-                const src = drinkImage.startsWith('http') || drinkImage.startsWith('/') ? drinkImage : '/' + drinkImage;
-                return <img src={src} alt={drink.name} width="1040" height="1040" decoding="async" fetchpriority="high" />;
-              })()}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="dk-detail-col">
-        <div class="dk-detail-card">
-          <h2 class="dk-detail-name">{drink.name}</h2>
-          {drink.description && (
-            <p class="dk-detail-desc">{drink.description}</p>
-          )}
-          {drink.tags && drink.tags.length > 0 && (
-            <>
-              <div class="dk-divider"></div>
-              <p class="dk-flavor-label">{m.drinkPage?.flavorNotesLabel ?? 'Flavor Notes'}</p>
-              <p class="dk-flavor-val">{drink.tags.join(', ')}</p>
-            </>
-          )}
-
-          <a href="/menu" class="dk-menu-link">{m.drinkPage?.viewMenuLabel ?? 'View Full Menu'}</a>
-        </div>
-      </div>
-    </div>
-
-    <div class="dk-customize-wrap">
-      <div class="dk-customize-card">
-        <h3 class="dk-customize-heading">{m.drinkPage?.customizeHeading ?? 'Customize Your Drink'}</h3>
-        <div class="dk-customize-rows">
-          <div class="dk-customize-row">
-            <h4>{m.drinkPage?.flavorsHeading ?? 'Flavors'}</h4>
-            <div class="dk-customize-tags">
-              {(m.customize?.flavors ?? []).map((f: string, i: number) => (
-                <span class="dk-customize-tag">{f}</span>
-              ))}
-            </div>
-          </div>
-          <div class="dk-customize-row">
-            <h4>{m.drinkPage?.sugarFreeHeading ?? 'Sugar Free'}</h4>
-            <div class="dk-customize-tags">
-              {(m.customize?.sfFlavors ?? []).map((f: string, i: number) => (
-                <span class="dk-customize-tag sf">{f}</span>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <Footer />
-</Layout>

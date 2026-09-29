@@ -1,11 +1,13 @@
 ---
 export const prerender = import.meta.env.STORYBLOK_DRAFT_MODE !== 'true';
 import Layout from '../layouts/Layout.astro';
+import '../styles/menu.css';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import HeroVideo from '../components/HeroVideo.astro';
 import BlockRenderer from '../components/blocks/BlockRenderer.astro';
 import { getPage, getDrinks, getCategories, getLocations, unwrapSingletons, imageUrl, mediaUrl } from '../lib/storyblok';
+import { itemPath } from '../lib/menu-urls.mjs';
 import Editable from '../components/Editable.astro';
 import JsonLd from '../components/JsonLd.astro';
 import { graph, menuSchema, breadcrumbSchema } from '../lib/seo';
@@ -197,7 +199,6 @@ const decideDrinksJson = JSON.stringify(decideDrinksArr);
 ---
 <Layout title={p.seo?.title ?? 'Menu | 151 Coffee - Coffee, Cold Brew, Energy & Dirty Pop'} description={p.seo?.description ?? 'Explore the full 151 Coffee menu. Signature espresso drinks, cold brew, blended energy, Dirty Pop sodas, refreshers, smoothies, teas, and more.'} ogImage={imageUrl(p.seo?.ogImage, { width: 1200, height: 630 })}>
   <Fragment slot="head">
-    <link rel="stylesheet" href="/menu.css" />
     <JsonLd schema={menuJsonLd} />
   </Fragment>
 
@@ -216,14 +217,14 @@ const decideDrinksJson = JSON.stringify(decideDrinksArr);
           </svg>
           <span id="locationTriggerLabel">{p.locationPicker?.triggerLabel ?? 'Select Your Location'}</span>
         </button>
-        <!--
+        {/*
           Desktop-only shortcut to the same compact layout mobile visitors
           already get - one drink per glance instead of the wide horizontal
           timeline. Hidden below 768px in menu.css (mobile IS that view
           already, there's nothing to switch to). Real navigation to its own
           page (/menu/simple) rather than a popup - see that page for how
           it actually renders the compact view without a second template.
-        -->
+        */}
         <a href="/menu/simple" class="simple-menu-trigger">
           <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             <rect x="7" y="2.5" width="10" height="19" rx="2.2" stroke="currentColor" stroke-width="1.8"/>
@@ -232,14 +233,14 @@ const decideDrinksJson = JSON.stringify(decideDrinksArr);
           <span>Simple Menu</span>
         </a>
       </div>
-      <!--
+      {/*
         Third trigger for the same "Help Me Decide" popup as the two further
         down the page (see the openBtns array in the script below). Those two
         only turn up after you've scrolled past the drinks, which is exactly
         when someone who can't decide has already done the deciding - this
         one offers it up front, worded as the thing it does rather than as a
         feature name.
-      -->
+      */}
       <div class="menu-hero-decide">
         <button type="button" class="decide-btn decide-btn--hero" id="pickMyDrinkBtn">
           Pick My Drink
@@ -258,10 +259,10 @@ const decideDrinksJson = JSON.stringify(decideDrinksArr);
   </section>
 
   <div id="locationModal" class="modal">
-    <div class="modal-content loc-modal-content">
+    <div class="modal-content loc-modal-content" role="dialog" aria-modal="true" aria-labelledby="locationModalTitle">
       <button type="button" class="modal-close" id="closeLocationModal" aria-label="Close">&times;</button>
       <div class="loc-modal-inner">
-        <h2>{p.locationPicker?.heading ?? 'Select Your Location'}</h2>
+        <h2 id="locationModalTitle">{p.locationPicker?.heading ?? 'Select Your Location'}</h2>
         <p>{p.locationPicker?.subtext ?? "See only what's available at your store. You can change this anytime."}</p>
         <div class="loc-modal-list">
           <button type="button" class="loc-modal-item loc-modal-item--all" data-store="">
@@ -283,7 +284,7 @@ const decideDrinksJson = JSON.stringify(decideDrinksArr);
   </div>
 
   <div id="decideModal" class="modal decide-modal">
-    <div class="modal-content decide-modal-content">
+    <div class="modal-content decide-modal-content" role="dialog" aria-modal="true" aria-label="Today's pick">
       <button type="button" class="modal-close" id="closeDecideModal" aria-label="Close">&times;</button>
       <div class="decide-stage" id="decideStage">
         <p class="decide-eyebrow">Today's Pick</p>
@@ -327,7 +328,7 @@ const decideDrinksJson = JSON.stringify(decideDrinksArr);
             <div class="cat-drinks-wrap">
             {drinks.map((drink: any) => (
               <a class={`drink-card${drink.slug === 'coldbrew-nitro-brew' ? ' nitro-card' : ''}`}
-                data-cat={cat.tab} href={`/drinks/${drink.slug}`}
+                data-cat={cat.tab} data-slug={drink.slug} href={itemPath({ ...drink, category: catSlug(drink) })}
                 data-visible={cat.hiddenByDefault ? 'false' : undefined}
 >
                 <Editable blok={drink} />
@@ -418,13 +419,13 @@ const decideDrinksJson = JSON.stringify(decideDrinksArr);
       </div>
       <div class="timeline-end-spacer"></div>
     </div>
-    <!--
+    {/*
       Mobile/simple-menu only: on a narrow viewport the timeline scrolls
       vertically and the customize-section (where the desktop "Help Me
       Decide" button lives, to the right of the flavor pills) can be a long
       scroll away, so give mobile visitors the same trigger right here,
       immediately after the last category. Hidden on desktop via menu.css.
-    -->
+    */}
     <div class="decide-btn-mobile-wrap">
       <button type="button" class="decide-btn decide-btn--mobile" id="helpMeDecideBtnMobile">
         Help Me Decide
@@ -876,7 +877,7 @@ const decideDrinksJson = JSON.stringify(decideDrinksArr);
       if (activeFilter && (!d.tags || d.tags.indexOf(activeFilter) === -1)) return false;
       return true;
     }
-    function drinkSlug(card) { return (card.getAttribute('href') || '').replace('/drinks/', ''); }
+    function drinkSlug(card) { return card.getAttribute('data-slug') || ''; }
 
     function refresh() {
       var filtering = !!activeFilter || !!selectedStore;
@@ -1005,7 +1006,7 @@ const decideDrinksJson = JSON.stringify(decideDrinksArr);
       btn.addEventListener('click', function() { selectStore(btn.dataset.store); });
     });
 
-    // A location's "See This Store's Menu" button links here with
+    // A location's "This Store's Menu" button links here with
     // ?store=<slug>. Honor that over anything already saved.
     var queryStore = new URLSearchParams(window.location.search).get('store');
     var storedStore = null;
