@@ -99,7 +99,7 @@ export function organizationSchema(s: any) {
   return prune({
     '@type': 'Organization',
     '@id': ORG_ID,
-    name: s?.siteName ?? '151 Coffee',
+    name: s?.siteName || '151 Coffee',
     legalName: s?.legalName,
     url: `${SITE}/`,
     logo: imageUrl(s?.logo, { width: 512 }),
@@ -108,8 +108,8 @@ export function organizationSchema(s: any) {
     email: s?.email,
     slogan: s?.slogan,
     priceRange: s?.priceRange,
-    foundingDate: s?.foundingDate ?? '2017',
-    founder: { '@type': 'Person', name: s?.founderName ?? 'Mark Wattles' },
+    foundingDate: s?.foundingDate || '2017',
+    founder: { '@type': 'Person', name: s?.founderName || 'Mark Wattles' },
     address: postalAddress({
       address: s?.streetAddress,
       city: s?.addressCity,

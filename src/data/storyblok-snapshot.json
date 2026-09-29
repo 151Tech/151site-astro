@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-09-29T18:28:04.500Z",
+  "generatedAt": "2026-09-29T19:06:47.881Z",
   "publishedAt": {
-    "settings/global": "2026-09-25T13:21:24.793Z",
-    "pages/home": "2026-09-29T18:25:48.244Z",
+    "settings/global": "2026-09-29T19:01:36.629Z",
+    "pages/home": "2026-09-29T19:06:26.148Z",
     "pages/about": "2026-09-29T18:23:49.806Z",
     "pages/careers": "2026-09-25T17:55:51.398Z",
     "pages/locations": "2026-09-29T16:09:06.345Z",
     "pages/menu": "2026-09-25T17:54:41.022Z",
-    "pages/realestate": "2026-09-29T18:22:55.633Z",
+    "pages/realestate": "2026-09-29T19:04:22.217Z",
     "pages/privacy": "2026-08-26T15:42:59.017Z",
     "products/pumpkin-spice-chai": "2026-09-16T16:58:24.142Z",
     "products/pumpkin-spice-latte": "2026-09-16T16:58:22.735Z",
@@ -144,8 +144,8 @@
         },
         {
           "_uid": "54c545c4-f6a9-4417-9b29-ead531a31cb8",
-          "href": "/ourfuture",
-          "label": "Our Future",
+          "href": "/realestate",
+          "label": "Real Estate",
           "component": "nav_link"
         }
       ],
@@ -197,8 +197,8 @@
             },
             {
               "_uid": "5a12835c-5231-43a6-ae3a-c44902fc7042",
-              "href": "/ourfuture",
-              "label": "Our Future",
+              "href": "/realestate",
+              "label": "Real Estate",
               "component": "nav_link"
             }
           ],
@@ -222,6 +222,18 @@
           "instagram": "https://www.instagram.com/151coffee/"
         }
       ],
+      "ogImage": {
+        "id": null,
+        "alt": null,
+        "name": "",
+        "focus": null,
+        "title": null,
+        "source": null,
+        "filename": "",
+        "copyright": null,
+        "fieldtype": "asset",
+        "meta_data": {}
+      },
       "ogimage": {
         "id": null,
         "alt": "151 Coffee: It's a Good Day to Have a Good Day",
@@ -234,8 +246,16 @@
       "siteName": "151 Coffee",
       "component": "settings_global",
       "copyright": "© 151 Coffee, LLC. It's a Good Day to Have a Good Day.",
+      "legalName": "",
+      "addressZip": "",
+      "priceRange": "",
+      "addressCity": "",
+      "founderName": "",
       "giftCardUrl": "https://giftcards-151coffee-orders.crispnow.com",
+      "addressState": "",
+      "foundingDate": "",
       "giftCardLabel": "Gift Card",
+      "streetAddress": "",
       "realEstateEmail": "RealEstate@151Coffee.com"
     },
     "pages/home": {
@@ -529,7 +549,7 @@
               "component": "page_home_investment_stats_item"
             }
           ],
-          "ctahref": "/ourfuture",
+          "ctahref": "/realestate",
           "heading": "brewing the next billion-dollar coffee brand",
           "ctalabel": "Explore Investment Opportunities",
           "component": "page_home_investment",
@@ -1489,7 +1509,7 @@
             "is_external_url": false
           },
           "component": "page_ourfuture_seo",
-          "description": "151 Coffee is expanding across Texas and Kansas. Seeking drive-thru pad sites of 25,000+ sq ft with 30,000+ VPD. See our site criteria and submit your property."
+          "description": "Real Estate & Site Development | 151 Coffee"
         }
       ],
       "_uid": "22758fb0-82f0-452e-89a1-36f9852161ef",
