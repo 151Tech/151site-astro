@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-09-29T19:06:47.881Z",
+  "generatedAt": "2026-09-29T19:16:18.488Z",
   "publishedAt": {
     "settings/global": "2026-09-29T19:01:36.629Z",
-    "pages/home": "2026-09-29T19:06:26.148Z",
+    "pages/home": "2026-09-29T19:15:40.322Z",
     "pages/about": "2026-09-29T18:23:49.806Z",
     "pages/careers": "2026-09-25T17:55:51.398Z",
     "pages/locations": "2026-09-29T16:09:06.345Z",
     "pages/menu": "2026-09-25T17:54:41.022Z",
-    "pages/realestate": "2026-09-29T19:04:22.217Z",
+    "pages/realestate": "2026-09-29T19:15:18.272Z",
     "pages/privacy": "2026-08-26T15:42:59.017Z",
     "products/pumpkin-spice-chai": "2026-09-16T16:58:24.142Z",
     "products/pumpkin-spice-latte": "2026-09-16T16:58:22.735Z",
@@ -445,7 +445,7 @@
       "hero": [
         {
           "_uid": "a7201665-0863-43b9-b446-1a7ca24f108c",
-          "ctahref": "/drinks/coffee-white-chocolate-macadamia",
+          "ctahref": "/menu",
           "heading": "It's a Good Day",
           "ctalabel": "See Our Menu",
           "videourl": {
@@ -1494,7 +1494,7 @@
       "seo": [
         {
           "_uid": "e909f809-3d30-4bca-98b5-f6f64d65e316",
-          "title": "Real Estate & Site Development | 151 Coffee Drive-Thru Expansion",
+          "title": "Real Estate & Site Development | 151 Coffee",
           "ogimage": {
             "id": 220401257686619,
             "alt": "",
@@ -1509,7 +1509,7 @@
             "is_external_url": false
           },
           "component": "page_ourfuture_seo",
-          "description": "Real Estate & Site Development | 151 Coffee"
+          "description": "151 Coffee is expanding across Texas and Kansas. Seeking drive-thru pad sites of 25,000+ sq ft with 30,000+ VPD. See our site criteria and submit your property."
         }
       ],
       "_uid": "22758fb0-82f0-452e-89a1-36f9852161ef",
