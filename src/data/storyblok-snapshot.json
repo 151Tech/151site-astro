@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-25T20:16:32.601Z",
+  "generatedAt": "2026-09-29T17:42:00.073Z",
   "stories": {
     "settings/global": {
       "nav": [
@@ -871,7 +871,7 @@
             "is_external_url": false
           },
           "component": "page_locations_seo",
-          "description": "Find your nearest 151 Coffee drive-thru. 15+ locations across Texas and Kansas with more opening soon."
+          "description": "Find your nearest 151 Coffee drive-thru. 15 locations across Texas and Kansas with more opening soon."
         }
       ],
       "_uid": "77a65d74-6d9f-4d21-a8b9-f76c44448bdc",
