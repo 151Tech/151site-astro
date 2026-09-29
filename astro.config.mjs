@@ -44,7 +44,7 @@ const PAGE_SOURCES = {
   '/careers': ['pages/careers'],
   '/locations': ['pages/locations', ...folderSlugs('locations')],
   '/menu': ['pages/menu', ...folderSlugs('products'), ...folderSlugs('categories')],
-  '/realestate': ['pages/ourfuture', ...folderSlugs('locations')],
+  '/realestate': ['pages/realestate', ...folderSlugs('locations')],
   '/privacy-policy': ['pages/privacy'],
 };
 const lastmodByPath = new Map(Object.entries(PAGE_SOURCES).map(([p, keys]) => [p, newest(keys)]));

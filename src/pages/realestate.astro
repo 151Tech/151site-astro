@@ -8,7 +8,7 @@ import { getPage, getLocations, unwrapSingletons, imageUrl } from '../lib/storyb
 import Editable from '../components/Editable.astro';
 
 const [p, locationsEntries] = await Promise.all([
-  getPage('ourfuture').then((page) => unwrapSingletons(page as any, [
+  getPage('realestate').then((page) => unwrapSingletons(page as any, [
     'seo', 'hero', 'visibility', 'overview', 'criteria', 'idealSite', 'markets', 'contact',
   ])),
   getLocations(),

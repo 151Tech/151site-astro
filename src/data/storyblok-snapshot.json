@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-09-29T18:00:15.000Z",
+  "generatedAt": "2026-09-29T18:28:04.500Z",
   "publishedAt": {
     "settings/global": "2026-09-25T13:21:24.793Z",
-    "pages/home": "2026-09-25T19:21:17.610Z",
-    "pages/about": "2026-09-25T17:55:55.674Z",
+    "pages/home": "2026-09-29T18:25:48.244Z",
+    "pages/about": "2026-09-29T18:23:49.806Z",
     "pages/careers": "2026-09-25T17:55:51.398Z",
     "pages/locations": "2026-09-29T16:09:06.345Z",
     "pages/menu": "2026-09-25T17:54:41.022Z",
-    "pages/ourfuture": "2026-09-25T17:57:02.531Z",
+    "pages/realestate": "2026-09-29T18:22:55.633Z",
     "pages/privacy": "2026-08-26T15:42:59.017Z",
     "products/pumpkin-spice-chai": "2026-09-16T16:58:24.142Z",
     "products/pumpkin-spice-latte": "2026-09-16T16:58:22.735Z",
@@ -383,13 +383,13 @@
             },
             {
               "_uid": "71db218e-b587-442a-8f59-4a3f4ebb9448",
-              "answer": "We currently have 12+ locations across the Dallas-Fort Worth area in Texas and 3 in Kansas. Use the locator on our homepage or visit the Locations page to find the nearest store.",
+              "answer": "We currently have 12 locations across the Dallas-Fort Worth area in Texas and 3 in Kansas. Use the Locations page to find the nearest store.",
               "question": "Where is 151 Coffee located?",
               "component": "page_home_faqs_items_item"
             },
             {
               "_uid": "b5f6d7c6-d7b9-4642-b2cb-fab3b99e9d54",
-              "answer": "Our menu includes espresso drinks, cold brew, energy drinks, dirty sodas, refreshers, smoothies, teas, kids drinks, hot food items like burritos and bagels, and baked treats. There's something for everyone.",
+              "answer": "Our menu includes espresso drinks, cold brew, energy drinks, dirty sodas, refreshers, smoothies, teas, kids drinks. Most stores have hot food items like burritos and bagels, and baked treats. Find out your store's offerings on our location page.",
               "question": "What does 151 Coffee serve?",
               "component": "page_home_faqs_items_item"
             },
@@ -572,7 +572,7 @@
               },
               "label": "Drink Menu",
               "title": "Drink Menu",
-              "subtitle": "43,000+ Flavor Combinations",
+              "subtitle": "Find Your New Favorite Drink",
               "component": "page_home_menusection_cards_item"
             },
             {
@@ -859,7 +859,7 @@
             },
             {
               "_uid": "82b797b8-26df-4b5f-a308-c708d83181bd",
-              "text": "Thirteen more locations open across Texas, followed by expansion into Kansas - Lawrence, Manhattan, and Overland Park.",
+              "text": "Ten more locations open across Texas, followed by expansion into Kansas - Lawrence, Manhattan, and Overland Park.",
               "year": "2019-22",
               "component": "page_about_history_timeline_item"
             },
@@ -1470,7 +1470,7 @@
         "meta_data": {}
       }
     },
-    "pages/ourfuture": {
+    "pages/realestate": {
       "seo": [
         {
           "_uid": "e909f809-3d30-4bca-98b5-f6f64d65e316",
@@ -1669,7 +1669,7 @@
           "body": [
             {
               "_uid": "2fee8c56-eda9-4c01-b19e-a8a5182db9d4",
-              "value": "151 Coffee currently operates 15 locations across the Dallas-Fort Worth metro and Kansas City. We aren't stopping here, either; there are many more in the pipeline.",
+              "value": "151 Coffee currently operates 15 locations across the Dallas-Fort Worth metro and Kansas. We aren't stopping here, either; there are many more in the pipeline.",
               "component": "text_item"
             },
             {

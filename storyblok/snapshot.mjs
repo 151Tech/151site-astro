@@ -38,7 +38,7 @@ const STORY_SLUGS = [
   'pages/careers',
   'pages/locations',
   'pages/menu',
-  'pages/ourfuture',
+  'pages/realestate',
   'pages/privacy',
 ];
 
