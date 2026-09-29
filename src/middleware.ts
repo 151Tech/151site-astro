@@ -1,5 +1,6 @@
 import { defineMiddleware } from 'astro:middleware';
 import { checkPreviewAccess, gateDeniedResponse } from './lib/preview-gate';
+import { TEMP_NOINDEX } from './lib/temp-noindex';
 
 // Only pages without getStaticPaths (about, careers, index, locations,
 // menu, ourfuture, privacy-policy) actually run through this: Webflow's
@@ -66,7 +67,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
   // through Layout, and a crawler sees it without parsing the body. In draft
   // mode every page is server-rendered (prerender is false site-wide), so
   // every response passes through here.
-  if (IS_DRAFT_PREVIEW) {
+  if (IS_DRAFT_PREVIEW || TEMP_NOINDEX) {
     response.headers.set('X-Robots-Tag', 'noindex, nofollow');
   }
 

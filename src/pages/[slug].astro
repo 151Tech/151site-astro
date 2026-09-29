@@ -213,7 +213,7 @@ function highlight(text: string): string {
     display: flex;
     flex-direction: column;
     align-items: center;
-    background: radial-gradient(circle at 50% 0%, rgba(230, 57, 70, 0.25) 0%, transparent 55%), var(--black);
+    background: radial-gradient(circle at 50% 0%, rgba(228,37,43, 0.25) 0%, transparent 55%), var(--black);
     padding: max(1.1rem, env(safe-area-inset-top)) 1.25rem max(1.1rem, env(safe-area-inset-bottom));
     overflow: hidden;
   }
@@ -235,10 +235,10 @@ function highlight(text: string): string {
     display: block;
   }
   .landing-logo span {
-    font-family: var(--font-bebas-neue), 'Impact', sans-serif;
+    font-family: var(--font-source-sans), sans-serif; font-weight: 700;
     color: var(--white);
     font-size: 1.1rem;
-    letter-spacing: 0.04em;
+    letter-spacing: -0.066em;
   }
 
   .landing-content {
@@ -260,17 +260,17 @@ function highlight(text: string): string {
     color: var(--red-soft);
     font-weight: 700;
     font-size: 0.8rem;
-    letter-spacing: 0.12em;
+    letter-spacing: -0.066em;
     text-transform: uppercase;
   }
 
   .landing-headline {
     flex: 0 0 auto;
     margin: 0;
-    font-family: var(--font-bebas-neue), 'Impact', sans-serif;
+    font-family: var(--font-source-sans), sans-serif; font-weight: 700;
     color: var(--white);
     line-height: 1.02;
-    letter-spacing: 0.01em;
+    letter-spacing: -0.066em;
     font-size: clamp(1.9rem, 9vw, 3rem);
   }
 
@@ -300,9 +300,9 @@ function highlight(text: string): string {
     border: 2px dashed var(--red);
     border-radius: var(--radius-pill);
     color: var(--white);
-    font-family: var(--font-inter), monospace;
+    font-family: var(--font-montserrat), monospace;
     font-weight: 700;
-    letter-spacing: 0.1em;
+    letter-spacing: -0.066em;
   }
 
   /* Allowed to shrink (and get clipped by its own overflow:hidden) before
@@ -483,20 +483,20 @@ function highlight(text: string): string {
     pointer-events: none;
   }
   .drink-label-category {
-    font-family: var(--font-inter), sans-serif;
+    font-family: var(--font-montserrat), sans-serif;
     font-size: clamp(0.72rem, 2.9vw, 0.88rem);
     font-weight: 800;
     line-height: 1.1;
-    letter-spacing: 0.14em;
+    letter-spacing: -0.066em;
     text-transform: uppercase;
     color: #f4efe9;
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
   }
   .drink-label-name {
-    font-family: var(--font-bebas-neue), 'Impact', sans-serif;
+    font-family: var(--font-source-sans), sans-serif; font-weight: 700;
     font-size: clamp(1.7rem, 8vw, 2.3rem);
     line-height: 0.95;
-    letter-spacing: 0.02em;
+    letter-spacing: -0.066em;
     color: var(--white);
   }
 

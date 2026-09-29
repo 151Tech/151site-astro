@@ -2,6 +2,7 @@
 import Font from 'astro/components/Font.astro';
 import { getSettings, imageUrl } from '../lib/storyblok';
 import { ogImageUrl } from '../lib/seo';
+import { TEMP_NOINDEX } from '../lib/temp-noindex';
 
 interface Props {
   title: string;
@@ -68,16 +69,16 @@ const isDraftPreview = import.meta.env.STORYBLOK_DRAFT_MODE === 'true';
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <Font cssVariable="--font-inter" preload />
-  <Font cssVariable="--font-bebas-neue" preload />
+  <Font cssVariable="--font-montserrat" preload />
+  <Font cssVariable="--font-source-sans" preload />
   <Font cssVariable="--font-caveat" />
 
   <title>{title}</title>
   <meta name="description" content={description} />
   <link rel="canonical" href={canonicalUrl} />
-  <meta name="robots" content={isDraftPreview || noindex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'} />
+  <meta name="robots" content={isDraftPreview || noindex || TEMP_NOINDEX ? 'noindex, nofollow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'} />
   <meta name="author" content="151 Coffee" />
-  <meta name="theme-color" content="#e63946" />
+  <meta name="theme-color" content="#e4252b" />
 
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="151 Coffee" />

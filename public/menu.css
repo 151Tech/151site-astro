@@ -107,11 +107,11 @@
     background: rgba(255,255,255,0.05);
     border: 1.5px solid rgba(255,255,255,0.12);
     border-radius: 999px;
-    font-family: var(--font-inter), sans-serif;
+    font-family: var(--font-montserrat), sans-serif;
     font-size: clamp(0.5rem, 1.1vw, 0.8rem);
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.04em;
+    letter-spacing: -0.066em;
     padding: 0.5rem 0.4rem;
     margin: 0 0.2rem 0.75rem;
     cursor: pointer;
@@ -149,10 +149,10 @@
     position: absolute;
     inset: 0;
     background:
-        radial-gradient(120% 60% at 50% 0%,   rgba(230,57,70,0.08) 0%, transparent 60%),
-        radial-gradient(120% 60% at 50% 100%, rgba(230,57,70,0.06) 0%, transparent 60%),
-        radial-gradient(60% 100% at 0% 50%,   rgba(230,57,70,0.06) 0%, transparent 55%),
-        radial-gradient(60% 100% at 100% 50%, rgba(230,57,70,0.06) 0%, transparent 55%);
+        radial-gradient(120% 60% at 50% 0%,   rgba(228,37,43,0.08) 0%, transparent 60%),
+        radial-gradient(120% 60% at 50% 100%, rgba(228,37,43,0.06) 0%, transparent 60%),
+        radial-gradient(60% 100% at 0% 50%,   rgba(228,37,43,0.06) 0%, transparent 55%),
+        radial-gradient(60% 100% at 100% 50%, rgba(228,37,43,0.06) 0%, transparent 55%);
     pointer-events: none;
 }
 
@@ -248,9 +248,9 @@
 }
 
 .cat-title-text {
-    font-family: var(--font-bebas-neue), sans-serif;
+    font-family: var(--font-source-sans), sans-serif; font-weight: 700;
     font-size: clamp(2.3rem, 4.8vw, 4.1rem);
-    letter-spacing: 0.03em;
+    letter-spacing: -0.066em;
     color: #1a1512;
     line-height: 0.95;
     margin: 0;
@@ -388,11 +388,11 @@
 }
 
 .drink-info h3 {
-    font-family: var(--font-bebas-neue), sans-serif;
+    font-family: var(--font-source-sans), sans-serif; font-weight: 700;
     color: #1a1512;
     font-size: 1.7rem;
     line-height: 1.1;
-    letter-spacing: 0.03em;
+    letter-spacing: -0.066em;
     text-transform: uppercase;
 }
 
@@ -401,7 +401,7 @@
     font-size: 0.76rem;
     line-height: 1.5;
     margin: 0;
-    letter-spacing: 0.02em;
+    letter-spacing: -0.066em;
 }
 
 /* Descriptor Card */
@@ -433,11 +433,11 @@
 }
 
 .descriptor-label {
-    font-family: var(--font-inter), sans-serif;
+    font-family: var(--font-montserrat), sans-serif;
     font-size: 0.65rem;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.14em;
+    letter-spacing: -0.066em;
     color: rgba(20,17,14,0.45);
     margin: 0;
 }
@@ -450,7 +450,7 @@
 }
 
 .descriptor-list span {
-    font-family: var(--font-inter), sans-serif;
+    font-family: var(--font-montserrat), sans-serif;
     font-size: 0.85rem;
     font-weight: 500;
     color: rgba(20,17,14,0.8);
@@ -472,7 +472,7 @@
     content: '';
     position: absolute;
     inset: 0;
-    background: radial-gradient(80% 50% at 50% 0%, rgba(230,57,70,0.1) 0%, transparent 65%);
+    background: radial-gradient(80% 50% at 50% 0%, rgba(228,37,43,0.1) 0%, transparent 65%);
     pointer-events: none;
 }
 
@@ -502,11 +502,11 @@
 }
 
 .cz-heading h2 {
-    font-family: var(--font-bebas-neue), sans-serif;
+    font-family: var(--font-source-sans), sans-serif;
     font-size: clamp(1.8rem, 3.2vw, 2.4rem);
-    letter-spacing: 0.03em;
+    letter-spacing: -0.066em;
     color: #f5efe8;
-    font-weight: 400;
+    font-weight: 700;
     line-height: 1.1;
     margin: 0;
 }
@@ -522,7 +522,7 @@
     font-size: 0.7rem;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.1em;
+    letter-spacing: -0.066em;
     color: var(--red);
     margin: 0 0 0.75rem;
 }
@@ -550,8 +550,8 @@
 
 @media (hover: hover) and (pointer: fine) {
     .cpill:hover {
-        background: rgba(230,57,70,0.18);
-        border-color: rgba(230,57,70,0.4);
+        background: rgba(228,37,43,0.18);
+        border-color: rgba(228,37,43,0.4);
         color: #fff;
     }
 }
@@ -622,10 +622,10 @@
 }
 
 .timeline-empty-state p {
-    font-family: var(--font-bebas-neue), sans-serif;
+    font-family: var(--font-source-sans), sans-serif; font-weight: 700;
     font-size: clamp(1.6rem, 4vw, 2.4rem);
     color: rgba(255,255,255,0.9);
-    letter-spacing: 0.04em;
+    letter-spacing: -0.066em;
     margin: 0;
     line-height: 1.25;
 }
@@ -634,7 +634,7 @@
     font-size: 0.85rem;
     color: rgba(255,255,255,0.45);
     font-weight: 400;
-    letter-spacing: 0.04em;
+    letter-spacing: -0.066em;
 }
 
 .cz-filter-hint {
@@ -1123,7 +1123,7 @@
 .menu-simple-mode .descriptor-label-line {
     font-size: 0.68rem;
     font-weight: 700;
-    letter-spacing: 0.02em;
+    letter-spacing: -0.066em;
     text-transform: uppercase;
     line-height: 1.05;
     white-space: nowrap;
@@ -1256,10 +1256,10 @@
     background: rgba(255,255,255,0.08);
     border: 1.5px solid rgba(255,255,255,0.25);
     color: var(--white);
-    font-family: var(--font-inter), sans-serif;
+    font-family: var(--font-montserrat), sans-serif;
     font-size: 0.82rem;
     font-weight: 600;
-    letter-spacing: 0.03em;
+    letter-spacing: -0.066em;
     padding: 0.6rem 1.1rem;
     border-radius: var(--radius-pill);
     cursor: pointer;
@@ -1297,7 +1297,7 @@
 
 .loc-modal-inner > p {
     color: var(--light-gray);
-    font-family: var(--font-inter), sans-serif;
+    font-family: var(--font-montserrat), sans-serif;
     font-size: 0.92rem;
     margin-bottom: 1.5rem;
 }
@@ -1320,10 +1320,10 @@
 }
 
 .loc-modal-state-label {
-    font-family: var(--font-inter), sans-serif;
+    font-family: var(--font-montserrat), sans-serif;
     font-size: 0.7rem;
     font-weight: 700;
-    letter-spacing: 0.12em;
+    letter-spacing: -0.066em;
     text-transform: uppercase;
     color: rgba(0,0,0,0.35);
     width: 100%;
@@ -1339,10 +1339,10 @@
     border: 1px solid rgba(0,0,0,0.08);
     box-shadow: 0 1px 3px rgba(0,0,0,0.08);
     color: var(--black);
-    font-family: var(--font-inter), sans-serif;
+    font-family: var(--font-montserrat), sans-serif;
     font-size: 0.85rem;
     font-weight: 600;
-    letter-spacing: 0.01em;
+    letter-spacing: -0.066em;
     padding: 0.5rem 1.15rem;
     border-radius: var(--radius-pill);
     cursor: pointer;
@@ -1406,10 +1406,10 @@
     background: transparent;
     border: 1.5px solid rgba(255,255,255,0.25);
     color: var(--white);
-    font-family: var(--font-inter), sans-serif;
+    font-family: var(--font-montserrat), sans-serif;
     font-size: 0.82rem;
     font-weight: 600;
-    letter-spacing: 0.03em;
+    letter-spacing: -0.066em;
     padding: 0.6rem 1.1rem;
     border-radius: var(--radius-pill);
     cursor: pointer;
@@ -1652,22 +1652,20 @@
     color: #fff;
     border: none;
     border-radius: 999px;
-    font-family: var(--font-inter), sans-serif;
+    font-family: var(--font-montserrat), sans-serif;
     font-size: 0.92rem;
     font-weight: 700;
-    letter-spacing: 0.01em;
+    letter-spacing: -0.066em;
     padding: 0.85rem 1.6rem;
     cursor: pointer;
     white-space: nowrap;
-    box-shadow: 0 10px 24px rgba(230,57,70,0.35);
     transition: transform 0.2s cubic-bezier(0.34,1.4,0.64,1), box-shadow 0.2s ease, background 0.2s ease;
 }
 
 @media (hover: hover) and (pointer: fine) {
     .decide-btn:hover {
         transform: translateY(-3px) scale(1.03);
-        box-shadow: 0 14px 30px rgba(230,57,70,0.45);
-        background: #ef4a54;
+        background: #e4252b;
     }
 }
 
@@ -1710,8 +1708,8 @@
        over the same dark ground as .customize-section - lively without
        competing with the reel itself. */
     background:
-        radial-gradient(circle at 12% -8%, rgba(230,57,70,0.4) 0%, transparent 45%),
-        radial-gradient(circle at 104% 108%, rgba(230,57,70,0.28) 0%, transparent 48%),
+        radial-gradient(circle at 12% -8%, rgba(228,37,43,0.4) 0%, transparent 45%),
+        radial-gradient(circle at 104% 108%, rgba(228,37,43,0.28) 0%, transparent 48%),
         radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1.5px) 0 0/20px 20px,
         #1c1815;
     padding: 2.5rem 2rem 2.25rem;
@@ -1720,11 +1718,11 @@
 }
 
 .decide-eyebrow {
-    font-family: var(--font-inter), sans-serif;
+    font-family: var(--font-montserrat), sans-serif;
     font-size: 0.72rem;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.16em;
+    letter-spacing: -0.066em;
     color: var(--red);
     margin: 0 0 1.1rem;
 }
@@ -1754,7 +1752,7 @@
     height: 220px;
     margin: 0 auto 1.25rem;
     border-radius: 22px;
-    background: radial-gradient(circle at 50% 40%, rgba(230,57,70,0.25), transparent 70%);
+    background: radial-gradient(circle at 50% 40%, rgba(228,37,43,0.25), transparent 70%);
     overflow: hidden;
 }
 
@@ -1785,10 +1783,10 @@
 }
 
 .decide-card h3 {
-    font-family: var(--font-bebas-neue), sans-serif;
+    font-family: var(--font-source-sans), sans-serif; font-weight: 700;
     color: #f5efe8;
     font-size: 1.9rem;
-    letter-spacing: 0.02em;
+    letter-spacing: -0.066em;
     line-height: 1.1;
     margin: 0 0 0.35rem;
     opacity: 0;
@@ -1796,7 +1794,7 @@
 }
 
 .decide-card p {
-    font-family: var(--font-inter), sans-serif;
+    font-family: var(--font-montserrat), sans-serif;
     color: rgba(255,255,255,0.55);
     font-size: 0.85rem;
     margin: 0;
@@ -1814,7 +1812,7 @@
     background: transparent;
     border: 1px solid rgba(255,255,255,0.25);
     color: #fff;
-    font-family: var(--font-inter), sans-serif;
+    font-family: var(--font-montserrat), sans-serif;
     font-size: 0.82rem;
     font-weight: 600;
     border-radius: 999px;
@@ -1841,7 +1839,7 @@
     height: 6px;
     border-radius: 50%;
     background: var(--red);
-    box-shadow: 0 0 8px 1px rgba(230,57,70,0.6);
+    box-shadow: 0 0 8px 1px rgba(228,37,43,0.6);
     opacity: 0;
     transform: translate(-50%, -50%);
     animation: decide-spark-burst 0.65s cubic-bezier(0.16,1,0.3,1) both;
@@ -1858,8 +1856,8 @@
 /* While the reel scrolls, a faint ring pulses around the frame - reads as
    "still picking" independent of the carousel motion itself. */
 @keyframes decide-cycling-ring {
-    0%, 100% { box-shadow: inset 0 0 0 3px rgba(230,57,70,0.18); }
-    50%      { box-shadow: inset 0 0 0 3px rgba(230,57,70,0.4); }
+    0%, 100% { box-shadow: inset 0 0 0 3px rgba(228,37,43,0.18); }
+    50%      { box-shadow: inset 0 0 0 3px rgba(228,37,43,0.4); }
 }
 
 .decide-card:not(.decide-landed) .decide-img-wrap {
@@ -1879,7 +1877,7 @@
     left: 50%;
     width: 40px;
     height: 40px;
-    background: radial-gradient(circle, rgba(230,57,70,0.55) 0%, rgba(230,57,70,0.18) 45%, transparent 72%);
+    background: radial-gradient(circle, rgba(228,37,43,0.55) 0%, rgba(228,37,43,0.18) 45%, transparent 72%);
     transform: translate(-50%, -50%) scale(0);
     border-radius: 50%;
     pointer-events: none;

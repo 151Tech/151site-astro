@@ -10,9 +10,9 @@
     --black: #111111;
     --concrete: #1e1e1e;
     --steel: #2c2c2c;
-    --red: #E63946;
-    --red-soft: #e36b75;
-    --red-dark: #ad2b35; /* AA-safe red for small/bold text on light backgrounds, var(--red) alone fails contrast there */
+    --red: #e4252b;
+    --red-soft: var(--red);
+    --red-dark: var(--red);
     --light-gray: #888888;
     --mid-gray: #444444;
     --white: #F5F5F5;
@@ -35,7 +35,8 @@
 
 /* Base */
 body {
-    font-family: var(--font-inter), -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: var(--font-montserrat), -apple-system, BlinkMacSystemFont, sans-serif;
+    letter-spacing: -0.066em;
     background-color: var(--black);
     color: var(--white);
     line-height: 1.6;
@@ -43,16 +44,16 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-bebas-neue), 'Impact', sans-serif;
-    font-weight: 400;
-    letter-spacing: 0.04em;
+    font-family: var(--font-source-sans), sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.066em;
     text-transform: uppercase;
 }
 
 h1 { font-size: clamp(2.8rem, 7vw, 5.5rem); }
 h2 { font-size: clamp(1.8rem, 4vw, 3rem); }
 h3 { font-size: clamp(1.4rem, 2.5vw, 1.9rem); }
-h4 { font-size: 1.1rem; letter-spacing: 0.1em; }
+h4 { font-size: 1.1rem; letter-spacing: -0.066em; }
 
 p {
     font-size: 1rem;
@@ -115,11 +116,11 @@ nav.nav-scrolled .nav-container {
     align-items: center;
     gap: 0.6rem;
     font-size: 1.8rem;
-    font-family: var(--font-bebas-neue), 'Impact', sans-serif;
-    font-weight: 400;
+    font-family: var(--font-source-sans), sans-serif;
+    font-weight: 700;
     color: var(--black);
     text-decoration: none;
-    letter-spacing: 0.02em;
+    letter-spacing: -0.066em;
     transition: color 0.2s ease, transform 0.2s ease;
     flex-shrink: 0;
 }
@@ -142,11 +143,11 @@ nav.nav-scrolled .nav-container {
 .nav-links a {
     color: var(--black);
     text-decoration: none;
-    font-family: var(--font-inter), sans-serif;
+    font-family: var(--font-montserrat), sans-serif;
     font-weight: 600;
     text-transform: uppercase;
     font-size: 0.78rem;
-    letter-spacing: 0.1em;
+    letter-spacing: -0.066em;
     padding: 0.5rem 1rem;
     display: block;
     border-radius: var(--radius-pill);
@@ -181,20 +182,19 @@ nav.nav-scrolled .nav-container {
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    background: linear-gradient(135deg, var(--red) 0%, var(--red-soft) 100%);
+    background: var(--red);
     color: var(--white);
     padding: 0.75rem 1.75rem;
     text-decoration: none;
-    font-family: var(--font-inter), sans-serif;
+    font-family: var(--font-montserrat), sans-serif;
     font-weight: 700;
     text-transform: uppercase;
     font-size: 0.82rem;
-    letter-spacing: 0.1em;
+    letter-spacing: -0.066em;
     border: none;
     border-radius: var(--radius-pill);
     cursor: pointer;
-    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease, filter 0.2s ease;
-    box-shadow: 0 4px 14px rgba(230, 57, 70, 0.3);
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
     white-space: nowrap;
 }
 
@@ -204,8 +204,6 @@ nav.nav-scrolled .nav-container {
 .btn-primary:hover,
 .gc-btn:hover {
     transform: translateY(-3px) scale(1.04);
-    box-shadow: 0 10px 28px rgba(230, 57, 70, 0.45);
-    filter: brightness(1.07);
 }
 
 .main-menu-btn:active,
@@ -224,11 +222,11 @@ nav.nav-scrolled .nav-container {
     color: var(--white);
     padding: 0.75rem 1.75rem;
     text-decoration: none;
-    font-family: var(--font-inter), sans-serif;
+    font-family: var(--font-montserrat), sans-serif;
     font-weight: 700;
     text-transform: uppercase;
     font-size: 0.82rem;
-    letter-spacing: 0.1em;
+    letter-spacing: -0.066em;
     border: 2px solid rgba(255,255,255,0.35);
     border-radius: var(--radius-pill);
     cursor: pointer;
@@ -347,11 +345,11 @@ nav.nav-scrolled .nav-container {
 .mobile-nav-drawer .nav-links a {
     display: block;
     color: var(--black);
-    font-family: var(--font-inter), sans-serif;
+    font-family: var(--font-montserrat), sans-serif;
     font-size: 1rem;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.1em;
+    letter-spacing: -0.066em;
     text-decoration: none;
     padding: 1rem 0;
     border-bottom: 1px solid rgba(0,0,0,0.08);
@@ -425,7 +423,7 @@ nav.nav-scrolled .nav-container {
     left: 0;
     width: 100%;
     height: 3px;
-    background: linear-gradient(90deg, var(--red), var(--red-soft));
+    background: var(--red);
     transform: scaleX(0);
     transform-origin: left;
     animation: loading 2s ease-out forwards;
@@ -543,10 +541,10 @@ nav.nav-scrolled .nav-container {
     position: absolute;
     inset: 0;
     background:
-        radial-gradient(120% 60% at 50% 0%,   rgba(230,57,70,0.08) 0%, transparent 60%),
-        radial-gradient(120% 60% at 50% 100%, rgba(230,57,70,0.06) 0%, transparent 60%),
-        radial-gradient(60% 100% at 0% 50%,   rgba(230,57,70,0.06) 0%, transparent 55%),
-        radial-gradient(60% 100% at 100% 50%, rgba(230,57,70,0.06) 0%, transparent 55%);
+        radial-gradient(120% 60% at 50% 0%,   rgba(228,37,43,0.08) 0%, transparent 60%),
+        radial-gradient(120% 60% at 50% 100%, rgba(228,37,43,0.06) 0%, transparent 60%),
+        radial-gradient(60% 100% at 0% 50%,   rgba(228,37,43,0.06) 0%, transparent 55%),
+        radial-gradient(60% 100% at 100% 50%, rgba(228,37,43,0.06) 0%, transparent 55%);
     pointer-events: none;
 }
 
@@ -600,11 +598,11 @@ nav.nav-scrolled .nav-container {
     display: inline-block;
     background: var(--red);
     color: #fff;
-    font-family: var(--font-inter), sans-serif;
+    font-family: var(--font-montserrat), sans-serif;
     font-size: 0.7rem;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.14em;
+    letter-spacing: -0.066em;
     padding: 0.45rem 1rem;
     border-radius: var(--radius-pill);
     margin-bottom: 1.5rem;
@@ -684,16 +682,16 @@ nav.nav-scrolled .nav-container {
 
 .featured-cta {
     display: inline-block;
-    background: linear-gradient(135deg, var(--red) 0%, var(--red-soft) 100%);
+    background: var(--red);
     color: #fff;
-    font-family: var(--font-inter), sans-serif;
+    font-family: var(--font-montserrat), sans-serif;
     font-weight: 600;
     font-size: 0.95rem;
-    letter-spacing: 0.02em;
+    letter-spacing: -0.066em;
     padding: 0.95rem 2.2rem;
     border-radius: var(--radius-pill);
     text-decoration: none;
-    transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
 @media (min-width: 769px) {
@@ -704,8 +702,6 @@ nav.nav-scrolled .nav-container {
 
 .featured-cta:hover {
     transform: translateY(-2px);
-    box-shadow: 0 12px 30px rgba(230,57,70,0.4);
-    filter: brightness(1.07);
 }
 
 @media (max-width: 768px) {
@@ -775,7 +771,7 @@ nav.nav-scrolled .nav-container {
     display: inline-block;
     color: var(--red);
     line-height: 1.05;
-    letter-spacing: 0.05em;
+    letter-spacing: -0.066em;
     margin-bottom: 1.1rem;
     text-shadow: 0 1px 0 rgba(0,0,0,0.06);
 }
@@ -907,7 +903,7 @@ nav.nav-scrolled .nav-container {
     right: 0.6rem;
     height: calc(100% - 0.6rem - 5.5rem);
     border-radius: 2px;
-    background: linear-gradient(165deg, rgba(17,17,17,0.24) 0%, rgba(230,57,70,0.2) 100%);
+    background: linear-gradient(165deg, rgba(17,17,17,0.24) 0%, rgba(228,37,43,0.2) 100%);
     pointer-events: none;
 }
 
@@ -918,6 +914,7 @@ nav.nav-scrolled .nav-container {
     font-family: var(--font-caveat), cursive;
     font-size: 1.9rem;
     font-weight: 600;
+    letter-spacing: 0;
     color: #2b2b2b;
     line-height: 1;
     white-space: nowrap;
@@ -973,7 +970,6 @@ nav.nav-scrolled .nav-container {
 .cta .btn-primary {
     background: var(--white);
     color: var(--red);
-    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
 }
 
 .cta .btn-primary:hover {
@@ -1015,7 +1011,7 @@ nav.nav-scrolled .nav-container {
 
 .feature-card:hover {
     transform: translateY(-8px);
-    box-shadow: 0 20px 48px rgba(230,57,70,0.22);
+    box-shadow: 0 20px 48px rgba(228,37,43,0.22);
 }
 
 .feature-card::before {
@@ -1023,7 +1019,7 @@ nav.nav-scrolled .nav-container {
     position: absolute;
     top: 0; left: 0;
     right: 0; height: 4px;
-    background: linear-gradient(90deg, var(--red), var(--red-soft));
+    background: var(--red);
     transform: scaleX(0);
     transform-origin: left;
     transition: transform 0.35s ease;
@@ -1053,7 +1049,7 @@ nav.nav-scrolled .nav-container {
 }
 
 .feature-card h3 { color: var(--white); font-size: 1.3rem; margin: 0; }
-.feature-card-subtitle { display: block; color: var(--red-soft); font-family: var(--font-inter), sans-serif; font-size: 0.86rem; font-weight: 400; text-transform: none; letter-spacing: normal; margin-top: 0.2rem; }
+.feature-card-subtitle { display: block; color: var(--red-soft); font-family: var(--font-montserrat), sans-serif; font-size: 0.86rem; font-weight: 400; text-transform: none; letter-spacing: -0.066em; margin-top: 0.2rem; }
 .feature-card .menu-btn { flex-shrink: 0; padding: 0.6rem 1.1rem; font-size: 0.72rem; }
 
 /* Locations */
@@ -1102,7 +1098,7 @@ nav.nav-scrolled .nav-container {
     border-radius: var(--radius-pill);
     background: #fbf8f4;
     color: var(--black);
-    font-family: var(--font-inter), sans-serif;
+    font-family: var(--font-montserrat), sans-serif;
     font-size: 0.9rem;
     outline: none;
     transition: all 0.2s ease;
@@ -1111,7 +1107,7 @@ nav.nav-scrolled .nav-container {
 .locator__search input:focus {
     border-color: var(--red);
     background: #fbf8f4;
-    box-shadow: 0 0 0 3px rgba(230,57,70,0.12);
+    box-shadow: 0 0 0 3px rgba(228,37,43,0.12);
 }
 
 .locator__list {
@@ -1138,9 +1134,9 @@ nav.nav-scrolled .nav-container {
     gap: 0.4rem;
 }
 .locator__competitor-egg-title {
-    font-family: var(--font-bebas-neue), 'Impact', sans-serif;
+    font-family: var(--font-source-sans), sans-serif; font-weight: 700;
     font-size: clamp(1.8rem, 4vw, 2.4rem);
-    letter-spacing: 0.03em;
+    letter-spacing: -0.066em;
     color: var(--red);
     margin: 0;
 }
@@ -1163,7 +1159,7 @@ nav.nav-scrolled .nav-container {
 }
 
 .locator__item:hover { border-color: var(--red); box-shadow: 0 4px 14px rgba(0,0,0,0.08); }
-.locator__item.active { border-color: var(--red); background: rgba(230,57,70,0.04); }
+.locator__item.active { border-color: var(--red); background: rgba(228,37,43,0.04); }
 
 .locator__item-top {
     display: flex;
@@ -1174,11 +1170,11 @@ nav.nav-scrolled .nav-container {
 .locator__item-name {
     display: block;
     text-align: left;
-    font-family: var(--font-inter), sans-serif;
+    font-family: var(--font-montserrat), sans-serif;
     font-size: 0.95rem;
     font-weight: 700;
     text-transform: none;
-    letter-spacing: normal;
+    letter-spacing: -0.066em;
     color: var(--black);
     margin: 0 0 0.3rem;
 }
@@ -1282,10 +1278,10 @@ nav.nav-scrolled .nav-container {
     background: linear-gradient(to bottom, transparent, var(--red) 20%, var(--red) 80%, transparent);
 }
 .locator__mobile-name {
-    font-family: var(--font-inter), sans-serif;
+    font-family: var(--font-montserrat), sans-serif;
     font-size: clamp(0.74rem, 0.58rem + 1.7cqi, 1rem);
     font-weight: 800;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.066em;
     color: var(--black);
     margin: 0;
     white-space: nowrap;
@@ -1345,23 +1341,21 @@ nav.nav-scrolled .nav-container {
     align-items: center;
     justify-content: center;
     white-space: nowrap;
-    background: linear-gradient(135deg, var(--red) 0%, var(--red-soft) 100%);
+    background: var(--red);
     color: var(--white);
     text-decoration: none;
-    font-family: var(--font-inter), sans-serif;
+    font-family: var(--font-montserrat), sans-serif;
     font-size: 0.72rem;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.07em;
+    letter-spacing: -0.066em;
     padding: 0.5rem 1rem;
     border-radius: var(--radius-pill);
     transition: transform 0.25s ease, box-shadow 0.25s ease;
-    box-shadow: 0 4px 12px rgba(230,57,70,0.28);
 }
 
 .locator__directions:hover {
     transform: translateY(-2px) scale(1.04);
-    box-shadow: 0 6px 18px rgba(230,57,70,0.42);
 }
 
 /* Base "More Info" link - covers a location with no photo, which falls
@@ -1376,11 +1370,11 @@ nav.nav-scrolled .nav-container {
     white-space: nowrap;
     color: var(--red);
     text-decoration: none;
-    font-family: var(--font-inter), sans-serif;
+    font-family: var(--font-montserrat), sans-serif;
     font-size: 0.72rem;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.07em;
+    letter-spacing: -0.066em;
     transition: gap 0.2s ease;
 }
 .locator__more-info svg { width: 12px; height: 12px; flex-shrink: 0; }
@@ -1440,7 +1434,7 @@ nav.nav-scrolled .nav-container {
     border: 1px solid rgba(0,0,0,0.1);
     border-radius: var(--radius-pill);
     box-shadow: 0 2px 8px rgba(0,0,0,0.18);
-    font-family: var(--font-inter), sans-serif;
+    font-family: var(--font-montserrat), sans-serif;
     font-size: 0.72rem;
     font-weight: 700;
     padding: 0.25rem 0.65rem;
@@ -1450,7 +1444,7 @@ nav.nav-scrolled .nav-container {
 .maplibregl-popup-content {
     border-radius: var(--radius);
     padding: 0.85rem 1.1rem;
-    font-family: var(--font-inter), sans-serif;
+    font-family: var(--font-montserrat), sans-serif;
     font-size: 0.85rem;
     line-height: 1.5;
     box-shadow: 0 6px 24px rgba(0,0,0,0.18);
@@ -1500,9 +1494,9 @@ nav.nav-scrolled .nav-container {
 }
 .ld-map-fallback-name {
     margin: 0;
-    font-family: var(--font-bebas-neue), 'Impact', sans-serif;
+    font-family: var(--font-source-sans), sans-serif; font-weight: 700;
     font-size: 1.6rem;
-    letter-spacing: 0.03em;
+    letter-spacing: -0.066em;
     color: var(--black);
 }
 .ld-map-fallback-address {
@@ -1627,11 +1621,11 @@ nav.nav-scrolled .nav-container {
     display: inline-flex;
     align-items: center;
     gap: 0.3rem;
-    font-family: var(--font-inter), sans-serif;
+    font-family: var(--font-montserrat), sans-serif;
     font-size: 0.68rem;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.07em;
+    letter-spacing: -0.066em;
     text-decoration: none;
     width: fit-content;
     transition: gap 0.2s ease, color 0.2s ease;
@@ -1674,7 +1668,7 @@ nav.nav-scrolled .nav-container {
     width: 900px;
     height: 900px;
     transform: translate(-50%, -50%);
-    background: radial-gradient(circle, rgba(230, 57, 70, 0.16) 0%, transparent 65%);
+    background: radial-gradient(circle, rgba(228,37,43, 0.16) 0%, transparent 65%);
     pointer-events: none;
     z-index: 0;
 }
@@ -1746,8 +1740,8 @@ nav.nav-scrolled .nav-container {
     transform: translate(-50%, -50%) translateX(0) scale(1);
     opacity: 1;
     z-index: 3;
-    box-shadow: 0 20px 60px rgba(230, 57, 70, 0.22), 0 14px 44px rgba(0, 0, 0, 0.5);
-    border-color: rgba(230, 57, 70, 0.35);
+    box-shadow: 0 20px 60px rgba(228,37,43, 0.22), 0 14px 44px rgba(0, 0, 0, 0.5);
+    border-color: rgba(228,37,43, 0.35);
 }
 
 /* Resting state: all 3 slides visible, left/right dimmed either side of a
@@ -1808,7 +1802,7 @@ nav.nav-scrolled .nav-container {
     font-size: 0.66rem;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
+    letter-spacing: -0.066em;
     opacity: 0;
     transition: opacity 0.4s ease;
     pointer-events: none;
@@ -1986,7 +1980,7 @@ nav.nav-scrolled .nav-container {
 
 .pricing-card {
     background:
-        radial-gradient(120% 100% at 100% 0%, rgba(230,57,70,0.16) 0%, transparent 55%),
+        radial-gradient(120% 100% at 100% 0%, rgba(228,37,43,0.16) 0%, transparent 55%),
         linear-gradient(160deg, #202020 0%, #141414 100%);
     padding: 2.25rem 2rem 2rem;
     border: 1px solid rgba(255,255,255,0.06);
@@ -2003,7 +1997,7 @@ nav.nav-scrolled .nav-container {
 .pricing-card::before {
     content: '\201C';
     display: block;
-    font-family: var(--font-bebas-neue), sans-serif;
+    font-family: var(--font-source-sans), sans-serif; font-weight: 700;
     font-size: 3.5rem;
     line-height: 1;
     color: var(--red);
@@ -2012,7 +2006,7 @@ nav.nav-scrolled .nav-container {
 
 .pricing-card:hover {
     transform: translateY(-6px);
-    border-color: rgba(230,57,70,0.4);
+    border-color: rgba(228,37,43,0.4);
     box-shadow: 0 20px 44px rgba(0,0,0,0.28);
 }
 
@@ -2022,7 +2016,7 @@ nav.nav-scrolled .nav-container {
     color: rgba(245,245,245,0.82);
     margin-bottom: 1.5rem;
     text-align: left;
-    font-family: var(--font-inter), sans-serif;
+    font-family: var(--font-montserrat), sans-serif;
     font-style: normal;
 }
 
@@ -2043,9 +2037,9 @@ nav.nav-scrolled .nav-container {
     width: 2.4rem;
     height: 2.4rem;
     border-radius: 50%;
-    background: linear-gradient(135deg, var(--red) 0%, var(--red-soft) 100%);
+    background: var(--red);
     color: #fff;
-    font-family: var(--font-inter), sans-serif;
+    font-family: var(--font-montserrat), sans-serif;
     font-size: 0.95rem;
     font-weight: 700;
 }
@@ -2057,17 +2051,17 @@ nav.nav-scrolled .nav-container {
 }
 
 .plan-name {
-    font-family: var(--font-inter), sans-serif;
+    font-family: var(--font-montserrat), sans-serif;
     font-size: 0.85rem;
     font-weight: 700;
     text-align: left;
     color: var(--white);
     text-transform: uppercase;
-    letter-spacing: 0.1em;
+    letter-spacing: -0.066em;
 }
 
 .review-location {
-    font-family: var(--font-inter), sans-serif;
+    font-family: var(--font-montserrat), sans-serif;
     font-size: 0.78rem;
     color: rgba(245,245,245,0.5);
 }
@@ -2102,7 +2096,7 @@ nav.nav-scrolled .nav-container {
     -webkit-backdrop-filter: blur(16px);
     padding: 3rem;
     margin: 0 auto;
-    border: 1px solid rgba(230,57,70,0.4);
+    border: 1px solid rgba(228,37,43,0.4);
     border-radius: var(--radius);
     text-align: center;
     width: 100%;
@@ -2134,10 +2128,10 @@ nav.nav-scrolled .nav-container {
 
 .special-feature-number {
     display: block;
-    font-family: var(--font-bebas-neue), sans-serif;
+    font-family: var(--font-source-sans), sans-serif; font-weight: 700;
     font-size: 2.4rem;
     color: var(--red);
-    letter-spacing: 0.05em;
+    letter-spacing: -0.066em;
     margin-bottom: 0.2rem;
 }
 
@@ -2158,10 +2152,10 @@ nav.nav-scrolled .nav-container {
     position: absolute;
     inset: 0;
     background:
-        radial-gradient(120% 60% at 50% 0%,   rgba(230,57,70,0.08) 0%, transparent 60%),
-        radial-gradient(120% 60% at 50% 100%, rgba(230,57,70,0.06) 0%, transparent 60%),
-        radial-gradient(60% 100% at 0% 50%,   rgba(230,57,70,0.06) 0%, transparent 55%),
-        radial-gradient(60% 100% at 100% 50%, rgba(230,57,70,0.06) 0%, transparent 55%);
+        radial-gradient(120% 60% at 50% 0%,   rgba(228,37,43,0.08) 0%, transparent 60%),
+        radial-gradient(120% 60% at 50% 100%, rgba(228,37,43,0.06) 0%, transparent 60%),
+        radial-gradient(60% 100% at 0% 50%,   rgba(228,37,43,0.06) 0%, transparent 55%),
+        radial-gradient(60% 100% at 100% 50%, rgba(228,37,43,0.06) 0%, transparent 55%);
     z-index: 0;
     pointer-events: none;
 }
@@ -2174,7 +2168,7 @@ nav.nav-scrolled .nav-container {
 }
 
 .contact-form-wrapper {
-    border: 1px solid rgba(230,57,70,0.4);
+    border: 1px solid rgba(228,37,43,0.4);
     border-radius: var(--radius);
     box-shadow: 0 24px 60px rgba(0,0,0,0.5);
     overflow: hidden;
@@ -2228,9 +2222,9 @@ nav.nav-scrolled .nav-container {
     margin-bottom: 0.6rem;
     color: rgba(245,245,245,0.6);
     text-transform: uppercase;
-    font-family: var(--font-inter), sans-serif;
+    font-family: var(--font-montserrat), sans-serif;
     font-size: 0.72rem;
-    letter-spacing: 0.14em;
+    letter-spacing: -0.066em;
     font-weight: 600;
 }
 
@@ -2243,16 +2237,16 @@ nav.nav-scrolled .nav-container {
     border-radius: var(--radius-sm);
     color: var(--white);
     font-size: 0.95rem;
-    font-family: var(--font-inter), sans-serif;
+    font-family: var(--font-montserrat), sans-serif;
     transition: all 0.25s ease;
 }
 
 .form-group input:focus,
 .form-group textarea:focus {
     outline: none;
-    border-color: rgba(230,57,70,0.5);
+    border-color: rgba(228,37,43,0.5);
     background: rgba(255,255,255,0.06);
-    box-shadow: 0 0 0 3px rgba(230,57,70,0.1);
+    box-shadow: 0 0 0 3px rgba(228,37,43,0.1);
 }
 
 .form-group input::placeholder,
@@ -2300,10 +2294,10 @@ form[data-netlify] { position: relative; }
 .form-sent__title {
     margin: 0;
     color: inherit;
-    font-family: var(--font-bebas-neue), 'Impact', sans-serif;
+    font-family: var(--font-source-sans), sans-serif; font-weight: 700;
     font-size: clamp(2.2rem, 6vw, 3rem);
     line-height: 1;
-    letter-spacing: 0.03em;
+    letter-spacing: -0.066em;
 }
 
 .form-sent__msg {
@@ -2366,28 +2360,25 @@ form[data-netlify] { position: relative; }
 }
 
 .form-submit {
-    background: linear-gradient(135deg, var(--red) 0%, var(--red-soft) 100%);
+    background: var(--red);
     color: var(--white);
     padding: 1rem 2.5rem;
     border: none;
     border-radius: var(--radius-pill);
     text-transform: uppercase;
-    font-family: var(--font-inter), sans-serif;
+    font-family: var(--font-montserrat), sans-serif;
     font-weight: 700;
-    letter-spacing: 0.12em;
+    letter-spacing: -0.066em;
     font-size: 0.82rem;
     cursor: pointer;
-    transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s ease, filter 0.2s ease;
+    transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s ease;
     width: 100%;
-    box-shadow: 0 4px 14px rgba(230,57,70,0.3);
     position: relative;
     overflow: hidden;
 }
 
 .form-submit:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(230,57,70,0.4);
-    filter: brightness(1.07);
 }
 
 .form-submit span { position: relative; z-index: 1; }
@@ -2416,12 +2407,12 @@ footer {
 
 .footer-section h4,
 .footer-social-section h4 {
-    font-family: var(--font-inter), sans-serif;
+    font-family: var(--font-montserrat), sans-serif;
     font-size: 0.72rem;
     font-weight: 700;
     color: var(--red);
     text-transform: uppercase;
-    letter-spacing: 0.14em;
+    letter-spacing: -0.066em;
     margin-bottom: 1.25rem;
 }
 
@@ -2441,7 +2432,7 @@ footer {
 .footer-social-section ul li button {
     color: var(--light-gray);
     text-decoration: none;
-    font-family: var(--font-inter), sans-serif;
+    font-family: var(--font-montserrat), sans-serif;
     font-size: 0.9rem;
     transition: color 0.2s ease;
     background: none;
@@ -2466,13 +2457,13 @@ footer {
 }
 
 .footer-credits p {
-    font-family: var(--font-inter), sans-serif;
+    font-family: var(--font-montserrat), sans-serif;
     font-size: 0.82rem;
     color: var(--light-gray);
 }
 
 .footer-cookie-btn {
-    font-family: var(--font-inter), sans-serif;
+    font-family: var(--font-montserrat), sans-serif;
     font-size: 0.82rem;
     color: var(--light-gray);
     background: none;
@@ -2500,7 +2491,7 @@ footer {
 }
 
 .footer-web-design span {
-    font-family: var(--font-inter), sans-serif;
+    font-family: var(--font-montserrat), sans-serif;
     font-size: 0.82rem;
     color: var(--light-gray);
 }
@@ -2541,7 +2532,7 @@ footer {
     justify-content: center;
     text-decoration: none;
     color: var(--light-gray);
-    font-family: var(--font-inter), sans-serif;
+    font-family: var(--font-montserrat), sans-serif;
     font-size: 0.75rem;
     font-weight: 700;
     transition: all 0.25s ease;
@@ -2603,11 +2594,11 @@ footer {
     transition: background 0.2s ease, transform 0.2s ease;
     z-index: 2001;
     line-height: 1;
-    font-family: var(--font-inter), sans-serif;
+    font-family: var(--font-montserrat), sans-serif;
 }
 
 .modal-close:hover {
-    background: #c0313d;
+    background: #e4252b;
     transform: scale(1.1);
 }
 
@@ -2653,7 +2644,7 @@ footer {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    border: 3px solid rgba(230,57,70,0.2);
+    border: 3px solid rgba(228,37,43,0.2);
     border-top-color: var(--red);
     animation: crisp-spin 0.8s linear infinite;
 }
@@ -2673,8 +2664,8 @@ footer {
     width: 100%;
     background-color: #161616;
     background-image:
-        radial-gradient(120% 60% at 50% 0%,   rgba(230,57,70,0.16) 0%, transparent 60%),
-        radial-gradient(80% 60% at 100% 100%, rgba(230,57,70,0.09) 0%, transparent 60%),
+        radial-gradient(120% 60% at 50% 0%,   rgba(228,37,43,0.16) 0%, transparent 60%),
+        radial-gradient(80% 60% at 100% 100%, rgba(228,37,43,0.09) 0%, transparent 60%),
         radial-gradient(rgba(255,255,255,0.06) 2px, transparent 2.5px);
     background-size: auto, auto, 26px 26px;
     border-top: 1px solid var(--border);
@@ -2711,9 +2702,9 @@ footer {
 }
 
 .invest-banner-title {
-    font-family: var(--font-bebas-neue), 'Impact', sans-serif;
+    font-family: var(--font-source-sans), sans-serif; font-weight: 700;
     font-size: 2.1rem;
-    letter-spacing: 0.03em;
+    letter-spacing: -0.066em;
     color: var(--white);
     margin: 0;
 }
@@ -2756,9 +2747,9 @@ footer {
 .invest-modal-header { margin-bottom: 1.5rem; text-align: center; }
 
 .invest-modal-header h3 {
-    font-family: var(--font-bebas-neue), 'Impact', sans-serif;
+    font-family: var(--font-source-sans), sans-serif; font-weight: 700;
     font-size: 1.75rem;
-    letter-spacing: 0.02em;
+    letter-spacing: -0.066em;
     margin-bottom: 0.5rem;
 }
 
@@ -2795,7 +2786,7 @@ footer {
 .invest-modal-form .form-group input:focus {
     border-color: var(--red);
     background: #fff;
-    box-shadow: 0 0 0 3px rgba(230,57,70,0.12);
+    box-shadow: 0 0 0 3px rgba(228,37,43,0.12);
 }
 
 .invest-modal-form .form-group input::placeholder {
@@ -2865,7 +2856,7 @@ footer {
 }
 .cc-inner {
     background: linear-gradient(145deg, rgba(22,16,17,0.97) 0%, rgba(14,10,11,0.98) 100%);
-    border: 1px solid rgba(230,57,70,0.35);
+    border: 1px solid rgba(228,37,43,0.35);
     border-radius: 16px;
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
@@ -2883,14 +2874,14 @@ footer {
 }
 .cc-text strong {
     display: block;
-    font-family: var(--font-bebas-neue), sans-serif;
+    font-family: var(--font-source-sans), sans-serif; font-weight: 700;
     font-size: 1.15rem;
-    letter-spacing: 0.04em;
+    letter-spacing: -0.066em;
     color: var(--white);
     margin-bottom: 0.25rem;
 }
 .cc-text p {
-    font-family: var(--font-inter), sans-serif;
+    font-family: var(--font-montserrat), sans-serif;
     font-size: 0.82rem;
     color: rgba(255,255,255,0.60);
     line-height: 1.55;
@@ -2902,7 +2893,7 @@ footer {
     justify-content: flex-end;
 }
 .cc-btn {
-    font-family: var(--font-inter), sans-serif;
+    font-family: var(--font-montserrat), sans-serif;
     font-size: 0.82rem;
     font-weight: 600;
     padding: 0.55rem 1.25rem;
@@ -2962,11 +2953,11 @@ footer {
 .loc-page-tail { display: none; }
 html:has(.loc-fullpage), body:has(.loc-fullpage) { overflow: hidden; }
 .loc-count-inline {
-    font-family: var(--font-inter), sans-serif;
+    font-family: var(--font-montserrat), sans-serif;
     font-size: 0.82rem;
     font-weight: 700;
     color: rgba(255,255,255,0.75);
-    letter-spacing: 0.04em;
+    letter-spacing: -0.066em;
     text-transform: uppercase;
 }
 .loc-count-inline strong { color: var(--red-soft); font-size: 0.95rem; }
@@ -3001,10 +2992,10 @@ html:has(.loc-fullpage), body:has(.loc-fullpage) { overflow: hidden; }
     text-align: center;
 }
 .locator__panel-header h1 {
-    font-family: var(--font-bebas-neue), sans-serif;
+    font-family: var(--font-source-sans), sans-serif; font-weight: 700;
     font-size: 3.65rem;
     line-height: 1;
-    letter-spacing: 0.01em;
+    letter-spacing: -0.066em;
     color: var(--black);
     margin: 0;
 }
@@ -3072,7 +3063,7 @@ html:has(.loc-fullpage), body:has(.loc-fullpage) { overflow: hidden; }
     border: 1px solid rgba(0,0,0,0.14);
     background: #fbf8f4;
     color: var(--black);
-    font-family: var(--font-inter), sans-serif;
+    font-family: var(--font-montserrat), sans-serif;
     font-size: 0.78rem;
     font-weight: 700;
     cursor: pointer;
@@ -3080,10 +3071,9 @@ html:has(.loc-fullpage), body:has(.loc-fullpage) { overflow: hidden; }
 }
 .locator__state-btn:hover { border-color: var(--red); }
 .locator__state-btn.active {
-    background: linear-gradient(135deg, var(--red) 0%, var(--red-soft) 100%);
+    background: var(--red);
     border-color: transparent;
     color: #fff;
-    box-shadow: 0 3px 10px rgba(230,57,70,0.3);
 }
 
 /* Count "badge", hanging off the map's bottom-right corner like a sticker -
@@ -3108,11 +3098,11 @@ html:has(.loc-fullpage), body:has(.loc-fullpage) { overflow: hidden; }
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, var(--red) 0%, var(--red-soft) 100%);
+    background: var(--red);
     border: 3px solid #fff;
     border-radius: var(--radius-pill);
     padding: 0.65rem 1.7rem;
-    box-shadow: 0 4px 10px rgba(230,57,70,0.25);
+    box-shadow: 0 4px 10px rgba(228,37,43,0.25);
     overflow: visible;
 }
 
@@ -3124,17 +3114,17 @@ html:has(.loc-fullpage), body:has(.loc-fullpage) { overflow: hidden; }
     left: 50%;
     bottom: 0.55rem;
     transform: translate(-58%, 0);
-    font-family: var(--font-bebas-neue), sans-serif;
+    font-family: var(--font-source-sans), sans-serif; font-weight: 700;
     font-size: 12rem;
     line-height: 1;
-    background: linear-gradient(135deg, var(--red) 0%, var(--red-soft) 100%);
+    background: var(--red);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
     -webkit-text-fill-color: transparent;
     -webkit-text-stroke: 3.5px #fff;
     paint-order: stroke fill;
-    text-shadow: 0 4px 10px rgba(230,57,70,0.25);
+    text-shadow: 0 4px 10px rgba(228,37,43,0.25);
     z-index: 1;
     white-space: nowrap;
     animation: locCountGlow 5s ease-in-out infinite;
@@ -3149,10 +3139,10 @@ html:has(.loc-fullpage), body:has(.loc-fullpage) { overflow: hidden; }
 .loc-count-label {
     position: relative;
     z-index: 2;
-    font-family: var(--font-inter), sans-serif;
+    font-family: var(--font-montserrat), sans-serif;
     font-size: 0.68rem;
     font-weight: 800;
-    letter-spacing: 0.08em;
+    letter-spacing: -0.066em;
     text-transform: uppercase;
     color: #fff;
 }
@@ -3231,16 +3221,16 @@ html:has(.loc-fullpage), body:has(.loc-fullpage) { overflow: hidden; }
     border-top: 1px solid rgba(255,255,255,0.08);
 }
 .loc-sitemap__state {
-    font-family: var(--font-inter), sans-serif;
+    font-family: var(--font-montserrat), sans-serif;
     font-size: 0.72rem;
     font-weight: 800;
-    letter-spacing: 0.1em;
+    letter-spacing: -0.066em;
     text-transform: uppercase;
     color: var(--red-soft);
     margin-right: 0.5rem;
 }
 .loc-sitemap a {
-    font-family: var(--font-inter), sans-serif;
+    font-family: var(--font-montserrat), sans-serif;
     font-size: 0.82rem;
     color: rgba(255,255,255,0.55);
     text-decoration: none;
@@ -3275,9 +3265,9 @@ html:has(.loc-fullpage), body:has(.loc-fullpage) { overflow: hidden; }
     transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
 }
 .faq details:hover { transform: translateY(-2px); box-shadow: 0 14px 34px rgba(0,0,0,0.2); }
-.faq details[open] { border-color: rgba(230,57,70,0.4); box-shadow: 0 16px 38px rgba(0,0,0,0.22); }
+.faq details[open] { border-color: rgba(228,37,43,0.4); box-shadow: 0 16px 38px rgba(0,0,0,0.22); }
 .faq summary {
-    font-family: var(--font-inter), sans-serif;
+    font-family: var(--font-montserrat), sans-serif;
     font-weight: 700;
     font-size: 1.08rem;
     color: #fff;
@@ -3307,7 +3297,7 @@ html:has(.loc-fullpage), body:has(.loc-fullpage) { overflow: hidden; }
 }
 .faq details[open] summary::after { transform: rotate(45deg); }
 .faq details p {
-    font-family: var(--font-inter), sans-serif;
+    font-family: var(--font-montserrat), sans-serif;
     font-size: 0.99rem;
     line-height: 1.7;
     color: rgba(255,255,255,0.72);
@@ -3412,10 +3402,10 @@ html:has(.loc-fullpage), body:has(.loc-fullpage) { overflow: hidden; }
     position: absolute;
     inset: 0;
     background:
-        radial-gradient(120% 60% at 50% 0%,   rgba(230,57,70,0.08) 0%, transparent 60%),
-        radial-gradient(120% 60% at 50% 100%, rgba(230,57,70,0.06) 0%, transparent 60%),
-        radial-gradient(60% 100% at 0% 50%,   rgba(230,57,70,0.06) 0%, transparent 55%),
-        radial-gradient(60% 100% at 100% 50%, rgba(230,57,70,0.06) 0%, transparent 55%);
+        radial-gradient(120% 60% at 50% 0%,   rgba(228,37,43,0.08) 0%, transparent 60%),
+        radial-gradient(120% 60% at 50% 100%, rgba(228,37,43,0.06) 0%, transparent 60%),
+        radial-gradient(60% 100% at 0% 50%,   rgba(228,37,43,0.06) 0%, transparent 55%),
+        radial-gradient(60% 100% at 100% 50%, rgba(228,37,43,0.06) 0%, transparent 55%);
     z-index: 0;
 }
 .page-hero .container { position: relative; z-index: 1; }
@@ -3427,7 +3417,7 @@ html:has(.loc-fullpage), body:has(.loc-fullpage) { overflow: hidden; }
     margin-bottom: 0.75rem;
 }
 .page-hero-content p {
-    font-family: var(--font-inter), sans-serif;
+    font-family: var(--font-montserrat), sans-serif;
     font-size: 1.1rem;
     color: rgba(20,17,14,0.6);
     max-width: 540px;
@@ -3443,7 +3433,7 @@ html:has(.loc-fullpage), body:has(.loc-fullpage) { overflow: hidden; }
 }
 .legal-content > .container > div:first-child h2 { margin-top: 0; }
 .legal-content p {
-    font-family: var(--font-inter), sans-serif;
+    font-family: var(--font-montserrat), sans-serif;
     font-size: 1rem;
     line-height: 1.75;
     color: rgba(255,255,255,0.65);
@@ -3526,11 +3516,11 @@ html:has(.loc-fullpage), body:has(.loc-fullpage) { overflow: hidden; }
 }
 
 .featured-card .drink-info h3 {
-    font-family: var(--font-bebas-neue), sans-serif;
+    font-family: var(--font-source-sans), sans-serif; font-weight: 700;
     color: var(--black);
     font-size: 1.7rem;
     line-height: 1.1;
-    letter-spacing: 0.03em;
+    letter-spacing: -0.066em;
     text-transform: uppercase;
 }
 
@@ -3539,7 +3529,7 @@ html:has(.loc-fullpage), body:has(.loc-fullpage) { overflow: hidden; }
     font-size: 0.76rem;
     line-height: 1.5;
     margin: 0;
-    letter-spacing: 0.02em;
+    letter-spacing: -0.066em;
 }
 
 /* Drink Badge (menu card + drink detail page) */
@@ -3553,10 +3543,10 @@ html:has(.loc-fullpage), body:has(.loc-fullpage) { overflow: hidden; }
     -webkit-backdrop-filter: blur(6px);
     border: 1px solid rgba(255,255,255,0.18);
     color: #fff;
-    font-family: var(--font-inter), sans-serif;
+    font-family: var(--font-montserrat), sans-serif;
     font-size: 0.66rem;
     font-weight: 700;
-    letter-spacing: 0.06em;
+    letter-spacing: -0.066em;
     text-transform: uppercase;
     padding: 0.4rem 0.75rem;
     border-radius: var(--radius-pill);
@@ -3592,8 +3582,8 @@ html:has(.loc-fullpage), body:has(.loc-fullpage) { overflow: hidden; }
         url('/images/quote-banner.jpg');
 
     --bg-dark-grid:
-        radial-gradient(120% 60% at 50% 0%,   rgba(230,57,70,0.28) 0%, transparent 60%),
-        radial-gradient(80% 60% at 100% 100%, rgba(230,57,70,0.16) 0%, transparent 60%),
+        radial-gradient(120% 60% at 50% 0%,   rgba(228,37,43,0.28) 0%, transparent 60%),
+        radial-gradient(80% 60% at 100% 100%, rgba(228,37,43,0.16) 0%, transparent 60%),
         radial-gradient(rgba(255,255,255,0.06) 2px, transparent 2.5px);
 }
 
@@ -3735,7 +3725,7 @@ html:has(.loc-fullpage), body:has(.loc-fullpage) { overflow: hidden; }
     width: min(900px, 140vw);
     height: min(900px, 140vw);
     transform: translate(-50%, -50%);
-    background: radial-gradient(circle, rgba(230, 57, 70, 0.35) 0%, rgba(230, 57, 70, 0.12) 35%, transparent 68%);
+    background: radial-gradient(circle, rgba(228,37,43, 0.35) 0%, rgba(228,37,43, 0.12) 35%, transparent 68%);
     pointer-events: none;
 }
 #click-egg-panel {
@@ -3753,15 +3743,15 @@ html:has(.loc-fullpage), body:has(.loc-fullpage) { overflow: hidden; }
 }
 #click-egg-heading {
     margin: 0;
-    font-family: var(--font-bebas-neue), sans-serif;
+    font-family: var(--font-source-sans), sans-serif; font-weight: 700;
     font-size: clamp(3.5rem, 12vw, 7rem);
-    letter-spacing: 0.06em;
+    letter-spacing: -0.066em;
     line-height: 1;
     background: linear-gradient(180deg, #ffffff, var(--red) 85%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
-    text-shadow: 0 0 50px rgba(230, 57, 70, 0.6);
+    text-shadow: 0 0 50px rgba(228,37,43, 0.6);
 }
 #click-egg-sub {
     margin-top: 1.25rem;
@@ -3772,7 +3762,7 @@ html:has(.loc-fullpage), body:has(.loc-fullpage) { overflow: hidden; }
 #click-egg-hint {
     margin-top: 1.5rem;
     font-size: 0.8rem;
-    letter-spacing: 0.14em;
+    letter-spacing: -0.066em;
     text-transform: uppercase;
     color: rgba(245, 245, 245, 0.5);
 }
@@ -3798,7 +3788,7 @@ html:has(.loc-fullpage), body:has(.loc-fullpage) { overflow: hidden; }
 #click-egg-close:not(:disabled) {
     cursor: pointer;
     opacity: 1;
-    border-color: rgba(230, 57, 70, 0.6);
+    border-color: rgba(228,37,43, 0.6);
 }
 #click-egg-close:not(:disabled):hover {
     transform: scale(1.08);

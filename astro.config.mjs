@@ -110,19 +110,20 @@ export default defineConfig({
   // Self-hosts these Google fonts (downloaded and served from our own
   // origin/CDN, no request to fonts.googleapis.com at all) and generates
   // @font-face rules under the same family names already used everywhere
-  // in our CSS (font-family: 'Inter' / 'Bebas Neue' / 'Caveat'), so no CSS
+  // in our CSS (font-family: 'Montserrat' / 'Source Sans 3' / 'Caveat'), so no CSS
   // had to change to pick this up.
   fonts: [
     {
       provider: fontProviders.google(),
-      name: 'Inter',
-      cssVariable: '--font-inter',
-      weights: [400, 500, 600, 700],
+      name: 'Montserrat',
+      cssVariable: '--font-montserrat',
+      weights: [400, 500, 600, 700, 800, 900],
     },
     {
       provider: fontProviders.google(),
-      name: 'Bebas Neue',
-      cssVariable: '--font-bebas-neue',
+      name: 'Source Sans 3', // Google's current name for Source Sans Pro
+      cssVariable: '--font-source-sans',
+      weights: [400, 600, 700],
     },
     {
       provider: fontProviders.google(),

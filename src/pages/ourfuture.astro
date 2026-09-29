@@ -28,9 +28,9 @@ const marketTags = [
     .re-hero { margin-top: 58px; background-color: #161616; background-image: var(--bg-dark-grid); background-size: auto, auto, 26px 26px; position: relative; padding: 6rem 0 5rem; text-align: center; }
     .re-hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(120% 60% at 50% 0%, rgba(255,255,255,0.22) 0%, transparent 55%), radial-gradient(120% 60% at 50% 100%, rgba(255,255,255,0.14) 0%, transparent 55%), radial-gradient(60% 100% at 0% 50%, rgba(255,255,255,0.10) 0%, transparent 55%), radial-gradient(60% 100% at 100% 50%, rgba(255,255,255,0.10) 0%, transparent 55%); pointer-events: none; }
     .re-hero-content { position: relative; z-index: 1; }
-    .re-hero .eyebrow { display: inline-block; font-family: var(--font-inter), sans-serif; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.92); margin-bottom: 1rem; border: 1px solid rgba(255,255,255,0.30); padding: 0.3rem 0.9rem; border-radius: 999px; }
+    .re-hero .eyebrow { display: inline-block; font-family: var(--font-montserrat), sans-serif; font-size: 0.72rem; font-weight: 800; letter-spacing: -0.066em; text-transform: uppercase; color: rgba(255,255,255,0.92); margin-bottom: 1rem; border: 1px solid rgba(255,255,255,0.30); padding: 0.3rem 0.9rem; border-radius: 999px; }
     .re-hero h1 { font-size: clamp(2.8rem, 6vw, 5rem); color: #fff; line-height: 1; margin-bottom: 0.75rem; }
-    .re-hero p { font-family: var(--font-inter), sans-serif; font-size: 1.05rem; color: rgba(255,255,255,0.94); max-width: 540px; margin: 0 auto; line-height: 1.6; }
+    .re-hero p { font-family: var(--font-montserrat), sans-serif; font-size: 1.05rem; color: rgba(255,255,255,0.94); max-width: 540px; margin: 0 auto; line-height: 1.6; }
     .re-overview { background-color: #f4efe9; background-image: var(--bg-quote); background-size: 1250px auto; background-position: top center; background-repeat: repeat; padding: var(--section-pad); }
     .re-overview-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
     /* A grid item defaults to min-width:auto, so a wide child can force the
@@ -39,7 +39,7 @@ const marketTags = [
     .re-overview-text { display: flex; flex-direction: column; justify-content: flex-start; aspect-ratio: 1 / 1; box-sizing: border-box; }
     .re-overview-text h2 { font-size: clamp(1.8rem, 3.5vw, 2.8rem); color: var(--black); line-height: 1.1; margin-bottom: 1.25rem; }
     .re-overview-text h2 span { color: var(--red); }
-    .re-overview-text > p { font-family: var(--font-inter), sans-serif; font-size: 1.08rem; line-height: 1.85; color: rgba(17,17,17,0.62); padding: 0.4rem 0; margin-bottom: 1rem; }
+    .re-overview-text > p { font-family: var(--font-montserrat), sans-serif; font-size: 1.08rem; line-height: 1.85; color: rgba(17,17,17,0.62); padding: 0.4rem 0; margin-bottom: 1rem; }
     /* auto-fit rather than a fixed 1fr 1fr: the two cards sit side by side
        wherever there is room for them and drop to one column on their own
        below roughly 340px of usable width. A fixed two-column track could not
@@ -50,7 +50,7 @@ const marketTags = [
     .re-stat {
       display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
       background:
-          radial-gradient(120% 100% at 100% 0%, rgba(230,57,70,0.16) 0%, transparent 55%),
+          radial-gradient(120% 100% at 100% 0%, rgba(228,37,43,0.16) 0%, transparent 55%),
           linear-gradient(160deg, #282828 0%, #1c1c1c 100%);
       border: 1px solid rgba(255,255,255,0.06);
       border-radius: var(--radius);
@@ -59,11 +59,11 @@ const marketTags = [
       box-shadow: 0 10px 26px rgba(0,0,0,0.16);
       transition: border-color 0.2s, transform 0.2s;
     }
-    .re-stat:hover { border-color: rgba(230,57,70,0.40); transform: translateY(-4px); }
+    .re-stat:hover { border-color: rgba(228,37,43,0.40); transform: translateY(-4px); }
     .re-stat-num { font-size: clamp(2.75rem, 13vw, 3.75rem); font-weight: 900; color: var(--red); line-height: 1; margin-bottom: 0.4rem; }
     .re-stat-num-sm { font-size: clamp(1.9rem, 9vw, 2.5rem); }
-    .re-stat-label { font-family: var(--font-inter), sans-serif; font-size: 0.95rem; color: rgba(255,255,255,0.90); font-weight: 700; letter-spacing: 0.03em; margin-bottom: 0.6rem; }
-    .re-stat-desc { font-family: var(--font-inter), sans-serif; font-size: 1rem; line-height: 1.55; color: rgba(244,239,233,0.80); }
+    .re-stat-label { font-family: var(--font-montserrat), sans-serif; font-size: 0.95rem; color: rgba(255,255,255,0.90); font-weight: 700; letter-spacing: -0.066em; margin-bottom: 0.6rem; }
+    .re-stat-desc { font-family: var(--font-montserrat), sans-serif; font-size: 1rem; line-height: 1.55; color: rgba(244,239,233,0.80); }
     .re-map-img { border-radius: var(--radius); overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.22); position: relative; background: #1a1a1a; aspect-ratio: 1 / 1; }
     .re-map-img img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
     .re-map-img::after { content: ''; position: absolute; inset: 0; border: 1px solid rgba(0,0,0,0.06); border-radius: var(--radius); pointer-events: none; }
@@ -72,11 +72,11 @@ const marketTags = [
     .re-map-grid .re-map-img::after { border-radius: 14px; }
     .re-criteria { background: #161616; padding: var(--section-pad); }
     .re-criteria .section-header h2 { color: #fff; }
-    .re-criteria .section-header p { font-family: var(--font-inter), sans-serif; font-size: 1rem; color: rgba(255,255,255,0.55); margin-top: 0.75rem; max-width: 600px; margin-left: auto; margin-right: auto; }
+    .re-criteria .section-header p { font-family: var(--font-montserrat), sans-serif; font-size: 1rem; color: rgba(255,255,255,0.55); margin-top: 0.75rem; max-width: 600px; margin-left: auto; margin-right: auto; }
     .criteria-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-top: 3rem; }
     .criteria-card {
       background:
-          radial-gradient(120% 100% at 100% 0%, rgba(230,57,70,0.16) 0%, transparent 55%),
+          radial-gradient(120% 100% at 100% 0%, rgba(228,37,43,0.16) 0%, transparent 55%),
           linear-gradient(160deg, #282828 0%, #1c1c1c 100%);
       border: 1px solid rgba(255,255,255,0.06);
       border-radius: var(--radius);
@@ -84,32 +84,32 @@ const marketTags = [
       box-shadow: 0 10px 30px rgba(0,0,0,0.18);
       transition: border-color 0.22s, box-shadow 0.22s, transform 0.22s;
     }
-    .criteria-card:hover { border-color: rgba(230,57,70,0.40); box-shadow: 0 16px 40px rgba(0,0,0,0.24); transform: translateY(-4px); }
+    .criteria-card:hover { border-color: rgba(228,37,43,0.40); box-shadow: 0 16px 40px rgba(0,0,0,0.24); transform: translateY(-4px); }
     .criteria-icon { font-size: 2rem; margin-bottom: 1.1rem; display: block; }
-    .criteria-card h3 { font-family: var(--font-inter), sans-serif; font-size: 1rem; font-weight: 700; color: #fff; text-transform: none; letter-spacing: normal; margin-bottom: 0.6rem; }
-    .criteria-card p { font-family: var(--font-inter), sans-serif; font-size: 0.85rem; line-height: 1.65; color: rgba(255,255,255,0.52); margin: 0; }
+    .criteria-card h3 { font-family: var(--font-montserrat), sans-serif; font-size: 1rem; font-weight: 700; color: #fff; text-transform: none; letter-spacing: -0.066em; margin-bottom: 0.6rem; }
+    .criteria-card p { font-family: var(--font-montserrat), sans-serif; font-size: 0.85rem; line-height: 1.65; color: rgba(255,255,255,0.52); margin: 0; }
     .re-ideal { background-color: #f4efe9; background-image: var(--bg-quote); background-size: 1250px auto; background-position: top center; background-repeat: repeat; position: relative; padding: var(--section-pad); }
-    .re-ideal::before { content: ''; position: absolute; inset: 0; background: radial-gradient(120% 60% at 50% 0%, rgba(230,57,70,0.08) 0%, transparent 55%), radial-gradient(120% 60% at 50% 100%, rgba(230,57,70,0.06) 0%, transparent 55%); pointer-events: none; }
+    .re-ideal::before { content: ''; position: absolute; inset: 0; background: radial-gradient(120% 60% at 50% 0%, rgba(228,37,43,0.08) 0%, transparent 55%), radial-gradient(120% 60% at 50% 100%, rgba(228,37,43,0.06) 0%, transparent 55%); pointer-events: none; }
     .re-ideal .container { position: relative; z-index: 1; }
     .re-ideal .section-header h2 { color: var(--red); }
     .ideal-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-top: 2.5rem; max-width: 860px; margin-left: auto; margin-right: auto; }
     .ideal-item { display: flex; align-items: flex-start; gap: 1rem; background: rgba(255,255,255,0.72); border: 1px solid rgba(17,17,17,0.10); border-radius: 14px; padding: 1.25rem 1.4rem; backdrop-filter: blur(8px); box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
     .ideal-check { flex-shrink: 0; width: 22px; height: 22px; background: var(--red); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-top: 0.1rem; }
     .ideal-check svg { width: 12px; height: 12px; stroke: #fff; stroke-width: 2.5; fill: none; }
-    .ideal-item p { font-family: var(--font-inter), sans-serif; font-size: 0.9rem; line-height: 1.55; color: rgba(17,17,17,0.82); margin: 0; }
+    .ideal-item p { font-family: var(--font-montserrat), sans-serif; font-size: 0.9rem; line-height: 1.55; color: rgba(17,17,17,0.82); margin: 0; }
     .re-locations { position: relative; padding: var(--section-pad); background: var(--black); }
     .re-locations .container { position: relative; z-index: 1; }
     .re-locations .section-header h2 { color: #fff; }
-    .re-locations .section-header p { font-family: var(--font-inter), sans-serif; font-size: 1rem; color: rgba(255,255,255,0.52); margin-top: 0.75rem; }
+    .re-locations .section-header p { font-family: var(--font-montserrat), sans-serif; font-size: 1rem; color: rgba(255,255,255,0.52); margin-top: 0.75rem; }
     .re-location-tags { display: flex; flex-wrap: wrap; gap: 0.65rem; margin-top: 2.5rem; justify-content: center; }
-    .re-location-tag { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.10); border-radius: 999px; padding: 0.45rem 1.1rem; font-family: var(--font-inter), sans-serif; font-size: 0.82rem; font-weight: 600; color: rgba(255,255,255,0.70); transition: border-color 0.2s, color 0.2s; }
+    .re-location-tag { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.10); border-radius: 999px; padding: 0.45rem 1.1rem; font-family: var(--font-montserrat), sans-serif; font-size: 0.82rem; font-weight: 600; color: rgba(255,255,255,0.70); transition: border-color 0.2s, color 0.2s; }
     .re-location-tag:hover { border-color: var(--red); color: #fff; }
-    .re-location-tag.expanding { background: rgba(230,57,70,0.12); border-color: rgba(230,57,70,0.35); color: var(--red); }
+    .re-location-tag.expanding { background: rgba(228,37,43,0.12); border-color: rgba(228,37,43,0.35); color: var(--red); }
     .re-contact { background-color: #f4efe9; background-image: var(--bg-quote); background-size: 1250px auto; background-position: top center; background-repeat: repeat; padding: var(--section-pad); }
     .re-contact .section-header h2 { color: var(--red); }
     .re-contact-inner { max-width: 760px; margin: 3rem auto 0; }
-    .re-contact-or { text-align: center; font-family: var(--font-inter), sans-serif; font-size: 0.82rem; color: rgba(17,17,17,0.55); margin: 1.5rem 0 0.5rem; }
-    .re-contact-email { display: block; text-align: center; font-family: var(--font-inter), sans-serif; font-size: 0.95rem; font-weight: 600; color: var(--red-dark); text-decoration: none; transition: opacity 0.2s; }
+    .re-contact-or { text-align: center; font-family: var(--font-montserrat), sans-serif; font-size: 0.82rem; color: rgba(17,17,17,0.55); margin: 1.5rem 0 0.5rem; }
+    .re-contact-email { display: block; text-align: center; font-family: var(--font-montserrat), sans-serif; font-size: 0.95rem; font-weight: 600; color: var(--red-dark); text-decoration: none; transition: opacity 0.2s; }
     .re-contact-email:hover { opacity: 0.8; }
     @media (max-width: 900px) {
       .re-overview-inner { grid-template-columns: 1fr; gap: 2.5rem; }

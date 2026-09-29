@@ -4,6 +4,8 @@
 // carry different content per environment. Serving it from a route instead
 // lets it read STORYBLOK_DRAFT_MODE and disallow the preview domain
 // entirely, while production keeps the real, fully-open file.
+import { TEMP_NOINDEX } from '../lib/temp-noindex';
+
 export const prerender = import.meta.env.STORYBLOK_DRAFT_MODE !== 'true';
 
 const PRODUCTION_ROBOTS = `# 151 Coffee - robots.txt
@@ -82,9 +84,18 @@ User-agent: *
 Allow: /
 `;
 
+// TEMPORARY (see src/lib/temp-noindex.ts): production serves this until the
+// new site replaces the live one. Same Allow-not-Disallow reasoning as above.
+const TEMP_NOINDEX_ROBOTS = `# Temporarily not for search engines while this site is being built.
+# Crawling is allowed ONLY so crawlers can read the noindex sent on every
+# page. The real site is https://www.151coffee.com
+User-agent: *
+Allow: /
+`;
+
 export function GET() {
   const isDraftPreview = import.meta.env.STORYBLOK_DRAFT_MODE === 'true';
-  return new Response(isDraftPreview ? PREVIEW_ROBOTS : PRODUCTION_ROBOTS, {
+  return new Response(isDraftPreview ? PREVIEW_ROBOTS : TEMP_NOINDEX ? TEMP_NOINDEX_ROBOTS : PRODUCTION_ROBOTS, {
     headers: { 'Content-Type': 'text/plain; charset=utf-8' },
   });
 }

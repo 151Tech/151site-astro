@@ -97,7 +97,7 @@
     resize();
     window.addEventListener('resize', resize);
 
-    var COLORS = ['#E63946', '#ffffff', '#ffc145', '#7a1119'];
+    var COLORS = ['#e4252b', '#ffffff', '#ffc145', '#e4252b'];
     function spawnBurst(n) {
       for (var i = 0; i < n; i++) {
         particles.push({
