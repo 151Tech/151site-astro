@@ -392,20 +392,31 @@
 /* Landmarks near the store. Plain rows rather than the cards above: these
    are places we don't own, so there is nothing to link to and no image to
    show, and a card that isn't clickable invites a click that goes nowhere. */
+/* .ld-more stretches this panel to the height of the About column beside it,
+   which left three short rows stranded at the top. The list takes the spare
+   height and the rows share it, with a cap so a long About column can't
+   stretch them into slabs. */
+.ld-nearby { display: flex; flex-direction: column; }
+
 .ld-landmark-list {
     list-style: none;
     margin: 0;
     padding: 0;
+    flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    justify-content: space-between;
+    gap: 0.6rem;
 }
 
 .ld-landmark {
+    flex: 1 1 0;
+    min-height: 3.2rem;
+    max-height: 5.5rem;
     display: flex;
     align-items: center;
     gap: 0.7rem;
-    padding: 0.7rem 0.9rem;
+    padding: 0.7rem 1rem;
     border-radius: var(--radius-sm);
     background: #fff;
     border: 1px solid rgba(0,0,0,0.06);
