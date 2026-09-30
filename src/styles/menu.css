@@ -1676,6 +1676,58 @@
     align-self: center;
 }
 
+/* Desktop layout for .cz-row's three panels. Deliberately after the base
+   rules above rather than beside them: a media query adds no specificity,
+   so a block placed earlier in the file would lose to them. The ≤900px
+   stacked layout is left alone - it has its own rules further up. */
+@media (min-width: 901px) {
+    /* Panels run the full height of the row, so both dividers are full
+       height instead of only as tall as their own content. */
+    .cz-row {
+        align-items: stretch;
+    }
+
+    /* A fixed column rather than shrink-to-fit, so there is actually a
+       panel to centre the heading inside. */
+    /* Padding is symmetric so the centred text sits on the panel's real
+       midpoint; with padding on the divider side only it lands half the
+       padding to the left of centre. */
+    .cz-heading {
+        flex: 0 0 290px;
+        max-width: none;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        text-align: center;
+        padding: 0 2rem;
+    }
+
+    /* Mirrors the heading panel on the opposite end of the row: same
+       divider, same fixed column. The button filled a fraction of it as an
+       intrinsically-sized pill, leaving a conspicuous gap between it and
+       the flavor pills. */
+    .cz-decide-block {
+        flex: 0 0 clamp(190px, 16vw, 240px);
+        align-self: stretch;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding-left: 2rem;
+        border-left: 1px solid rgba(255,255,255,0.1);
+    }
+
+    /* Fills its column. Wrapping is allowed here (the shared .decide-btn
+       forbids it) because the label has a whole panel to occupy and reads
+       better on two lines than as a wide, thin pill. */
+    .cz-decide-block .decide-btn {
+        width: 100%;
+        white-space: normal;
+        font-size: 1rem;
+        line-height: 1.25;
+        padding: 1.05rem 1.25rem;
+    }
+}
+
 /* Mobile trigger renders right after the last category in the timeline;
    desktop already has the one in .cz-row, so hide this one there. A
    dedicated full-width wrapper centers the (intrinsically-sized) pill
