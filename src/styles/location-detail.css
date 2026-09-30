@@ -389,9 +389,9 @@
     color: #555;
 }
 
-/* Landmarks near the store. Plain rows rather than the cards above: these
-   are places we don't own, so there is nothing to link to and no image to
-   show, and a card that isn't clickable invites a click that goes nowhere. */
+/* Landmarks near the store. No image, unlike the cards above: we don't own
+   these places and have no photo of them. Each row opens the same map of
+   our corner, so they read as one set rather than separate destinations. */
 /* .ld-more stretches this panel to the height of the About column beside it,
    which left three short rows stranded at the top. The list takes the spare
    height and the rows share it, with a cap so a long About column can't
@@ -409,10 +409,16 @@
     gap: 0.6rem;
 }
 
-.ld-landmark {
+/* The row is the <li>; the link fills it, so the whole row is the target. */
+.ld-landmark-list > li {
     flex: 1 1 0;
     min-height: 3.2rem;
     max-height: 5.5rem;
+    display: flex;
+}
+
+.ld-landmark {
+    flex: 1;
     display: flex;
     align-items: center;
     gap: 0.7rem;
@@ -425,6 +431,29 @@
     font-size: 1.02rem;
     letter-spacing: var(--tracking-display);
     color: #111;
+    text-decoration: none;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.ld-landmark:hover { transform: translateY(-2px); border-color: var(--red); }
+.ld-landmark:hover .ld-landmark-arrow { color: var(--red); opacity: 1; }
+
+.ld-landmark:focus-visible {
+    outline: 2px solid var(--red);
+    outline-offset: 2px;
+}
+
+/* Takes the space between the name and the arrow, so the arrow sits hard
+   against the right edge however short the name is. */
+.ld-landmark-name { flex: 1; min-width: 0; }
+
+.ld-landmark-arrow {
+    flex: 0 0 auto;
+    width: 15px;
+    height: 15px;
+    color: #999;
+    opacity: 0.85;
+    transition: color 0.2s ease, opacity 0.2s ease;
 }
 
 /* Small red pin, drawn rather than shipped as an icon file. */

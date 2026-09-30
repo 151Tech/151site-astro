@@ -145,6 +145,13 @@ const miles = (m: number) => `${m < 10 ? m.toFixed(1) : Math.round(m)} mi`;
 const landmarks: string[] = ((nearbyLandmarks as Record<string, any>)[slug as string] ?? []) as string[];
 const hasLandmarks = landmarks.length > 0;
 
+// Every landmark row opens the same place: Google Maps centred on this
+// store's address, so the visitor sees our corner and everything around it
+// rather than being sent off to one particular shop. Built from the address
+// rather than the coordinates because a search on lat/lng drops a bare pin
+// with no name attached to it.
+const nearbyMapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(fullAddress)}`;
+
 // --- About copy ------------------------------------------------------------
 // Storyblok's "Store Description" when an editor has written one (blank
 // lines split paragraphs). Until then, a paragraph built only from this
@@ -324,7 +331,21 @@ const storeSchema = graph(
           <h2 class="ld-section-title">{dl.landmarksHeading ?? "What's Nearby"}</h2>
           <ul class="ld-landmark-list">
             {landmarks.map((name: string) => (
-              <li class="ld-landmark">{name}</li>
+              <li>
+                {/* All three go to the same map. The aria-label says so, since
+                    the visible text alone would promise a page about that
+                    shop. */}
+                <a
+                  class="ld-landmark"
+                  href={nearbyMapUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`${name}: see what's around 151 Coffee ${shortName} on Google Maps`}
+                >
+                  <span class="ld-landmark-name">{name}</span>
+                  <svg class="ld-landmark-arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h7v7"/><path d="M13 3L6.5 9.5"/><path d="M11 10.5V13H3V5h2.5"/></svg>
+                </a>
+              </li>
             ))}
           </ul>
         </div>
