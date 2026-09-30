@@ -3,7 +3,10 @@ import Font from 'astro/components/Font.astro';
 import { getSettings, imageUrl } from '../lib/storyblok';
 import { ogImageUrl, metaDescription } from '../lib/seo';
 import { TEMP_NOINDEX } from '../lib/temp-noindex';
-// Page stylesheets are imported after this one, so they win the cascade.
+// The site-wide stylesheet. Page stylesheets are imported after it, but don't
+// rely on that for the cascade: dev serves them in import order while the
+// production build bundles them, and the order can invert. A page rule that
+// has to beat one in here needs higher specificity, not a later import.
 import '../styles/style.css';
 
 interface Props {

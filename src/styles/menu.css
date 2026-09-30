@@ -1700,7 +1700,11 @@
 }
 
 /* "Help Me Decide" popup */
-.decide-modal-content {
+/* Scoped under .modal on purpose: this overrides .modal-content in
+   style.css, which has the same specificity, so a bare .decide-modal-content
+   only wins while the bundler happens to emit this file last. It doesn't in
+   a production build, and the popup came out white and full width. */
+.modal .decide-modal-content {
     max-width: 460px;
     /* Two soft red blooms in opposite corners, a faint dot-grid for texture,
        over the same dark ground as .customize-section - lively without
