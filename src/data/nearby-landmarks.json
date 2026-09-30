@@ -1,0 +1,18 @@
+{
+  "_comment": "Landmarks near each store, in order: the first is the one shown in the detail tile. Hand-checked against each store's actual corner, not generated. Keep the strongest draw first. Keyed by location slug.",
+  "151-coffee-westworth-village": ["Walmart Supercenter", "Sam's Club", "Lowe's"],
+  "151-coffee-the-colony": ["Nebraska Furniture Mart", "Scheels", "Andretti Indoor Karting & Games"],
+  "151-coffee-north-richland-hills": ["Albertsons", "Big Lots", "CVS Pharmacy"],
+  "151-coffee-roanoke": ["Walmart Supercenter", "Home Depot", "ALDI"],
+  "151-coffee-lewisville": ["Walmart Supercenter", "WinCo Foods", "Lewisville High School"],
+  "151-coffee-burleson": ["Target", "HEB", "Goodwill"],
+  "151-coffee-overland-park": ["Micro Center", "Overland Park Racquet Club", "Natural Grocers"],
+  "151-coffee-manhattan": ["Manhattan Crossing", "Plaza de Maria", "Kansas State University"],
+  "151-coffee-plano": ["Activate Games", "Calloway's Nursery", "Preston Park Village"],
+  "151-coffee-rowlett": ["Target", "Timberlake Shopping Center", "Walmart Supercenter"],
+  "151-coffee-keller": ["Keller Parkway", "Keller Town Center", "Natural Grocers"],
+  "151-coffee-flower-mound": ["Flower Mound Town Center", "Marketplace at Flower Mound", "Flower Mound High School"],
+  "151-coffee-coppell": ["Trader Joe's", "Braewood Shopping Center", "Coppell High School"],
+  "151-coffee-lawrence": ["University of Kansas", "The Malls Shopping Center", "Pet World"],
+  "151-coffee-alliance": ["Main Event", "Hobby Lobby", "WinCo"]
+}

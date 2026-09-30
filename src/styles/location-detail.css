@@ -389,6 +389,44 @@
     color: #555;
 }
 
+/* Landmarks near the store. Plain rows rather than the cards above: these
+   are places we don't own, so there is nothing to link to and no image to
+   show, and a card that isn't clickable invites a click that goes nowhere. */
+.ld-landmark-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.ld-landmark {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.7rem 0.9rem;
+    border-radius: var(--radius-sm);
+    background: #fff;
+    border: 1px solid rgba(0,0,0,0.06);
+    font-family: var(--font-source-sans), sans-serif;
+    font-weight: 700;
+    font-size: 1.02rem;
+    letter-spacing: var(--tracking-display);
+    color: #111;
+}
+
+/* Small red pin, drawn rather than shipped as an icon file. */
+.ld-landmark::before {
+    content: '';
+    flex: 0 0 auto;
+    width: 9px;
+    height: 9px;
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+    background: var(--red);
+}
+
 @media (max-width: 1280px) {
     .ld-detail-card { padding: 1.75rem; }
 }
