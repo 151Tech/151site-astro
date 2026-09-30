@@ -81,7 +81,7 @@ if (ytMatch) {
   (function () {
     var isDesktop = window.matchMedia('(min-width: 769px)').matches;
     function activate() {
-      document.querySelectorAll('video[data-hero-video]').forEach(function (v) {
+      document.querySelectorAll<HTMLVideoElement>('video[data-hero-video]').forEach(function (v) {
         // The blurred backdrop copy only exists to fill space around a
         // contain-fit video on mobile. Don't fetch/decode it on desktop.
         if (isDesktop && v.hasAttribute('data-mobile-only')) return;
@@ -96,9 +96,10 @@ if (ytMatch) {
           if (pr && pr.catch) pr.catch(function () {});
         }
       });
-      document.querySelectorAll('iframe[data-hero-embed]').forEach(function (f) {
-        if (!f.getAttribute('src')) {
-          f.setAttribute('src', f.getAttribute('data-src'));
+      document.querySelectorAll<HTMLIFrameElement>('iframe[data-hero-embed]').forEach(function (f) {
+        var embedSrc = f.getAttribute('data-src');
+        if (!f.getAttribute('src') && embedSrc) {
+          f.setAttribute('src', embedSrc);
           // Some embed contexts silently ignore the passive autoplay=1
           // param (blocked autoplay policy, sandboxed iframe, etc.),
           // which leaves the paused-state overlay (play/rewind/forward)

@@ -7,14 +7,14 @@ import BlockRenderer from '../components/blocks/BlockRenderer.astro';
 import { getPage, getLocations, unwrapSingletons, imageUrl } from '../lib/storyblok';
 import Editable from '../components/Editable.astro';
 
-const [p, locationsEntries] = await Promise.all([
+const [p, locationsEntries]: [any, any[]] = await Promise.all([
   getPage('realestate').then((page) => unwrapSingletons(page as any, [
     'seo', 'hero', 'visibility', 'overview', 'criteria', 'idealSite', 'markets', 'contact',
   ])),
   getLocations(),
 ]);
 const openLocationsCount = locationsEntries.length;
-const marketTags = [
+const marketTags: string[] = [
   ...new Set(locationsEntries.map((l: any) => `${l.city}, ${l.state}`)),
   '+ New Markets Coming',
 ];
@@ -225,7 +225,7 @@ const marketTags = [
           'Strong ingress and egress from main road',
           'High-visibility corner or outparcel location preferred',
           'Suburban and commuter-heavy demographics',
-        ]).map((item: string, i: number) => (
+        ]).map((item: string) => (
           <div class="ideal-item">
             <div class="ideal-check"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
             <p>{item}</p>
@@ -244,7 +244,7 @@ const marketTags = [
         <p>{p.markets?.subheading ?? 'Open in DFW and Kansas City. Actively expanding to new metros.'}</p>
       </div>
       <div class="re-location-tags">
-        {marketTags.map((tag: string, i: number) => (
+        {marketTags.map((tag) => (
           <span class={`re-location-tag${tag.startsWith('+') ? ' expanding' : ''}`}>{tag}</span>
         ))}
       </div>

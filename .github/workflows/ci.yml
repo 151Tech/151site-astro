@@ -1,0 +1,57 @@
+name: CI
+
+# Lint, type-check and unit tests on every push and pull request.
+#
+# There is deliberately no build step. Webflow Cloud injects the Cloudflare
+# adapter at deploy time and runs `astro build` itself; this repo configures
+# no adapter, so a build here fails with NoAdapterInstalled. Adding one just
+# to satisfy CI would mean CI building a different app from the one that
+# ships, which is worse than not building at all.
+#
+# The snapshot-only commits pushed by storyblok-rebuild.yml are skipped: they
+# change content, not code, and every one of them would otherwise queue a
+# full run. A commit touching code as well still runs, because paths-ignore
+# skips a push only when *every* changed path matches.
+on:
+  push:
+    branches: [storyblok-migration, preview]
+    paths-ignore:
+      - 'src/data/storyblok-snapshot.json'
+      - 'storyblok/.last-rebuild-check.json'
+  pull_request:
+  workflow_dispatch: {}
+
+# A fast follow-up push makes the earlier run irrelevant.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          # Matches the `engines.node` floor in package.json.
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      # Needs .astro/types.d.ts, which `astro sync` generates. `astro check`
+      # runs it itself, but only after loading the config - this way a broken
+      # config surfaces as a sync failure rather than a wall of missing-type
+      # errors.
+      - name: Generate Astro types
+        run: npx astro sync
+
+      - name: Type check
+        run: npm run typecheck
+
+      - name: Unit tests
+        run: npm test

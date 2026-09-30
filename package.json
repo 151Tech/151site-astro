@@ -12,7 +12,15 @@
     "astro": "astro",
     "storyblok:generate": "node storyblok/generate-schema.mjs",
     "storyblok:migrate": "node storyblok/migrate.mjs",
-    "storyblok:snapshot": "node storyblok/snapshot.mjs"
+    "storyblok:snapshot": "node storyblok/snapshot.mjs",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "typecheck": "astro check",
+    "check": "npm run lint && npm run typecheck && npm run test"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.3",
@@ -21,7 +29,19 @@
     "storyblok-js-client": "^6.10.7"
   },
   "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "@cloudflare/workers-types": "^5.20260930.2",
+    "@eslint/js": "^10.0.1",
+    "astro-eslint-parser": "^3.2.0",
     "dotenv": "^16.4.5",
-    "js-yaml": "^4.1.0"
+    "eslint": "^10.11.0",
+    "eslint-plugin-astro": "^3.2.1",
+    "globals": "^17.12.0",
+    "js-yaml": "^4.1.0",
+    "prettier": "^3.9.9",
+    "prettier-plugin-astro": "^1.1.0",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.71.0",
+    "vitest": "^5.0.3"
   }
 }

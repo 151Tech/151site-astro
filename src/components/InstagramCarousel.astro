@@ -51,6 +51,14 @@ const items = (media ?? []).slice(0, 3);
 function igLabel(caption?: string): string {
   const text = (caption ?? '')
     .replace(/[#@][\w.]+/g, '')
+    // The class lists the zero-width joiner and variation selector 16 as
+    // members on purpose. ESLint warns because a class can't match a
+    // multi-codepoint emoji as one unit - but we're deleting, not matching:
+    // stripping the pictographs, skin-tone modifiers and these two joiners
+    // one codepoint at a time leaves nothing of the emoji behind, which is
+    // the goal. Matching whole graphemes would need \p{RGI_Emoji} and a `v`
+    // flag, for an identical result here.
+    // eslint-disable-next-line no-misleading-character-class
     .replace(/[\p{Extended_Pictographic}\u{1F3FB}-\u{1F3FF}‍️]/gu, '')
     .replace(/\s+/g, ' ')
     .trim();

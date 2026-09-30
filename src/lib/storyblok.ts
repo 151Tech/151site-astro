@@ -31,7 +31,11 @@ const version = DRAFT_MODE
       ? 'draft'
       : 'published';
 
-async function sbFetch(path: string, params: Record<string, string | number> = {}) {
+// `res.json()` is `unknown`, and the CMS decides these payloads' shape at
+// runtime, so the return is `any` on purpose - the same convention the rest
+// of this module uses for Storyblok content. Without it the `unknown`
+// spreads into every caller's inferred types.
+async function sbFetch(path: string, params: Record<string, string | number> = {}): Promise<any> {
   const url = new URL(`${API_BASE}/${path}`);
   url.searchParams.set('token', import.meta.env.STORYBLOK_TOKEN);
   url.searchParams.set('version', version);

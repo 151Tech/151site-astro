@@ -1,5 +1,20 @@
 {
   "extends": "astro/tsconfigs/strict",
+  "compilerOptions": {
+    // The API routes import `cloudflare:workers`: Webflow Cloud deploys this
+    // site to Cloudflare Workers and injects the adapter at build time, so
+    // the runtime is real even though no adapter is configured here.
+    "types": ["@cloudflare/workers-types"]
+  },
   "include": [".astro/types.d.ts", "**/*"],
-  "exclude": ["dist"]
+  "exclude": [
+    "dist",
+    "node_modules",
+    ".wrangler",
+    // Third-party minified builds. `astro check` ran the whole project out of
+    // memory trying to infer types through the ~1MB MapLibre bundle, and
+    // nothing we write imports it as a module - it loads from a <script> tag
+    // and is declared as the `maplibregl` global.
+    "public/vendor"
+  ]
 }
