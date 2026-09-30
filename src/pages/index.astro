@@ -387,17 +387,4 @@ const homeSchema = graph(
   <BlockRenderer sections={p.sections} />
 
   <Footer />
-
-  <script is:inline>
-    (function () {
-      document.querySelectorAll('.cta-signature').forEach(function (sig) {
-        var rotate = -10 + Math.random() * 14;
-        var left = 42 + Math.random() * 16;
-        var bottom = 0.7 + Math.random() * 1;
-        sig.style.left = left + '%';
-        sig.style.bottom = bottom + 'rem';
-        sig.style.transform = 'translateX(-50%) rotate(' + rotate.toFixed(1) + 'deg)';
-      });
-    })();
-  </script>
 </Layout>

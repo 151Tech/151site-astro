@@ -16,6 +16,9 @@
     --white: #F5F5F5;
     --border: rgba(255,255,255,0.08);
     --section-pad: 6rem 0;
+    /* Tracking for the Source Sans display face used on headings and
+       subtitles. Tight by design, but not so tight it stops reading. */
+    --tracking-display: -0.02em;
     --radius: 20px;
     --radius-sm: 12px;
     --radius-pill: 999px;
@@ -32,7 +35,7 @@
 /* Base */
 body {
     font-family: var(--font-montserrat), -apple-system, BlinkMacSystemFont, sans-serif;
-    letter-spacing: -0.066em;
+    letter-spacing: var(--tracking-display);
     background-color: var(--black);
     color: var(--white);
     line-height: 1.6;
@@ -42,14 +45,14 @@ body {
 h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-source-sans), sans-serif;
     font-weight: 700;
-    letter-spacing: -0.066em;
+    letter-spacing: var(--tracking-display);
     text-transform: uppercase;
 }
 
 h1 { font-size: clamp(2.8rem, 7vw, 5.5rem); }
 h2 { font-size: clamp(1.8rem, 4vw, 3rem); }
 h3 { font-size: clamp(1.4rem, 2.5vw, 1.9rem); }
-h4 { font-size: 1.1rem; letter-spacing: -0.066em; }
+h4 { font-size: 1.1rem; letter-spacing: var(--tracking-display); }
 
 p {
     font-size: 1rem;
@@ -159,7 +162,7 @@ nav.nav-scrolled .nav-container {
     font-weight: 600;
     text-transform: uppercase;
     font-size: 0.9rem;
-    letter-spacing: -0.066em;
+    letter-spacing: var(--tracking-display);
     padding: 0.5rem 1rem;
     display: block;
     white-space: nowrap;
@@ -200,7 +203,7 @@ nav.nav-scrolled .nav-container {
     font-weight: 700;
     text-transform: uppercase;
     font-size: 0.82rem;
-    letter-spacing: -0.066em;
+    letter-spacing: var(--tracking-display);
     border: none;
     border-radius: var(--radius-pill);
     cursor: pointer;
@@ -238,7 +241,7 @@ nav .main-menu-btn { font-size: 0.95rem; }
     font-weight: 700;
     text-transform: uppercase;
     font-size: 0.82rem;
-    letter-spacing: -0.066em;
+    letter-spacing: var(--tracking-display);
     border: 2px solid rgba(255,255,255,0.35);
     border-radius: var(--radius-pill);
     cursor: pointer;
@@ -367,7 +370,7 @@ nav .main-menu-btn { font-size: 0.95rem; }
     font-size: 1rem;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: -0.066em;
+    letter-spacing: var(--tracking-display);
     text-decoration: none;
     padding: 1rem 0;
     border-bottom: 1px solid rgba(0,0,0,0.08);
@@ -607,7 +610,7 @@ nav .main-menu-btn { font-size: 0.95rem; }
     font-size: 0.7rem;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: -0.066em;
+    letter-spacing: var(--tracking-display);
     padding: 0.45rem 1rem;
     border-radius: var(--radius-pill);
     margin-bottom: 1.5rem;
@@ -639,17 +642,35 @@ nav .main-menu-btn { font-size: 0.95rem; }
         margin-bottom: clamp(0.35rem, calc(var(--fd-img-h) * 0.0375), 0.75rem);
     }
     .featured-text h2 {
-        font-size: clamp(1.6rem, min(4.5vw, calc(var(--fd-img-h) * 0.13)), 3rem);
+        font-size: clamp(1.15rem, min(4.5vw, calc(var(--fd-img-h) * 0.13)), 3rem);
         margin-bottom: clamp(0.25rem, calc(var(--fd-img-h) * 0.025), 0.5rem);
     }
     .featured-text p {
-        font-size: clamp(0.9rem, calc(var(--fd-img-h) * 0.04), 1.08rem);
-        margin-bottom: clamp(0.5rem, calc(var(--fd-img-h) * 0.0375), 1rem);
-        /* Truncate so the CTA stays inside the square. */
+        /* Scales with the box so the whole blurb fits rather than being cut
+           off; the clamp is a backstop for unusually long copy, not the
+           normal case. */
+        font-size: clamp(0.72rem, calc(var(--fd-img-h) * 0.045), 1.08rem);
+        line-height: 1.45;
+        margin-bottom: clamp(0.4rem, calc(var(--fd-img-h) * 0.03), 1rem);
+        flex: 0 0 auto;
         display: -webkit-box;
         -webkit-box-orient: vertical;
-        -webkit-line-clamp: 4;
+        -webkit-line-clamp: 8;
         overflow: hidden;
+    }
+    /* Fixed-size items, so the paragraph never gets squeezed to make room. */
+    .featured-drink .featured-badge,
+    .featured-text h2,
+    .featured-text .featured-cta {
+        flex: 0 0 auto;
+    }
+    /* On short screens the square gets narrow enough to wrap the button
+       label over three lines, which is what pushed the copy out of the box. */
+    .featured-text .featured-cta {
+        white-space: nowrap;
+        font-size: clamp(0.72rem, calc(var(--fd-img-h) * 0.036), 0.95rem);
+        padding: clamp(0.5rem, calc(var(--fd-img-h) * 0.034), 0.95rem)
+                 clamp(1rem, calc(var(--fd-img-h) * 0.079), 2.2rem);
     }
     /* The same square as the image. */
     .featured-text {
@@ -669,6 +690,14 @@ nav .main-menu-btn { font-size: 0.95rem; }
     }
 }
 
+/* Short windows: the square hits its 220px floor but the heading doesn't,
+   so it wraps to a third line and pushes the copy out of the box. */
+@media (min-width: 769px) and (max-height: 660px) {
+    .featured-text h2 {
+        font-size: clamp(1.05rem, calc(var(--fd-img-h) * 0.105), 2rem);
+    }
+}
+
 .featured-cta {
     display: inline-block;
     background: var(--red);
@@ -676,7 +705,7 @@ nav .main-menu-btn { font-size: 0.95rem; }
     font-family: var(--font-montserrat), sans-serif;
     font-weight: 600;
     font-size: 0.95rem;
-    letter-spacing: -0.066em;
+    letter-spacing: var(--tracking-display);
     padding: 0.95rem 2.2rem;
     border-radius: var(--radius-pill);
     text-decoration: none;
@@ -749,7 +778,7 @@ nav .main-menu-btn { font-size: 0.95rem; }
     display: inline-block;
     color: var(--red);
     line-height: 1.05;
-    letter-spacing: -0.066em;
+    letter-spacing: var(--tracking-display);
     margin-bottom: 1.1rem;
     text-shadow: 0 1px 19px rgba(0,0,0,0.06);
 }
@@ -797,13 +826,16 @@ nav .main-menu-btn { font-size: 0.95rem; }
 .cta-photo-stack {
     position: relative;
     width: min(300px, 100%);
+    /* The polaroid's white strip below the photo; the signature centres in it. */
+    --cta-strip-h: 5.5rem;
+    --cta-frame: 0.6rem;
 }
 
 /* Polaroid-style frame, with a taller bottom border. */
 .cta-photo {
     background: #fff;
     width: 100%;
-    padding: 0.6rem 0.6rem 5.5rem;
+    padding: var(--cta-frame) var(--cta-frame) var(--cta-strip-h);
     border-radius: 10px;
     box-shadow: 0 20px 50px rgba(0,0,0,0.45);
     position: relative;
@@ -865,27 +897,32 @@ nav .main-menu-btn { font-size: 0.95rem; }
 .cta-photo::after {
     content: '';
     position: absolute;
-    top: 0.6rem;
-    left: 0.6rem;
-    right: 0.6rem;
-    height: calc(100% - 0.6rem - 5.5rem);
+    top: var(--cta-frame);
+    left: var(--cta-frame);
+    right: var(--cta-frame);
+    height: calc(100% - var(--cta-frame) - var(--cta-strip-h));
     border-radius: 2px;
     background: linear-gradient(165deg, rgba(17,17,17,0.24) 0%, rgba(228,37,43,0.2) 100%);
     pointer-events: none;
 }
 
+/* Centred in the white strip, both ways. */
 .cta-signature {
     position: absolute;
-    left: 50%;
-    bottom: 1.1rem;
+    left: var(--cta-frame);
+    right: var(--cta-frame);
+    bottom: 0;
+    height: var(--cta-strip-h);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
     font-family: var(--font-caveat), cursive;
     font-size: 1.9rem;
     font-weight: 600;
     letter-spacing: 0;
     color: #2b2b2b;
-    line-height: 1;
-    white-space: nowrap;
-    transform: translateX(-50%) rotate(-6deg);
+    line-height: 1.1;
 }
 
 /* The one signature that's also a link; styled like the others on purpose. */
@@ -1019,7 +1056,7 @@ nav .main-menu-btn { font-size: 0.95rem; }
 }
 
 .feature-card h3 { color: var(--white); font-size: 1.3rem; margin: 0; }
-.feature-card-subtitle { display: block; color: var(--red-soft); font-family: var(--font-montserrat), sans-serif; font-size: 0.86rem; font-weight: 400; text-transform: none; letter-spacing: -0.066em; margin-top: 0.2rem; }
+.feature-card-subtitle { display: block; color: var(--red-soft); font-family: var(--font-montserrat), sans-serif; font-size: 0.86rem; font-weight: 400; text-transform: none; letter-spacing: var(--tracking-display); margin-top: 0.2rem; }
 .feature-card-subtitle--red { color: var(--red); }
 .feature-card .menu-btn { flex-shrink: 0; padding: 0.6rem 1.1rem; font-size: 0.72rem; }
 
@@ -1089,7 +1126,7 @@ nav .main-menu-btn { font-size: 0.95rem; }
 .locator__competitor-egg-title {
     font-family: var(--font-source-sans), sans-serif; font-weight: 700;
     font-size: clamp(1.8rem, 4vw, 2.4rem);
-    letter-spacing: -0.066em;
+    letter-spacing: var(--tracking-display);
     color: var(--red);
     margin: 0;
 }
@@ -1127,7 +1164,7 @@ nav .main-menu-btn { font-size: 0.95rem; }
     font-size: 0.95rem;
     font-weight: 700;
     text-transform: none;
-    letter-spacing: -0.066em;
+    letter-spacing: var(--tracking-display);
     color: var(--black);
     margin: 0 0 0.3rem;
 }
@@ -1207,7 +1244,7 @@ nav .main-menu-btn { font-size: 0.95rem; }
     font-family: var(--font-montserrat), sans-serif;
     font-size: clamp(0.74rem, 0.58rem + 1.7cqi, 1rem);
     font-weight: 800;
-    letter-spacing: -0.066em;
+    letter-spacing: var(--tracking-display);
     color: var(--black);
     margin: 0;
     white-space: nowrap;
@@ -1259,7 +1296,7 @@ nav .main-menu-btn { font-size: 0.95rem; }
     font-size: 0.72rem;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: -0.066em;
+    letter-spacing: var(--tracking-display);
     padding: 0.5rem 1rem;
     border-radius: var(--radius-pill);
     transition: transform 0.25s ease, box-shadow 0.25s ease;
@@ -1283,7 +1320,7 @@ nav .main-menu-btn { font-size: 0.95rem; }
     font-size: 0.72rem;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: -0.066em;
+    letter-spacing: var(--tracking-display);
     transition: gap 0.2s ease;
 }
 .locator__more-info svg { width: 12px; height: 12px; flex-shrink: 0; }
@@ -1342,6 +1379,8 @@ nav .main-menu-btn { font-size: 0.95rem; }
     font-family: var(--font-montserrat), sans-serif;
     font-size: 0.85rem;
     font-weight: 700;
+    /* Kept tight on purpose: these sit over the map and have to stay narrow
+       enough not to collide with the next pin. */
     letter-spacing: -0.066em;
     padding: 0.3rem 0.75rem;
     white-space: nowrap;
@@ -1395,7 +1434,7 @@ nav .main-menu-btn { font-size: 0.95rem; }
     margin: 0;
     font-family: var(--font-source-sans), sans-serif; font-weight: 700;
     font-size: 1.6rem;
-    letter-spacing: -0.066em;
+    letter-spacing: var(--tracking-display);
     color: var(--black);
 }
 .ld-map-fallback-address {
@@ -1507,7 +1546,7 @@ nav .main-menu-btn { font-size: 0.95rem; }
     font-size: 0.68rem;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: -0.066em;
+    letter-spacing: var(--tracking-display);
     text-decoration: none;
     width: fit-content;
     transition: gap 0.2s ease, color 0.2s ease;
@@ -1666,7 +1705,7 @@ nav .main-menu-btn { font-size: 0.95rem; }
     font-size: 0.66rem;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: -0.066em;
+    letter-spacing: var(--tracking-display);
     opacity: 0;
     transition: opacity 0.4s ease;
     pointer-events: none;
@@ -1915,7 +1954,7 @@ nav .main-menu-btn { font-size: 0.95rem; }
     text-align: left;
     color: var(--white);
     text-transform: uppercase;
-    letter-spacing: -0.066em;
+    letter-spacing: var(--tracking-display);
     line-height: 1.6;
     margin: 0;
 }
@@ -1999,7 +2038,7 @@ nav .main-menu-btn { font-size: 0.95rem; }
     text-transform: uppercase;
     font-family: var(--font-montserrat), sans-serif;
     font-size: 0.72rem;
-    letter-spacing: -0.066em;
+    letter-spacing: var(--tracking-display);
     font-weight: 600;
 }
 
@@ -2067,7 +2106,7 @@ form[data-ajax-form] { position: relative; }
     font-family: var(--font-source-sans), sans-serif; font-weight: 700;
     font-size: clamp(2.2rem, 6vw, 3rem);
     line-height: 1;
-    letter-spacing: -0.066em;
+    letter-spacing: var(--tracking-display);
 }
 
 .form-sent__msg {
@@ -2136,7 +2175,7 @@ form[data-ajax-form] { position: relative; }
     text-transform: uppercase;
     font-family: var(--font-montserrat), sans-serif;
     font-weight: 700;
-    letter-spacing: -0.066em;
+    letter-spacing: var(--tracking-display);
     font-size: 0.82rem;
     cursor: pointer;
     transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s ease;
@@ -2182,7 +2221,7 @@ footer {
     font-weight: 700;
     color: var(--red);
     text-transform: uppercase;
-    letter-spacing: -0.066em;
+    letter-spacing: var(--tracking-display);
     margin-bottom: 1.25rem;
 }
 
@@ -2480,7 +2519,7 @@ footer {
 .invest-banner-title {
     font-family: var(--font-source-sans), sans-serif; font-weight: 700;
     font-size: 2.1rem;
-    letter-spacing: -0.066em;
+    letter-spacing: var(--tracking-display);
     color: var(--white);
     margin: 0;
 }
@@ -2525,7 +2564,7 @@ footer {
 .invest-modal-header h3 {
     font-family: var(--font-source-sans), sans-serif; font-weight: 700;
     font-size: 1.75rem;
-    letter-spacing: -0.066em;
+    letter-spacing: var(--tracking-display);
     margin-bottom: 0.5rem;
 }
 
@@ -2650,7 +2689,7 @@ footer {
     display: block;
     font-family: var(--font-source-sans), sans-serif; font-weight: 700;
     font-size: 1.15rem;
-    letter-spacing: -0.066em;
+    letter-spacing: var(--tracking-display);
     color: var(--white);
     margin-bottom: 0.25rem;
 }
@@ -2729,7 +2768,7 @@ html:has(.loc-fullpage), body:has(.loc-fullpage) { overflow: hidden; }
     font-size: 0.82rem;
     font-weight: 700;
     color: rgba(255,255,255,0.75);
-    letter-spacing: -0.066em;
+    letter-spacing: var(--tracking-display);
     text-transform: uppercase;
 }
 .loc-count-inline strong { color: var(--red-soft); font-size: 0.95rem; }
@@ -2764,7 +2803,7 @@ html:has(.loc-fullpage), body:has(.loc-fullpage) { overflow: hidden; }
     font-size: min(3.65rem, 17cqi);
     white-space: nowrap;
     line-height: 1;
-    letter-spacing: -0.066em;
+    letter-spacing: var(--tracking-display);
     color: var(--black);
     margin: 0;
 }
@@ -2902,7 +2941,7 @@ html:has(.loc-fullpage), body:has(.loc-fullpage) { overflow: hidden; }
     font-family: var(--font-montserrat), sans-serif;
     font-size: 0.68rem;
     font-weight: 800;
-    letter-spacing: -0.066em;
+    letter-spacing: var(--tracking-display);
     text-transform: uppercase;
     color: #fff;
 }
@@ -2972,7 +3011,7 @@ html:has(.loc-fullpage), body:has(.loc-fullpage) { overflow: hidden; }
     font-family: var(--font-montserrat), sans-serif;
     font-size: 0.72rem;
     font-weight: 800;
-    letter-spacing: -0.066em;
+    letter-spacing: var(--tracking-display);
     text-transform: uppercase;
     color: var(--red-soft);
     margin-right: 0.5rem;
@@ -3250,7 +3289,7 @@ html:has(.loc-fullpage), body:has(.loc-fullpage) { overflow: hidden; }
     color: var(--black);
     font-size: 1.7rem;
     line-height: 1.1;
-    letter-spacing: -0.066em;
+    letter-spacing: var(--tracking-display);
     text-transform: uppercase;
 }
 
@@ -3259,7 +3298,7 @@ html:has(.loc-fullpage), body:has(.loc-fullpage) { overflow: hidden; }
     font-size: 0.76rem;
     line-height: 1.5;
     margin: 0;
-    letter-spacing: -0.066em;
+    letter-spacing: var(--tracking-display);
 }
 
 /* Drink badge (menu card and drink page) */
@@ -3276,7 +3315,7 @@ html:has(.loc-fullpage), body:has(.loc-fullpage) { overflow: hidden; }
     font-family: var(--font-montserrat), sans-serif;
     font-size: 0.66rem;
     font-weight: 700;
-    letter-spacing: -0.066em;
+    letter-spacing: var(--tracking-display);
     text-transform: uppercase;
     padding: 0.4rem 0.75rem;
     border-radius: var(--radius-pill);
@@ -3452,7 +3491,7 @@ html:has(.loc-fullpage), body:has(.loc-fullpage) { overflow: hidden; }
     margin: 0;
     font-family: var(--font-source-sans), sans-serif; font-weight: 700;
     font-size: clamp(3.5rem, 12vw, 7rem);
-    letter-spacing: -0.066em;
+    letter-spacing: var(--tracking-display);
     line-height: 1;
     background: linear-gradient(180deg, #ffffff, var(--red) 85%);
     -webkit-background-clip: text;
@@ -3469,7 +3508,7 @@ html:has(.loc-fullpage), body:has(.loc-fullpage) { overflow: hidden; }
 #click-egg-hint {
     margin-top: 1.5rem;
     font-size: 0.8rem;
-    letter-spacing: -0.066em;
+    letter-spacing: var(--tracking-display);
     text-transform: uppercase;
     color: rgba(245, 245, 245, 0.5);
 }

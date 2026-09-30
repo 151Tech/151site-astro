@@ -7,7 +7,7 @@ const f = s.footer ?? {};
 const cmsCompanyLinks: { label: string; href: string }[] = f.companyLinks ?? [
   { label: 'About Us', href: '/about' },
   { label: 'Careers', href: '/careers' },
-  { label: 'Privacy Policy', href: '/privacy-policy' },
+  { label: 'Locations', href: '/locations' },
   { label: 'Real Estate', href: '/realestate' },
 ];
 
@@ -47,7 +47,10 @@ const igAppUrl = igUsername ? `instagram://user?username=${igUsername}` : undefi
         <ul>
           <li><a href={`mailto:${s.email ?? 'Contact@151Coffee.com'}`}>{f.contactLabel ?? 'Contact'}</a></li>
           <li><a href={`tel:${(s.phone ?? '').replace(/\D/g,'')}`}>{f.callLabel ?? 'Call Us'}</a></li>
-          <li><a href={`mailto:${s.email ?? 'Contact@151Coffee.com'}`}>{f.supportLabel ?? 'Support'}</a></li>
+          {/* Storyblok has no href field on this row, so the target lives here.
+              It's the privacy policy page - the two mailto rows above already
+              cover "get in touch". */}
+          <li><a href="/privacy-policy">{f.supportLabel ?? 'Privacy Policy'}</a></li>
           <li><button type="button" id="giftCardFooterSupportBtn">{f.giftCardCheckLabel ?? 'Check Gift Card'}</button></li>
         </ul>
       </div>

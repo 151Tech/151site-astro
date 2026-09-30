@@ -37,7 +37,7 @@ const slug = drink?.slug;
 // unknown slug in the first place.
 if (!drink) return Astro.rewrite('/404');
 const m = unwrapSingletons(menuData as any, [
-  'seo', 'visibility', 'hero', 'labels', 'locationPicker', 'drinkPage', 'customize',
+  'seo', 'visibility', 'hero', 'labels', 'locationPicker', 'drinkPage',
 ]);
 
 // drink.category holds a Storyblok slug like "categories/coffee"; resolve it to the title.
@@ -138,30 +138,6 @@ const drinkSchema = graph(
           )}
 
           <a href="/menu" class="dk-menu-link">{m.drinkPage?.viewMenuLabel ?? 'View Full Menu'}</a>
-        </div>
-      </div>
-    </div>
-
-    <div class="dk-customize-wrap">
-      <div class="dk-customize-card">
-        <h3 class="dk-customize-heading">{m.drinkPage?.customizeHeading ?? 'Customize Your Drink'}</h3>
-        <div class="dk-customize-rows">
-          <div class="dk-customize-row">
-            <h4>{m.drinkPage?.flavorsHeading ?? 'Flavors'}</h4>
-            <div class="dk-customize-tags">
-              {(m.customize?.flavors ?? []).map((f: string, i: number) => (
-                <span class="dk-customize-tag">{f}</span>
-              ))}
-            </div>
-          </div>
-          <div class="dk-customize-row">
-            <h4>{m.drinkPage?.sugarFreeHeading ?? 'Sugar Free'}</h4>
-            <div class="dk-customize-tags">
-              {(m.customize?.sfFlavors ?? []).map((f: string, i: number) => (
-                <span class="dk-customize-tag sf">{f}</span>
-              ))}
-            </div>
-          </div>
         </div>
       </div>
     </div>

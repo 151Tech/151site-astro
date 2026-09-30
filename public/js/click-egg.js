@@ -96,8 +96,11 @@
     window.addEventListener('resize', resize);
 
     const COLORS = ['#e4252b', '#ffffff', '#ffc145', '#e4252b'];
+    // A hidden tab stops painting but keeps firing timers, so nothing would
+    // clear the array; the cap keeps it bounded either way.
+    const MAX_PARTICLES = 420;
     function spawnBurst(n) {
-      for (let i = 0; i < n; i++) {
+      for (let i = 0; i < n && particles.length < MAX_PARTICLES; i++) {
         particles.push({
           x: Math.random() * canvas.width,
           y: -20 - Math.random() * canvas.height * 0.4,
@@ -112,10 +115,11 @@
       }
     }
 
+    let refillInterval = null;
     if (!reduceMotion) {
       spawnBurst(160);
-      const refillInterval = setInterval(function () {
-        if (running) spawnBurst(24);
+      refillInterval = setInterval(function () {
+        if (running && !document.hidden) spawnBurst(24);
       }, 260);
     }
 
@@ -143,9 +147,13 @@
     }
     if (!reduceMotion) requestAnimationFrame(tick);
 
+    let dismissed = false;
     function dismiss() {
+      if (dismissed) return;
+      dismissed = true;
       running = false;
       if (refillInterval) clearInterval(refillInterval);
+      refillInterval = null;
       window.removeEventListener('resize', resize);
       window.removeEventListener('keydown', onKey);
       overlay.classList.add('click-egg-leaving');

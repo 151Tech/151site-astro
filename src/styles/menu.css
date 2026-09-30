@@ -111,7 +111,7 @@
     font-size: clamp(0.5rem, 1.1vw, 0.8rem);
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: -0.066em;
+    letter-spacing: var(--tracking-display);
     padding: 0.5rem 0.4rem;
     margin: 0 0.2rem 0.75rem;
     cursor: pointer;
@@ -246,7 +246,7 @@
 .cat-title-text {
     font-family: var(--font-source-sans), sans-serif; font-weight: 700;
     font-size: clamp(2.3rem, 4.8vw, 4.1rem);
-    letter-spacing: -0.066em;
+    letter-spacing: var(--tracking-display);
     color: #1a1512;
     line-height: 0.95;
     margin: 0;
@@ -390,7 +390,7 @@
     color: #1a1512;
     font-size: 1.7rem;
     line-height: 1.1;
-    letter-spacing: -0.066em;
+    letter-spacing: var(--tracking-display);
     text-transform: uppercase;
 }
 
@@ -399,7 +399,7 @@
     font-size: 0.76rem;
     line-height: 1.5;
     margin: 0;
-    letter-spacing: -0.066em;
+    letter-spacing: var(--tracking-display);
 }
 
 /* Descriptor Card */
@@ -435,7 +435,7 @@
     font-size: 0.65rem;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: -0.066em;
+    letter-spacing: var(--tracking-display);
     color: rgba(20,17,14,0.45);
     margin: 0;
 }
@@ -502,7 +502,7 @@
 .cz-heading h2 {
     font-family: var(--font-source-sans), sans-serif;
     font-size: clamp(1.8rem, 3.2vw, 2.4rem);
-    letter-spacing: -0.066em;
+    letter-spacing: var(--tracking-display);
     color: #f5efe8;
     font-weight: 700;
     line-height: 1.1;
@@ -520,7 +520,7 @@
     font-size: 0.7rem;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: -0.066em;
+    letter-spacing: var(--tracking-display);
     color: var(--red);
     margin: 0 0 0.75rem;
 }
@@ -623,7 +623,7 @@
     font-family: var(--font-source-sans), sans-serif; font-weight: 700;
     font-size: clamp(1.6rem, 4vw, 2.4rem);
     color: rgba(255,255,255,0.9);
-    letter-spacing: -0.066em;
+    letter-spacing: var(--tracking-display);
     margin: 0;
     line-height: 1.25;
 }
@@ -632,7 +632,7 @@
     font-size: 0.85rem;
     color: rgba(255,255,255,0.45);
     font-weight: 400;
-    letter-spacing: -0.066em;
+    letter-spacing: var(--tracking-display);
 }
 
 .cz-filter-hint {
@@ -1121,7 +1121,7 @@
 .menu-simple-mode .descriptor-label-line {
     font-size: 0.68rem;
     font-weight: 700;
-    letter-spacing: -0.066em;
+    letter-spacing: var(--tracking-display);
     text-transform: uppercase;
     line-height: 1.05;
     white-space: nowrap;
@@ -1257,7 +1257,7 @@
     font-family: var(--font-montserrat), sans-serif;
     font-size: 0.82rem;
     font-weight: 600;
-    letter-spacing: -0.066em;
+    letter-spacing: var(--tracking-display);
     padding: 0.6rem 1.1rem;
     border-radius: var(--radius-pill);
     cursor: pointer;
@@ -1321,7 +1321,7 @@
     font-family: var(--font-montserrat), sans-serif;
     font-size: 0.7rem;
     font-weight: 700;
-    letter-spacing: -0.066em;
+    letter-spacing: var(--tracking-display);
     text-transform: uppercase;
     color: rgba(0,0,0,0.35);
     width: 100%;
@@ -1340,7 +1340,7 @@
     font-family: var(--font-montserrat), sans-serif;
     font-size: 0.85rem;
     font-weight: 600;
-    letter-spacing: -0.066em;
+    letter-spacing: var(--tracking-display);
     padding: 0.5rem 1.15rem;
     border-radius: var(--radius-pill);
     cursor: pointer;
@@ -1407,7 +1407,7 @@
     font-family: var(--font-montserrat), sans-serif;
     font-size: 0.82rem;
     font-weight: 600;
-    letter-spacing: -0.066em;
+    letter-spacing: var(--tracking-display);
     padding: 0.6rem 1.1rem;
     border-radius: var(--radius-pill);
     cursor: pointer;
@@ -1653,7 +1653,7 @@
     font-family: var(--font-montserrat), sans-serif;
     font-size: 0.92rem;
     font-weight: 700;
-    letter-spacing: -0.066em;
+    letter-spacing: var(--tracking-display);
     padding: 0.85rem 1.6rem;
     cursor: pointer;
     white-space: nowrap;
@@ -1720,7 +1720,7 @@
     font-size: 0.72rem;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: -0.066em;
+    letter-spacing: var(--tracking-display);
     color: var(--red);
     margin: 0 0 1.1rem;
 }
@@ -1784,7 +1784,7 @@
     font-family: var(--font-source-sans), sans-serif; font-weight: 700;
     color: #f5efe8;
     font-size: 1.9rem;
-    letter-spacing: -0.066em;
+    letter-spacing: var(--tracking-display);
     line-height: 1.1;
     margin: 0 0 0.35rem;
     opacity: 0;

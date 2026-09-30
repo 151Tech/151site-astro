@@ -57,7 +57,7 @@
     border-radius: 100px;
     font-size: 0.72rem;
     font-weight: 500;
-    letter-spacing: -0.066em;
+    letter-spacing: var(--tracking-display);
     text-transform: uppercase;
     padding: 0.25rem 0.65rem;
 }
@@ -69,7 +69,7 @@
     color: rgba(255,255,255,0.9);
     font-size: 0.85rem;
     font-weight: 500;
-    letter-spacing: -0.066em;
+    letter-spacing: var(--tracking-display);
     text-transform: uppercase;
     text-decoration: none;
     transition: color 0.2s ease;
@@ -93,7 +93,7 @@
     border-radius: 100px;
     font-size: 0.78rem;
     font-weight: 700;
-    letter-spacing: -0.066em;
+    letter-spacing: var(--tracking-display);
     text-transform: uppercase;
     padding: 0.3rem 0.85rem;
 }
@@ -103,7 +103,7 @@
     font-size: clamp(3rem, 7vw, 6rem);
     color: #fff;
     line-height: 1;
-    letter-spacing: -0.066em;
+    letter-spacing: var(--tracking-display);
     margin: 0;
 }
 
@@ -201,7 +201,7 @@
     font-size: clamp(2.2rem, 4vw, 3.4rem);
     color: #fff;
     line-height: 1;
-    letter-spacing: -0.066em;
+    letter-spacing: var(--tracking-display);
     margin: 0;
 }
 
@@ -222,7 +222,7 @@
 .dk-flavor-label {
     font-size: 0.72rem;
     font-weight: 700;
-    letter-spacing: -0.066em;
+    letter-spacing: var(--tracking-display);
     text-transform: uppercase;
     color: rgba(255,255,255,0.55);
     margin: 0;
@@ -241,7 +241,7 @@
     color: #fff;
     font-size: 0.85rem;
     font-weight: 700;
-    letter-spacing: -0.066em;
+    letter-spacing: var(--tracking-display);
     text-transform: uppercase;
     text-decoration: none;
     padding: 0.9rem 1.9rem;
@@ -253,83 +253,6 @@
 
 .dk-menu-link:hover {
     transform: translateY(-2px);
-}
-
-/* Customize card - full-width card below the image/detail row.
-   Flavors and Sugar Free rows sit side by side so the tag clouds
-   have room to wrap across the full card width. */
-.dk-customize-wrap {
-    position: relative;
-    z-index: 1;
-    max-width: 1200px;
-    margin: 2.5rem auto 0;
-}
-
-.dk-customize-card {
-    background:
-        radial-gradient(120% 100% at 100% 0%, rgba(228,37,43,0.16) 0%, transparent 55%),
-        linear-gradient(160deg, #242424 0%, #161616 100%);
-    border: 1px solid rgba(255,255,255,0.07);
-    border-radius: var(--radius);
-    padding: 2.5rem 3rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-    box-shadow: 0 24px 60px rgba(0,0,0,0.22);
-}
-
-.dk-customize-heading {
-    font-family: var(--font-source-sans), sans-serif; font-weight: 700;
-    font-size: clamp(1.15rem, 1.8vw, 1.4rem);
-    color: var(--red);
-    letter-spacing: -0.066em;
-    text-align: left;
-    margin: 0;
-}
-
-.dk-customize-rows {
-    display: flex;
-    flex-direction: row;
-    gap: 2.5rem;
-}
-
-.dk-customize-row {
-    flex: 1;
-    min-width: 0;
-}
-
-.dk-customize-row h4 {
-    font-family: var(--font-montserrat), sans-serif;
-    font-size: 0.7rem;
-    font-weight: 700;
-    letter-spacing: -0.066em;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.55);
-    margin: 0 0 0.65rem;
-}
-
-.dk-customize-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem;
-}
-
-.dk-customize-tag {
-    display: inline-block;
-    background: rgba(255,255,255,0.05);
-    color: rgba(255,255,255,0.75);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 100px;
-    font-family: var(--font-montserrat), sans-serif;
-    font-size: 0.78rem;
-    font-weight: 500;
-    padding: 0.3rem 0.75rem;
-}
-
-.dk-customize-tag.sf {
-    border-color: rgba(228,37,43,0.3);
-    color: rgba(228,37,43,0.85);
-    background: rgba(228,37,43,0.06);
 }
 
 /* Responsive */
@@ -359,11 +282,6 @@
         height: auto;
         aspect-ratio: 1 / 1;
     }
-
-    .dk-customize-rows {
-        flex-direction: column;
-        gap: 1.25rem;
-    }
 }
 
 @media (max-width: 600px) {
@@ -382,10 +300,6 @@
     .dk-img-col .featured-card .drink-img-wrap {
         height: auto;
         aspect-ratio: 1 / 1;
-    }
-
-    .dk-customize-card {
-        padding: 2rem 1.5rem;
     }
 }
 
