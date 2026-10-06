@@ -25,7 +25,7 @@ const marketTags: string[] = [
   ogImage={imageUrl(p.seo?.ogImage, { width: 1200, height: 630 })}
 >
   <style is:global slot="head">
-    .re-hero { margin-top: 58px; background-color: #161616; background-image: var(--bg-dark-grid); background-size: auto, auto, 26px 26px; position: relative; padding: 6rem 0 5rem; text-align: center; }
+    .re-hero { margin-top: 58px; background-color: var(--dark-ground); background-image: var(--bg-dark); background-size: auto; position: relative; padding: 6rem 0 5rem; text-align: center; }
     .re-hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(120% 60% at 50% 0%, rgba(255,255,255,0.22) 0%, transparent 55%), radial-gradient(120% 60% at 50% 100%, rgba(255,255,255,0.14) 0%, transparent 55%), radial-gradient(60% 100% at 0% 50%, rgba(255,255,255,0.10) 0%, transparent 55%), radial-gradient(60% 100% at 100% 50%, rgba(255,255,255,0.10) 0%, transparent 55%); pointer-events: none; }
     .re-hero-content { position: relative; z-index: 1; }
     .re-hero .eyebrow { display: inline-block; font-family: var(--font-montserrat), sans-serif; font-size: 0.72rem; font-weight: 800; letter-spacing: var(--tracking-display); text-transform: uppercase; color: rgba(255,255,255,0.92); margin-bottom: 1rem; border: 1px solid rgba(255,255,255,0.30); padding: 0.3rem 0.9rem; border-radius: 999px; }
@@ -70,7 +70,7 @@ const marketTags: string[] = [
     .re-map-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
     .re-map-grid .re-map-img { border-radius: 14px; }
     .re-map-grid .re-map-img::after { border-radius: 14px; }
-    .re-criteria { background: #161616; padding: var(--section-pad); }
+    .re-criteria { background: var(--dark-ground); padding: var(--section-pad); }
     .re-criteria .section-header h2 { color: #fff; }
     .re-criteria .section-header p { font-family: var(--font-montserrat), sans-serif; font-size: 1rem; color: rgba(255,255,255,0.55); margin-top: 0.75rem; max-width: 600px; margin-left: auto; margin-right: auto; }
     .criteria-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-top: 3rem; }
