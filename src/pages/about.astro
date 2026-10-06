@@ -155,8 +155,9 @@ if (Array.isArray(p.founder?.bio)) {
     .venture-card:hover { border-color: rgba(228,37,43,0.35); }
     .venture-name { font-family: var(--font-montserrat), sans-serif; font-size: 0.88rem; font-weight: 700; color: #fff; margin-bottom: 0.3rem; }
     .venture-desc { font-family: var(--font-montserrat), sans-serif; font-size: 0.8rem; line-height: 1.55; color: rgba(255,255,255,0.50); }
+    /* Flat red under the dots. The white glows that used to sit on top in
+       a ::before overlay are gone - the dot tile is the only texture. */
     .about-cta { background-color: var(--red); background-image: radial-gradient(rgba(255,255,255,0.18) 2px, transparent 2.5px); background-size: 26px 26px; position: relative; padding: 5rem 0; text-align: center; }
-    .about-cta::before { content: ''; position: absolute; inset: 0; background: radial-gradient(120% 60% at 50% 0%, rgba(255,255,255,0.22) 0%, transparent 55%), radial-gradient(120% 60% at 50% 100%, rgba(255,255,255,0.14) 0%, transparent 55%); pointer-events: none; }
     .about-cta .container { position: relative; z-index: 1; }
     .about-cta h2 { font-size: clamp(2rem, 4vw, 3rem); color: #fff; margin-bottom: 0.75rem; line-height: 1.1; }
     .about-cta p { font-family: var(--font-montserrat), sans-serif; font-size: 1rem; color: rgba(255,255,255,0.94); max-width: 500px; margin: 0 auto 2rem; line-height: 1.6; }

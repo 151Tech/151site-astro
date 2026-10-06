@@ -2483,9 +2483,8 @@ footer {
     background-color: #161616;
     background-image:
         radial-gradient(120% 60% at 50% 0%,   rgba(228,37,43,0.16) 0%, transparent 60%),
-        radial-gradient(80% 60% at 100% 100%, rgba(228,37,43,0.09) 0%, transparent 60%),
-        radial-gradient(rgba(255,255,255,0.06) 2px, transparent 2.5px);
-    background-size: auto, auto, 26px 26px;
+        radial-gradient(80% 60% at 100% 100%, rgba(228,37,43,0.09) 0%, transparent 60%);
+    background-size: auto;
     border-top: 1px solid var(--border);
     border-bottom: 1px solid var(--border);
     padding: 1rem 0;
@@ -3345,6 +3344,13 @@ html:has(.loc-fullpage), body:has(.loc-fullpage) { overflow: hidden; }
         radial-gradient(120% 60% at 50% 0%,   rgba(228,37,43,0.28) 0%, transparent 60%),
         radial-gradient(80% 60% at 100% 100%, rgba(228,37,43,0.16) 0%, transparent 60%),
         radial-gradient(rgba(255,255,255,0.06) 2px, transparent 2.5px);
+
+    /* --bg-dark-grid without the dot tile, for the bands that want the
+       glow but not the texture. Kept in step with it by hand: the dots
+       are a separate layer, not something a value can switch off. */
+    --bg-dark-glow:
+        radial-gradient(120% 60% at 50% 0%,   rgba(228,37,43,0.28) 0%, transparent 60%),
+        radial-gradient(80% 60% at 100% 100%, rgba(228,37,43,0.16) 0%, transparent 60%);
 }
 
 .featured-drink,
@@ -3361,8 +3367,8 @@ html:has(.loc-fullpage), body:has(.loc-fullpage) { overflow: hidden; }
 
 .faq {
     background-color: #161616;
-    background-image: var(--bg-dark-grid);
-    background-size: auto, auto, 26px 26px;
+    background-image: var(--bg-dark-glow);
+    background-size: auto;
 }
 
 /* Text plates on the quote background */
