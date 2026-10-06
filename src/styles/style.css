@@ -1217,9 +1217,12 @@ nav .main-menu-btn { font-size: 0.95rem; }
     object-fit: cover;
 }
 .locator__mobile-info {
-    /* Sized to its content so the group can center. */
-    flex: 0 1 auto;
-    max-width: 65cqi;
+    /* A fixed basis rather than content width. The card centers the photo
+       and text as a group, so a content-sized column made every row's group
+       a different width - and the longest store name, North Richland Hills,
+       pushed its photo noticeably further left than the rest. A fixed basis
+       lands every row's photo in the same place. */
+    flex: 0 0 65cqi;
     min-width: 0;
     display: flex;
     flex-direction: column;

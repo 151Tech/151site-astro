@@ -170,7 +170,7 @@ const aboutParagraphs = writtenCopy
         ? `This store serves hot food too${hotFoodExamples.length ? `, like our ${listNames(hotFoodExamples)}` : ''}${foodCats.length > 1 ? ', plus baked treats' : ''}. Check the store menu for what's available today.`
         : foodCats.length
           ? `This store carries our ${foodLabel.toLowerCase()} alongside the full drink menu. Hot food isn't offered at this location.`
-          : `This store serves our full drink menu. Hot food and baked treats aren't offered at this location.`,
+          : `This store serves our full drink menu. Hot food and baked treats aren't offered at this location yet - they're coming soon.`,
       nearby.length
         ? `Heading somewhere else? The closest other 151 Coffee ${nearby.length > 1 ? 'stores are' : 'store is'} ${listNames(nearby.map((n: any) => `${n.shortName} (${miles(n.miles)})`))}.`
         : '',
