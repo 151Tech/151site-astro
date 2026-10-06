@@ -110,6 +110,11 @@ for (const card of p.menuSection?.cards ?? []) {
   if (card?.subtitle === 'Select Locations Only') {
     card.subtitle = 'Not Yet at North Richland Hills or Flower Mound';
   }
+  // Wrapped to two lines on a phone, and the card it sits on is already
+  // labelled "Drink Menu" - the word was doing nothing the second time.
+  if (card?.subtitle === 'Find Your New Favorite Drink') {
+    card.subtitle = 'Find Your New Favorite';
+  }
 }
 
 for (const faq of p.faqs?.items ?? []) {
