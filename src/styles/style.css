@@ -2481,10 +2481,7 @@ footer {
 .invest-banner {
     width: 100%;
     background-color: var(--dark-ground);
-    background-image:
-        radial-gradient(120% 60% at 50% 0%,   rgba(228,37,43,0.16) 0%, transparent 60%),
-        radial-gradient(80% 60% at 100% 100%, rgba(228,37,43,0.09) 0%, transparent 60%);
-    background-size: auto;
+    background-image: var(--bg-dark);
     border-top: 1px solid var(--border);
     border-bottom: 1px solid var(--border);
     padding: 1rem 0;
@@ -3330,10 +3327,10 @@ html:has(.loc-fullpage), body:has(.loc-fullpage) { overflow: hidden; }
 /* Two backgrounds cover every full-width band. --bg-quote is the light one:
    the celebrity-quote artwork as a seamless tile (1084x530, shown at native
    size) under a veil; raise --quote-veil to make the artwork fainter.
-   --bg-dark is the dark one, two soft red glows over --dark-ground. They're
-   custom properties because the sections using them span five stylesheets
-   and two page-level <style> blocks, and blocks.css and menu.css load after
-   this file. */
+   The dark one is flat --dark-ground with no artwork at all, so --bg-dark
+   is none - kept as a property rather than deleted because the sections
+   using it span five stylesheets and two page-level <style> blocks, and a
+   future treatment goes back in one place. */
 :root {
     --quote-veil: 0.9;
 
@@ -3342,15 +3339,13 @@ html:has(.loc-fullpage), body:has(.loc-fullpage) { overflow: hidden; }
         url('/images/quote-banner.jpg');
 
     /* The ground under every dark band. One value so the bands cannot
-       drift apart - several of them sit directly against each other. */
-    --dark-ground: #262626;
+       drift apart - several of them sit directly against each other. It is
+       the same --black the hero and footer use, so a dark band no longer
+       announces itself as a different shade. */
+    --dark-ground: var(--black);
 
-    /* No dot tile and no grid: the two red glows carry the whole thing,
-       and a faint neutral lift off the top keeps it from reading flat. */
-    --bg-dark:
-        radial-gradient(120% 60% at 50% 0%,   rgba(228,37,43,0.28) 0%, transparent 60%),
-        radial-gradient(80% 60% at 100% 100%, rgba(228,37,43,0.16) 0%, transparent 60%),
-        linear-gradient(180deg, rgba(255,255,255,0.05) 0%, transparent 55%);
+    /* Flat. No dots, no grid, no glow. */
+    --bg-dark: none;
 }
 
 .featured-drink,
