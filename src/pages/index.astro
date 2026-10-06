@@ -78,6 +78,50 @@ const p = unwrapSingletons(homeData as any, [
   'seo', 'hero', 'visibility', 'featuredDrink', 'menuSection', 'locationsSection',
   'cta', 'reviews', 'investment', 'faqs', 'contact', 'investBanner',
 ]);
+/* ---------------------------------------------------------------------
+   Temporary copy overrides - 2026-10-06
+
+   This site is being retired in favour of WordPress and this repo is
+   becoming an archive, so these edits are applied in code rather than in
+   Storyblok: the CMS is not where this copy will live, and a hand-edit to
+   storyblok-snapshot.json would be wiped by the next rebuild anyway.
+
+   Each one is a targeted replacement rather than a whole-field rewrite. If
+   the underlying copy is ever changed in Storyblok the match simply fails
+   and the original shows through, which is visible - a rewrite would
+   silently reinstate today's wording over tomorrow's.
+   --------------------------------------------------------------------- */
+function overrideCopy(text: string, find: string, replaceWith: string): string {
+  return typeof text === 'string' ? text.split(find).join(replaceWith) : text;
+}
+
+if (p.featuredDrink?.description) {
+  // The drink's full name is "Pumpkin Caramel Brulee Latte".
+  p.featuredDrink.description = overrideCopy(
+    p.featuredDrink.description,
+    'Pumpkin Caramel Br\u00fbl\u00e9e.',
+    'Pumpkin Caramel Br\u00fbl\u00e9e Latte.',
+  );
+}
+
+// The food menu is not at every store yet, and "Select Locations Only" does
+// not say which - the two it is missing from are the ones people ask about.
+for (const card of p.menuSection?.cards ?? []) {
+  if (card?.subtitle === 'Select Locations Only') {
+    card.subtitle = 'Not Yet at North Richland Hills or Flower Mound';
+  }
+}
+
+for (const faq of p.faqs?.items ?? []) {
+  if (!faq?.answer) continue;
+  faq.answer = overrideCopy(faq.answer, 'teas, kids drinks', 'teas, and kids drinks');
+  faq.answer = overrideCopy(
+    faq.answer,
+    'Most stores have hot food items like burritos and bagels, and baked treats.',
+    'We have hot food items like burritos and bagels, and baked treats, at all locations except North Richland Hills and Flower Mound.',
+  );
+}
+
 const s = (settingsData as any) ?? {};
 // `social` is a singleton nested blok, so Storyblok returns it as a one-item
 // array. Passing it through unwrapped left every link in the Instagram
@@ -105,7 +149,7 @@ const loyaltyFaqItems = [
   {
     question: 'Does 151 Coffee have discount days?',
     answer:
-      "Yes, we do! Sign up for a loyalty account at your nearest store to stay up to date. Note: this isn't tied to birthdays or a set day of the week. Your discount day is personalized to your account.",
+      "Yes, we do! Sign up for a loyalty account at your nearest store to stay up to date. Note: this isn't tied to birthdays or a set day of the week. Your discounts are personalized to your account.",
   },
   {
     question: "It's my birthday! Does 151 do anything?",
