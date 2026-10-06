@@ -1,16 +1,16 @@
 {
-  "generatedAt": "2026-09-30T15:39:36.625Z",
+  "generatedAt": "2026-10-06T15:38:17.186Z",
   "publishedAt": {
     "settings/global": "2026-09-30T13:25:14.228Z",
-    "pages/home": "2026-09-29T19:15:40.322Z",
+    "pages/home": "2026-10-06T15:37:11.951Z",
     "pages/about": "2026-09-29T18:23:49.806Z",
     "pages/careers": "2026-09-25T17:55:51.398Z",
     "pages/locations": "2026-09-29T16:09:06.345Z",
     "pages/menu": "2026-09-25T17:54:41.022Z",
     "pages/realestate": "2026-09-29T19:15:18.272Z",
     "pages/privacy": "2026-08-26T15:42:59.017Z",
-    "products/pumpkin-spice-chai": "2026-09-16T16:58:24.142Z",
-    "products/pumpkin-spice-latte": "2026-09-16T16:58:22.735Z",
+    "products/pumpkin-spice-chai": "2026-10-06T15:36:13.840Z",
+    "products/pumpkin-spice-latte": "2026-10-06T15:36:29.133Z",
     "products/pumpkin-caramel-brulee": "2026-09-16T16:58:21.312Z",
     "products/hotfood-green-chile-burrito": "2026-09-25T16:54:41.755Z",
     "products/treats-whookie-gf-cookie": "2026-09-15T17:23:36.311Z",
@@ -48,10 +48,10 @@
     "products/hotfood-egg-white-frittata": "2026-09-25T16:54:07.793Z",
     "products/hotfood-chorizo-burrito": "2026-09-25T16:54:23.821Z",
     "products/hotfood-bacon-cheddar-egg-bites": "2026-09-25T16:54:32.097Z",
-    "products/energy-tigers-blood": "2026-09-15T16:31:56.610Z",
-    "products/energy-starry-night": "2026-09-15T16:32:08.588Z",
-    "products/energy-ocean-water": "2026-09-15T16:32:22.116Z",
-    "products/energy-jolly-rancher": "2026-09-15T16:32:35.342Z",
+    "products/energy-tigers-blood": "2026-10-06T15:34:22.884Z",
+    "products/energy-starry-night": "2026-10-06T15:34:39.315Z",
+    "products/energy-ocean-water": "2026-10-06T15:34:51.441Z",
+    "products/energy-jolly-rancher": "2026-10-06T15:35:08.604Z",
     "products/dirtypop-texas-special": "2026-09-15T16:32:50.117Z",
     "products/dirtypop-smooth-classic": "2026-09-15T16:33:04.018Z",
     "products/dirtypop-just-dew-it": "2026-09-15T16:33:18.060Z",
@@ -599,13 +599,13 @@
               "_uid": "62b43dbd-d290-414f-bfd2-509a3fa27028",
               "href": "/menu#hotfood",
               "image": {
-                "id": 223909968111201,
+                "id": 227784396469894,
                 "alt": "",
                 "name": "",
                 "focus": "",
                 "title": "",
                 "source": "",
-                "filename": "https://a.storyblok.com/f/294671107081428/1350x1350/5f9c8fd435/6.jpg",
+                "filename": "https://a.storyblok.com/f/294671107081428/1350x1350/44da0754a5/eb.jpg",
                 "copyright": "",
                 "fieldtype": "asset",
                 "meta_data": {
@@ -1933,7 +1933,18 @@
         "content": {
           "_uid": "b9e6af1b-0cda-4994-9ca3-effe485f7664",
           "name": "Pumpkin Spice Chai",
-          "tags": [],
+          "tags": [
+            {
+              "_uid": "82afec9d-afa6-4ce1-af5e-b4e3d103b1e2",
+              "value": "Chai",
+              "component": "text_item"
+            },
+            {
+              "_uid": "90b7d889-ff6d-4116-a299-1aec5fb05d59",
+              "value": "Pumpkin",
+              "component": "text_item"
+            }
+          ],
           "badge": "",
           "image": {
             "id": 220360708685075,
@@ -1964,7 +1975,13 @@
         "content": {
           "_uid": "093a48d9-7bf1-4dc9-a7d9-a0f9fb7d2439",
           "name": "Pumpkin Spice Latte",
-          "tags": [],
+          "tags": [
+            {
+              "_uid": "7d6007cd-2265-4f38-a83b-e358260c1e84",
+              "value": "Pumpkin",
+              "component": "text_item"
+            }
+          ],
           "badge": "",
           "image": {
             "id": 220360708697364,
@@ -3380,13 +3397,13 @@
           ],
           "badge": "",
           "image": {
-            "id": 220360591691018,
+            "id": 220360591596809,
             "alt": "",
             "name": "",
             "focus": "",
             "title": "",
             "source": "",
-            "filename": "https://a.storyblok.com/f/294671107081428/1350x1350/e5368782f4/new-tigers-blood.jpg",
+            "filename": "https://a.storyblok.com/f/294671107081428/1350x1350/c45642cbf5/og-tiger_s-blood.jpg",
             "copyright": "",
             "fieldtype": "asset",
             "meta_data": {
@@ -3422,13 +3439,13 @@
           ],
           "badge": "",
           "image": {
-            "id": 220360591576327,
+            "id": 220360591551748,
             "alt": "",
             "name": "",
             "focus": "",
             "title": "",
             "source": "",
-            "filename": "https://a.storyblok.com/f/294671107081428/1350x1350/df4a5eca0f/new-starry-night.jpg",
+            "filename": "https://a.storyblok.com/f/294671107081428/1350x1350/7534665fe5/og-starry-night.jpg",
             "copyright": "",
             "fieldtype": "asset",
             "meta_data": {
@@ -3469,13 +3486,13 @@
           ],
           "badge": "",
           "image": {
-            "id": 220360591568133,
+            "id": 220360591547651,
             "alt": "",
             "name": "",
             "focus": "",
             "title": "",
             "source": "",
-            "filename": "https://a.storyblok.com/f/294671107081428/1350x1350/154900bbda/new-ocean-water.jpg",
+            "filename": "https://a.storyblok.com/f/294671107081428/1350x1350/8e170514a6/og-ocean-water.jpg",
             "copyright": "",
             "fieldtype": "asset",
             "meta_data": {
@@ -3511,13 +3528,13 @@
           ],
           "badge": "",
           "image": {
-            "id": 220360591596808,
+            "id": 220360591576326,
             "alt": "",
             "name": "",
             "focus": "",
             "title": "",
             "source": "",
-            "filename": "https://a.storyblok.com/f/294671107081428/1350x1350/05cc00945f/new-jolly-rancher.jpg",
+            "filename": "https://a.storyblok.com/f/294671107081428/1350x1350/72eec4d898/og-jolly-rancher.jpg",
             "copyright": "",
             "fieldtype": "asset",
             "meta_data": {
