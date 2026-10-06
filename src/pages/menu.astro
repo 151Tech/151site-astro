@@ -53,6 +53,24 @@ const TEA_BOTTOM_ROW = ['Mint', 'Cinnamon Spice'];
 const allDrinks = drinksEntries
   .sort((a: any, b: any) => (Number(a.menuOrder) || 99) - (Number(b.menuOrder) || 99));
 
+/* ---------------------------------------------------------------------
+   Temporary copy overrides - 2026-10-06
+
+   Applied in code, not in Storyblok: this site is being retired in favour
+   of WordPress and the repo is becoming an archive, so the CMS is not
+   where this copy will live, and a snapshot rebuild would wipe a hand-edit
+   to storyblok-snapshot.json.
+   --------------------------------------------------------------------- */
+
+// Every cold brew says so in its name. Skipping the ones that already
+// contain "Brew" avoids "Cold Brew Cold Brew" and "Nitro Brew Cold Brew" -
+// both of those already read as cold brew without help.
+for (const drink of allDrinks as any[]) {
+  if (drink.category !== 'categories/coldbrew') continue;
+  if (/brew/i.test(drink.name ?? '')) continue;
+  drink.name = `${drink.name} Cold Brew`;
+}
+
 // The full menu as one Menu > MenuSection > MenuItem tree. This is the page
 // that should be answering "what does 151 Coffee serve" for an answer engine,
 // and it previously shipped 64 drinks as unannotated card markup.
@@ -111,6 +129,33 @@ const CATEGORIES = categoryEntries
     _editable: e._editable,
   }))
   .sort((a: any, b: any) => (parseInt(a.num) || 99) - (parseInt(b.num) || 99));
+
+// See the override note above allDrinks.
+const CATEGORY_DESC_OVERRIDES: Record<string, string> = {
+  energy:
+    'Real fruit flavors mixed into regular or sugar free energy base. Bold, colorful, and built to get you moving.',
+  refreshers: 'Our caffeine free refreshers are light, fruity, and made to cool you down.',
+  // "Blended thick" - you cannot blend something thick.
+  smoothies: "Blended to order. Sweet, filling, and good enough to count as breakfast. We won't judge.",
+  // The tea is not brewed fresh, so it no longer says it is.
+  teas: "From sweet and simple to fruity and bold, there's a tea for every kind of day.",
+  // Nothing is house-baked, and cake pops were missing.
+  treats: "Cookies, breads, and cake pops - the kind of thing you add to your order and don't regret.",
+};
+for (const cat of CATEGORIES as any[]) {
+  if (CATEGORY_DESC_OVERRIDES[cat.tab]) cat.desc = CATEGORY_DESC_OVERRIDES[cat.tab];
+}
+
+// Kansas runs the proprietary blend under its own name, so a Kansas store
+// renames the category and swaps its description. Applied in the browser
+// rather than here because the page is static and the store is chosen
+// client-side - see applyRegionalCopy() in the script below.
+const KANSAS_CATEGORY_COPY: Record<string, { title: string; desc: string }> = {
+  energy: {
+    title: '151 Clarity Energy',
+    desc: 'Our proprietary energy featuring long lasting energy from caffeine plus L-Theanine to calm the caffeine jitters and Cognizin for brain nutrition.',
+  },
+};
 
 // Map a drink's category reference (Storyblok slug) back to its category tab slug.
 const REFID_TO_SLUG: Record<string, string> = Object.fromEntries(
@@ -250,6 +295,7 @@ const decideDrinksJson = JSON.stringify(decideDrinksArr);
         {CATEGORIES.map((cat: any, i: number) => (
           <button class={`cat-link${i === 0 ? ' active' : ''}`} data-tab={cat.tab}
             data-visible={cat.hiddenByDefault ? 'false' : undefined}
+            data-ks-title={KANSAS_CATEGORY_COPY[cat.tab]?.title}
 >{cat.title}</button>
         ))}
       </div>
@@ -312,6 +358,8 @@ const decideDrinksJson = JSON.stringify(decideDrinksArr);
           <div class="cat-group" data-cat={cat.tab}>
             <div class="cat-title-card" id={`cat-${cat.tab}`} data-cat={cat.tab}
               data-visible={cat.hiddenByDefault ? 'false' : undefined}
+              data-ks-title={KANSAS_CATEGORY_COPY[cat.tab]?.title}
+              data-ks-desc={KANSAS_CATEGORY_COPY[cat.tab]?.desc}
 >
               <Editable blok={cat} />
               <div class="cat-title-inner">
@@ -881,8 +929,31 @@ const decideDrinksJson = JSON.stringify(decideDrinksArr);
     }
     function drinkSlug(card) { return card.getAttribute('data-slug') || ''; }
 
+    /* Kansas sells the energy line under its own name. Runs from refresh()
+       so it follows the store picker without needing its own listener, and
+       stores the original text on first run so switching back restores it. */
+    function applyRegionalCopy() {
+      var loc = selectedStore && LOCATIONS_META[selectedStore];
+      var isKansas = !!loc && String(loc.state || '').trim().toUpperCase().slice(0, 2) === 'KS';
+
+      document.querySelectorAll('[data-ks-title]').forEach(function (el) {
+        var target = el.classList.contains('cat-title-card') ? el.querySelector('.cat-title-text') : el;
+        if (!target) return;
+        if (target.dataset.baseTitle === undefined) target.dataset.baseTitle = target.textContent;
+        target.textContent = isKansas ? el.getAttribute('data-ks-title') : target.dataset.baseTitle;
+      });
+
+      document.querySelectorAll('[data-ks-desc]').forEach(function (el) {
+        var desc = el.querySelector('.cat-title-desc');
+        if (!desc) return;
+        if (desc.dataset.baseDesc === undefined) desc.dataset.baseDesc = desc.textContent;
+        desc.textContent = isKansas ? el.getAttribute('data-ks-desc') : desc.dataset.baseDesc;
+      });
+    }
+
     function refresh() {
       var filtering = !!activeFilter || !!selectedStore;
+      applyRegionalCopy();
 
       if (!isMobile()) {
         if (timelineWrap) timelineWrap.style.minHeight = timelineWrap.offsetHeight + 'px';
