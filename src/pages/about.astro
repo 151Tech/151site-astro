@@ -10,6 +10,46 @@ import { getPage, unwrapSingletons, imageUrl } from '../lib/storyblok';
 const p = unwrapSingletons((await getPage('about')) as any, [
   'seo', 'visibility', 'hero', 'intro', 'history', 'founder', 'cta',
 ]);
+
+/* ---------------------------------------------------------------------
+   Temporary copy overrides - 2026-10-06
+
+   Applied in code rather than in Storyblok: this site is being retired in
+   favour of WordPress and the repo is becoming an archive, so the CMS is
+   not where this copy will live, and a hand-edit to the snapshot would be
+   wiped by the next rebuild.
+   --------------------------------------------------------------------- */
+
+// "drive with the 151 vibe" was a pun that read as an instruction.
+if (Array.isArray(p.intro?.paragraphs)) {
+  p.intro.paragraphs = p.intro.paragraphs.map((para: string) =>
+    typeof para === 'string'
+      ? para.split('and drive with the 151 vibe').join('and enjoy the 151 vibe')
+      : para,
+  );
+}
+
+/* The founder's closing paragraph moves into the history section, where it
+   sits between the founding and the ambition rather than trailing the
+   ventures list. The history's own closing line is restated with it, so
+   the section reads as one argument. "his next generation" became "the
+   next generation" on the way across. */
+const ENTREPRENEUR_PARAGRAPH =
+  'Now what makes a successful entrepreneur decide to start one more company? Mark created 151 Coffee as a place for the next generation to not just have a job, but as an entry point into what could be a long-term career; to create growth opportunities through mentorship and on-the-job development, and ultimately show our team that you don’t have to have a college degree in order to earn a six-figure income.';
+
+if (Array.isArray(p.history?.body) && p.history.body.length >= 2) {
+  p.history.body = [
+    p.history.body[0],
+    ENTREPRENEUR_PARAGRAPH,
+    'Leveraging the experience of our founder and the 151 Coffee Team, we are set to grow rapidly and create new opportunities for our teams while never forgetting our #1 mission: to have fun!',
+  ];
+}
+
+if (Array.isArray(p.founder?.bio)) {
+  p.founder.bio = p.founder.bio.filter(
+    (para: string) => typeof para !== 'string' || !para.startsWith('Now what makes a successful entrepreneur'),
+  );
+}
 ---
 <Layout
   title={p.seo?.title ?? 'About 151 Coffee | Our Story & Founder Mark Wattles'}
@@ -33,7 +73,8 @@ const p = unwrapSingletons((await getPage('about')) as any, [
        two-tone treatment of the same line. */
     .about-intro-text .about-intro-tagline span { color: var(--red); }
     .about-intro-text .about-intro-tagline { font-family: var(--font-source-sans), sans-serif; font-size: clamp(1.8rem, 3.5vw, 2.8rem); color: var(--black); line-height: 1.12; letter-spacing: var(--tracking-display); text-transform: uppercase; font-weight: 700; margin-top: 1.75rem; }
-    .about-intro-text p { font-family: var(--font-montserrat), sans-serif; font-size: 1rem; line-height: 1.75; color: rgba(17,17,17,0.62); }
+    .about-intro-text p { font-family: var(--font-montserrat), sans-serif; font-size: 1rem; line-height: 1.75; color: rgba(17,17,17,0.62); margin-bottom: 1.25rem; }
+    .about-intro-text p:last-of-type { margin-bottom: 0; }
     .about-intro-img { border-radius: var(--radius); overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.22); position: relative; aspect-ratio: 1 / 1; }
     .about-intro-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .about-intro-img::after { content: ''; position: absolute; inset: 0; border: 1px solid rgba(0,0,0,0.06); border-radius: var(--radius); pointer-events: none; }
@@ -60,7 +101,6 @@ const p = unwrapSingletons((await getPage('about')) as any, [
       font-family: var(--font-montserrat), sans-serif; font-size: 1.05rem; line-height: 1.78; color: rgba(17,17,17,0.62);
     }
     .history-body p { margin-bottom: 1.25rem; }
-    .history-body p:first-of-type { color: rgba(17,17,17,0.78); font-weight: 500; }
     .history-timeline { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-top: 3rem; max-width: 900px; margin-left: auto; margin-right: auto; }
     .timeline-item {
       position: relative; display: flex; flex-direction: column; gap: 0.6rem;
@@ -102,7 +142,6 @@ const p = unwrapSingletons((await getPage('about')) as any, [
     }
     .founder-content { text-align: left; }
     .founder-content p { font-family: var(--font-montserrat), sans-serif; font-size: 0.97rem; line-height: 1.75; color: rgba(255,255,255,0.62); margin-bottom: 1rem; }
-    .founder-bio p:first-of-type { font-size: 1.08rem; font-weight: 500; color: rgba(255,255,255,0.85); }
     .founder-ventures { margin-top: 1.75rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
     .founder-closing {
       position: relative; margin-top: 2.25rem; padding-top: 1.5rem; font-style: italic; color: rgba(255,255,255,0.72);
@@ -185,7 +224,7 @@ const p = unwrapSingletons((await getPage('about')) as any, [
       <div class="why-151">
         <div class="why-151-badge">Why <span>151</span>?</div>
         <p class="why-151-text">
-          {p.whyName?.body ?? "It's our founder's favorite temperature for a hot latte, and it's the temperature we steam our hot drinks to. Still hot, but you won't have to wait to take that first sip."}
+          {p.whyName?.body ?? "It's our founder's favorite temperature for a hot latte, and it's the temperature we steam our milk to. Still hot, but you won't have to wait to take that first sip."}
         </p>
       </div>
     </div>
@@ -251,8 +290,9 @@ const p = unwrapSingletons((await getPage('about')) as any, [
               'Instead of pursuing a traditional college education, Mark chose to dive into the world of business and has since built an impressive portfolio of successful national ventures.',
               'Now what makes a successful entrepreneur decide to start one more company? Mark created 151 Coffee as a place for his next generation to not just have a job, but as an entry point into what could be a long-term career; to create growth opportunities through mentorship and on-the-job development, and ultimately show our team that you don’t have to have a college degree in order to earn a six-figure income.',
             ];
-            const lead = bio.slice(0, -1);
-            const closing = bio[bio.length - 1];
+            const hasClosing = bio.length > 2;
+            const lead = hasClosing ? bio.slice(0, -1) : bio;
+            const closing = hasClosing ? bio[bio.length - 1] : '';
             return (
               <>
                 <div class="founder-bio">
