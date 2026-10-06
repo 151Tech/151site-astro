@@ -74,17 +74,19 @@ const marketTags: string[] = [
     .re-criteria .section-header h2 { color: #fff; }
     .re-criteria .section-header p { font-family: var(--font-montserrat), sans-serif; font-size: 1rem; color: rgba(255,255,255,0.55); margin-top: 0.75rem; max-width: 600px; margin-left: auto; margin-right: auto; }
     .criteria-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-top: 3rem; }
+    /* The .venture-card treatment from the about page's founder section:
+       a flat translucent white surface rather than a tinted gradient, no
+       drop shadow, and a hover that only warms the border. The roomier
+       padding stays - these cards carry an icon, a heading and a
+       paragraph where a venture card carries two lines. */
     .criteria-card {
-      background:
-          radial-gradient(120% 100% at 100% 0%, rgba(228,37,43,0.16) 0%, transparent 55%),
-          linear-gradient(160deg, #282828 0%, #1c1c1c 100%);
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: var(--radius);
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
       padding: 2rem 1.75rem;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.18);
-      transition: border-color 0.22s, box-shadow 0.22s, transform 0.22s;
+      transition: border-color 0.2s;
     }
-    .criteria-card:hover { border-color: rgba(228,37,43,0.40); box-shadow: 0 16px 40px rgba(0,0,0,0.24); transform: translateY(-4px); }
+    .criteria-card:hover { border-color: rgba(228,37,43,0.35); }
     .criteria-icon { font-size: 2rem; margin-bottom: 1.1rem; display: block; }
     .criteria-card h3 { font-family: var(--font-montserrat), sans-serif; font-size: 1rem; font-weight: 700; color: #fff; text-transform: none; letter-spacing: var(--tracking-display); margin-bottom: 0.6rem; }
     .criteria-card p { font-family: var(--font-montserrat), sans-serif; font-size: 0.85rem; line-height: 1.65; color: rgba(255,255,255,0.52); margin: 0; }
