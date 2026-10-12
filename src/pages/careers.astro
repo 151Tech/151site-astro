@@ -74,8 +74,8 @@ const heroVideoSrc = mediaUrl(p.heroVideo);
          is the careers hero below. The age gate is an interstitial, not the
          document's subject, so it's an h2: same inherited heading type
          treatment, identical rendering, one h1 per page. */
-      .age-card h2 { font-size: clamp(2.4rem, 6vw, 4rem); color: #fff; line-height: 1.05; margin-bottom: 1rem; }
-      .age-card h2 span { color: var(--red); }
+      .age-card h1, .age-card h2 { font-size: clamp(2.4rem, 6vw, 4rem); color: #fff; line-height: 1.05; margin-bottom: 1rem; }
+      .age-card h1 span, .age-card h2 span { color: var(--red); }
       .age-card .sub {
         font-family: var(--font-montserrat), sans-serif;
         font-size: 1rem;
@@ -114,7 +114,7 @@ const heroVideoSrc = mediaUrl(p.heroVideo);
       }
       .age-btn-no:hover { border-color: rgba(255,255,255,0.55); color: #fff; }
       .age-under { display: none; text-align: center; max-width: 520px; width: 100%; }
-      .age-under h2 { font-size: clamp(1.8rem, 4vw, 2.8rem); color: #fff; line-height: 1.1; margin-bottom: 1rem; }
+      .age-under h1, .age-under h2 { font-size: clamp(1.8rem, 4vw, 2.8rem); color: #fff; line-height: 1.1; margin-bottom: 1rem; }
       .age-under h2 span { color: var(--red); }
       .age-under p { font-family: var(--font-montserrat), sans-serif; font-size: 1rem; color: rgba(255,255,255,0.68); line-height: 1.7; margin-bottom: 1.75rem; }
       .age-under .back-link { font-family: var(--font-montserrat), sans-serif; font-size: 0.85rem; color: rgba(255,255,255,0.45); text-decoration: none; transition: color 0.2s; }
